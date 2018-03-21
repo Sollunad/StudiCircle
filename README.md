@@ -36,14 +36,18 @@ grün:
 
 ## Erstes Aufsetzen der Ionic Grundlage
 
-1. Git Repo klonen
-2. Node.js installieren
-3. Ionic und Cordova global installieren mit:
-   - npm install -g ionic
-   - npm install -g cordova
-4. Im StudiCircle Ordner vom Git Repo:
-   - npm install
-   - ionic serve (wenn das nicht geht, vorher ionic build)
+```git clone https://github.com/Sollunad/StudiCircle.git```
+
+Node.js installieren
+
+```
+npm install -g ionic
+npm install -g cordova
+cd StudiCircle/StudiCircle
+npm i
+(opt.) ionic build
+ionic serve
+```
 
 
 
