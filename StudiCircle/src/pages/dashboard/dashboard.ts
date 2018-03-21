@@ -8,10 +8,13 @@ import { SettingsPage } from "../settings/settings";
 })
 export class DashboardPage {
 
-  SettingsButton : any;
+  settings : SettingsPage;
 
   constructor(public navCtrl: NavController) {
-    this.SettingsButton = SettingsPage;
   }
 
+  goToSettings(params){
+    if (!params) params = {};
+    this.navCtrl.push(SettingsPage);
+  }
 }
