@@ -25,9 +25,9 @@
 
 ## Rahmenbedingungen
 
-Datenbanken sind zu implementieren
-Testumgebungen sind zu implementieren
-Designs von neuen Seiten sind zu entwerfen und mit dem PO abzustimmen
+- Datenbanken sind zu implementieren
+- Testumgebungen sind zu implementieren
+- Designs von neuen Seiten sind zu entwerfen und mit dem PO abzustimmen
 
 ## Corporate Design
 Farbcodes
