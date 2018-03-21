@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Get Involved
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="page1">
+  <div class="spacer" style="width:288px;height:40px;" id="getInvolved-spacer1"></div>
+  <h1 id="getInvolved-heading1" style="color:#000000;font-weight:600;text-align:center;">
+    StudiCircle
+  </h1>
+  <form id="getInvolved-form1">
+    <ion-item id="getInvolved-input2">
+      <ion-input type="email" placeholder="you@studicircle.io" name="mail"></ion-input>
+    </ion-item>
+    <ion-item id="getInvolved-input3">
+      <ion-input type="password" placeholder="Password" name="pw"></ion-input>
+    </ion-item>
+    <ion-item id="getInvolved-input6">
+      <ion-input type="password" placeholder="Retype Password" name="pw_check"></ion-input>
+    </ion-item>
+    <div class="spacer" style="width:300px;height:36px;" id="getInvolved-spacer4"></div>
+    <ion-item name="studentProfile" id="getInvolved-checkbox1">
+      <ion-label>
+        Student
+      </ion-label>
+      <ion-checkbox></ion-checkbox>
+    </ion-item>
+    <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
+      <ion-label>
+        Business / Club
+      </ion-label>
+      <ion-checkbox></ion-checkbox>
+    </ion-item>
+  </form>
+  <button id="getInvolved-button1" ion-button color="balanced" block on-click="goToVerifyNow()">
+    Register now!
+  </button>
+</ion-content>
