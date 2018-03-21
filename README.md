@@ -8,9 +8,9 @@
 
 ### Branches
 
-“master” für POs
-“develop” -> Lauffähige Entwicklungsversion, hier werden fertige User Stories zur Abnahme vorgestellt
-“story/SC-EPIC-###” -> Pro User Story einen Branch
+- “master” für POs
+- “develop” -> Lauffähige Entwicklungsversion, hier werden fertige User Stories zur Abnahme vorgestellt
+- “story/SC-EPIC-###” -> Pro User Story einen Branch
 (zum Beispiel story/SC-CORE-002)
 
 ### Workflow
