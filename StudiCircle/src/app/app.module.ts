@@ -6,6 +6,7 @@ import { GetInvolvedPage } from '../pages/get-involved/get-involved';
 import { LogInPage } from '../pages/log-in/log-in';
 import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
+import { SettingsPage } from '../pages/settings/settings';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -17,7 +18,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     GetInvolvedPage,
     LogInPage,
     VerifyNowPage,
-    DashboardPage
+    DashboardPage,
+    SettingsPage
   ],
   imports: [
     BrowserModule,
@@ -29,7 +31,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     GetInvolvedPage,
     LogInPage,
     VerifyNowPage,
-    DashboardPage
+    DashboardPage,
+    SettingsPage
   ],
   providers: [
     StatusBar,
