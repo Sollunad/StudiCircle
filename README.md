@@ -3,6 +3,7 @@
 ## Wichtige Links
 
 [Sprint- und Product-Backlog](https://docs.google.com/spreadsheets/d/1YCvQa_m60D70OW_NKOWodGU-s6tj3FHdgRDIcPds1GU/)
+[Übersicht 1. Sprint](https://drive.google.com/file/d/1ujw161Y97WQo8EW02hdNSwXAGiTV3paX/view?usp=sharing)
 
 ## Git Guideline
 
