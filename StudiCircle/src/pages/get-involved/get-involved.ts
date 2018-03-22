@@ -10,16 +10,20 @@ import { DashboardPage } from '../dashboard/dashboard';
 })
 export class GetInvolvedPage {
 
-  mail : any;
-  password : any;
-  passwdChk : any;
+  profile = {
+    mail : '',
+    password : '',
+    profileType : ''
+  };
+
+  passwdChk = '';
+  business : boolean;
+  student : boolean;
 
   constructor(public navCtrl: NavController) {
-    this.mail = '';
   }
 
   goToVerifyNow(params){
-    this.verifyStudentMail();
     if (!params) params = {};
     this.navCtrl.push(VerifyNowPage);
   }
@@ -39,22 +43,47 @@ export class GetInvolvedPage {
     this.navCtrl.push(DashboardPage);
   }
 
-  verifyStudentMail(){
-    //TODO add cond for when profile type is business profile
-    if(!(this.mail.includes("@student") || this.mail.includes(".edu"))){
-      if(this.mail.length>0){
-        console.log("[get-involved] Not valid student mail address: " + this.mail)
+  passwdCheck(){
+    if(this.profile.password.match("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,}$")){
+      console.log("[REGISTER] : Password complies to policy");
+      if((this.profile.password === this.passwdChk)){
+        console.log("[REGISTER] : PasswordCheck successful");
+        return true;
       }else{
-        console.log("[get-involved] No String collected.")
+        console.log("[REGISTER] : PasswordCheck not successful");
+      }
+      return false;
+    }else{
+      console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of six characters");
+    }
+    this.profile.password = '';
+    this.passwdChk = '';
+    return false;
+  }
+
+  logProfile(){
+    if(this.student && !this.business){
+      console.log("[REGISTER] : Student Profile");
+      if(this.profile.mail.match('(@student\.)|(\.edu$)')){
+        console.log("[REGISTER] : Valid Student Mail")
+        if(this.passwdCheck()){
+          this.profile.profileType = 'student';
+          this.goToVerifyNow({});
+        }
+      }else{
+        console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
       }
     }else{
-      console.log("[get-involved] Hooray! Valid Student Address: " + this.mail);
-      if(this.password === this.passwdChk && this.password.length > 0){
-        console.log("[get-involved] Hooray passwords are equal!")
-        this.goToVerifyNow({});
+      if(this.business && !this.student){
+        console.log("[REGISTER] : Business User detected");
+        if(this.passwdCheck()){
+          this.profile.profileType = 'business';
+          this.goToVerifyNow({});
+        }
       }else{
-        console.log("[get-involved] Nay passwords are not equal!")
+        console.log("[REGISTER] : Please select a Type of User")
       }
     }
   }
+
 }
