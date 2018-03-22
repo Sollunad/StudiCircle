@@ -18,7 +18,7 @@ module.exports = {
         );
 
         var mailOptions = {
-            from: 'Studicircle <studicircle@web.de>',
+            from: 'StudiCircle <studicircle@web.de>',
             to: mailAddress,
             subject: subject,
             html: htmlcontent

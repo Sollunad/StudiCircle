@@ -1,24 +1,23 @@
+var mailer = require('./mailer');
+var database = require('./database');
 module.exports = {
-    register: function (mail, pwd, accountType,res) {
+    register: function (mail, password, accountType, res) {
         html = '<html lang="de-DE">\n' +
             '<head>\n' +
             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
             '</head>\n' +
             '<body>\n' +
-            '<p>Please click on following link to register to Studicircle: <a href="http://localhost:8080/test">Validate E-Mail</a></p>' +
+            '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/activateNewUser">Validate E-Mail</a></p>' +
             '</body>\n' +
             '</html>';
-        subject = 'Studicircle: Validate Your mail address';
+        subject = 'StudiCircle: Validate your mail address';
 
         let randomString = this.generateRandomString(48);
 
         //insert userdata in database
-        // account state = onValidation
-        //db.insertNewPerson(mail,pwd,accountType,randomString);
+        database.insertNewPerson(mail, password, accountType, randomString);
 
-        console.log(randomString);
         //send registration Mail
-        var mailer = require('./mailer');
         mailer.sendMail(mail, html, subject, 'Error at sending verification link.', 'Send verification link.',res);
     },
     generateRandomString: function (length) {
