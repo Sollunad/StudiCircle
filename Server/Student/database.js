@@ -1,17 +1,6 @@
-const AccountType = {
-    BUSINESS: 1,
-    GUEST: 2,
-    STUDENT: 3
-};
-
-const AccountState = {
-    ACTIVE: 1,
-    PENDING: 2,
-    DISABLED: 3
-};
+const constant = require('./constants');
 
 module.exports = {
-
     insertNewPerson: function(mail, password, accountType, randomString){
 
     },

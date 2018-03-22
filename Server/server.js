@@ -12,8 +12,8 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-app.get('/test', function (req, res) {
-    res.send('Hello Test!');
+app.get('/testStudent', function (req, res) {
+    res.send('Test started...');
 });
 
 app.get('/changePassword', function (req, res) {
@@ -22,12 +22,12 @@ app.get('/changePassword', function (req, res) {
 
 app.get('/activateNewUser', function (req, res) {
     activation.activateNewUser(req.query.uuid);
-    res.send('Hello Test!');
+    res.send('Validating UUID '+req.query.uuid +'!');
 });
 
 //post registration
 app.post("/registration", function (req, res) {
-
+    console.log("test1");
     var mailAddress = req.body.mail;
     var password = req.body.pwd;
     var accountType = req.body.type;
