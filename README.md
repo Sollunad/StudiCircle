@@ -12,17 +12,28 @@
 
 - “master” für POs
 - “develop” -> Lauffähige Entwicklungsversion, hier werden fertige User Stories zur Abnahme vorgestellt
-- “story/SC-EPIC-###” -> Pro User Story einen Branch
+- "team/Teamname -> Entwicklungsbranch für jedes Team
+- “story/SC-EPIC-###” -> Pro User Story einen Branch, falls nötig
 (zum Beispiel story/SC-CORE-002)
 
 ### Workflow
 
-1. Für jede neue Story einen neuen Branch anlegen.
+#### Entwicklung im Team
+
+1. Für neue Story einen neuen Branch anlegen.
 2. Alles für diese Story auf diesen Branch committen.
-3. Nach Abschluss der Story Pull Request nach develop erstellen (auf GitHub).
-4. Pull Request von jemandem reviewen und bestätigen lassen. Evtl. als Reviewer Kommentare dazu schreiben, falls alles ok ist, den Pull Request akzeptieren.
-5. Pull Request mergen.
-6. Branch löschen.
+3. Nach Abschluss der Story auf Teambranch mergen.
+4. Story-Branch löschen.
+
+oder
+
+1. Direkt auf Teambranch committen, je nach Bedarf.
+
+#### Teamübergreifend
+
+1. Nach Abschluss eines Arbeitspakets, wenn Version lauffähig, Pull Request vom Teambranch nach develop erstellen (auf GitHub).
+2. Pull Request von jemand anderem reviewen und bestätigen lassen. Evtl. als Reviewer Kommentare dazu schreiben, falls alles ok ist, den Pull Request akzeptieren.
+3. Pull Request mergen.
 
 ## Rahmenbedingungen
 
