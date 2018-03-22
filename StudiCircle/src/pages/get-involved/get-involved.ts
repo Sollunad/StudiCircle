@@ -65,7 +65,7 @@ export class GetInvolvedPage {
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.profile.mail.match('(@student\.)|(\.edu$)')){
+        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
@@ -77,9 +77,11 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.passwdCheck()){
-            this.profile.profileType = 'business';
-            this.goToVerifyNow({});
+          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+            if(this.passwdCheck()){
+              this.profile.profileType = 'business';
+              this.goToVerifyNow({});
+            }
           }
         }else{
           console.log("[REGISTER] : Please select a Type of User")
