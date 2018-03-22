@@ -33,7 +33,8 @@ export class LogInPage {
     if(this.mail && this.pw){
       console.log("[LOGIN] : Logging in");
       this.goToDashboard({});
+    }else {
+      console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
     }
-    console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
   }
 }

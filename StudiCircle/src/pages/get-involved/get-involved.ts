@@ -62,26 +62,38 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    if(this.student && !this.business){
-      console.log("[REGISTER] : Student Profile");
-      if(this.profile.mail.match('(@student\.)|(\.edu$)')){
-        console.log("[REGISTER] : Valid Student Mail")
-        if(this.passwdCheck()){
-          this.profile.profileType = 'student';
-          this.goToVerifyNow({});
+    if(this.profile.mail && this.profile.password && this.passwdChk){
+      if(this.student && !this.business){
+        console.log("[REGISTER] : Student Profile");
+        if(this.profile.mail.match('(@student\.)|(\.edu$)')){
+          console.log("[REGISTER] : Valid Student Mail")
+          if(this.passwdCheck()){
+            this.profile.profileType = 'student';
+            this.goToVerifyNow({});
+          }
+        }else{
+          console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
         }
       }else{
-        console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
+        if(this.business && !this.student){
+          console.log("[REGISTER] : Business User detected");
+          if(this.passwdCheck()){
+            this.profile.profileType = 'business';
+            this.goToVerifyNow({});
+          }
+        }else{
+          console.log("[REGISTER] : Please select a Type of User")
+        }
       }
     }else{
-      if(this.business && !this.student){
-        console.log("[REGISTER] : Business User detected");
-        if(this.passwdCheck()){
-          this.profile.profileType = 'business';
-          this.goToVerifyNow({});
-        }
-      }else{
-        console.log("[REGISTER] : Please select a Type of User")
+      if(!this.profile.mail){
+        console.log("[REGISTER] : Mail is a required field")
+      }
+      if(!this.profile.password){
+        console.log("[REGISTER] : Password is a required field")
+      }
+      if(!this.passwdChk){
+        console.log("[REGISTER] : Please confirm your password of choice")
       }
     }
   }

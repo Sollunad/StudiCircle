@@ -12,7 +12,7 @@
   </h1>
   <form id="getInvolved-form1">
     <ion-item id="getInvolved-input2">
-      <ion-input type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="profile.mail"></ion-input>
+      <ion-input type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="profile.mail" pattern=''></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input3">
       <ion-input type="password" placeholder="Password" name="pw" [(ngModel)]="profile.password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$"></ion-input>
