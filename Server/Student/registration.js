@@ -30,7 +30,7 @@ module.exports = {
             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
             '</head>\n' +
             '<body>\n' +
-            '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/activateNewUser?uuid='+ randomString  +'">Validate E-Mail</a></p>' +
+            '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/'+ randomString  +'/activate">Validate E-Mail</a></p>' +
             '</body>\n' +
             '</html>';
         subject = 'StudiCircle: Validate your mail address';
