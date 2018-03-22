@@ -22,7 +22,7 @@ app.get('/changePassword', function (req, res) {
 
 app.get('/activateNewUser', function (req, res) {
     activation.activateNewUser(req.query.uuid);
-    res.send('Validating UUID '+req.query.uuid +'!');
+    res.send("Validating UUID "+req.query.uuid +'!');
 });
 
 //post registration
