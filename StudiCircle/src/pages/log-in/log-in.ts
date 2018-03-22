@@ -30,7 +30,7 @@ export class LogInPage {
   }
 
   login(){
-    if(this.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$') && this.pw.match('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,}$')){
+    if(this.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$') && this.pw.match('[(\\w+\\W+\\d)]{6,24}')){
       console.log("[LOGIN] : Logging in");
       this.goToDashboard({});
     }else {
