@@ -30,11 +30,15 @@ export class LogInPage {
   }
 
   login(){
-    if(this.mail && this.pw){
+    if(this.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$') && this.pw.match('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,}$')){
       console.log("[LOGIN] : Logging in");
       this.goToDashboard({});
     }else {
-      console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
+      if(!this.mail || !this.pw){
+        console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
+      }else{
+        console.log("[LOGIN] : Non-compliant E-Mail or Password")
+      }
     }
   }
 }
