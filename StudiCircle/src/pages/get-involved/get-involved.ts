@@ -44,7 +44,7 @@ export class GetInvolvedPage {
   }
 
   passwdCheck(){
-    if(this.profile.password.match("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,}$")){
+    if(this.profile.password.match('^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$')){
       console.log("[REGISTER] : Password complies to policy");
       if((this.profile.password === this.passwdChk)){
         console.log("[REGISTER] : PasswordCheck successful");
