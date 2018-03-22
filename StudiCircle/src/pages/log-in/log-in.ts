@@ -10,6 +10,9 @@ import { DashboardPage } from '../dashboard/dashboard';
 })
 export class LogInPage {
 
+  mail : '';
+  pw : '';
+
   constructor(public navCtrl: NavController) {
   }
   goToGetInvolved(params){
@@ -24,5 +27,13 @@ export class LogInPage {
   }goToDashboard(params){
     if (!params) params = {};
     this.navCtrl.push(DashboardPage);
+  }
+
+  login(){
+    if(this.mail && this.pw){
+      console.log("[LOGIN] : Logging in");
+      this.goToDashboard({});
+    }
+    console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
   }
 }
