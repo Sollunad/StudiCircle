@@ -20,7 +20,9 @@ module.exports = {
 
         let subject = 'StudiCircle: Reset your password';
 
-        mailer.sendSimpleMail(mail, subject, html);
+        database.setValidationKey(user, uuid);
+
+        mailer.sendMail(mail, html, subject);
 
         return true;
     }
