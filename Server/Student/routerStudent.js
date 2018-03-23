@@ -17,6 +17,9 @@ module.exports = function(app) {
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
+    app.route('/user/login')
+        .post(user.login)
+
     app.route('/user/test')
         .get(user.test);
 

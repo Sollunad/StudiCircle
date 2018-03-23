@@ -1,5 +1,6 @@
 var registration = require('./registration');
 var activation = require('./setPassword');
+var database = require('./database');
 var resetPwd = require('./passwordResetMail');
 
 module.exports = {
@@ -18,19 +19,29 @@ module.exports = {
     },
 
     setNewPassword : function (req, res) {
-        var user = req.body.user;
-        var pw = req.body.pw;
+        var session = req.body.session;
+        var oldPw = req.body.oldPw;
+        var newPw = req.body.newPw;
 
-        activation.setNewPassword(user, pw);
-        res.send("Success")
+        if (activation.setNewPassword(session, oldPw, newPw)) {
+            res.send('Success');
+        } else {
+            res.status(400);
+            res.send('Failed');
+        }
     },
 
     forgotPassword: function (req, res) {
-        var user = req.body.user;
-        if (resetPwd.reset(user)) {
-            res.send("Success");
+        if (database.validateSession(req.body.session)) {
+            var user = req.body.user;
+            if (resetPwd.reset(user)) {
+                res.send("Success");
+            } else {
+                res.send("Error");
+            }
         } else {
-            res.send("Error");
+            res.status(401);
+            res.send('Unauthorized');
         }
     },
 
@@ -46,6 +57,18 @@ module.exports = {
         //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
 
         registration.register(mailAddress, password, accountType, res);
+    },
+
+    login : function (req, res) {
+        var user = req.body.user;
+        var pass = req.body.pass;
+
+        if (database.checkPassword(user, pass)) {
+            res.send(database.newSession());
+        } else {
+            res.status(401);
+            res.send('Unauthorized!')
+        }
     },
 
     test : function (req, res) {

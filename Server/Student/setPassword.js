@@ -1,6 +1,5 @@
 const constant = require('./constants');
 var database = require('./database');
-var mailer = require('./mailer');
 
 
 module.exports = {
@@ -15,7 +14,13 @@ module.exports = {
         return true;
     },
 
-    setNewPassword : function (user, password) {
-        database.setNewPassword(user, password);
+    setNewPassword : function (session, oldPassword, newPassword) {
+        var user = database.validateSession(session);
+        if (database.checkPassword(user, oldPassword)) {
+            database.setNewPassword(user, newPassword);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
