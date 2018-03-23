@@ -10,7 +10,7 @@ module.exports = {
             return;
         }
 
-        if (!this.checkMailAddress(mail)) {
+        if (!mailer.checkMailAddress(mail)) {
             res.send("Invalid eMail entered.");
             return;
         }
@@ -28,7 +28,7 @@ module.exports = {
         let counter = 10;
         while (result != "ok" && counter > 0) {
             counter--;
-            let randomString = this.generateRandomString(48);
+            let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
             html = '<html lang="de-DE">\n' +
                 '<head>\n' +
                 '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
@@ -64,14 +64,5 @@ module.exports = {
 
         //send registration Mail
         mailer.sendMail(mail, html, subject, 'Error at sending verification link.', 'Send verification link.',res);
-    },
-    generateRandomString: function (length) {
-        var Crypto = require('crypto');
-        return Crypto.randomBytes(length).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
-    },
-    
-    checkMailAddress: function (mail) {
-        var validator = require("email-validator");
-        return validator.validate(mail);
     }
 };

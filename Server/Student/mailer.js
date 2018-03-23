@@ -1,4 +1,13 @@
+var validator = require("email-validator");
+
 module.exports = {
+    checkMailAddress: function (mail) {
+        return validator.validate(mail);
+    },
+    generateRandomString: function (length) {
+        var Crypto = require('crypto');
+        return Crypto.randomBytes(length).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+    },
     sendMail: function (mailAddress, htmlcontent, subject, errorMessage, successMessage,res) {
         var nodeMailer = require('nodemailer');
         var mailPassword = process.env.StudicircleMailPwd;

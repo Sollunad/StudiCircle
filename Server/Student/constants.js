@@ -10,8 +10,11 @@ const AccountState = {
     DISABLED: 3
 };
 
+const KEY_LENGTH = 48;
+
 module.exports = {
 
     AccountState: AccountState,
-    AccountType: AccountType
+    AccountType: AccountType,
+    KEY_LENGTH: KEY_LENGTH
 }
