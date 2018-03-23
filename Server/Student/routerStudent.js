@@ -5,14 +5,17 @@ module.exports = function(app) {
     app.route('/user/register')
         .post(user.register);
 
-    app.route('/user/:uuid/changePassword')
-        .get(user.changePassword);
-
-    app.route('/user/forgotPassword')
-        .post(user.forgotPassword);
+    app.route('/user/:uuid/resetPassword')
+        .get(user.resetPassword);
 
     app.route('/user/:uuid/activate')
         .get(user.activate);
+
+    app.route('/user/setNewPassword')
+        .post(user.setNewPassword);
+
+    app.route('/user/forgotPassword')
+        .post(user.forgotPassword);
 
     app.route('/user/test')
         .get(user.test);

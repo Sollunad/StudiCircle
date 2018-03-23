@@ -13,5 +13,9 @@ module.exports = {
         database.setPassword(uuid, password);
         database.setState(uuid, constant.AccountState.ACTIVE);
         return true;
+    },
+
+    setNewPassword : function (user, password) {
+        database.setNewPassword(user, password);
     }
 }

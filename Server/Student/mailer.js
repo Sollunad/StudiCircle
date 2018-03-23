@@ -8,7 +8,7 @@ module.exports = {
         var Crypto = require('crypto');
         return Crypto.randomBytes(length).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
     },
-    sendMail: function (mailAddress, htmlcontent, subject, errorMessage, successMessage,res) {
+    sendMail: function (mailAddress, htmlcontent, subject) {
         var nodeMailer = require('nodemailer');
         var mailPassword = process.env.StudicircleMailPwd;
 
@@ -33,25 +33,12 @@ module.exports = {
             html: htmlcontent
         };
 
-        transporter.sendMail().then(
-            (response) => {
-
-            }
-        )
-        transporter.sendMail(mailOptions, function (error, info) {
-            return new Promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
+            return transporter.sendMail(mailOptions, function (error, info) {
                 if(error){
-                    console.log(error);
-                    if ( null != res) {
-                        res.send(errorMessage);
-                    }
-                    reject("error");
+                    reject(error);
                 }
-                console.log('Email sent: ' + info.response);
-                if ( null != res) {
-                    res.send(successMessage);
-                }
-                resolve("ok")
+                resolve(info)
             });
         });
     }

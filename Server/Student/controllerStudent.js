@@ -1,6 +1,6 @@
 var registration = require('./registration');
-var activation = require('./activateUser');
-var resetPwd = require('./resetPassword');
+var activation = require('./setPassword');
+var resetPwd = require('./passwordResetMail');
 
 module.exports = {
 
@@ -9,12 +9,20 @@ module.exports = {
         res.send("Validating UUID "+req.params.uuid +'!');
     },
 
-    changePassword : function (req, res) {
+    resetPassword : function (req, res) {
         if (activation.activateExistingUser(req.params.uuid, req.body.password)) {
             res.send("Success");
         } else {
             res.send("Error");
         }
+    },
+
+    setNewPassword : function (req, res) {
+        var user = req.body.user;
+        var pw = req.body.pw;
+
+        activation.setNewPassword(user, pw);
+        res.send("Success")
     },
 
     forgotPassword: function (req, res) {

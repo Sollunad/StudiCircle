@@ -1,6 +1,10 @@
 const constant = require('./constants');
 
 module.exports = {
+    getUserData : function(username) {
+        return {"username":username, "mail":"studicircle@googlegroups.com"};
+    },
+
     insertNewPerson: function(mail, password, accountType, randomString){
         console.log("insert new person");
         let resultMessage = "ok";
@@ -9,6 +13,10 @@ module.exports = {
         //invalidAccountType
         //randomExisting
         return resultMessage;
+    },
+
+    setNewPassword : function(user, newPass) {
+        return true;
     },
 
     setPassword : function (validationKey, password) {
