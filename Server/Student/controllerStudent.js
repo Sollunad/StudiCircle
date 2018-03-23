@@ -41,6 +41,7 @@ module.exports = {
     },
 
     test : function (req, res) {
+        let response = "Start unit tests\n";
 
     },
 

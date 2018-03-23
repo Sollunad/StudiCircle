@@ -12,14 +12,14 @@ module.exports = {
     },
 
     setPassword : function (validationKey, password) {
-
+        return true;
     },
     
     setState : function (validationKey, newState) {
-        
+        return true;
     },
 
     setValidationKey : function (username, validationKey) {
-
+        return true;
     }
 }

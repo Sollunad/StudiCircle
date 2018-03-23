@@ -33,18 +33,26 @@ module.exports = {
             html: htmlcontent
         };
 
+        transporter.sendMail().then(
+            (response) => {
+
+            }
+        )
         transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-                if ( null != res) {
-                    res.send(errorMessage);
+            return new Promise(function(resolve, reject) {
+                if(error){
+                    console.log(error);
+                    if ( null != res) {
+                        res.send(errorMessage);
+                    }
+                    reject("error");
                 }
-            } else {
                 console.log('Email sent: ' + info.response);
                 if ( null != res) {
                     res.send(successMessage);
                 }
-            }
+                resolve("ok")
+            });
         });
     }
 }
