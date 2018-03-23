@@ -14,6 +14,9 @@ module.exports = function(app) {
     app.route('/user/:uuid/activate')
         .get(user.activate);
 
+    app.route('/user/test')
+        .get(user.test);
+
     app.route('/user/*')
         .get(user.helloworld);
 

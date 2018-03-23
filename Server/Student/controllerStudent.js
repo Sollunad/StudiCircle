@@ -10,12 +10,20 @@ module.exports = {
     },
 
     changePassword : function (req, res) {
-        activation.activateExistingUser(req.params.uuid, req.body.password);
+        if (activation.activateExistingUser(req.params.uuid, req.body.password)) {
+            res.send("Success");
+        } else {
+            res.send("Error");
+        }
     },
 
     forgotPassword: function (req, res) {
         var user = req.body.user;
-        resetPwd.reset(user);
+        if (resetPwd.reset(user)) {
+            res.send("Success");
+        } else {
+            res.send("Error");
+        }
     },
 
     helloworld : function (req, res) {
@@ -30,6 +38,10 @@ module.exports = {
         //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
 
         registration.register(mailAddress, password, accountType, res);
+    },
+
+    test : function (req, res) {
+
     },
 
     unknownpage : function (req, res) {

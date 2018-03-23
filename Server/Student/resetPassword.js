@@ -6,6 +6,9 @@ module.exports = {
     reset: function (user) {
         var uuid = mailer.generateRandomString(constant.KEY_LENGTH);
         database.setValidationKey(user, uuid);
-        
+
+        //TODO
+
+        return true;
     }
 }
