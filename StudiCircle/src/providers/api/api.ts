@@ -19,7 +19,7 @@ export class ApiProvider {
   public currentUser: UserInfo;
 
   public login(username: string, password: string): Observable<any>{
-    return this.http.get("");
+    return new Observable<any>();
   }
 
 }
