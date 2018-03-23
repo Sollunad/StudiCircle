@@ -34,7 +34,7 @@ module.exports = {
                 '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
                 '</head>\n' +
                 '<body>\n' +
-                '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/' + randomString + '/activate">Validate E-Mail</a></p>' +
+                '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/user/' + randomString + '/activate">Validate E-Mail</a></p>' +
                 '</body>\n' +
                 '</html>';
             subject = 'StudiCircle: Validate your mail address';
@@ -47,12 +47,15 @@ module.exports = {
             //errors
             if (result == "duplicateMail"){
                 res.send("Mail address already registered.");
+                return;
             }
             if (result == "invalidPwd"){
                 res.send("Invalid password entered.");
+                return;
             }
             if (result == "invalidAccountType"){
                 res.send("Error at account type.");
+                return;
             }
             if (result == "randomExisting"){
                 console.log("Random string already exists.");

@@ -8,6 +8,8 @@ module.exports = function(app) {
     app.route('/user/:uuid/changePassword')
         .get(user.changePassword);
 
+    app.route('/user/forgotPassword')
+        .post(user.forgotPassword);
 
     app.route('/user/:uuid/activate')
         .get(user.activate);
