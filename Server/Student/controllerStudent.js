@@ -14,7 +14,8 @@ module.exports = {
     },
 
     forgotPassword: function (req, res) {
-        resetPwd.reset(req, res);
+        var user = req.body.user;
+        resetPwd.reset(user);
     },
 
     helloworld : function (req, res) {

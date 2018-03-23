@@ -17,5 +17,9 @@ module.exports = {
     
     setState : function (validationKey, newState) {
         
+    },
+
+    setValidationKey : function (username, validationKey) {
+
     }
 }
