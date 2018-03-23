@@ -26,7 +26,7 @@ module.exports = {
         }
         let result = "";
         let counter = 10;
-        while (result != "ok" && counter > 0) {
+        while (result !== "ok" && counter > 0) {
             counter--;
             let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
             html = '<html lang="de-DE">\n' +
@@ -41,33 +41,43 @@ module.exports = {
 
             //insert userdata in database
             result = database.insertNewPerson(mail, password, accountType, randomString);
-            if (result == "ok"){
+            if (result === "ok"){
                 break;
             }
             //errors
-            if (result == "duplicateMail"){
+            if (result === "duplicateMail"){
                 res.send("Mail address already registered.");
                 return result;
             }
-            if (result == "invalidPwd"){
+            if (result === "invalidPwd"){
                 res.send("Invalid password entered.");
                 return result;
             }
-            if (result == "invalidAccountType"){
+            if (result === "invalidAccountType"){
                 res.send("Error at account type.");
                 return result;
             }
-            if (result == "randomExisting"){
+            if (result === "randomExisting"){
                 console.log("Random string already exists.");
             }
         }
 
-        if (result == "randomExisting"){
+        if (result === "randomExisting"){
             res.send("Random string already exists.");
             return result;
         }
 
         //send registration Mail
-        mailer.sendMail(mail, html, subject, 'Error at sending verification link.', 'Send verification link.',res);
+        mailer.sendMail(mail, html, subject)
+            .then(resp => {
+                console.log(resp);
+                res.send("Send verification link");
+                return true;
+            })
+            .catch(err => {
+                console.log(err);
+                res.send("Error at sending verification link.");
+                return false;
+            });
     }
 };
