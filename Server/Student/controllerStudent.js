@@ -7,8 +7,13 @@ var tests = require('./tests');
 module.exports = {
 
     activate : function (req, res) {
-        activation.activateNewUser(req.params.uuid);
-        res.send("Validating UUID "+req.params.uuid +'!');
+        let result = false;
+        result = activation.activateNewUser(req.params.uuid);
+        if (result){
+            res.send("Successfully validated new user account.");
+        }else{
+            res.send("Error at validating UUID "+req.params.uuid +'!');
+        }
     },
 
     resetPassword : function (req, res) {

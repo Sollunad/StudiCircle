@@ -4,8 +4,9 @@ var database = require('./database');
 
 module.exports = {
     activateNewUser: function (uuid) {
-        database.setState(uuid, constant.AccountState.ACTIVE);
-        return true;
+        let result =false;
+        result = database.setState(uuid, constant.AccountState.ACTIVE);
+        return result;
     },
 
     activateExistingUser: function (uuid, password) {
