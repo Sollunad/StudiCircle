@@ -2,6 +2,7 @@ var registration = require('./registration');
 var activation = require('./setPassword');
 var database = require('./database');
 var resetPwd = require('./passwordResetMail');
+var tests = require('./tests');
 
 module.exports = {
 
@@ -72,8 +73,7 @@ module.exports = {
     },
 
     test : function (req, res) {
-        let response = "Start unit tests\n";
-
+        tests.startUnitTests(req,res);
     },
 
     unknownpage : function (req, res) {

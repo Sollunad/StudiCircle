@@ -5,23 +5,31 @@ const constant = require('./constants');
 module.exports = {
     register: function (mail, password, accountType, res) {
 
-        if (!mail || !password || !accountType || !res) {
-            res.send("Error: Null pointer.");
+        if (!mail || !password || !accountType ) {
+            if (res) {
+                res.send("Error: Null pointer.");
+            }
             return "null";
         }
 
         if (!mailer.checkMailAddress(mail)) {
-            res.send("Invalid eMail entered.");
+            if (res) {
+                res.send("Invalid eMail entered.");
+            }
             return "invalidMail";
         }
 
         if (accountType != constant.AccountType.BUSINESS && accountType != constant.AccountType.GUEST && accountType != constant.AccountType.STUDENT ) {
-            res.send("Invalid account type entered.");
+            if (res) {
+                res.send("Invalid account type entered.");
+            }
             return "invalidAccountType";
         }
 
         if (password.length < 6 || password.length > 24) {
-            res.send("Password length is not between 6 and 24 characters.");
+            if (res){
+                res.send("Password length is not between 6 and 24 characters.");
+            }
             return "wrongPwd";
         }
         let result = "";
@@ -43,19 +51,22 @@ module.exports = {
             result = database.insertNewPerson(mail, password, accountType, randomString);
             if (result === "ok"){
                 break;
-            }
-            //errors
-            if (result === "duplicateMail"){
-                res.send("Mail address already registered.");
-                return result;
-            }
-            if (result === "invalidPwd"){
-                res.send("Invalid password entered.");
-                return result;
-            }
-            if (result === "invalidAccountType"){
-                res.send("Error at account type.");
-                return result;
+            }else if (res) {
+                //errors
+                if (result === "duplicateMail") {
+                    res.send("Mail address already registered.");
+                    return result;
+                }
+                if (result === "invalidPwd") {
+                    res.send("Invalid password entered.");
+                    return result;
+                }
+                if (result === "invalidAccountType") {
+                    res.send("Error at account type.");
+                    return result;
+                }
+            }else{
+                return "error";
             }
             if (result === "randomExisting"){
                 console.log("Random string already exists.");
@@ -63,7 +74,9 @@ module.exports = {
         }
 
         if (result === "randomExisting"){
-            res.send("Random string already exists.");
+            if (res){
+                res.send("Random string already exists.");
+            }
             return result;
         }
 
@@ -71,12 +84,16 @@ module.exports = {
         mailer.sendMail(mail, html, subject)
             .then(resp => {
                 console.log(resp);
-                res.send("Send verification link");
+                if (res){
+                    res.send("Send verification link");
+                }
                 return true;
             })
             .catch(err => {
                 console.log(err);
-                res.send("Error at sending verification link.");
+                if (res){
+                    res.send("Error at sending verification link.");
+                }
                 return false;
             });
     }
