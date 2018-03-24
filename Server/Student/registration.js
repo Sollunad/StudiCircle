@@ -1,6 +1,7 @@
 var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
+const Crypto = require('crypto');
 
 module.exports = {
     register: function (mail, password, accountType, res) {
@@ -47,8 +48,12 @@ module.exports = {
                 '</html>';
             subject = 'StudiCircle: Validate your mail address';
 
+            var salt = this.generateSalt()
+            var userValue = salt + password;
+            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+
             //insert userdata in database
-            result = database.insertNewPerson(mail, password, accountType, randomString);
+            result = database.insertNewPerson(mail, hash, salt, accountType, randomString);
             if (result === "ok"){
                 break;
             }else if (res) {
@@ -96,5 +101,9 @@ module.exports = {
                 }
                 return false;
             });
+    },
+
+    generateSalt : function() {
+        return crypto.randomBytes(length).toString('base64');
     }
 };

@@ -11,6 +11,7 @@ const AccountState = {
 };
 
 const KEY_LENGTH = 48;
+const SALT_LENGTH = 48;
 
 module.exports = {
 

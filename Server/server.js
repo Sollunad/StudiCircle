@@ -11,4 +11,4 @@ routes(app); //register the route
 
 app.listen(8080);
 
-console.log('todo list RESTful API server started on: 8080');
+console.log('RESTful API server started on: 8080');
