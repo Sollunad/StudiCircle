@@ -11,8 +11,8 @@ module.exports = function(app) {
     app.route('/user/:validationKey/activate')
         .get(user.activate);
 
-    app.route('/user/setNewPassword')
-        .post(user.setNewPassword);
+    app.route('/user/setPassword')
+        .post(user.setPassword);
 
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);

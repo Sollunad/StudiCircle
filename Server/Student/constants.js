@@ -17,5 +17,6 @@ module.exports = {
 
     AccountState: AccountState,
     AccountType: AccountType,
-    KEY_LENGTH: KEY_LENGTH
+    KEY_LENGTH: KEY_LENGTH,
+    SALT_LENGTH : SALT_LENGTH
 }

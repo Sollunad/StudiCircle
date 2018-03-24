@@ -1,7 +1,7 @@
 var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
-const Crypto = require('crypto');
+const crypto = require('crypto');
 
 module.exports = {
     register: function (mail, password, accountType, res) {
@@ -104,6 +104,6 @@ module.exports = {
     },
 
     generateSalt : function() {
-        return crypto.randomBytes(length).toString('base64');
+        return crypto.randomBytes(constant.SALT_LENGTH).toString('base64');
     }
 };
