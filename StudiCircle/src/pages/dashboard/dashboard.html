@@ -18,7 +18,7 @@
     <ion-searchbar placeholder="" name="search" id="dashboard-search2"></ion-searchbar>
   </form>
   <ion-list id="dashboard-list4">
-    <ion-item color="none" id="dashboard-list-item19">
+  <!--  <ion-item color="none" id="dashboard-list-item19">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
@@ -26,18 +26,14 @@
         Item
       </h2>
     </ion-item>
-  </ion-list>
-  <ion-list id="dashboard-list5">
     <ion-item color="none" id="dashboard-list-item20">
       <ion-thumbnail item-left>
         <img />
-      </ion-thumbnail>
-      <h2>
-        Item
-      </h2>
+        </ion-thumbnail>
+          <h2>
+            Item
+          </h2>
     </ion-item>
-  </ion-list>
-  <ion-list id="dashboard-list6">
     <ion-item color="none" id="dashboard-list-item21">
       <ion-thumbnail item-left>
         <img />
@@ -46,8 +42,6 @@
         Item
       </h2>
     </ion-item>
-  </ion-list>
-  <ion-list id="dashboard-list7">
     <ion-item color="none" id="dashboard-list-item22">
       <ion-thumbnail item-left>
         <img />
@@ -56,5 +50,13 @@
         Item
       </h2>
     </ion-item>
+    <ion-item color="none" id="dashboard-list-item22">
+      <button ion-button on-click="addCircle()">Add Circle</button>
+    </ion-item> -->
+  <div id="listContainer">
+    <ion-item coclor="none" id="dashboard-list4" *ngFor="let i of circle_list">{{i}}</ion-item>
+    <br>
+    <div id="addButton"><button ion-button (click)="addCircle()">Add Circle</button></div>
+  </div>
   </ion-list>
 </ion-content>
