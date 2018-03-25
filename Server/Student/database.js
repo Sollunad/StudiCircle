@@ -53,7 +53,15 @@ module.exports = {
 
     setChangeMailKey : function (oldMail, newMail, validationKey) {
         return true;
-    }
+    },
+
+    getNewMailFromValidationKey : function (validationKey) {
+        return "test@example.com"
+    },
+
+    updateMail : function (userId, newMail) {
+
+    },
 
     validationKeyExists : function (validationKey) {
         return true;

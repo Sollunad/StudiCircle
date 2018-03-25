@@ -278,6 +278,30 @@ module.exports = {
     },
 
     confirmNewMail : function (req, res) {
+        var validationKey = req.params.validationKey;
+
+        if (typeof validationKey == 'undefined') {
+            res.status(400);
+            res.send("Bad request. No validation key.");
+            return;
+        }
+
+        try {
+            if (!database.validationKeyExists(validationKey)) {
+                var userId = database.getUserIdFromValidationKey(validationKey);
+                var newMail = database.getNewMailFromValidationKey(validationKey);
+
+                database.updateMail(userId, newMail);
+
+                res.status(200);
+                res.send("Successfully updated mail address");
+            } else {
+                res.status(401);
+                res.send("Unauthorized. No invalid validation key.");
+                return;
+            }
+        }
+
         res.send("The Requested function is not implemented yet!");
         //TODO
     },
