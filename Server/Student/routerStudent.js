@@ -6,7 +6,7 @@ module.exports = function(app) {
         .post(user.register);
 
     app.route('/user/:validationKey/resetPassword')
-        .get(user.resetPassword);
+        .post(user.resetPassword);
 
     app.route('/user/:validationKey/activate')
         .get(user.activate);
