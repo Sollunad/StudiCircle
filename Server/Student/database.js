@@ -51,6 +51,10 @@ module.exports = {
         return true;
     },
 
+    setChangeMailKey : function (oldMail, newMail, validationKey) {
+        return true;
+    }
+
     validationKeyExists : function (validationKey) {
         return true;
     },

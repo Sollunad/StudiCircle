@@ -3,6 +3,7 @@ const constants = require('./constants');
 const database = require('./database');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
+const changeMail = require('./changeMailMail');
 const tests = require('./tests');
 
 module.exports = {
@@ -100,6 +101,45 @@ module.exports = {
         }
     },
 
+    //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
+    login : function (req, res) {
+        var mail = req.body.mail;
+        var pass = req.body.pwd;
+
+        if (typeof mail == 'undefined' || typeof pass == 'undefined') {
+            res.status(400);
+            res.send("Bad request. Either no username or no password.");
+            return;
+        }
+
+        try {
+            var userId = database.getUserIdFromMail(mail);
+            var userAuthData = database.getUserAuthData(userId);
+
+            var userValue = userAuthData.salt + pass;
+            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+
+            if (hash == userAuthData.hash) {
+                var returnObject = {};
+                returnObject.status = 200;
+                returnObject.message = "Successfully Logged in";
+                returnObject.session = database.newSession(userId);
+                returnObject.userData = database.getUserData(userId);
+
+                res.status(200);
+                res.send(returnObject);
+            } else {
+                res.status(401);
+                res.send('Unauthorized!');
+            }
+        } catch (err) {
+            console.log(err)
+            res.status(500);
+            res.send("Server Error");
+        }
+
+    },
+
     //Called when the user sets a new password
     setPassword : function (req, res) {
         var session = req.body.session;
@@ -141,45 +181,7 @@ module.exports = {
         }
     },
 
-    //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
-    login : function (req, res) {
-        var mail = req.body.mail;
-        var pass = req.body.pwd;
-
-        if (typeof mail == 'undefined' || typeof pass == 'undefined') {
-            res.status(400);
-            res.send("Bad request. Either no username or no password.");
-            return;
-        }
-
-        try {
-            var userId = database.getUserIdFromMail(mail);
-            var userAuthData = database.getUserAuthData(userId);
-
-            var userValue = userAuthData.salt + pass;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-
-            if (hash == userAuthData.hash) {
-                var returnObject = {};
-                returnObject.status = 200;
-                returnObject.message = "Successfully Logged in";
-                returnObject.session = database.newSession(userId);
-                returnObject.userData = database.getUserData(userId);
-
-                res.status(200);
-                res.send(returnObject);
-            } else {
-                res.status(401);
-                res.send('Unauthorized!');
-            }
-        } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
-        }
-
-    },
-
+    //Called when the user wants to delete the account
     deleteAccount : function (req, res) {
         var session = req.body.session;
         var pass = req.body.pwd;
@@ -219,12 +221,69 @@ module.exports = {
         }
     },
 
-    test : function (req, res) {
-        tests.startUnitTests(req,res);
+    //
+    updateMail : function (req, res) {
+        var session = req.body.session;
+        var oldMail = req.body.oldMail;
+        var newMail = req.body.newMail;
+        var pass = req.body.pwd;
+
+        if (typeof session == 'undefined' || typeof oldMail == 'undefined' || typeof newMail == 'undefined' || typeof pass == 'undefined') {
+            res.status(400);
+            res.send("Bad request. Either no session, oldMail, newMail or no password.");
+            return;
+        }
+
+        if (oldMail == newMail) {
+            res.status(400);
+            res.send("Bad request. Old mail is new mail.");
+            return;
+        }
+
+        try {
+            if (!database.sessionExists(session)) {
+                res.status(401);
+                res.send("Invalid Session!");
+                return;
+            }
+            var userId = database.getUserIdFromSession(session);
+
+            if (!userId == database.getUserIdFromMail(oldMail)) {
+                res.status(401);
+                res.send("Unauthorized! Mail and session do not match!");
+                return;
+            }
+
+            var userAuthData = database.getUserAuthData(userId);
+
+            var userValue = userAuthData.salt + pass;
+            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+
+            if (hash == userAuthData.hash) {
+                changeMail.send(oldMail, newMail);
+                res.status(200);
+                res.send("Send an validation E-Mail");
+                return;
+            } else {
+                res.status(401);
+                res.send("Error updating the email")
+            }
+
+        } catch (err) {
+            console.log(err)
+            res.status(500);
+            res.send("Server Error");
+        }
+
     },
 
-    helloworld : function (req, res) {
-        res.send('Hello World!');
+    confirmNewMail : function (req, res) {
+        res.send("The Requested function is not implemented yet!");
+        //TODO
+    },
+
+    test : function (req, res) {
+        tests.startUnitTests(req,res);
     },
 
     unknownpage : function (req, res) {

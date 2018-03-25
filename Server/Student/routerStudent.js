@@ -23,11 +23,17 @@ module.exports = function(app) {
     app.route('/user/delete')
         .post(user.deleteAccount);
 
+    app.route('/user/updateMail')
+        .post(user.updateMail);
+
+    app.route('/user/:validationKey/changeMail')
+        .post(user.confirmNewMail);
+
     app.route('/user/test')
         .get(user.test);
 
     app.route('/user/*')
-        .get(user.helloworld);
+        .get(user.unknownpage);
 
     app.route('/*')
         .get(user.unknownpage);
