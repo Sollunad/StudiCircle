@@ -1,8 +1,8 @@
 const constant = require('./constants');
 
 module.exports = {
-    getUserData : function(username) {
-        return {"username":username, "mail":"studicircle@googlegroups.com"};
+    getUserData : function(userId) {
+        return {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
     },
 
     getUserIdFromMail : function(mail) {
@@ -47,11 +47,15 @@ module.exports = {
         return true;
     },
 
-    setValidationKey : function (username, validationKey) {
+    setValidationKey : function (mail, validationKey) {
         return true;
     },
 
     validationKeyExists : function (validationKey) {
         return true;
     },
+
+    userExists : function (mail) {
+        return true;
+    }
 }

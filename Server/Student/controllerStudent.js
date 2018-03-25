@@ -10,7 +10,7 @@ module.exports = {
     activate : function (req, res) {
         var validationKey = req.params.validationKey;
 
-        if (typeof uuid == 'undefined') {
+        if (typeof validationKey == 'undefined') {
             res.status(400);
             res.send("Bad request. No uuid.");
             return;
@@ -23,7 +23,7 @@ module.exports = {
                 res.send("Successfully validated new user account.");
             } else {
                 res.status(401);
-                res.send("Unaithorized. Invalid validation key.");
+                res.send("Unauthorized. Invalid validation key.");
             }
         } catch (err) {
             res.status(500);
@@ -50,6 +50,9 @@ module.exports = {
                 var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
 
                 database.setPasswordHash(userId, hash);
+
+                res.status(200);
+                res.send("Password successfully reset.")
             } else {
                 res.status(401);
                 res.send("Invalid validation key!");
@@ -62,8 +65,8 @@ module.exports = {
 
     setPassword : function (req, res) {
         var session = req.body.session;
-        var oldPw = req.body.oldPw;
-        var newPw = req.body.newPw;
+        var oldPw = req.body.oldPwd;
+        var newPw = req.body.newPwd;
 
         if (typeof session == 'undefined' || typeof oldPw == 'undefined' || typeof newPw == 'undefined') {
             res.status(400);
@@ -87,6 +90,9 @@ module.exports = {
             if (hash == userAuthData.hash) {
                 var newHash = userAuthData.salt + newPw;
                 database.setPasswordHash(userId, newHash);
+
+                res.status(200);
+                res.send("Successfully set Password")
             } else {
                 res.status(401);
                 res.send("Unauthorized. Invalid password!")
@@ -98,17 +104,22 @@ module.exports = {
     },
 
     forgotPassword: function (req, res) {
-        var username = req.body.username;
+        var mail = req.body.mail;
 
-        if (typeof username == 'undefined' ) {
+        if (typeof mail == 'undefined' ) {
             res.status(400);
-            res.send("Bad request. No username.");
+            res.send("Bad request. No mail.");
             return;
         }
 
         try {
-            resetPwd.reset(username);
+            if (database.userExists(mail)) {
+                resetPwd.reset(mail);
+            }
+            res.status(200);
+            res.send("Reset mail sent if user is known.");
         } catch (err) {
+            console.log(err);
             res.status(500);
             res.send("Server Error");
         }
@@ -140,16 +151,22 @@ module.exports = {
 
             var userValue = userAuthData.salt + pass;
             var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-            console.log(hash);
 
             if (hash == userAuthData.hash) {
+                var returnObject = {};
+                returnObject.status = 200;
+                returnObject.message = "Successfully Logged in";
+                returnObject.session = database.newSession(userId);
+                returnObject.userData = database.getUserData(userId);
+
                 res.status(200);
-                res.send(database.newSession(userId));
+                res.send(returnObject);
             } else {
                 res.status(401);
                 res.send('Unauthorized!');
             }
         } catch (err) {
+            console.log(err)
             res.status(500);
             res.send("Server Error");
         }
