@@ -301,9 +301,6 @@ module.exports = {
                 return;
             }
         }
-
-        res.send("The Requested function is not implemented yet!");
-        //TODO
     },
 
     test : function (req, res) {
