@@ -57,5 +57,9 @@ module.exports = {
 
     userExists : function (mail) {
         return true;
+    },
+
+    deleteUser : function (userId) {
+
     }
 }

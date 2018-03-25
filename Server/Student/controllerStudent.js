@@ -7,6 +7,19 @@ const tests = require('./tests');
 
 module.exports = {
 
+    //Called when a user wants to create an account
+    //Will send a validation Mail
+    register : function (req, res) {
+        var mailAddress = req.body.mail;
+        var password = req.body.pwd;
+        var accountType = req.body.type;
+
+        //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
+
+        registration.register(mailAddress, password, accountType, res);
+    },
+
+    //Called when user clicks the link in the validation Mail.
     activate : function (req, res) {
         var validationKey = req.params.validationKey;
 
@@ -31,6 +44,30 @@ module.exports = {
         }
     },
 
+    //Called when user requests a Mail to reset her/his password
+    forgotPassword: function (req, res) {
+        var mail = req.body.mail;
+
+        if (typeof mail == 'undefined' ) {
+            res.status(400);
+            res.send("Bad request. No mail.");
+            return;
+        }
+
+        try {
+            if (database.userExists(mail)) {
+                resetPwd.reset(mail);
+            }
+            res.status(200);
+            res.send("Reset mail sent if user is known.");
+        } catch (err) {
+            console.log(err);
+            res.status(500);
+            res.send("Server Error");
+        }
+    },
+
+    //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : function (req, res) {
         var validationKey = req.params.validationKey;
         var newPassword = req.body.pwd;
@@ -63,6 +100,7 @@ module.exports = {
         }
     },
 
+    //Called when the user sets a new password
     setPassword : function (req, res) {
         var session = req.body.session;
         var oldPw = req.body.oldPwd;
@@ -103,38 +141,7 @@ module.exports = {
         }
     },
 
-    forgotPassword: function (req, res) {
-        var mail = req.body.mail;
-
-        if (typeof mail == 'undefined' ) {
-            res.status(400);
-            res.send("Bad request. No mail.");
-            return;
-        }
-
-        try {
-            if (database.userExists(mail)) {
-                resetPwd.reset(mail);
-            }
-            res.status(200);
-            res.send("Reset mail sent if user is known.");
-        } catch (err) {
-            console.log(err);
-            res.status(500);
-            res.send("Server Error");
-        }
-    },
-
-    register : function (req, res) {
-        var mailAddress = req.body.mail;
-        var password = req.body.pwd;
-        var accountType = req.body.type;
-
-        //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
-
-        registration.register(mailAddress, password, accountType, res);
-    },
-
+    //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
     login : function (req, res) {
         var mail = req.body.mail;
         var pass = req.body.pwd;
@@ -171,6 +178,45 @@ module.exports = {
             res.send("Server Error");
         }
 
+    },
+
+    deleteAccount : function (req, res) {
+        var session = req.body.session;
+        var pass = req.body.pwd;
+
+        if (typeof session == 'undefined' || typeof pass == 'undefined') {
+            res.status(400);
+            res.send("Bad request. Either no session or no password.");
+            return;
+        }
+
+        try {
+            if (!database.sessionExists(session)) {
+                res.status(401);
+                res.send("Invalid Session!")
+                return;
+            }
+            var userId = database.getUserIdFromSession(session);
+            var userAuthData = database.getUserAuthData(userId);
+
+            var userValue = userAuthData.salt + pass;
+            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+
+            if (hash == userAuthData.hash) {
+                database.deleteUser(userId);
+                res.status(200);
+                res.send("Successfully deleted Account")
+                return;
+            } else {
+                res.status(401);
+                res.send("Unauthorized. Invalid password.")
+            }
+
+        } catch (err) {
+            console.log(err)
+            res.status(500);
+            res.send("Server Error");
+        }
     },
 
     test : function (req, res) {

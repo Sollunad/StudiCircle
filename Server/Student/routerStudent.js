@@ -5,20 +5,23 @@ module.exports = function(app) {
     app.route('/user/register')
         .post(user.register);
 
-    app.route('/user/:validationKey/resetPassword')
-        .post(user.resetPassword);
-
     app.route('/user/:validationKey/activate')
         .get(user.activate);
-
-    app.route('/user/setPassword')
-        .post(user.setPassword);
 
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
+    app.route('/user/:validationKey/resetPassword')
+        .post(user.resetPassword);
+
     app.route('/user/login')
-        .post(user.login)
+        .post(user.login);
+
+    app.route('/user/setPassword')
+        .post(user.setPassword);
+
+    app.route('/user/delete')
+        .post(user.deleteAccount);
 
     app.route('/user/test')
         .get(user.test);
