@@ -5,7 +5,6 @@ import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DBProvider } from '../../providers/dbprovider/dbprovider'
-import { SearchPage } from '../search/search';
 import { circleErstellen} from '../circleErstellen/circleErstellen';
 
 @Component({
