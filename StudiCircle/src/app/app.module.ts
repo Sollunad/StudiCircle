@@ -11,8 +11,6 @@ import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
-import { HttpClientModule } from '@angular/common/http';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
@@ -32,8 +30,8 @@ import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
     SearchPage
   ],
   imports: [
+    HttpModule,
     BrowserModule,
-    HttpClientModule,
     HttpModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
@@ -56,6 +54,7 @@ import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
     ApiProvider,
     Geolocation,
     HttpModule,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbproviderProvider,
     HttpClientModule
   ]

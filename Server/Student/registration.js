@@ -38,13 +38,12 @@ module.exports = {
         while (result !== "ok" && counter > 0) {
             counter--;
             let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
-            let url = constant.getActivationUrl(randomString);
             html = '<html lang="de-DE">\n' +
                 '<head>\n' +
                 '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
                 '</head>\n' +
                 '<body>\n' +
-                '<p>Please click on following link to register to StudiCircle: <a href="'+ url + '">Validate E-Mail</a></p>' +
+                '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/user/' + randomString + '/activate">Validate E-Mail</a></p>' +
                 '</body>\n' +
                 '</html>';
             subject = 'StudiCircle: Validate your mail address';

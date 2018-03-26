@@ -1,10 +1,8 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { UserInfo } from './../declarations/UserInfo';
-import { LoginResponse } from './../declarations/LoginResponse';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';;
+import { Observable } from 'rxjs/Observable';
+import { UserInfo } from '../../providers/declarations/UserInfo';
 import {Subscription} from "rxjs/Subscription";
-import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 
@@ -20,47 +18,21 @@ export class ApiProvider {
   private _apiPath = "https://api.sknx.de/";
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient) {
+  constructor(public http: HttpClient) {
 
   }
 
-
-  private getSnowflakeHeader(): HttpHeaders {
-    return new HttpHeaders(
-      {"Content-Type": "application/x-www-form-urlencoded"}
-    );
+  public login(username: string, password: string): Observable<any>{
+    return new Observable<any>();
   }
 
-  public login(username: string, password: string): Observable<boolean>{
-    let userCredentials = {"mail": username, "pass": password}
-    return this.http.get(
-      this._apiPath + "user/login",
-      {
-        params: userCredentials
-      }
-    ).pipe(
-      map(
-        (res: LoginResponse) => {
-          if(res.status !== 200) {
-            return false;
-          } else {
-            res.userData.session = res.session;
-            this.currentUser = res.userData;
-            return true;
-          }
-        }
-      )
-    );
-  }
-
-  public register(mail : string, passwd : string, type : string){
+  public register(user : UserInfo, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
       {
-        headers: this.getSnowflakeHeader(),
         params: {
-          mail : mail,
+          mail : user.username,
           pwd : passwd,
           type : type
         }
@@ -78,4 +50,5 @@ export class ApiProvider {
     );
     return successSubject.asObservable();
   }
+
 }
