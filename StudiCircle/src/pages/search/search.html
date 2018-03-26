@@ -15,47 +15,32 @@
     Search for Circles <span id="search-location">...</span>
   </h1>
   <form id="search-form12">
-    <ion-searchbar placeholder="" name="search" id="search-search2"></ion-searchbar>
-    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <ion-searchbar (ionInput)="getCircles($event)"></ion-searchbar>
+
+  <!-- <ion-range min="0" max="5" snaps="true" color="secondary" [(ngModel)]="singleValue4" (ionChange)="range"> -->
+    <ion-label>Entfernung: <ion-badge id="search-distance" item-end>1 km</ion-badge></ion-label>
+    <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged($event)">
+      <ion-icon range-left small name="locate"></ion-icon>
+      <ion-icon range-right name="locate"></ion-icon>
+    </ion-range>
   </form>
+
   <ion-list id="search-list4">
     <ion-item color="none" id="search-list-item19">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
-      <h2>
-        Item
-      </h2>
+      <button ion-button color="secondary" (click)="circleClicked($event)">
+        Circle 1
+      </button>
     </ion-item>
-  <!-- </ion-list>
-  <ion-list id="search-list5"> -->
-    <ion-item color="none" id="search-list-item20">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Item
-      </h2>
-    </ion-item>
-  <!-- </ion-list>
-  <ion-list id="search-list6"> -->
-    <ion-item color="none" id="search-list-item21">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Item
-      </h2>
-    </ion-item>
-  <!-- </ion-list>
-  <ion-list id="search-list7"> -->
-    <ion-item color="none" id="search-list-item22">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Item
-      </h2>
-    </ion-item>
+      <ion-item color="none" id="search-list-item19">
+        <ion-thumbnail item-left>
+          <img />
+        </ion-thumbnail>
+        <button ion-button color="secondary" (click)="circleClicked($event)">
+          Circle 2
+        </button>
+      </ion-item>
   </ion-list>
 </ion-content>
