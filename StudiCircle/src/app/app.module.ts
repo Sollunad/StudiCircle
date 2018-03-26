@@ -14,6 +14,7 @@ import { PassManPage } from '../pages/pass-man/pass-man';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
+import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 
 @NgModule({
   declarations: [
@@ -23,8 +24,10 @@ import { ApiProvider } from '../providers/api/api';
     VerifyNowPage,
     DashboardPage,
     SettingsPage,
-    PassManPage
+    PassManPage,
+    CircleEinstellungenPage
   ],
+
   imports: [
     HttpModule,
     BrowserModule,
@@ -38,7 +41,8 @@ import { ApiProvider } from '../providers/api/api';
     VerifyNowPage,
     DashboardPage,
     SettingsPage,
-    PassManPage
+    PassManPage,
+    CircleEinstellungenPage
   ],
   providers: [
     StatusBar,
