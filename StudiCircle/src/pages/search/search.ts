@@ -14,6 +14,14 @@ import 'rxjs/add/operator/map';
 export class SearchPage {
 
   settings: SettingsPage;
+  distanceValues = [
+    '1 km',
+    '5 km',
+    '10 km',
+    '20 km',
+    '50 km',
+    '∞'
+  ];
 
   constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http) {
     this.getCurrentPosition();
@@ -24,7 +32,7 @@ export class SearchPage {
       // console.log('position', position);
       let coords = position.coords;
 
-      this.showCoordsAlert(coords.latitude, coords.longitude)
+      this.setUserCoordinates(coords.latitude, coords.longitude)
     }, (err) => {
       // console.log('error', err);
 
@@ -32,13 +40,7 @@ export class SearchPage {
     });
   }
 
-  private showCoordsAlert(lat: number, lon: number) {
-    this.alertCtrl.create({
-      title: `Lat: ${lat}\nLon: ${lon}`,
-      subTitle: '',
-      buttons: ['OK']
-    }).present();
-
+  private setUserCoordinates(lat: number, lon: number) {
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
   }
 
@@ -78,25 +80,27 @@ export class SearchPage {
         if (json === undefined) {
           this.showLocationPrompt();
         } else {
-          this.showCoordsAlert(json.lat, json.lon);
+          this.setUserCoordinates(json.lat, json.lon);
         }
       });
   }
 
-  getItems(ev: any) {
-    console.log(ev);
-    // Reset items back to all of the items
-    // this.initializeItems();
+  private distanceChanged(event: any) {
+    // console.log(event);
 
-    // set val to the value of the searchbar
-    // let val = ev.target.value;
-    //
-    // // if the value is an empty string don't filter the items
-    // if (val && val.trim() != '') {
-    //   this.items = this.items.filter((item) => {
-    //     return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
-    //   })
-    // }
+    document.getElementById('search-distance').innerText = this.distanceValues[event.value];
+  }
+
+  private circleClicked(event: any) {
+    console.log(event);
+  }
+
+  private getCircles(event: any) {
+    let value = event.target.value;
+
+    if (value && value.trim() != '') {
+      console.log('value', value);
+    }
   }
 
   private goToSettings(params) {
