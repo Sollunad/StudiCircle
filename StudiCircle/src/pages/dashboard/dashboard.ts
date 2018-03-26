@@ -18,9 +18,9 @@ export class DashboardPage {
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbproviderProvider) {
       this.geolocation.getCurrentPosition().then((resp) => {
-         let lat = resp.coords.latitude
-         let long = resp.coords.longitude
-         this.database.setLocation(lat, long)
+         let lat = resp.coords.latitude;
+         let long = resp.coords.longitude;
+         this.dbprovider.setLocation(lat, long)
         }).catch((error) => {
           console.log('Error getting location', error);
         });

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { UserInfo } from '../../providers/declarations/UserInfo';
@@ -17,7 +17,7 @@ import {AccountTypes} from "../declarations/AccountTypeEnum";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.sknx.de/";
+  private _apiPath = "https://api.dev.sknx.de/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient) {
@@ -30,7 +30,7 @@ export class ApiProvider {
       {"Content-Type": "application/x-www-form-urlencoded"}
     );
   }
-
+  /**
   public login(username: string, password: string): Observable<boolean>{
     let userCredentials = {"mail": username, "pass": password}
     return this.http.get(
@@ -52,7 +52,7 @@ export class ApiProvider {
       )
     );
   }
-
+  */
   public register(mail : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let typeAsInt : number;
