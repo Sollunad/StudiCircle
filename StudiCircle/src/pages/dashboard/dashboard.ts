@@ -2,8 +2,15 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { SettingsPage } from "../settings/settings";
+import { SearchPage  } from '../search/search';
+import { GeoLocation } from '@ionic-native/geolocation'
+import { DBProvider } from '../../providers/dbprovider/dbprovider'
 import { SearchPage } from '../search/search';
+<<<<<<< HEAD
 import { DbproviderProvider } from '../../providers/dbprovider/dbprovider';
+=======
+import { circleErstellen} from '../circleErstellen/circleErstellen';
+>>>>>>> 8e5417bd3dcd0948ca91d5348d69b29827899fcd
 
 @Component({
   selector: 'page-dashboard',
@@ -14,8 +21,19 @@ export class DashboardPage {
   settings: SettingsPage;
   clist:string[];
 
+<<<<<<< HEAD
   constructor(public navCtrl: NavController, private dbprovider: DbproviderProvider) {
 
+=======
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private database: DBProvider) {
+      this.geolocation.getCurrentPosition().then((resp) => {
+         let lat = resp.coords.latitude
+         let long = resp.coords.longitude
+         this.database.setLocation(lat, long)
+        }).catch((error) => {
+          console.log('Error getting location', error);
+        });
+>>>>>>> 8e5417bd3dcd0948ca91d5348d69b29827899fcd
   }
 
   private goToSearch(params) {
@@ -26,10 +44,16 @@ export class DashboardPage {
   private goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
+  }private onNewCircle(){
+    this.navCtrl.push(circleErstellen);
   }
 
+<<<<<<< HEAD
   ionViewWillEnter(){
     this.clist = this.dbprovider.getCircles();
     console.log("aufgerufen");
   }
+=======
+
+>>>>>>> 8e5417bd3dcd0948ca91d5348d69b29827899fcd
 }
