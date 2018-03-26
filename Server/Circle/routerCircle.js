@@ -31,4 +31,9 @@ module.exports = function(app) {
     // return: List circles
     app.route('/circle/forLocation')
         .get(circle.circlesForLocation);
+
+    // id: circleId
+    // return: List users
+    app.route('/circle/members')
+        .get(circle.members);
 };

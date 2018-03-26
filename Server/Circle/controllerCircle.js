@@ -33,4 +33,12 @@ module.exports = {
         var location = req.body.loc;
         res.send(location);
     },
+
+    members : function (req, res) {
+        var circleId = req.body.id;
+        res.send([
+            {id:1, name:"Hans"},
+            {id:2, name:"Peter"}
+        ]);
+    },
 };
