@@ -9,10 +9,18 @@ const Circle = sequelize.define('Circle', {
 	visible: Sequelize.BOOLEAN
 });
 
+// Circle.sync({
+// 	force: true
+// });
+
 const Location = sequelize.define('Location', {
 	longitude: Sequelize.DOUBLE,
 	latitude: Sequelize.DOUBLE
 });
+
+// Location.sync({
+// 	force: true
+// });
 
 const CircleLocation = sequelize.define('CircleLocation', {});
 
