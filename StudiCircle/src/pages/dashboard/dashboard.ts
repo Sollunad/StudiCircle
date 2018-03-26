@@ -4,7 +4,7 @@ import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DbproviderProvider } from '../../providers/dbprovider/dbprovider';
-import { circleErstellen} from '../circleErstellen/circleErstellen';
+//import { circleErstellen} from '../circleErstellen/circleErstellen';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class DashboardPage {
   settings: SettingsPage;
   clist:string[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private database: DbproviderProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbproviderProvider) {
       this.geolocation.getCurrentPosition().then((resp) => {
          let lat = resp.coords.latitude
          let long = resp.coords.longitude
@@ -34,9 +34,11 @@ export class DashboardPage {
   private goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
-  }private onNewCircle(){
-    this.navCtrl.push(circleErstellen);
   }
+
+ /* private onNewCircle(){
+    this.navCtrl.push(circleErstellen);
+  }*/
 
 
   ionViewWillEnter(){
