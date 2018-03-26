@@ -9,7 +9,7 @@ module.exports = {
         if (!mail || !password || !accountType ) {
             if (res) {
                 res.status(400);
-                res.send("Error: Null pointer.");
+                res.send("Error: Null pointer." + mail +" pwd: " + password + " type" + accountType);
             }
             return "null";
         }
