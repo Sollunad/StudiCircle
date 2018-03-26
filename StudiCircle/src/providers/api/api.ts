@@ -1,8 +1,7 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { UserInfo } from './../declarations/UserInfo';
-import { LoginResponse } from './../declarations/LoginResponse';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { UserInfo } from '../../providers/declarations/UserInfo';
 import {Subscription} from "rxjs/Subscription";
 import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
@@ -79,7 +78,6 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
-        console.log(res);
         registerNewUser.unsubscribe();
         successSubject.next(res.httpStatus === 200);
       },
