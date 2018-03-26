@@ -12,29 +12,29 @@
   </h1>
   <form id="getInvolved-form1">
     <ion-item id="getInvolved-input2">
-      <ion-input type="email" placeholder="you@studicircle.io" name="mail"></ion-input>
+      <ion-input type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="profile.mail" pattern='^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input3">
-      <ion-input type="password" placeholder="Password" name="pw"></ion-input>
+      <ion-input type="password" placeholder="Password" name="pw" [(ngModel)]="profile.password" pattern='[(\w+\W+\d)]{6,24}'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input6">
-      <ion-input type="password" placeholder="Retype Password" name="pw_check"></ion-input>
+      <ion-input type="password" placeholder="Retype Password" name="pw_check" [(ngModel)]="passwdChk" pattern='[(\w+\W+\d)]{6,24}'></ion-input>
     </ion-item>
     <div class="spacer" style="width:300px;height:36px;" id="getInvolved-spacer4"></div>
     <ion-item name="studentProfile" id="getInvolved-checkbox1">
       <ion-label>
         Student
       </ion-label>
-      <ion-checkbox></ion-checkbox>
+      <ion-checkbox name="student" [(ngModel)]="student"></ion-checkbox>
     </ion-item>
     <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
       <ion-label>
         Business / Club
       </ion-label>
-      <ion-checkbox></ion-checkbox>
+      <ion-checkbox name="business" [(ngModel)]="business"></ion-checkbox>
     </ion-item>
   </form>
-  <button id="getInvolved-button1" ion-button color="balanced" block on-click="goToVerifyNow()">
+  <button id="getInvolved-button1" ion-button color="balanced" block on-click="logProfile()">
     Register now!
   </button>
 </ion-content>
