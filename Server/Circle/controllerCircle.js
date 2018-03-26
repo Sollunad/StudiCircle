@@ -16,10 +16,13 @@ module.exports = {
     },
 
     newCircle : function (req, res) {
-        var name = req.body.name;
-        var visible = req.body.vis;
+        var newCircle = {};
+        newCircle.name = req.body.name;,
+        newCircle.visible = req.body.vis;
+
         var location = req.body.loc;
-        db.Circle.create({name: name, visible: visible});
+        
+        db.Circle.create(newCircle);
         res.send(name + " " + visible);
     },
 
