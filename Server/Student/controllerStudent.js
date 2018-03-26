@@ -24,7 +24,7 @@ module.exports = {
     activate : function (req, res) {
         var validationKey = req.params.validationKey;
 
-        if (typeof validationKey == 'undefined') {
+        if (!validationKey) {
             res.status(400);
             res.send("Bad request. No uuid.");
             return;
@@ -49,7 +49,7 @@ module.exports = {
     forgotPassword: function (req, res) {
         var mail = req.body.mail;
 
-        if (typeof mail == 'undefined' ) {
+        if (!mail) {
             res.status(400);
             res.send("Bad request. No mail.");
             return;
@@ -73,7 +73,7 @@ module.exports = {
         var validationKey = req.params.validationKey;
         var newPassword = req.body.pwd;
 
-        if (typeof validationKey == 'undefined' || typeof newPassword == 'undefined') {
+        if (!validationKey || !newPassword) {
             res.status(400);
             res.send("Bad request. No validation key or password.");
             return;
@@ -90,7 +90,7 @@ module.exports = {
                 database.setPasswordHash(userId, hash);
 
                 res.status(200);
-                res.send("Password successfully reset.")
+                res.send("Password successfully reset.");
             } else {
                 res.status(401);
                 res.send("Invalid validation key!");
@@ -106,7 +106,7 @@ module.exports = {
         var mail = req.body.mail;
         var pass = req.body.pwd;
 
-        if (typeof mail == 'undefined' || typeof pass == 'undefined') {
+        if (!mail || !pass) {
             res.status(400);
             res.send("Bad request. Either no username or no password.");
             return;
@@ -146,7 +146,7 @@ module.exports = {
         var oldPw = req.body.oldPwd;
         var newPw = req.body.newPwd;
 
-        if (typeof session == 'undefined' || typeof oldPw == 'undefined' || typeof newPw == 'undefined') {
+        if (!session || !oldPw || !newPw) {
             res.status(400);
             res.send("Bad request. No session, old or new password.");
             return;
@@ -186,7 +186,7 @@ module.exports = {
         var session = req.body.session;
         var pass = req.body.pwd;
 
-        if (typeof session == 'undefined' || typeof pass == 'undefined') {
+        if (!session || !pass) {
             res.status(400);
             res.send("Bad request. Either no session or no password.");
             return;
@@ -228,7 +228,7 @@ module.exports = {
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
-        if (typeof session == 'undefined' || typeof oldMail == 'undefined' || typeof newMail == 'undefined' || typeof pass == 'undefined') {
+        if (!session || !oldMail || !newMail || !pass) {
             res.status(400);
             res.send("Bad request. Either no session, oldMail, newMail or no password.");
             return;
@@ -280,7 +280,7 @@ module.exports = {
     confirmNewMail : function (req, res) {
         var validationKey = req.params.validationKey;
 
-        if (typeof validationKey == 'undefined') {
+        if (!validationKey) {
             res.status(400);
             res.send("Bad request. No validation key.");
             return;
