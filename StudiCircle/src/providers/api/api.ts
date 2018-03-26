@@ -1,8 +1,10 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { UserInfo } from './../declarations/UserInfo';
+import { LoginResponse } from './../declarations/LoginResponse';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { UserInfo } from '../../providers/declarations/UserInfo';
+import { Observable } from 'rxjs/Observable';;
 import {Subscription} from "rxjs/Subscription";
+import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 
@@ -18,9 +20,10 @@ export class ApiProvider {
   private _apiPath = "https://api.sknx.de/";
   public currentUser: UserInfo;
 
-  constructor(public http: HttpClient) {
+  constructor(private http: HttpClient) {
 
   }
+
 
   private getSnowflakeHeader(): HttpHeaders {
     return new HttpHeaders(
@@ -28,8 +31,26 @@ export class ApiProvider {
     );
   }
 
-  public login(username: string, password: string): Observable<any>{
-    return new Observable<any>();
+  public login(username: string, password: string): Observable<boolean>{
+    let userCredentials = {"mail": username, "pass": password}
+    return this.http.get(
+      "/user/login",
+      {
+        params: userCredentials
+      }
+    ).pipe(
+      map(
+        (res: LoginResponse) => {
+          if(res.status !== 200) {
+            return false;
+          } else {
+            res.userData.session = res.session;
+            this.currentUser = res.userData;
+            return true;
+          }
+        }
+      )
+    );
   }
 
   public register(user : UserInfo, passwd : string, type : string){
@@ -57,5 +78,4 @@ export class ApiProvider {
     );
     return successSubject.asObservable();
   }
-
 }
