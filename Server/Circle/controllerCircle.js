@@ -15,7 +15,7 @@ module.exports = {
 
     newCircle : function (req, res) {
         var name = req.body.name;
-        var location = req.body.location;
+        var location = req.body.loc;
         res.send(name + " " + location);
     },
 
