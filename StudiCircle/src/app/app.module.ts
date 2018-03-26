@@ -56,12 +56,8 @@ import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
     ApiProvider,
     Geolocation,
     HttpModule,
-<<<<<<< HEAD
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbproviderProvider,
     HttpClientModule
-=======
->>>>>>> 8e5417bd3dcd0948ca91d5348d69b29827899fcd
   ]
 })
 export class AppModule {}
