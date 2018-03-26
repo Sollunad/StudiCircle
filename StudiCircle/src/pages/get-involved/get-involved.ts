@@ -5,7 +5,6 @@ import { LogInPage } from '../log-in/log-in';
 import { DashboardPage } from '../dashboard/dashboard';
 import { ApiProvider } from "../../providers/api/api";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {Circle} from "../../providers/declarations/Circle";
 
 @Component({
   selector: 'page-get-involved',
@@ -13,14 +12,9 @@ import {Circle} from "../../providers/declarations/Circle";
 })
 export class GetInvolvedPage {
 
-  user = {
-    username : '',
-    uuid : '',
-    circles : Array<Circle>()
-  };
+  user : UserInfo;
 
   profile = {
-    mail : '',
     password : '',
     profileType : ''
   };
@@ -53,14 +47,16 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    const registration = this._apiService.register(this.profile.mail, this.profile.password, this.profile.profileType).subscribe(
+    const registration = this._apiService.register(this.user, this.profile.password, this.profile.profileType).subscribe(
       (success: boolean) => {
-        registration.unsubscribe();
         if(success){
           console.log("[REGISTER] : Registration successful");
-          this.goToVerifyNow({});
+          registration.unsubscribe();
+          return true;
         }else{
           console.log("[REGISTER] : Registration not successful");
+          registration.unsubscribe();
+          return false;
         }
       }
     )
@@ -85,14 +81,16 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    if(this.profile.mail && this.profile.password && this.passwdChk){
+    if(this.user.username && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+        if(this.user.username.match('(@student\.)|(\.edu$)') && this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
-            this.registerNow()
+            if(this.registerNow()){
+              this.goToVerifyNow({});
+            }
           }
         }else{
           console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
@@ -100,10 +98,12 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+          if(this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
-              this.registerNow()
+              if(this.registerNow()){
+                this.goToVerifyNow({});
+              }
             }
           }
         }else{
@@ -111,7 +111,7 @@ export class GetInvolvedPage {
         }
       }
     }else{
-      if(!this.profile.mail){
+      if(!this.user.username){
         console.log("[REGISTER] : Mail is a required field")
       }
       if(!this.profile.password){

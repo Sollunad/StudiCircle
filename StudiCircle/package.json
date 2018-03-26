@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "5.2.9",
     "@ionic-native/core": "4.5.3",
     "@ionic-native/geolocation": "^4.6.0",
-    "@ionic-native/http": "latest",
+    "@ionic-native/http": "^4.6.0",
     "@ionic-native/splash-screen": "4.5.3",
     "@ionic-native/status-bar": "4.5.3",
     "@ionic/storage": "2.1.3",
