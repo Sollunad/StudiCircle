@@ -3,7 +3,6 @@ import { NavController } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
-import { SearchPage } from '../search/search';
 import { DbproviderProvider } from '../../providers/dbprovider/dbprovider';
 import { circleErstellen} from '../circleErstellen/circleErstellen';
 
@@ -17,7 +16,7 @@ export class DashboardPage {
   settings: SettingsPage;
   clist:string[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private database: DBProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private database: DbproviderProvider) {
       this.geolocation.getCurrentPosition().then((resp) => {
          let lat = resp.coords.latitude
          let long = resp.coords.longitude
