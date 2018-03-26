@@ -34,7 +34,7 @@ export class ApiProvider {
   public login(username: string, password: string): Observable<boolean>{
     let userCredentials = {"mail": username, "pass": password}
     return this.http.get(
-      "/user/login",
+      this._apiPath + "user/login",
       {
         params: userCredentials
       }
@@ -53,14 +53,14 @@ export class ApiProvider {
     );
   }
 
-  public register(user : UserInfo, passwd : string, type : string){
+  public register(mail : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
       {
         headers: this.getSnowflakeHeader(),
         params: {
-          mail : user.username,
+          mail : mail,
           pwd : passwd,
           type : type
         }
