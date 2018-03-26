@@ -5,6 +5,8 @@ import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DBProvider } from '../../providers/dbprovider/dbprovider'
+import { SearchPage } from '../search/search';
+import { circleErstellen} from '../circleErstellen/circleErstellen';
 
 @Component({
   selector: 'page-dashboard',
@@ -32,6 +34,8 @@ export class DashboardPage {
   private goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
+  }private onNewCircle(){
+    this.navCtrl.push(circleErstellen);
   }
 
 

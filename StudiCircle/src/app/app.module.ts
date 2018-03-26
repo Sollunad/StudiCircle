@@ -9,6 +9,8 @@ import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
+import { HttpClientModule } from '@angular/common/http';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
@@ -27,8 +29,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     SearchPage
   ],
   imports: [
-    HttpModule,
     BrowserModule,
+    HttpClientModule,
     HttpModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -50,7 +52,6 @@ import { Geolocation } from '@ionic-native/geolocation';
     ApiProvider,
     Geolocation,
     HttpModule,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}
