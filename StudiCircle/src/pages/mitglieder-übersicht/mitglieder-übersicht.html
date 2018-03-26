@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Mitglieder</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+
+  <ion-list>
+    <div ion-item *ngFor="let member of memberList" (click)="itemSelected(member)">
+      {{ member }}
+    </div>
+  </ion-list>
+</ion-content>
