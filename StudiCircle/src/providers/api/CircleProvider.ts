@@ -16,12 +16,13 @@ export class CircleProvider {
   constructor(public http: HttpClient) {
   }
 
-  /*public getMemberListbyCircleId(uid: number): Array<string>{
-    this.http.get('https://someserver.com/api/users').map(res => res.json()).subscribe((memberList) => {
+  public getMemberListbyCircleId(uid: number): Array<string>{
+    this.http.get('http://localhost:8080/circle/members?id=1').map(res => res.json()).subscribe((memberList) => {
+      console.log(memberList);
       this.memberList = memberList;
     });
     return this.memberList;
-  }*/
+  }
 
 }
 

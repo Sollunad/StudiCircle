@@ -1,6 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GetInvolvedPage } from '../pages/get-involved/get-involved';
@@ -9,16 +8,16 @@ import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
+import {CircleProvider} from "../providers/api/CircleProvider";
+import {HttpClientModule} from "@angular/common/http";
 import { SearchPage } from '../pages/search/search';
 import { Geolocation } from '@ionic-native/geolocation';
-import {CircleProvider} from "../providers/api/CircleProvider";
-import {HttpClient} from "@angular/common/http";
-import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -30,13 +29,12 @@ import {HttpClientModule} from "@angular/common/http";
     SettingsPage,
     PassManPage,
     CircleStartseite,
+    MitgliederÜbersicht,
     SearchPage
-    MitgliederÜbersicht
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
-    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -49,17 +47,16 @@ import {HttpClientModule} from "@angular/common/http";
     SettingsPage,
     PassManPage,
     CircleStartseite,
+    MitgliederÜbersicht,
     SearchPage
-    MitgliederÜbersicht
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
-    CircleProvider
+    CircleProvider,
     Geolocation,
-    HttpModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
