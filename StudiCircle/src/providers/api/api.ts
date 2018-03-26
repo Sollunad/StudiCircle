@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { UserInfo } from '../../providers/declarations/UserInfo';
@@ -22,6 +22,12 @@ export class ApiProvider {
 
   }
 
+  private getSnowflakeHeader(): HttpHeaders {
+    return new HttpHeaders(
+      {"Content-Type": "application/x-www-form-urlencoded"}
+    );
+  }
+
   public login(username: string, password: string): Observable<any>{
     return new Observable<any>();
   }
@@ -31,6 +37,7 @@ export class ApiProvider {
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
       {
+        headers: this.getSnowflakeHeader(),
         params: {
           mail : user.username,
           pwd : passwd,
