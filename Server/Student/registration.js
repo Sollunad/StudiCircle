@@ -8,6 +8,7 @@ module.exports = {
 
         if (!mail || !password || !accountType ) {
             if (res) {
+                res.status(400);
                 res.send("Error: Null pointer.");
             }
             return "null";
@@ -15,6 +16,7 @@ module.exports = {
 
         if (!mailer.checkMailAddress(mail)) {
             if (res) {
+                res.status(400);
                 res.send("Invalid eMail entered.");
             }
             return "invalidMail";
@@ -22,6 +24,7 @@ module.exports = {
 
         if (accountType != constant.AccountType.BUSINESS && accountType != constant.AccountType.GUEST && accountType != constant.AccountType.STUDENT ) {
             if (res) {
+                res.status(400);
                 res.send("Invalid account type entered.");
             }
             return "invalidAccountType";
@@ -29,6 +32,7 @@ module.exports = {
 
         if (password.length < 6 || password.length > 24) {
             if (res){
+                res.status(400);
                 res.send("Password length is not between 6 and 24 characters.");
             }
             return "wrongPwd";
@@ -60,14 +64,17 @@ module.exports = {
             }else if (res) {
                 //errors
                 if (result === "duplicateMail") {
+                    res.status(400);
                     res.send("Mail address already registered.");
                     return result;
                 }
                 if (result === "invalidPwd") {
+                    res.status(400);
                     res.send("Invalid password entered.");
                     return result;
                 }
                 if (result === "invalidAccountType") {
+                    res.status(400);
                     res.send("Error at account type.");
                     return result;
                 }
@@ -81,6 +88,7 @@ module.exports = {
 
         if (result === "randomExisting"){
             if (res){
+                res.status(400);
                 res.send("Random string already exists.");
             }
             return result;
@@ -98,6 +106,7 @@ module.exports = {
             .catch(err => {
                 console.log(err);
                 if (res){
+                    res.status(400);
                     res.send("Error at sending verification link.");
                 }
                 return false;
