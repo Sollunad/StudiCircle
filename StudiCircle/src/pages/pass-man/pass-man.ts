@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PassManPage } from '../pass-man/pass-man';
 import { LogInPage } from '../log-in/log-in';
 import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
 
 @Component({
-  selector: 'page-settings',
-  templateUrl: 'settings.html'
+  selector: 'page-pass-man',
+  templateUrl: 'pass-man.html'
 })
-export class SettingsPage {
+export class PassManPage {
+
+  pw_old : '';
+  pw_new : '';
+  pw_new_confirm : '';
 
   constructor(public navCtrl: NavController) {
   }
-  goToPassMan(params){
-    if (!params) params = {};
-    this.navCtrl.push(PassManPage);
-  }goToLogIn(params){
+  goToLogIn(params){
     if (!params) params = {};
     this.navCtrl.push(LogInPage);
   }goToGetInvolved(params){
@@ -29,5 +29,19 @@ export class SettingsPage {
   }goToDashboard(params){
     if (!params) params = {};
     this.navCtrl.push(DashboardPage);
+  }
+
+  managePassword(){
+    if(this.pw_old && this.pw_new && this.pw_new_confirm){
+      console.log("[PassMan]: Fields not empty");
+      if(this.pw_new === this.pw_new_confirm && this.pw_old !== this.pw_new){
+        console.log("[PassMan]: Old Password differs from new one. Success!");
+        this.goToLogIn({});
+      }else{
+        console.log("[PassMan]: Old and new Password same");
+      }
+    }else{
+      console.log("[PassMan]: All fields have to be filled");
+    }
   }
 }
