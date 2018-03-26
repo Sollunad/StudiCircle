@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
-import { GeoLocation } from '@ionic-native/geolocation'
+import { Geolocation } from '@ionic-native/geolocation'
 import { DBProvider } from '../../providers/dbprovider/dbprovider'
 import { SearchPage } from '../search/search';
 <<<<<<< HEAD
