@@ -8,32 +8,44 @@ module.exports = {
 
         if (!mail || !password || !accountType ) {
             if (res) {
-                res.status(400);
-                res.send("Error: Null pointer." + mail +" pwd: " + password + " type" + accountType);
+                res.status(417);
+                res.send({
+                    httpStatus: 417,
+                    message:  "Expectation Failed"
+                });
             }
             return "null";
         }
 
         if (!mailer.checkMailAddress(mail)) {
             if (res) {
-                res.status(400);
-                res.send("Invalid eMail entered.");
+                res.status(412);
+                res.send({
+                    httpStatus: 412,
+                    message:  "Invalid eMail entered."
+                });
             }
             return "invalidMail";
         }
 
         if (accountType != constant.AccountType.BUSINESS && accountType != constant.AccountType.GUEST && accountType != constant.AccountType.STUDENT ) {
             if (res) {
-                res.status(400);
-                res.send("Invalid account type entered.");
+                res.status(412);
+                res.send({
+                    httpStatus: 412,
+                    message:  "Invalid account type entered."
+                });
             }
             return "invalidAccountType";
         }
 
         if (password.length < 6 || password.length > 24) {
             if (res){
-                res.status(400);
-                res.send("Password length is not between 6 and 24 characters.");
+                res.status(412);
+                res.send({
+                    httpStatus: 412,
+                    message:  "Password length is not between 6 and 24 characters."
+                });
             }
             return "wrongPwd";
         }
@@ -47,7 +59,7 @@ module.exports = {
                 '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
                 '</head>\n' +
                 '<body>\n' +
-                '<p>Please click on following link to register to StudiCircle: <a href="http://localhost:8080/user/' + randomString + '/activate">Validate E-Mail</a></p>' +
+                '<p>Please click on following link to register to StudiCircle: <a href="' + constant.getActivationURL(randomString) + '">Validate E-Mail</a></p>' +
                 '</body>\n' +
                 '</html>';
             subject = 'StudiCircle: Validate your mail address';
@@ -63,18 +75,28 @@ module.exports = {
             }else if (res) {
                 //errors
                 if (result === "duplicateMail") {
-                    res.status(400);
-                    res.send("Mail address already registered.");
+
+                    res.status(409);
+                    res.send({
+                        httpStatus: 409,
+                        message:  "Mail address already registered."
+                    });
                     return result;
                 }
                 if (result === "invalidPwd") {
                     res.status(400);
-                    res.send("Invalid password entered.");
+                    res.send({
+                        httpStatus: 400,
+                        message:  "Invalid password entered."
+                    });
                     return result;
                 }
                 if (result === "invalidAccountType") {
                     res.status(400);
-                    res.send("Error at account type.");
+                    res.send({
+                        httpStatus: 400,
+                        message:  "Error at account type."
+                    });
                     return result;
                 }
             }else{
@@ -87,8 +109,11 @@ module.exports = {
 
         if (result === "randomExisting"){
             if (res){
-                res.status(400);
-                res.send("Random string already exists.");
+                res.status(418);
+                res.send({
+                    httpStatus: 418,
+                    message:  "10 random generated strings already exist."
+                });
             }
             return result;
         }
@@ -98,15 +123,21 @@ module.exports = {
             .then(resp => {
                 console.log(resp);
                 if (res){
-                    res.send("Send verification link");
+                    res.send({
+                        httpStatus: 200,
+                        message:  "Verification link sent"
+                    });
                 }
                 return true;
             })
             .catch(err => {
                 console.log(err);
                 if (res){
-                    res.status(400);
-                    res.send("Error at sending verification link.");
+                    res.status(412);
+                    res.send({
+                        httpStatus: 412,
+                        message:  "Error at sending verification link."
+                    });
                 }
                 return false;
             });
