@@ -1,3 +1,5 @@
+var db = require('../Database/circle.js');
+
 module.exports = {
     helloworld : function (req, res) {
         res.send('Hello World!');
@@ -15,8 +17,10 @@ module.exports = {
 
     newCircle : function (req, res) {
         var name = req.body.name;
+        var visible = req.body.vis;
         var location = req.body.loc;
-        res.send(name + " " + location);
+        db.Circle.create({name: name, visible: visible});
+        res.send(name + " " + visible);
     },
 
     removeCircle : function (req, res) {
