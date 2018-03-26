@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+
 import { SettingsPage } from "../settings/settings";
+import { SearchPage } from '../search/search';
 
 @Component({
   selector: 'page-dashboard',
@@ -8,12 +10,18 @@ import { SettingsPage } from "../settings/settings";
 })
 export class DashboardPage {
 
-  settings : SettingsPage;
+  settings: SettingsPage;
 
   constructor(public navCtrl: NavController) {
+
   }
 
-  goToSettings(params){
+  private goToSearch(params) {
+    if (!params) params = {};
+    this.navCtrl.push(SearchPage);
+  }
+
+  private goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
   }

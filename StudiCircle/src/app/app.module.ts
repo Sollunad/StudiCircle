@@ -14,6 +14,8 @@ import { HttpModule } from '@angular/http';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
+import { SearchPage } from '../pages/search/search';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { ApiProvider } from '../providers/api/api';
     VerifyNowPage,
     DashboardPage,
     SettingsPage,
-    PassManPage
+    PassManPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
@@ -39,13 +42,17 @@ import { ApiProvider } from '../providers/api/api';
     VerifyNowPage,
     DashboardPage,
     SettingsPage,
-    PassManPage
+    PassManPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ApiProvider
+    ApiProvider,
+    Geolocation,
+    HttpModule,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}
