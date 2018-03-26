@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
+import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 
 @Component({
   templateUrl: 'circle-startseite.html'
@@ -12,8 +13,7 @@ export class CircleStartseite {
   constructor(public navCtrl: NavController) {
   }
 
-  goToSettings(params){
-    if (!params) params = {};
-    this.navCtrl.push(SettingsPage);
+  openSubPage(id: number){
+    this.navCtrl.push(MitgliederÜbersicht)
   }
 }

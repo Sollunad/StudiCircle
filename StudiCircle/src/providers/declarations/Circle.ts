@@ -7,4 +7,5 @@ export interface Circle {
         latitude: number
     }
     members?: Array<string>;
+    //TODO später sollte noch 'modules?: Array<Module>' hinzugefügt werden
 }

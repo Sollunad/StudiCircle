@@ -14,6 +14,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
+import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
+import {CircleProvider} from "../providers/api/CircleProvider";
+import {HttpClient} from "@angular/common/http";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -24,10 +28,11 @@ import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
     DashboardPage,
     SettingsPage,
     PassManPage,
-    CircleStartseite
+    CircleStartseite,
+    MitgliederÜbersicht
   ],
   imports: [
-    HttpModule,
+    HttpClientModule,
     BrowserModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -40,13 +45,15 @@ import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
     DashboardPage,
     SettingsPage,
     PassManPage,
-    CircleStartseite
+    CircleStartseite,
+    MitgliederÜbersicht
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ApiProvider
+    ApiProvider,
+    CircleProvider
   ]
 })
 export class AppModule {}
