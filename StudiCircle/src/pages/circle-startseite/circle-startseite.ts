@@ -8,12 +8,24 @@ import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersic
 })
 export class CircleStartseite {
 
-  settings : SettingsPage;
+  pages: Array<{title: string, component: any, imageName: string}>;
+
 
   constructor(public navCtrl: NavController) {
+    this.pages = [
+      { title: 'Rechnungen', component: '', imageName: 'rechnungen.jpg'},
+      { title: 'Blackboard', component: '' , imageName: 'blackboard.jpg'},
+      { title: 'Chat', component: '' , imageName: 'chat.jpg'},
+      { title: 'Mitglieder', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'},
+      { title: 'Kalender', component: '' ,imageName: 'kalender.jpg'},
+      { title: 'Wetten', component:'',imageName: 'wetten.jpg'},
+      { title: 'File-Sharing', component:'',imageName: 'file-sharing.jpg'},
+      { title: 'Flohmarkt', component:'',imageName: 'flohmarkt.jpg'},
+      { title: 'Einstellungen', component:SettingsPage,imageName: 'einstellungen.jpg'}
+    ];
   }
 
-  openSubPage(id: number){
-    this.navCtrl.push(MitgliederÜbersicht)
+  openPage(page) {
+    this.navCtrl.push(page.component);
   }
 }
