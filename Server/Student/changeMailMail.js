@@ -13,7 +13,7 @@ module.exports = {
             '</head>\n' +
             '<body>\n' +
                 '<p>\n' +
-                    'You requested the change of your Mail. Please confirm the address by clicking the following link <a href="http://localhost:8080/user/' + changeId + '/changeMail">Confirm mail address</a><br/>\n' +
+                    'You requested the change of your Mail. Please confirm the address by clicking the following link <a href="' + constants.getNewMailActivationURL(changeId) + '">Confirm mail address</a><br/>\n' +
                     'If you did not request a change or changed your opinion and do not want to change the mail address please ignore this mail.' +
                 '</p>' +
             '</body>\n' +

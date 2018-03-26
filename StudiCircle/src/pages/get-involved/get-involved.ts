@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { LogInPage } from '../log-in/log-in';
 import { DashboardPage } from '../dashboard/dashboard';
+import { ApiProvider } from "../../providers/api/api";
+import {UserInfo} from "../../providers/declarations/UserInfo";
 
 @Component({
   selector: 'page-get-involved',
@@ -10,8 +12,9 @@ import { DashboardPage } from '../dashboard/dashboard';
 })
 export class GetInvolvedPage {
 
+  user : UserInfo;
+
   profile = {
-    mail : '',
     password : '',
     profileType : ''
   };
@@ -20,7 +23,7 @@ export class GetInvolvedPage {
   business : boolean;
   student : boolean;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private _apiService : ApiProvider) {
   }
 
   goToVerifyNow(params){
@@ -43,6 +46,22 @@ export class GetInvolvedPage {
     this.navCtrl.push(DashboardPage);
   }
 
+  registerNow(){
+    const registration = this._apiService.register(this.user, this.profile.password, this.profile.profileType).subscribe(
+      (success: boolean) => {
+        if(success){
+          console.log("[REGISTER] : Registration successful");
+          registration.unsubscribe();
+          return true;
+        }else{
+          console.log("[REGISTER] : Registration not successful");
+          registration.unsubscribe();
+          return false;
+        }
+      }
+    )
+  }
+
   passwdCheck(){
     if(this.profile.password.match('[(\\w+\\W+\\d)]{6,24}')){
       console.log("[REGISTER] : Password complies to policy");
@@ -62,14 +81,16 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    if(this.profile.mail && this.profile.password && this.passwdChk){
+    if(this.user.username && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+        if(this.user.username.match('(@student\.)|(\.edu$)') && this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
-            this.goToVerifyNow({});
+            if(this.registerNow()){
+              this.goToVerifyNow({});
+            }
           }
         }else{
           console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
@@ -77,10 +98,12 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+          if(this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
-              this.goToVerifyNow({});
+              if(this.registerNow()){
+                this.goToVerifyNow({});
+              }
             }
           }
         }else{
@@ -88,7 +111,7 @@ export class GetInvolvedPage {
         }
       }
     }else{
-      if(!this.profile.mail){
+      if(!this.user.username){
         console.log("[REGISTER] : Mail is a required field")
       }
       if(!this.profile.password){

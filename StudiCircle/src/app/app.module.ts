@@ -9,12 +9,13 @@ import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
+import { SearchPage } from '../pages/search/search';
+import { Geolocation } from '@ionic-native/geolocation';
 import {CircleProvider} from "../providers/api/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {HttpClientModule} from "@angular/common/http";
@@ -29,11 +30,13 @@ import {HttpClientModule} from "@angular/common/http";
     SettingsPage,
     PassManPage,
     CircleStartseite,
+    SearchPage
     MitgliederÜbersicht
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -46,6 +49,7 @@ import {HttpClientModule} from "@angular/common/http";
     SettingsPage,
     PassManPage,
     CircleStartseite,
+    SearchPage
     MitgliederÜbersicht
   ],
   providers: [
@@ -54,6 +58,9 @@ import {HttpClientModule} from "@angular/common/http";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     CircleProvider
+    Geolocation,
+    HttpModule,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

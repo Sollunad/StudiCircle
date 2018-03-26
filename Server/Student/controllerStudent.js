@@ -300,6 +300,10 @@ module.exports = {
                 res.send("Unauthorized. No invalid validation key.");
                 return;
             }
+        } catch (err) {
+            console.log(err)
+            res.status(500);
+            res.send("Server Error");
         }
     },
 

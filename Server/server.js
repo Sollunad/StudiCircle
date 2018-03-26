@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-var routes = require('./Circle/routerCircle'); //importing route
-routes(app); //register the route
+var routesCircle = require('./Circle/routerCircle'); //importing route
+routesCircle(app); //register the route
 
 app.listen(8080);
 
