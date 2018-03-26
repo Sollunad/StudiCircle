@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { SettingsPage } from "../settings/settings";
 import { SearchPage } from '../search/search';
+import { DbproviderProvider } from '../../providers/dbprovider/dbprovider';
 
 @Component({
   selector: 'page-dashboard',
@@ -11,8 +12,9 @@ import { SearchPage } from '../search/search';
 export class DashboardPage {
 
   settings: SettingsPage;
+  clist:string[];
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private dbprovider: DbproviderProvider) {
 
   }
 
@@ -24,5 +26,10 @@ export class DashboardPage {
   private goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
+  }
+
+  ionViewWillEnter(){
+    this.clist = this.dbprovider.getCircles();
+    console.log("aufgerufen");
   }
 }

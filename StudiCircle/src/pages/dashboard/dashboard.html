@@ -23,7 +23,7 @@
     <ion-searchbar placeholder="" name="search" id="dashboard-search2"></ion-searchbar>
   </form>
   <ion-list id="dashboard-list4">
-    <ion-item color="none" id="dashboard-list-item19">
+  <!--  <ion-item color="none" id="dashboard-list-item19">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
@@ -32,7 +32,7 @@
       </h2>
     </ion-item>
   <!-- </ion-list>
-  <ion-list id="dashboard-list5"> -->
+  <ion-list id="dashboard-list5">
     <ion-item color="none" id="dashboard-list-item20">
       <ion-thumbnail item-left>
         <img />
@@ -42,7 +42,7 @@
       </h2>
     </ion-item>
   <!-- </ion-list>
-  <ion-list id="dashboard-list6"> -->
+  <ion-list id="dashboard-list6">
     <ion-item color="none" id="dashboard-list-item21">
       <ion-thumbnail item-left>
         <img />
@@ -52,7 +52,7 @@
       </h2>
     </ion-item>
   <!-- </ion-list>
-  <ion-list id="dashboard-list7"> -->
+  <ion-list id="dashboard-list7">
     <ion-item color="none" id="dashboard-list-item22">
       <ion-thumbnail item-left>
         <img />
@@ -60,6 +60,7 @@
       <h2>
         Feed
       </h2>
-    </ion-item>
+    </ion-item>-->
+    <ion-item *ngFor="let i of clist">{{i}}</ion-item>
   </ion-list>
 </ion-content>

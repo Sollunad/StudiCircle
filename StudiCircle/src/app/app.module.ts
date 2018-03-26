@@ -1,6 +1,8 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GetInvolvedPage } from '../pages/get-involved/get-involved';
@@ -14,6 +16,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import { SearchPage } from '../pages/search/search';
 import { Geolocation } from '@ionic-native/geolocation';
+import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
 
 @NgModule({
   declarations: [
@@ -27,9 +30,9 @@ import { Geolocation } from '@ionic-native/geolocation';
     SearchPage
   ],
   imports: [
-    HttpModule,
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -50,7 +53,9 @@ import { Geolocation } from '@ionic-native/geolocation';
     ApiProvider,
     Geolocation,
     HttpModule,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    DbproviderProvider,
+    HttpClientModule
   ]
 })
 export class AppModule {}
