@@ -15,9 +15,10 @@ module.exports = {
         var password = req.body.pwd;
         var accountType = req.body.type;
 
+        res.send(mailAddress + "\n pwd: " + password + "\n: type" + accountType + "\n");
         //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
 
-        registration.register(mailAddress, password, accountType, res);
+        //registration.register(mailAddress, password, accountType, res);
     },
 
     //Called when user clicks the link in the validation Mail.
