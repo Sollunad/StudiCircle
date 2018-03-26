@@ -7,11 +7,12 @@ import { LogInPage } from '../pages/log-in/log-in';
 import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
-
+import { SearchPage } from '../pages/search/search';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geolocation } from '@ionic-native/geolocation';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -20,10 +21,12 @@ import { Geolocation } from '@ionic-native/geolocation';
     LogInPage,
     VerifyNowPage,
     DashboardPage,
-    SettingsPage
+    SettingsPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -33,12 +36,14 @@ import { Geolocation } from '@ionic-native/geolocation';
     LogInPage,
     VerifyNowPage,
     DashboardPage,
-    SettingsPage
+    SettingsPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Geolocation,
+    HttpModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
