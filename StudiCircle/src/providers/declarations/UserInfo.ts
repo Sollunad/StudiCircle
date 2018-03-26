@@ -1,7 +1,12 @@
 import { Circle } from "./Circle";
 
-export interface UserInfo{
+
+export interface UserInfo {
+    userId: number|string;
     username: string;
-    uuid: string;
-    circles: Array<Circle>;
+    mail: string;
+    role: number;
+    status: number;
+    cirlces?: Array<Circle>;
+    session?: string|any;
 }

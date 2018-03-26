@@ -53,17 +53,14 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    this.user.username = this.profile.mail;
-    const registration = this._apiService.register(this.user, this.profile.password, this.profile.profileType).subscribe(
+    const registration = this._apiService.register(this.profile.mail, this.profile.password, this.profile.profileType).subscribe(
       (success: boolean) => {
+        registration.unsubscribe();
         if(success){
           console.log("[REGISTER] : Registration successful");
-          registration.unsubscribe();
-          return true;
+          this.goToVerifyNow({});
         }else{
           console.log("[REGISTER] : Registration not successful");
-          registration.unsubscribe();
-          return false;
         }
       }
     )
@@ -95,9 +92,7 @@ export class GetInvolvedPage {
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
-            if(this.registerNow()){
-              this.goToVerifyNow({});
-            }
+            this.registerNow()
           }
         }else{
           console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
@@ -108,9 +103,7 @@ export class GetInvolvedPage {
           if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
-              if(this.registerNow()){
-                this.goToVerifyNow({});
-              }
+              this.registerNow()
             }
           }
         }else{
