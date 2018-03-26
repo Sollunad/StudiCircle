@@ -2,11 +2,12 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { UserInfo } from './../declarations/UserInfo';
 import { LoginResponse } from './../declarations/LoginResponse';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';;
+import { Observable } from 'rxjs/Observable';
 import {Subscription} from "rxjs/Subscription";
 import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
+import {AccountTypes} from "../declarations/AccountTypeEnum";
 
 /*
   Generated class for the ApiProvider provider.
@@ -55,6 +56,17 @@ export class ApiProvider {
 
   public register(mail : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
+    let typeAsInt : number;
+    if(type == 'student'){
+      typeAsInt = AccountTypes.STUDENT;
+    }else{
+      if(type == 'business'){
+        typeAsInt = AccountTypes.BUSINESS;
+      }else{
+        typeAsInt = AccountTypes.STUDENT;
+      }
+    }
+    console.log(mail + ' | ' + passwd + ' | ' + type + ' | ' + typeAsInt);
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
       {
@@ -62,11 +74,12 @@ export class ApiProvider {
         params: {
           mail : mail,
           pwd : passwd,
-          type : type
+          type : typeAsInt
         }
       }
     ).subscribe(
       (res: ApiResponse) => {
+        console.log(res);
         registerNewUser.unsubscribe();
         successSubject.next(res.httpStatus === 200);
       },
