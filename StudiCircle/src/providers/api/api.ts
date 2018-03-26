@@ -65,17 +65,20 @@ export class ApiProvider {
         typeAsInt = AccountTypes.STUDENT;
       }
     }
+
+    var data = JSON.stringify({
+      "mail": mail,
+      "pwd": passwd,
+      "type": typeAsInt
+    });
+
+    var header = { "headers": {"Content-Type": "application/json"} };
+
     console.log(mail + ' | ' + passwd + ' | ' + type + ' | ' + typeAsInt);
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
-      {
-        headers: this.getSnowflakeHeader(),
-        params: {
-          mail : mail,
-          pwd : passwd,
-          type : typeAsInt
-        }
-      }
+      data,
+      header
     ).subscribe(
       (res: ApiResponse) => {
         registerNewUser.unsubscribe();
