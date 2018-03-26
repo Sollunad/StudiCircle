@@ -1,4 +1,3 @@
-let activation = require('./setPassword');
 const constant = require('./constants');
 let database = require('./database');
 let mailer = require('./mailer');

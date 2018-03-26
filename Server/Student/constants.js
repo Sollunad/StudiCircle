@@ -11,10 +11,12 @@ const AccountState = {
 };
 
 const KEY_LENGTH = 48;
+const SALT_LENGTH = 48;
 
 module.exports = {
 
     AccountState: AccountState,
     AccountType: AccountType,
-    KEY_LENGTH: KEY_LENGTH
+    KEY_LENGTH: KEY_LENGTH,
+    SALT_LENGTH : SALT_LENGTH
 }
