@@ -1,0 +1,8 @@
+{
+	"username": "studicircle",
+    "password": "TINF16AIBI",
+    "database": "studicircle",
+    "host": "localhost",
+	"port": 3306,
+    "dialect": "mysql"
+}

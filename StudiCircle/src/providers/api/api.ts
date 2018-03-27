@@ -1,12 +1,12 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { UserInfo } from './../declarations/UserInfo';
-import { LoginResponse } from './../declarations/LoginResponse';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';;
+import { Observable } from 'rxjs/Observable';
+import { UserInfo } from '../../providers/declarations/UserInfo';
 import {Subscription} from "rxjs/Subscription";
 import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
+import {AccountTypes} from "../declarations/AccountTypeEnum";
 
 /*
   Generated class for the ApiProvider provider.
@@ -17,7 +17,7 @@ import {ApiResponse} from "../declarations/ApiResponse";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.sknx.de/";
+  private _apiPath = "https://api.dev.sknx.de/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient) {
@@ -27,10 +27,10 @@ export class ApiProvider {
 
   private getSnowflakeHeader(): HttpHeaders {
     return new HttpHeaders(
-      {"Content-Type": "application/x-www-form-urlencoded"}
+      {"Content-Type": "application/json"}
     );
   }
-
+  /**
   public login(username: string, password: string): Observable<boolean>{
     let userCredentials = {"mail": username, "pass": password}
     return this.http.get(
@@ -52,19 +52,33 @@ export class ApiProvider {
       )
     );
   }
-
+  */
   public register(mail : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
+    let typeAsInt : number;
+    if(type == 'student'){
+      typeAsInt = AccountTypes.STUDENT;
+    }else{
+      if(type == 'business'){
+        typeAsInt = AccountTypes.BUSINESS;
+      }else{
+        typeAsInt = AccountTypes.STUDENT;
+      }
+    }
+
+    var data = JSON.stringify({
+      "mail": mail,
+      "pwd": passwd,
+      "type": typeAsInt
+    });
+
+    var header = { "headers": {"Content-Type": "application/json"} };
+
+    console.log(mail + ' | ' + passwd + ' | ' + type + ' | ' + typeAsInt);
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
-      {
-        headers: this.getSnowflakeHeader(),
-        params: {
-          mail : mail,
-          pwd : passwd,
-          type : type
-        }
-      }
+      data,
+      header
     ).subscribe(
       (res: ApiResponse) => {
         registerNewUser.unsubscribe();
