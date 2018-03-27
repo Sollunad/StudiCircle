@@ -17,7 +17,7 @@ module.exports = {
 
     newCircle : function (req, res) {
         var newCircle = {};
-        newCircle.name = req.body.name;,
+        newCircle.name = req.body.name;
         newCircle.visible = req.body.vis;
 
         var location = req.body.loc;
