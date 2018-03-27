@@ -15,32 +15,24 @@
     Search for Circles <span id="search-location">...</span>
   </h1>
   <form id="search-form12">
-    <ion-searchbar (ionInput)="getCircles($event)"></ion-searchbar>
+    <ion-searchbar (ionInput)="searchCircles()" name="search" [(ngModel)]="search"></ion-searchbar>
 
-  <!-- <ion-range min="0" max="5" snaps="true" color="secondary" [(ngModel)]="singleValue4" (ionChange)="range"> -->
     <ion-label>Entfernung: <ion-badge id="search-distance" item-end>1 km</ion-badge></ion-label>
-    <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged($event)">
+    <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged()" name="distance" [(ngModel)]="distance">
       <ion-icon range-left small name="locate"></ion-icon>
       <ion-icon range-right name="locate"></ion-icon>
     </ion-range>
   </form>
 
-  <ion-list id="search-list4">
-    <ion-item color="none" id="search-list-item19">
+  <ion-list>
+    <ion-item color="none" id="search-list-item19" *ngFor="let circle of circles">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
-      <button ion-button color="secondary" (click)="circleClicked($event)">
-        Circle 1
+      <button ion-button color="secondary" (click)="circleClicked(circle)">
+        {{ circle }}
       </button>
     </ion-item>
-      <ion-item color="none" id="search-list-item19">
-        <ion-thumbnail item-left>
-          <img />
-        </ion-thumbnail>
-        <button ion-button color="secondary" (click)="circleClicked($event)">
-          Circle 2
-        </button>
-      </ion-item>
   </ion-list>
+
 </ion-content>

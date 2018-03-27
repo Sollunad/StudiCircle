@@ -15,3 +15,7 @@ module.exports = {
 	Circle: Circle,
 	Location: Location,
 };
+
+// zur initialisierung der Datenbank, Stefan oder Marcel fragen
+//Circle.sync({force:true});
+//Location.sync({force:true});
