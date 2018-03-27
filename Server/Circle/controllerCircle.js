@@ -81,11 +81,29 @@ module.exports = {
     },
 
     members : function (req, res) {
-        var circleId = req.body.id;
-        res.send([
-            {uuid:1, username:"Hans"},
-            {uuid:2, username:"Peter"}
-        ]);
+        const circleId = req.query.id;
+
+        if (argumentMissing(res, circleId)) return;
+
+        const userId = 1 //TODO: get by session
+
+        db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
+            var data = [];
+            var userInCircle = false;
+            users.forEach(element => {
+                data.push({uuid: element.id, username: element.name});
+                if(!userInCircle && element.id == userId) userInCircle = true;
+            });
+            if(userInCircle){
+                res.send(data);
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not in the requested circle.")
+            }
+        }).error(err => {
+            res.status(500);
+            res.send("Server Error");
+        });
     },
 };
 
