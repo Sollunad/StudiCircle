@@ -33,6 +33,7 @@ module.exports = {
             //name: req.body.name,
             visible:  req.body.vis
           })
+          res.send();
       })
     },
 
