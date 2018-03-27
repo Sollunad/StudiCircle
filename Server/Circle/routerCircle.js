@@ -5,13 +5,13 @@ module.exports = function(app) {
     app.route('/circle/helloworld')
         .get(circle.helloworld);
 
-    // id: userId
+    // userId
+    // circleId
     app.route('/circle/removeUser')
         .post(circle.removeUser);
 
     // circleId
     // userId
-    // role
     app.route('/circle/addUser')
         .post(circle.addUser);
 

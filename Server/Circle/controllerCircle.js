@@ -1,4 +1,5 @@
-var db = require('../Database/database.js');
+const db = require('../Database/database.js');
+const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
@@ -6,32 +7,51 @@ module.exports = {
     },
 
     removeUser : function (req, res) {
-        var userId = req.body.id;
-        res.send(userId);
+        const userId = req.body.userId;
+        const circleId = req.body.circleId;
+
+        if (argumentMissing(res, circleId, userId)) return;
+
+        db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
+            result.destroy();
+        }).error(err => {
+            res.status(404);
+            res.send("User in circle not found.");
+            return;
+        });
+
+        res.send("User from circle removed.");
     },
 
     addUser : function (req, res) {
         const circleId = req.body.circleId;
         const userId = req.body.userId;
-        const userRole = req.body.role;
+        //const userRole = req.body.role;
 
-        if (argumentMissing(res, circleId, userId, userRole)) return;
+        if (argumentMissing(res, circleId, userId)) return;
 
         db.Circle.findById(circleId).then(circle => {
+            if(!circle.visible) {
+                res.status(400);
+                res.send("Bad request. Circle not public.")
+                return;
+            }
             db.User.findById(userId).then(user => {
                 circle.addUser(user).then(result => {
-                    result[0][0].update({"role" : userRole});
+                    result[0][0].update({"role" : cons.CircleRole.MEMBER});
                 });
             }).error(err => {
                 res.status(404);
-                res.send("No user with given id")
+                res.send("No user with given id.");
+                return;
             });
         }).error(err => {
             res.status(404);
-            res.send("No circle with given id")
+            res.send("No circle with given id.");
+            return;
         });
 
-        res.send("User added to circle");
+        res.send("User added to circle.");
     },
 
     newCircle : function (req, res) {
