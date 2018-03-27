@@ -6,7 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation'
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import { AlertController } from 'ionic-angular';
-import { Http } from '@angular/http';
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'page-dashboard',
@@ -17,7 +17,7 @@ export class DashboardPage {
   settings: SettingsPage;
   clist:string[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: Http) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient) {
       this.geolocation.getCurrentPosition().then((resp) => {
          let lat = resp.coords.latitude
          let long = resp.coords.longitude
