@@ -14,7 +14,8 @@ import { DbproviderProvider } from '../../providers/dbprovider/dbprovider';
 export class DashboardPage {
 
   settings: SettingsPage;
-  clist:string[];
+  private clist:string[];
+  private res: any;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbproviderProvider) {
       this.geolocation.getCurrentPosition().then((resp) => {
@@ -36,14 +37,13 @@ export class DashboardPage {
     this.navCtrl.push(SettingsPage);
   }
 
- /* private onNewCircle(){
+ private onNewCircle(){
     this.navCtrl.push(circleErstellen);
-  }*/
+  }
 
 
   ionViewWillEnter(){
-    this.clist = this.dbprovider.getCircles();
-    console.log("aufgerufen");
+    this.dbprovider.getCircles();
   }
 
 }

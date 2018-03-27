@@ -1,5 +1,10 @@
 import { HttpClient } from '@angular/common/http';
+import { ApiProvider } from '../../providers/api/api';
 import { Injectable } from '@angular/core';
+import {Subscription} from "rxjs/Subscription";
+import {Subject} from "rxjs/Subject";
+import {ApiResponse} from "../declarations/ApiResponse";
+import 'rxjs/add/operator/map';
 
 /*
   Generated class for the DbproviderProvider provider.
@@ -9,20 +14,31 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class DbproviderProvider {
+  private result: any;
 
-  circle_list = ["Circle1", "Circle", "CTest"];
-
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, private api: ApiProvider) {
 
   }
 
   public getCircles(){
-    if(this.circle_list == null){
-      return -1;
-    }
-    else{
-      return this.circle_list;
-    }
+    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
+       this.res = res;
+       console.log(res);
+     });*/
+     const successSubject: Subject<boolean> = new Subject<boolean>();
+      const subs: Subscription = this.http.get(
+        'http://localhost:8080/circle/forUser?id=1').subscribe(
+        (res: ApiResponse) =>{
+          subs.unsubscribe();
+          console.log(res);
+          successSubject.next(res.httpStatus === 200);
+        },
+        (error: any) => {
+          console.log(error);
+          subs.unsubscribe();
+          successSubject.next(false);
+        }
+      );
   }
 
   public setLocation(lat, long){
