@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {NavController, NavParams} from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 
@@ -10,8 +10,9 @@ export class CircleStartseite {
 
   pages: Array<{title: string, component: any, imageName: string}>;
 
+  circleId : number;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.pages = [
       { title: 'Rechnungen', component: '', imageName: 'rechnungen.jpg'},
       { title: 'Blackboard', component: '' , imageName: 'blackboard.jpg'},
@@ -23,9 +24,11 @@ export class CircleStartseite {
       { title: 'Flohmarkt', component:'',imageName: 'flohmarkt.jpg'},
       { title: 'Einstellungen', component:SettingsPage,imageName: 'einstellungen.jpg'}
     ];
+
+    this.circleId = navParams.get('circleId');
   }
 
   openPage(page) {
-    this.navCtrl.push(page.component);
+    this.navCtrl.push(page.component,{circleId: this.circleId});
   }
 }
