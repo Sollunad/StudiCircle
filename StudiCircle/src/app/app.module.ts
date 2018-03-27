@@ -15,6 +15,7 @@ import { PassManPage } from '../pages/pass-man/pass-man';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
+import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 import {CircleProvider} from "../providers/circle-provider/CircleProvider";
@@ -32,6 +33,7 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    CircleEinstellungenPage,
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage
@@ -52,6 +54,7 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    CircleEinstellungenPage,
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage
