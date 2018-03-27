@@ -15,6 +15,7 @@ module.exports = {
         var password = req.body.pwd;
         var accountType = req.body.type;
 
+        //res.send(mailAddress + "\n pwd: " + password + "\ntype; " + accountType + "\n all: " + req.body);
         //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
 
         registration.register(mailAddress, password, accountType, res);
