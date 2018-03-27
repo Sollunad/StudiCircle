@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Circle X</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12 col-sm-6 *ngFor="let page of pages">
+        <ion-card (click)="openPage(page)">
+          <img src="assets/img/{{page.imageName}}"/>
+          <div class="shadow"></div>
+          <div class="card-title">{{page.title}}</div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
