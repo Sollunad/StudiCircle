@@ -14,7 +14,7 @@ module.exports = function(app) {
         .post(circle.addUser);
 
     // name: circle name
-    // loc: location
+    // loc: location{long,lat}
     app.route('/circle/new')
         .post(circle.newCircle);
 
@@ -27,7 +27,7 @@ module.exports = function(app) {
     app.route('/circle/forUser')
         .get(circle.circlesForUserId);
 
-    // loc: location
+    // loc: location{long,lat}
     // return: List circles
     app.route('/circle/forLocation')
         .get(circle.circlesForLocation);

@@ -5,9 +5,11 @@ import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { Circle } from '../declarations/Circle';
 
 /*
-  Generated class for the DbproviderProvider provider.
+  Generated class for the DbProvider provider.
 
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
@@ -15,6 +17,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class DbproviderProvider {
   private result: any;
+export class DbProvider {
 
   constructor(public http: HttpClient, private api: ApiProvider) {
 
@@ -39,9 +42,21 @@ export class DbproviderProvider {
           successSubject.next(false);
         }
       );
+  public getCirclesByLocation(lat: number, lon: number): Observable<Circle[]> {
+    // TODO: add location properties
+    return this.http.get<Circle[]>(`http://localhost:8080/circle/forLocation`);
   }
 
-  public setLocation(lat, long){
+  public getCircles() {
+    if (this.circle_list == null) {
+      return [];
+    }
+    else {
+      return this.circle_list;
+    }
+  }
+
+  public setLocation(lat, long) {
     //Jesse mach mal was
   }
 

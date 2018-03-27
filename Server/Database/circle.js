@@ -1,8 +1,5 @@
-const config = require('./config.json');
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(config);
-
-console.log(config);
+const Sequelize = require('sequelize'),
+	sequelize = require('./connection.js');
 
 const Circle = sequelize.define('Circle', {
 	name: Sequelize.STRING,
@@ -32,3 +29,4 @@ Location.belongsToMany(Circle, { as: 'circles', through: { model: CircleLocation
 module.exports.Circle = Circle;
 module.exports.Location = Location;
 module.exports.UsersCircles = UsersCircles;
+module.exports = Circle;
