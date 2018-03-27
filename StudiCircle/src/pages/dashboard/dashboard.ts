@@ -5,6 +5,8 @@ import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
+import { AlertController } from 'ionic-angular';
+import { Http } from '@angular/http';
 
 @Component({
   selector: 'page-dashboard',
@@ -15,13 +17,14 @@ export class DashboardPage {
   settings: SettingsPage;
   clist:string[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: Http) {
       this.geolocation.getCurrentPosition().then((resp) => {
          let lat = resp.coords.latitude
          let long = resp.coords.longitude
          this.dbprovider.setLocation(lat, long)
         }).catch((error) => {
           console.log('Error getting location', error);
+          this.showLocationPrompt();
         });
 
   }
@@ -55,5 +58,37 @@ export class DashboardPage {
     console.log("aufgerufen");
   }
 
+  private showLocationPrompt() {
+    this.alertCtrl.create({
+      title: 'Enter Location',
+      message: 'To use App, we need your location.',
+      enableBackdropDismiss: false,
+      inputs: [{
+          name: 'location',
+          placeholder: 'Location'
+        }],
+      buttons: [{
+        text: 'OK',
+        handler: data => {
+          let address = data.location;
+          this.getLocationByAddress(address);
+          }
+        }]
+    }).present();
+  }
+
+  private getLocationByAddress(address: string) {
+    this.http
+      .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
+      .map(res => res.json())
+      .subscribe(data => {
+        let json = data[0];
+        if (!json) {
+          this.showLocationPrompt();
+        } else {
+          this.dbprovider.setLocation(json.lat, json.lon);
+        }
+      });
+  }
 
 }
