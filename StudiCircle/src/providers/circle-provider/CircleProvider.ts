@@ -7,6 +7,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
+import {ApiResponse} from "../declarations/ApiResponse";
+import {Subscription} from "rxjs/Subscription";
+import {Subject} from "rxjs/Subject";
 
 
 @Injectable()
@@ -21,5 +24,30 @@ export class CircleProvider {
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=1`);
   }
 
+  private _path = "http://localhost:8080/";
+  public edit(id : string, visibility : string){
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const editVisibility: Subscription = this.http.post(
+      this._path + "circle/edit",
+      {
+        params: {
+          id : id,
+          vis : visibility
+        }
+      }
+    ).subscribe(
+      (res: ApiResponse) => {
+        editVisibility.unsubscribe();
+        successSubject.next(res.httpStatus === 200);
+      },
+      (error: any) => {
+        console.log(error);
+        editVisibility.unsubscribe();
+        successSubject.next(false);
+      }
+    );
+  }
+
 }
+
 

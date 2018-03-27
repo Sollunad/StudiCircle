@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
+import {ApiResponse} from "../../providers/declarations/ApiResponse";
+import {UserInfo} from "../../providers/declarations/UserInfo";
+import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+
 
 @Component({
   selector: 'page-circle-einstellungen',
@@ -8,7 +12,7 @@ import {AlertController, NavController} from 'ionic-angular';
 
 export class CircleEinstellungenPage {
 
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _circleService : CircleProvider) {
   }
 
   openConfirmDialog() {
@@ -43,6 +47,7 @@ export class CircleEinstellungenPage {
           text: 'Speichern',
           handler: () => {
             console.log('gespeichert');
+            this.editVisibility();
           }
         },
         {
@@ -55,5 +60,23 @@ export class CircleEinstellungenPage {
       ]
     });
     alert.present();
+  }
+
+  id='';
+  vis='';
+  editVisibility(){
+    const modification = this._circleService.edit(this.id, this.vis).subscribe(
+      (success: boolean) => {
+        if(success){
+          console.log("[Visibility] : Visibility edit successful");
+          modification.unsubscribe();
+          return true;
+        }else{
+          console.log("[Visibility] : Visibility edit not successful");
+          modification.unsubscribe();
+          return false;
+        }
+      }
+    )
   }
 }
