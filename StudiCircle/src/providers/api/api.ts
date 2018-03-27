@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { UserInfo } from '../../providers/declarations/UserInfo';
@@ -7,6 +7,7 @@ import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {AccountTypes} from "../declarations/AccountTypeEnum";
+import {LoginResponse} from "../declarations/LoginResponse";
 
 /*
   Generated class for the ApiProvider provider.
@@ -24,20 +25,13 @@ export class ApiProvider {
 
   }
 
-
-  private getSnowflakeHeader(): HttpHeaders {
-    return new HttpHeaders(
-      {"Content-Type": "application/json"}
-    );
-  }
-  /**
   public login(username: string, password: string): Observable<boolean>{
-    let userCredentials = {"mail": username, "pass": password}
-    return this.http.get(
+    let userCredentials = {"mail": username, "pwd": password};
+    var header = { "headers": {"Content-Type": "application/json"} };
+    return this.http.post(
       this._apiPath + "user/login",
-      {
-        params: userCredentials
-      }
+      userCredentials,
+      header
     ).pipe(
       map(
         (res: LoginResponse) => {
@@ -52,7 +46,7 @@ export class ApiProvider {
       )
     );
   }
-  */
+
   public register(mail : string, name : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let typeAsInt : number;
