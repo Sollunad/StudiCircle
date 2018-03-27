@@ -11,8 +11,27 @@ module.exports = {
     },
 
     addUser : function (req, res) {
-        var userId = req.body.id;
-        res.send(userId);
+        const circleId = req.body.circleId;
+        const userId = req.body.userId;
+        const userRole = req.body.role;
+
+        if (argumentMissing(res, circleId, userId, userRole)) return;
+
+        db.Circle.findById(circleId).then(circle => {
+            db.User.findById(userId).then(user => {
+                circle.addUser(user).then(result => {
+                    result[0][0].update({"role" : userRole});
+                });
+            }).error(err => {
+                res.status(404);
+                res.send("No user with given id")
+            });
+        }).error(err => {
+            res.status(404);
+            res.send("No circle with given id")
+        });
+
+        res.send("User added to circle");
     },
 
     newCircle : function (req, res) {
@@ -23,7 +42,7 @@ module.exports = {
         var location = req.body.loc;
 
         db.Circle.create(newCircle);
-        res.send(name + " " + visible);
+        res.send(newCircle);
     },
 
     removeCircle : function (req, res) {
@@ -49,3 +68,12 @@ module.exports = {
         ]);
     },
 };
+
+function argumentMissing(res, ...args){
+    if(!args.every(arg => {return arg != undefined;})){
+        res.status(400);
+        res.send("Bad request. Argument(s) missing.")
+        return true;
+    }
+    return false;
+}

@@ -9,11 +9,14 @@ module.exports = function(app) {
     app.route('/circle/removeUser')
         .post(circle.removeUser);
 
-    // id: userId
+    // circleId
+    // userId
+    // role
     app.route('/circle/addUser')
         .post(circle.addUser);
 
     // name: circle name
+    // vis: visible
     // loc: location{long,lat}
     app.route('/circle/new')
         .post(circle.newCircle);
