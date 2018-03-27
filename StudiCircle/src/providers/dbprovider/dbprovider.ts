@@ -2,23 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /*
-  Generated class for the DbproviderProvider provider.
+  Generated class for the DbProvider provider.
 
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
 @Injectable()
-export class DbproviderProvider {
+export class DbProvider {
 
   circle_list = ["Circle1", "Circle", "CTest"];
 
   constructor(public http: HttpClient) {
-
+    
   }
 
   public getCircles(){
     if(this.circle_list == null){
-      return -1;
+      return [];
     }
     else{
       return this.circle_list;
