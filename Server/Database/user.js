@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize'),
 	sequelize = require('./connection.js');
 
-const Circle = sequelize.define('Circle', {
+const User = sequelize.define('User', {
 	name: Sequelize.STRING,
-	visible: Sequelize.BOOLEAN
+	email: Sequelize.STRING,
+	password: Sequelize.STRING
 }, {
 	timestamps: false
 });
-module.exports = Circle;
+module.exports = User;
