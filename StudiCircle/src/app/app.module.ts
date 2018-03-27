@@ -1,6 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -11,9 +10,13 @@ import { DashboardPage } from '../pages/dashboard/dashboard';
 import { CircleErstellenPage} from '../pages/circle-erstellen/circle-erstellen';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
+import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
+import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
+import {CircleProvider} from "../providers/circle-provider/CircleProvider";
 import { SearchPage } from '../pages/search/search';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DbProvider } from '../providers/dbprovider/dbprovider';
@@ -28,12 +31,12 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    CircleStartseite,
+    MitgliederÜbersicht,
     SearchPage
   ],
   imports: [
-    HttpModule,
     BrowserModule,
-    HttpModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -47,15 +50,16 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    CircleStartseite,
+    MitgliederÜbersicht,
     SearchPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
+    CircleProvider,
     Geolocation,
-    HttpModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbProvider,
     HttpClientModule
