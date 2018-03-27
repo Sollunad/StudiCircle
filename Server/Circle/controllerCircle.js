@@ -27,16 +27,12 @@ module.exports = {
     },
 
     editCircle : function (req,res) {
-      db.Circle.findById(req.body.id);
-      .on('success', function (circle) {
-        // Check if record exists in db
-        if (circle) {
-          db.circle.updateAttributes({
-            name: req.body.name,
-            //vis:  req.body.vis
+      db.Circle.findById(req.body.id)
+      .then(circle => {
+          circle.updateAttributes({
+            //name: req.body.name,
+            visible:  req.body.vis
           })
-        .success(function () {})
-        }
       })
     },
 
