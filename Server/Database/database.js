@@ -11,6 +11,11 @@ const Location = require('./location.js');
 const CircleLocation = sequelize.define('CircleLocation', {});
 Circle.belongsToMany(Location, { through: CircleLocation });
 Location.belongsToMany(Circle, { through: CircleLocation });
+Circle.references = {};
+Location.references = {};
+Circle.references.location = Location;
+Location.references.circle = Circle;
+
 
 /**
  * n:m - CIRCLES AND USERS
@@ -20,6 +25,10 @@ const UserInCircles = sequelize.define('UserInCircles', {
 });
 User.belongsToMany(Circle, { through: UserInCircles });
 Circle.belongsToMany(User, { through: UserInCircles });
+Circle.references = {};
+User.references = {};
+Circle.references.user = User;
+User.references.circle = Circle;
 
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
 function init() {
@@ -32,6 +41,7 @@ function init() {
 }
 
 module.exports = {
+	init: init,
 	Circle: Circle,
 	Location: Location,
 	User: User,
