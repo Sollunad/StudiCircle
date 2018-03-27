@@ -37,7 +37,6 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     SearchPage
   ],
   imports: [
-    HttpClientModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
@@ -59,7 +58,6 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     CircleProvider,
     Geolocation,

@@ -15,11 +15,10 @@
     Search for Circles <span id="search-location">...</span>
   </h1>
   <form id="search-form12">
-    <ion-searchbar (ionInput)="searchCircles($event)"></ion-searchbar>
+    <ion-searchbar (ionInput)="searchCircles()" name="search" [(ngModel)]="search"></ion-searchbar>
 
-  <!-- <ion-range min="0" max="5" snaps="true" color="secondary" [(ngModel)]="singleValue4" (ionChange)="range"> -->
     <ion-label>Entfernung: <ion-badge id="search-distance" item-end>1 km</ion-badge></ion-label>
-    <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged($event.value)">
+    <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged()" name="distance" [(ngModel)]="distance">
       <ion-icon range-left small name="locate"></ion-icon>
       <ion-icon range-right name="locate"></ion-icon>
     </ion-range>
