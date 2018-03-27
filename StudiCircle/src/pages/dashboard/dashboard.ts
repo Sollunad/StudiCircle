@@ -4,7 +4,7 @@ import { SettingsPage } from "../settings/settings";
 import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
-//import { circleErstellen} from '../circleErstellen/circleErstellen';
+import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 
 
 @Component({
@@ -36,9 +36,9 @@ export class DashboardPage {
     this.navCtrl.push(SettingsPage);
   }
 
- /* private onNewCircle(){
-    this.navCtrl.push(circleErstellen);
-  }*/
+ private onNewCircle(){
+    this.navCtrl.push(CircleErstellenPage);
+  }
 
 
   ionViewWillEnter(){

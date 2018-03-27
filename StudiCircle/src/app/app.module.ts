@@ -8,6 +8,7 @@ import { GetInvolvedPage } from '../pages/get-involved/get-involved';
 import { LogInPage } from '../pages/log-in/log-in';
 import { VerifyNowPage } from '../pages/verify-now/verify-now';
 import { DashboardPage } from '../pages/dashboard/dashboard';
+import { CircleErstellenPage} from '../pages/circle-erstellen/circle-erstellen';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -24,6 +25,7 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     LogInPage,
     VerifyNowPage,
     DashboardPage,
+    CircleErstellenPage,
     SettingsPage,
     PassManPage,
     SearchPage
@@ -42,6 +44,7 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     LogInPage,
     VerifyNowPage,
     DashboardPage,
+    CircleErstellenPage,
     SettingsPage,
     PassManPage,
     SearchPage
