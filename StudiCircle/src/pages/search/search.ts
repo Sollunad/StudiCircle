@@ -4,6 +4,9 @@ import { SettingsPage } from "../settings/settings";
 import { Geolocation } from '@ionic-native/geolocation';
 import { AlertController } from 'ionic-angular';
 import { Http } from '@angular/http';
+import { DbProvider } from '../../providers/dbprovider/dbprovider';
+// import { Circle } from '../../providers/declarations/Circle';
+// import { CircleTest } from '../../../../Server/Database/circle.js';
 
 import 'rxjs/add/operator/map';
 
@@ -13,8 +16,7 @@ import 'rxjs/add/operator/map';
 })
 export class SearchPage {
 
-  settings: SettingsPage;
-  distanceValues = [
+  private distanceValues = [
     '1 km',
     '5 km',
     '10 km',
@@ -22,9 +24,14 @@ export class SearchPage {
     '50 km',
     '∞'
   ];
+  circles: String[];
 
-  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http) {
+  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http, private dbProvider: DbProvider) {
     this.getCurrentPosition();
+    // CircleTest.Circle.create({
+    //   name: 'Test',
+    //   visibleble: true
+    // });
   }
 
   private getCurrentPosition() {
@@ -42,6 +49,11 @@ export class SearchPage {
 
   private setUserCoordinates(lat: number, lon: number) {
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
+
+    this.circles = this.dbProvider.getCircles();
+    // let circle = new Circle();
+    // circle.position = { lat, lon };
+    // this.circles.push(circle);
   }
 
   private showLocationPrompt() {
@@ -85,17 +97,17 @@ export class SearchPage {
       });
   }
 
-  private distanceChanged(event: any) {
-    // console.log(event);
+  private distanceChanged(value: number) {
+    // console.log(value);
 
-    document.getElementById('search-distance').innerText = this.distanceValues[event.value];
+    document.getElementById('search-distance').innerText = this.distanceValues[value];
   }
 
   private circleClicked(event: any) {
     console.log(event);
   }
 
-  private getCircles(event: any) {
+  private searchCircles(event: any) {
     let value = event.target.value;
 
     if (value && value.trim() != '') {
