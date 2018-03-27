@@ -4,9 +4,9 @@ const constant = require('./constants');
 const crypto = require('crypto');
 
 module.exports = {
-    register: function (mail, password, accountType, res) {
+    register: function (mail, password, accountType, userName, res) {
 
-        if (!mail || !password || !accountType ) {
+        if (!mail || !password || !accountType || !userName ) {
             if (res) {
                 res.status(417);
                 res.send({
@@ -39,16 +39,28 @@ module.exports = {
             return "invalidAccountType";
         }
 
-        if (password.length < 6 || password.length > 24) {
+        if (password.length < constant.PASS_MIN_LENGTH || password.length > constant.PASS_MAX_LENGTH) {
             if (res){
                 res.status(412);
                 res.send({
                     httpStatus: 412,
-                    message:  "Password length is not between 6 and 24 characters."
+                    message:  "Password length is not between " + constant.PASS_MIN_LENGTH + " and "+ constant.PASS_MAX_LENGTH +" characters."
                 });
             }
             return "wrongPwd";
         }
+
+        if (userName.length < constant.USERNAME_MIN_LENGTH || userName.length > constant.USERNAME_MAX_LENGTH) {
+            if (res){
+                res.status(412);
+                res.send({
+                    httpStatus: 412,
+                    message:  "User name length is not between " + constant.USERNAME_MIN_LENGTH + " and " + constant.USERNAME_MAX_LENGTH + " characters."
+                });
+            }
+            return "wrong username";
+        }
+
         let result = "";
         let counter = 10;
         while (result !== "ok" && counter > 0) {
@@ -80,6 +92,15 @@ module.exports = {
                     res.send({
                         httpStatus: 409,
                         message:  "Mail address already registered."
+                    });
+                    return result;
+                }
+                if (result === "duplicateUsername") {
+
+                    res.status(409);
+                    res.send({
+                        httpStatus: 409,
+                        message:  "User name already registered."
                     });
                     return result;
                 }
