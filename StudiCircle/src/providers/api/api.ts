@@ -53,7 +53,7 @@ export class ApiProvider {
     );
   }
   */
-  public register(mail : string, passwd : string, type : string){
+  public register(mail : string, name : string, passwd : string, type : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let typeAsInt : number;
     if(type == 'student'){
@@ -68,13 +68,13 @@ export class ApiProvider {
 
     var data = JSON.stringify({
       "mail": mail,
+      "username" : name,
       "pwd": passwd,
       "type": typeAsInt
     });
 
     var header = { "headers": {"Content-Type": "application/json"} };
 
-    console.log(mail + ' | ' + passwd + ' | ' + type + ' | ' + typeAsInt);
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
       data,
