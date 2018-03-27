@@ -27,7 +27,7 @@ export class ApiProvider {
 
   private getSnowflakeHeader(): HttpHeaders {
     return new HttpHeaders(
-      {"Content-Type": "application/x-www-form-urlencoded"}
+      {"Content-Type": "application/json"}
     );
   }
   /**
