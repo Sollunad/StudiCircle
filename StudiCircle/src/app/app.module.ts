@@ -1,6 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GetInvolvedPage } from '../pages/get-involved/get-involved';
@@ -10,15 +10,11 @@ import { DashboardPage } from '../pages/dashboard/dashboard';
 import { SettingsPage } from '../pages/settings/settings';
 import { PassManPage } from '../pages/pass-man/pass-man';
 
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
-import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
-import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
-import {CircleProvider} from "../providers/circle-provider/CircleProvider";
-import { SearchPage } from '../pages/search/search';
-import { Geolocation } from '@ionic-native/geolocation';
-import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
+import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 
 @NgModule({
   declarations: [
@@ -29,14 +25,12 @@ import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
     DashboardPage,
     SettingsPage,
     PassManPage,
-    CircleStartseite,
-    MitgliederÜbersicht,
-    SearchPage
+    CircleEinstellungenPage
   ],
+
   imports: [
-    HttpClientModule,
+    HttpModule,
     BrowserModule,
-    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -48,20 +42,13 @@ import { DbproviderProvider } from '../providers/dbprovider/dbprovider';
     DashboardPage,
     SettingsPage,
     PassManPage,
-    CircleStartseite,
-    MitgliederÜbersicht,
-    SearchPage
+    CircleEinstellungenPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ApiProvider,
-    CircleProvider,
-    Geolocation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    DbproviderProvider,
-    HttpClientModule
+    ApiProvider
   ]
 })
 export class AppModule {}
