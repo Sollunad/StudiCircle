@@ -1,4 +1,4 @@
-var db = require('../Database/circle.js');
+var db = require('../Database/database.js');
 
 module.exports = {
     helloworld : function (req, res) {
@@ -16,10 +16,13 @@ module.exports = {
     },
 
     newCircle : function (req, res) {
-        var name = req.body.name;
-        var visible = req.body.vis;
+        var newCircle = {};
+        newCircle.name = req.body.name;
+        newCircle.visible = req.body.vis;
+
         var location = req.body.loc;
-        db.Circle.create({name: name, visible: visible});
+
+        db.Circle.create(newCircle);
         res.send(name + " " + visible);
     },
 
@@ -41,8 +44,8 @@ module.exports = {
     members : function (req, res) {
         var circleId = req.body.id;
         res.send([
-            {id:1, name:"Hans"},
-            {id:2, name:"Peter"}
+            {uuid:1, username:"Hans"},
+            {uuid:2, username:"Peter"}
         ]);
     },
 };
