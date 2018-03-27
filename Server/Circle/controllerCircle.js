@@ -28,9 +28,11 @@ module.exports = {
         res.send(userId);
     },
 
+    //return all circles the user is following
     circlesForUserId : function (req, res) {
         var userId = req.body.id;
-        res.send(userId);
+        var circles = db.UsersCircles.findAll({where: {userID: 1}});
+        res.send({user: 1});
     },
 
     circlesForLocation : function (req, res) {
@@ -45,4 +47,5 @@ module.exports = {
             {id:2, name:"Peter"}
         ]);
     },
+
 };

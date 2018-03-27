@@ -36,4 +36,5 @@ module.exports = function(app) {
     // return: List users
     app.route('/circle/members')
         .get(circle.members);
+
 };

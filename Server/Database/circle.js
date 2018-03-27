@@ -14,9 +14,15 @@ const Location = sequelize.define('Location', {
 	latitude: Sequelize.DOUBLE
 });
 
+const UsersCircles = sequelize.define('UsersCircles', {
+	userID: Sequelize.INTEGER,
+	circleID: Sequelize.INTEGER
+});
+
 // zur initialisierung, Stefan oder Marcel fragen
 //Circle.sync({force:true});
 //Location.sync({force:true});
+//UsersCircles.sync({force:true});
 
 const CircleLocation = sequelize.define('CircleLocation', {});
 
@@ -25,3 +31,4 @@ Location.belongsToMany(Circle, { as: 'circles', through: { model: CircleLocation
 
 module.exports.Circle = Circle;
 module.exports.Location = Location;
+module.exports.UsersCircles = UsersCircles;
