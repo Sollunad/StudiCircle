@@ -34,28 +34,26 @@ export class LogInPage {
   }
 
   login(){
-    if(this.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$') && this.pw.match('[(\\w+\\W+\\d)]{6,24}')){
-      console.log("[LOGIN] : Logging in");
-      
-      /**const loginSub: Subscription = this._api.login(this.mail, this.pw).subscribe(
-        (data: boolean) => {
-          loginSub.unsubscribe();
-          if(data) {
-            this.goToDashboard({});
-          } else {
-            console.log("[LOGIN] : Lol du Opfer, 1 falsche Konbimatiom vong Logim Datem her.");
+    if(this.mail || this.pw){
+      console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
+      if(this.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$') && this.pw.match('[(\\w+\\W+\\d)]{6,24}')){
+        console.log("[LOGIN] : Logging in");
+        /**
+        const loginSub: Subscription = this._api.login(this.mail, this.pw).subscribe(
+          (data: boolean) => {
+            loginSub.unsubscribe();
+            if(data) {
+              this.goToDashboard({});
+            } else {
+              console.log("[LOGIN] : Lol du Opfer, 1 falsche Konbimatiom vong Logim Datem her.");
+            }
           }
-        }
-      )
-       */
-      
-      this.goToDashboard({});
-    }else {
-      if(!this.mail || !this.pw){
-        console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
-      }else{
-        console.log("[LOGIN] : Non-compliant E-Mail or Password")
+        )
+         */
+        this.goToDashboard({});
       }
+    }else{
+      console.log("[LOGIN] : Non-compliant E-Mail or Password")
     }
   }
 }
