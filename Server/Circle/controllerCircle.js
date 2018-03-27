@@ -26,6 +26,20 @@ module.exports = {
         res.send(name + " " + visible);
     },
 
+    editCircle : function (req,res) {
+      db.Circle.findById(req.body.id);
+      .on('success', function (circle) {
+        // Check if record exists in db
+        if (circle) {
+          db.circle.updateAttributes({
+            name: req.body.name,
+            //vis:  req.body.vis
+          })
+        .success(function () {})
+        }
+      })
+    },
+
     removeCircle : function (req, res) {
         var circleId = req.body.id;
         res.send(userId);
