@@ -21,7 +21,11 @@ export class CircleProvider {
   }
 
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
-    return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=1`);
+    return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=uid`);
+  }
+
+  public getModuleListByCircleId(uid:number): Observable<String[]>{
+    return this.http.get<String[]>(`http://localhost:8080/circle/modules?circleId=uid`);
   }
 
   public edit(id : number, visibility : string){

@@ -1,31 +1,31 @@
-import {ErrorHandler, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
-import {MyApp} from './app.component';
-import {GetInvolvedPage} from '../pages/get-involved/get-involved';
-import {LogInPage} from '../pages/log-in/log-in';
-import {VerifyNowPage} from '../pages/verify-now/verify-now';
-import {DashboardPage} from '../pages/dashboard/dashboard';
-import {CircleErstellenPage} from '../pages/circle-erstellen/circle-erstellen';
-import {SettingsPage} from '../pages/settings/settings';
-import {PassManPage} from '../pages/pass-man/pass-man';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { MyApp } from './app.component';
+import { GetInvolvedPage } from '../pages/get-involved/get-involved';
+import { LogInPage } from '../pages/log-in/log-in';
+import { VerifyNowPage } from '../pages/verify-now/verify-now';
+import { DashboardPage } from '../pages/dashboard/dashboard';
+import { CircleErstellenPage} from '../pages/circle-erstellen/circle-erstellen';
+import { SettingsPage } from '../pages/settings/settings';
+import { PassManPage } from '../pages/pass-man/pass-man';
 
 
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
-import {ApiProvider} from '../providers/api/api';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { ApiProvider } from '../providers/api/api';
 
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 import {CircleProvider} from "../providers/circle-provider/CircleProvider";
-import {SearchPage} from '../pages/search/search';
-import {Geolocation} from '@ionic-native/geolocation';
-import {DbProvider} from '../providers/dbprovider/dbprovider';
-import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
-import {ChangeMailPage} from "../pages/change-mail/change-mail";
-import {HttpModule} from "@angular/http";
+import { SearchPage } from '../pages/search/search';
+import { Geolocation } from '@ionic-native/geolocation';
+import { DbProvider } from '../providers/dbprovider/dbprovider';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {HttpClientModule} from "@angular/common/http";
+import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
+import {ChangeMailPage} from "../pages/change-mail/change-mail";
 
 @NgModule({
   declarations: [
@@ -78,8 +78,8 @@ import {HttpClientModule} from "@angular/common/http";
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbProvider,
-    HttpClientModule,
-    HttpModule
+    HttpModule,
+    HttpClientModule
   ]
 })
 export class AppModule {}
