@@ -66,8 +66,15 @@ module.exports = {
     },
 
     removeCircle : function (req, res) {
-        var circleId = req.body.id;
-        res.send(userId);
+        const circleId = req.body.id;
+
+        if (argumentMissing(res, circleId)) return;
+
+        const userId = 1 //TODO session handling?
+
+        db.Circle.build({"id" : circleId}).destroy();
+
+        res.send("Circle removed.");
     },
 
     circlesForUserId : function (req, res) {
