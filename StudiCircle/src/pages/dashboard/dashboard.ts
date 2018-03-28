@@ -42,7 +42,6 @@ export class DashboardPage {
   }
 
  private onNewCircle(){
-    this.navCtrl.push(circleErstellen);
     this.navCtrl.push(CircleErstellenPage);
   }
 
