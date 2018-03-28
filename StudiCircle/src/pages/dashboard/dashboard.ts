@@ -71,7 +71,7 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.dbprovider.getLocationByAddress(address);
+          this.dbprovider.getLocationByAddress(address)
           }
         }]
     }).present();

@@ -8,7 +8,6 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Circle } from '../declarations/Circle';
-import {DashboardPage} from '../../pages/dashboard/dashboard';
 
 /*
   Generated class for the DbProvider provider.
@@ -20,7 +19,7 @@ import {DashboardPage} from '../../pages/dashboard/dashboard';
 export class DbProvider{
   private result: any;
 
-constructor(public http: HttpClient, private api: ApiProvider, private dashboard: DashboardPage) {}
+constructor(public http: HttpClient, private api: ApiProvider) {}
 
 public getCircles(){
   /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
@@ -59,13 +58,9 @@ public setLocation(lat, long) {
       (res: GeoResponse) =>{
         subs.unsubscribe();
         console.log(res);
-        successSubject.next(res.httpStatus === 200);
-        if (!res) {
-          this.dashboard.showLocationPrompt();
-        } else {
-          console.log(res[0].lat, res[0].lon);
-          this.setLocation(res[0].lat, res[0].lon);
-          }
+        successSubject.next(true);
+        console.log(res[0].lat, res[0].lon);
+        this.setLocation(res[0].lat, res[0].lon);
         },
        (error: any) => {
          console.log(error);
