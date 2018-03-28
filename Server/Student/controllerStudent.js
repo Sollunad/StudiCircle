@@ -296,7 +296,7 @@ module.exports = {
                 res.send("Successfully updated mail address");
             } else {
                 res.status(401);
-                res.send("Unauthorized. No invalid validation key.");
+                res.send("Unauthorized. Invalid validation key.");
                 return;
             }
         } catch (err) {

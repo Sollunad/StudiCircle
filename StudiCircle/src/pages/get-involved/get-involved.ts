@@ -76,7 +76,7 @@ export class GetInvolvedPage {
   }
 
   passwdCheck(){
-    if(this.profile.password.match('[(\\w+\\W+\\d)]{6,24}')){
+    if(this.profile.password.match('[(\\w+\\W+\\d+)]{8,64}')){
       console.log("[REGISTER] : Password complies to policy");
       if((this.profile.password === this.passwdChk)){
         console.log("[REGISTER] : PasswordCheck successful");
