@@ -1,7 +1,7 @@
 export interface Circle {
-    uid: number;
+    id: number;
     name: string;
-    openCircle: boolean;
+    visible: boolean;
     position: {
         longitude: number,
         latitude: number

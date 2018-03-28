@@ -16,20 +16,20 @@ import {Circle} from '../declarations/Circle';
   and Angular DI.
 */
 @Injectable()
-export class DbProvider{
+export class DbProvider {
   private result: any;
 
-constructor(public http: HttpClient, private api: ApiProvider) {}
+  constructor(public http: HttpClient, private api: ApiProvider) { }
 
-public getCircles(){
-  /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
-     this.res = res;
-     console.log(res);
-   });*/
-   const successSubject: Subject<boolean> = new Subject<boolean>();
+  public getCircles() {
+    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
+       this.res = res;
+       console.log(res);
+     });*/
+    const successSubject: Subject<boolean> = new Subject<boolean>();
     const subs: Subscription = this.http.get(
       'http://localhost:8080/circle/forUser?id=1').subscribe(
-      (res: ApiResponse) =>{
+      (res: ApiResponse) => {
         subs.unsubscribe();
         console.log(res);
         successSubject.next(res.httpStatus === 200);
@@ -39,34 +39,36 @@ public getCircles(){
         subs.unsubscribe();
         successSubject.next(false);
       }
-    );
-}
+      );
+  }
 
-public getCirclesByLocation(lat: number, lon: number): Observable<Circle[]> {
-  // TODO: add location properties
-  return this.http.get<Circle[]>(`http://localhost:8080/circle/forLocation`);
-}
+  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
+    console.log(lat, lon, distance);
 
-public setLocation(lat, long) {
-  //Jesse mach mal was
-}
+    const url = `http://localhost:8080/circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
+    return this.http.get<Circle[]>(url);
+  }
+
+  public setLocation(lat, long) {
+    //Jesse mach mal was
+  }
 
   public getLocationByAddress(address: string) {
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const subs: Subscription = this.http.get(
-        'https://nominatim.openstreetmap.org/search/$'+ address +'?format=json&limit=1').subscribe(
-      (res: GeoResponse) =>{
+      'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
+      (res: GeoResponse) => {
         subs.unsubscribe();
         console.log(res);
         successSubject.next(true);
         console.log(res[0].lat, res[0].lon);
         this.setLocation(res[0].lat, res[0].lon);
-        },
-       (error: any) => {
-         console.log(error);
-         subs.unsubscribe();
-         successSubject.next(false);
-       }
-     );
+      },
+      (error: any) => {
+        console.log(error);
+        subs.unsubscribe();
+        successSubject.next(false);
+      }
+      );
   }
 }
