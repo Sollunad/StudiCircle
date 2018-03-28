@@ -61,8 +61,18 @@ module.exports = {
 
         if (argumentMissing(res, name, visible)) return;
 
-        db.Circle.create({"name":name,"visible":visible}).then(res => {
-            res.send("Circle created.");
+        const userId = 1 //TODO session ???
+
+        db.Circle.create({"name":name,"visible":visible}).then(circle => {
+            db.User.findOne({where: {"id" : userId}}).then(user => {
+                circle.addUser(user).then(result => {
+                    result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
+                    res.send("Circle created and User added.");
+                });
+            }).error(err => {
+                res.status(404)
+                res.send("User from session not found.");
+            });;
         }).error(err => {
             res.status(500)
             res.send("Server error.");
@@ -151,7 +161,10 @@ module.exports = {
     },
 
     getModules : function(req, res){
-      var circleId = req.query.circleId;
+      const circleId = req.query.circleId;
+
+      if (argumentMissing(res, circleId)) return;
+
       db.Circle.findById(circleId).then(circle => {
           if(circle == null){
             res.status(404).send("No circle with given id.");
