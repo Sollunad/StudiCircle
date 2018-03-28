@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { SettingsPage } from "../settings/settings";
+import { SettingsPage } from '../settings/settings';
+import { CircleStartseite } from '../circle-startseite/circle-startseite';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AlertController } from 'ionic-angular';
 import { HttpClient } from "@angular/common/http";
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
+import { Circle } from '../../providers/declarations/Circle';
 
 @Component({
   selector: 'page-search',
@@ -12,24 +14,62 @@ import { DbProvider } from '../../providers/dbprovider/dbprovider';
 })
 export class SearchPage {
 
-  search: '';
-  distance: 0;
+  public search: '';
+  public distance: 0;
+  public circles: Array<Circle>;
 
-  private distanceValues = [
-    '1 km',
-    '5 km',
-    '10 km',
-    '20 km',
-    '50 km',
-    '∞'
+  private distances = [
+    { label: '1', value: 1 },
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '50', value: 50 },
+    { label: '∞', value: 1 }
   ];
   private lat: number;
   private lon: number;
 
-  circles: String[];
-
   constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, public http: HttpClient, private dbProvider: DbProvider) {
     this.getCurrentPosition();
+  }
+
+  private getCirclesByLocation() {
+    const dist = this.distances[this.distance].value;
+    this.dbProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
+      circles => {
+        console.log('getCirclesByLocation', circles)
+        this.circles = circles;
+      });
+  }
+
+  private distanceChanged() {
+    // console.log(this.distance);
+
+    document.getElementById('search-distance').innerText = this.distances[this.distance].label;
+
+    this.getCirclesByLocation();
+  }
+
+  private circleClicked(circle: Circle) {
+    console.log(circle);
+
+    this.navCtrl.push(CircleStartseite, {
+      circleId: circle.id,
+      circleName: circle.name
+    });
+  }
+
+  private searchCircles() {
+    let value = this.search.trim();
+
+    if (value && value != '') {
+      console.log('value', value);
+
+      // TODO: filter circles by name
+    } else {
+      console.log('value', 'empty');
+      // TODO: view all circles
+    }
   }
 
   private getCurrentPosition() {
@@ -48,13 +88,10 @@ export class SearchPage {
   private setUserCoordinates(lat: number, lon: number) {
     this.lat = lat;
     this.lon = lon;
+    this.distance = 0;
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
 
-    // this.circles = this.dbProvider.getCircles();
-    //
-    // this.dbProvider.getCirclesByLocation(lat, lon).subscribe(
-    //   circles => console.log('getCirclesByLocation', circles)
-    // );
+    this.getCirclesByLocation();
   }
 
   private showLocationPrompt() {
@@ -95,33 +132,6 @@ export class SearchPage {
           this.setUserCoordinates(json.lat, json.lon);
         }
       });
-  }
-
-  private distanceChanged() {
-    // console.log(this.distance);
-
-    document.getElementById('search-distance').innerText = this.distanceValues[this.distance];
-
-    // TODO: filter circles by distance
-  }
-
-  private circleClicked(event: any) {
-    console.log(event);
-
-    // TODO: go to circle details
-  }
-
-  private searchCircles() {
-    let value = this.search.trim();
-
-    if (value && value != '') {
-      console.log('value', value);
-
-      // TODO: filter circles by name
-    } else {
-      console.log('value', 'empty');
-      // TODO: view all circles
-    }
   }
 
   private goToSettings() {

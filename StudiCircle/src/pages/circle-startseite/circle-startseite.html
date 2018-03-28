@@ -8,11 +8,11 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col col-12 col-md-6 *ngFor="let page of pages">
-        <ion-card (click)="openPage(page)">
-            <img src="assets/img/{{page.imageName}}"/>
+      <ion-col col-12 col-md-6 *ngFor="let module of moduleList">
+        <ion-card (click)="openPage(module)">
+            <img src="assets/img/{{module.imageName}}"/>
             <div class="shadow"></div>
-            <div class="card-title">{{page.title}}</div>
+            <div class="card-title">{{module.title}}</div>
         </ion-card>
       </ion-col>
     </ion-row>

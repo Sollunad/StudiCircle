@@ -12,8 +12,9 @@ import {HttpClient} from "@angular/common/http";
 export class CircleEinstellungenPage {
 
   private circleId : number;
+  public visibility : string = "test";
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
   }
 
@@ -51,6 +52,7 @@ export class CircleEinstellungenPage {
           text: 'Speichern',
           handler: () => {
             console.log('gespeichert');
+            this.editVisibility();
           }
         },
         {
@@ -63,5 +65,30 @@ export class CircleEinstellungenPage {
       ]
     });
     alert.present();
+  }
+
+  id=this.circleId;
+  vis='';
+
+  onChange(){
+    console.log(this.visibility);
+    this.vis = this.visibility;
+  }
+
+  editVisibility(){
+    console.log(this.vis)
+    const modification = this._circleService.edit(1, this.vis).subscribe(
+    (success: boolean) => {
+          if(success){
+            console.log("[Visibility] : Visibility edit successful");
+            modification.unsubscribe();
+            return true;
+          }else{
+            console.log("[Visibility] : Visibility edit not successful");
+            modification.unsubscribe();
+            return false;
+          }
+      }
+    )
   }
 }
