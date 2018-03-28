@@ -15,50 +15,49 @@ import { Circle } from '../declarations/Circle';
   and Angular DI.
 */
 @Injectable()
-export class DbproviderProvider {
+export class DbProvider{
   private result: any;
-export class DbProvider {
 
-  constructor(public http: HttpClient, private api: ApiProvider) {
+constructor(public http: HttpClient, private api: ApiProvider) {}
 
+public getCircles(){
+  /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
+     this.res = res;
+     console.log(res);
+   });*/
+   const successSubject: Subject<boolean> = new Subject<boolean>();
+    const subs: Subscription = this.http.get(
+      'http://localhost:8080/circle/forUser?id=1').subscribe(
+      (res: ApiResponse) =>{
+        subs.unsubscribe();
+        console.log(res);
+        successSubject.next(res.httpStatus === 200);
+      },
+      (error: any) => {
+        console.log(error);
+        subs.unsubscribe();
+        successSubject.next(false);
+      }
+    );
+}
+
+public getCirclesByLocation(lat: number, lon: number): Observable<Circle[]> {
+  // TODO: add location properties
+  return this.http.get<Circle[]>(`http://localhost:8080/circle/forLocation`);
+}
+
+public getCircles() {
+  if (this.circle_list == null) {
+    return [];
   }
-
-  public getCircles(){
-    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
-       this.res = res;
-       console.log(res);
-     });*/
-     const successSubject: Subject<boolean> = new Subject<boolean>();
-      const subs: Subscription = this.http.get(
-        'http://localhost:8080/circle/forUser?id=1').subscribe(
-        (res: ApiResponse) =>{
-          subs.unsubscribe();
-          console.log(res);
-          successSubject.next(res.httpStatus === 200);
-        },
-        (error: any) => {
-          console.log(error);
-          subs.unsubscribe();
-          successSubject.next(false);
-        }
-      );
-  public getCirclesByLocation(lat: number, lon: number): Observable<Circle[]> {
-    // TODO: add location properties
-    return this.http.get<Circle[]>(`http://localhost:8080/circle/forLocation`);
+  else {
+    return this.circle_list;
   }
+}
 
-  public getCircles() {
-    if (this.circle_list == null) {
-      return [];
-    }
-    else {
-      return this.circle_list;
-    }
-  }
-
-  public setLocation(lat, long) {
-    //Jesse mach mal was
-  }
+public setLocation(lat, long) {
+  //Jesse mach mal was
+}
 
   public getLocationByAddress(address: string) {
     this.http
