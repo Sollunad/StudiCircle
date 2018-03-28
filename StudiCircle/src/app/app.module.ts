@@ -19,7 +19,6 @@ import {CircleProvider} from "../providers/circle-provider/CircleProvider";
 import { Geolocation } from '@ionic-native/geolocation';
 import { DbProvider } from '../providers/dbprovider/dbprovider';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
-import {CircleProvider} from "../providers/circle-provider/CircleProvider";
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
