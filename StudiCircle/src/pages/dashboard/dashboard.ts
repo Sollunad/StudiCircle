@@ -15,7 +15,8 @@ import { HttpClient } from "@angular/common/http";
 export class DashboardPage {
 
   settings: SettingsPage;
-  clist:string[];
+  private clist:string[];
+  private res: any;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient) {
       this.geolocation.getCurrentPosition().then((resp) => {
@@ -41,6 +42,7 @@ export class DashboardPage {
   }
 
  private onNewCircle(){
+    this.navCtrl.push(circleErstellen);
     this.navCtrl.push(CircleErstellenPage);
   }
 
@@ -54,8 +56,7 @@ export class DashboardPage {
   }
 
   ionViewWillEnter(){
-    this.clist = this.dbprovider.getCircles();
-    console.log("aufgerufen");
+    this.dbprovider.getCircles();
   }
 
   private showLocationPrompt() {
@@ -71,24 +72,10 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.getLocationByAddress(address);
+          this.dbprovider.getLocationByAddress(address);
           }
         }]
     }).present();
-  }
-
-  private getLocationByAddress(address: string) {
-    this.http
-      .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
-      .map(res => res.json())
-      .subscribe(data => {
-        let json = data[0];
-        if (!json) {
-          this.showLocationPrompt();
-        } else {
-          this.dbprovider.setLocation(json.lat, json.lon);
-        }
-      });
   }
 
 }
