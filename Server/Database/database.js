@@ -46,6 +46,7 @@ Module.belongsTo(Circle);*/
 
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
 function init() {
+	console.log("Database init");
 	User.sync({force:true}).then(() => {
 		Circle.sync({force:true}).then(() => {
 			//Module.sync({force:true}).then(() => {
