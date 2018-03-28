@@ -42,7 +42,6 @@ export class DashboardPage {
   }
 
  private onNewCircle(){
-    this.navCtrl.push(circleErstellen);
     this.navCtrl.push(CircleErstellenPage);
   }
 
@@ -59,7 +58,7 @@ export class DashboardPage {
     this.dbprovider.getCircles();
   }
 
-  private showLocationPrompt() {
+  public showLocationPrompt() {
     this.alertCtrl.create({
       title: 'Enter Location',
       message: 'To use App, we need your location.',
@@ -72,7 +71,7 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.dbprovider.getLocationByAddress(address);
+          this.dbprovider.getLocationByAddress(address)
           }
         }]
     }).present();

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
+import { SearchPage } from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 
 @Component({
@@ -15,7 +16,7 @@ export class CircleStartseite {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.pages = [
       { title: 'Rechnungen', component: '', imageName: 'rechnungen.jpg'},
-      { title: 'Blackboard', component: '' , imageName: 'blackboard.jpg'},
+      { title: 'Blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
       { title: 'Chat', component: '' , imageName: 'chat.jpg'},
       { title: 'Mitglieder', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'},
       { title: 'Kalender', component: '' ,imageName: 'kalender.jpg'},
