@@ -20,6 +20,9 @@ import {CircleProvider} from "../providers/circle-provider/CircleProvider";
 import { SearchPage } from '../pages/search/search';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DbProvider } from '../providers/dbprovider/dbprovider';
+import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
+import {ChangeMailPage} from "../pages/change-mail/change-mail";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -31,11 +34,15 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    SearchPage,
+    ForgotPasswordPage,
+    ChangeMailPage,
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage
   ],
   imports: [
+    HttpModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
@@ -50,6 +57,9 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     CircleErstellenPage,
     SettingsPage,
     PassManPage,
+    SearchPage,
+    ChangeMailPage,
+    ForgotPasswordPage,
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage

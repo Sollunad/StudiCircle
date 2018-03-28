@@ -1,24 +1,19 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PassManPage } from '../pass-man/pass-man';
 import { LogInPage } from '../log-in/log-in';
 import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
-import { ChangeMailPage } from '../change-mail/change-mail';
 
 @Component({
-  selector: 'page-settings',
-  templateUrl: 'settings.html'
+  selector: 'page-forgot-password',
+  templateUrl: 'forgot-password.html'
 })
-export class SettingsPage {
+export class ForgotPasswordPage {
 
   constructor(public navCtrl: NavController) {
   }
-  goToPassMan(params){
-    if (!params) params = {};
-    this.navCtrl.push(PassManPage);
-  }goToLogIn(params){
+  goToLogIn(params){
     if (!params) params = {};
     this.navCtrl.push(LogInPage);
   }goToGetInvolved(params){
@@ -30,11 +25,5 @@ export class SettingsPage {
   }goToDashboard(params){
     if (!params) params = {};
     this.navCtrl.push(DashboardPage);
-  }goToChangeMail(params){
-    if (!params) params = {};
-    this.navCtrl.push(ChangeMailPage);
-  }goToSettings(params){
-    if (!params) params = {};
-    this.navCtrl.push(SettingsPage);
   }
 }
