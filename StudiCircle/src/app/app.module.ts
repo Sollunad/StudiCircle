@@ -25,7 +25,6 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {HttpModule} from "@angular/http";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
-import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -48,6 +47,7 @@ import {HttpClientModule} from "@angular/common/http";
 
   imports: [
     HttpModule,
+    HttpClientModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
