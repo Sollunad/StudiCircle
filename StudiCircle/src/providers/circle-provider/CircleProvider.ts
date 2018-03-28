@@ -28,17 +28,12 @@ export class CircleProvider {
     return this.http.get<String[]>(`http://localhost:8080/circle/modules?circleId=uid`);
   }
 
-  private _path = "http://localhost:8080/";
-  public edit(id : string, visibility : string){
+  public edit(id : number, visibility : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
+    let body = {id : id, vis : visibility};
+    let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
-      this._path + "circle/edit",
-      {
-        params: {
-          id : id,
-          vis : visibility
-        }
-      }
+      "http://localhost:8080/circle/edit", body, header
     ).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();
@@ -50,6 +45,7 @@ export class CircleProvider {
         successSubject.next(false);
       }
     );
+    return successSubject.asObservable();
   }
 
   public removeCircleByCircleId(uid: number): Observable<any>{
@@ -58,5 +54,3 @@ export class CircleProvider {
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 }
-
-

@@ -3,6 +3,6 @@ const Sequelize = require('sequelize'),
 
 const Module = sequelize.define('Module', {
 	type: Sequelize.STRING,
-	
+
 });
 module.exports = Module;

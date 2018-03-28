@@ -72,5 +72,4 @@ public setLocation(lat, long) {
         }
       });
   }
-
 }
