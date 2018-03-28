@@ -87,6 +87,7 @@ module.exports = {
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
+        console.log(req.body);
 
         if (argumentMissing(res, circleId)) return;
 
