@@ -44,4 +44,8 @@ module.exports = function(app) {
     app.route('/circle/members')
         .get(circle.members);
 
+    // circleId: circleId
+    // return: List of active modules for given circle
+    app.route('/circle/modules')
+        .get(circle.getModules);
 };

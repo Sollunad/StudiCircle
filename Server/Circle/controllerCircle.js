@@ -97,6 +97,7 @@ module.exports = {
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
+        console.log(req.body);
 
         if (argumentMissing(res, circleId)) return;
 
@@ -157,6 +158,43 @@ module.exports = {
             res.status(500);
             res.send("Server Error");
         });
+    },
+
+    getModules : function(req, res){
+      var circleId = req.query.circleId;
+      db.Circle.findById(circleId).then(circle => {
+          if(circle == null){
+            res.status(404).send("No circle with given id.");
+            return;
+          }
+          var result = {};
+          if(circle.blackboard){
+            result.blackboard = "blackboard";
+          }
+          if(circle.calendar){
+            result.calendar = "calendar";
+          }
+          if(circle. bill){
+            result.bill = "bill";
+          }
+          if(circle.bet){
+            result.bet = "bet";
+          }
+          if(circle.filesharing){
+            result.filesharing = "filesharing";
+          }
+          if(circle.chat){
+            result.chat = "chat";
+          }
+          if(circle.market){
+            result.market = "market";
+          }
+          res.send(result);
+          return;
+      }).error(err => {
+          res.status(500).send("Error.");
+          return;
+      });
     },
 
 };

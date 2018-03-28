@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { LogInPage } from '../pages/log-in/log-in';
-import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {LogInPage} from "../pages/circle-einstellungen/circle-einstellungen";
 
 @Component({
   templateUrl: 'app.html'
