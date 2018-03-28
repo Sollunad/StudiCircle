@@ -3,9 +3,8 @@ import { NavController } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { Geolocation } from '@ionic-native/geolocation';
 import { AlertController } from 'ionic-angular';
-import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/map';
+import { HttpClient } from "@angular/common/http";
+import { DbProvider } from '../../providers/dbprovider/dbprovider';
 
 @Component({
   selector: 'page-search',
@@ -13,8 +12,10 @@ import 'rxjs/add/operator/map';
 })
 export class SearchPage {
 
-  settings: SettingsPage;
-  distanceValues = [
+  search: '';
+  distance: 0;
+
+  private distanceValues = [
     '1 km',
     '5 km',
     '10 km',
@@ -22,8 +23,12 @@ export class SearchPage {
     '50 km',
     '∞'
   ];
+  private lat: number;
+  private lon: number;
 
-  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http) {
+  circles: String[];
+
+  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, public http: HttpClient, private dbProvider: DbProvider) {
     this.getCurrentPosition();
   }
 
@@ -41,7 +46,15 @@ export class SearchPage {
   }
 
   private setUserCoordinates(lat: number, lon: number) {
+    this.lat = lat;
+    this.lon = lon;
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
+
+    //this.circles = this.dbProvider.getCircles();
+
+    this.dbProvider.getCirclesByLocation(lat, lon).subscribe(
+      circles => console.log('getCirclesByLocation', circles)
+    );
   }
 
   private showLocationPrompt() {
@@ -72,7 +85,6 @@ export class SearchPage {
   private getLocationByAddress(address: string) {
     this.http
       .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
-      .map(res => res.json())
       .subscribe(data => {
         let json = data[0];
         // console.log('json', json);
@@ -85,26 +97,34 @@ export class SearchPage {
       });
   }
 
-  private distanceChanged(event: any) {
-    // console.log(event);
+  private distanceChanged() {
+    // console.log(this.distance);
 
-    document.getElementById('search-distance').innerText = this.distanceValues[event.value];
+    document.getElementById('search-distance').innerText = this.distanceValues[this.distance];
+
+    // TODO: filter circles by distance
   }
 
   private circleClicked(event: any) {
     console.log(event);
+
+    // TODO: go to circle details
   }
 
-  private getCircles(event: any) {
-    let value = event.target.value;
+  private searchCircles() {
+    let value = this.search.trim();
 
-    if (value && value.trim() != '') {
+    if (value && value != '') {
       console.log('value', value);
+
+      // TODO: filter circles by name
+    } else {
+      console.log('value', 'empty');
+      // TODO: view all circles
     }
   }
 
-  private goToSettings(params) {
-    if (!params) params = {};
+  private goToSettings() {
     this.navCtrl.push(SettingsPage);
   }
 }

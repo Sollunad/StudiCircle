@@ -26,14 +26,10 @@ export class CircleProvider {
 
   public edit(id : number, visibility : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
+    let body = {id : id, vis : visibility};
+    let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
-      "http://localhost:8080/circle/edit",
-      {
-        params: {
-          id : id,
-          vis : visibility
-        }
-      }
+      "http://localhost:8080/circle/edit", body, header
     ).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();

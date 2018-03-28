@@ -20,11 +20,12 @@
       <ion-label>
         Sichtbarkeit
       </ion-label>
-      <ion-select name="">
-        <ion-option [selected]="true">
+      <ion-select [(ngModel)]="visibility" name="maul" (ionChange)="onChange()">
+
+        <ion-option value="1" [selected]="true">
           öffentlich
         </ion-option>
-        <ion-option>
+        <ion-option value="0">
           privat
         </ion-option>
       </ion-select>

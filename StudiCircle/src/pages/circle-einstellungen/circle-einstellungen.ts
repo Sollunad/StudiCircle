@@ -15,6 +15,8 @@ export class CircleEinstellungenPage {
 
   private  circleId : number;
 
+  public visibility : string = "test";
+
   constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _circleService : CircleProvider, public navParams: NavParams) {
     this.circleId = navParams.get('circleId')
   }
@@ -68,8 +70,15 @@ export class CircleEinstellungenPage {
 
   id=this.circleId;
   vis='';
+
+  onChange(){
+    console.log(this.visibility);
+    this.vis = this.visibility;
+  }
+
   editVisibility(){
-    const modification = this._circleService.edit(this.id, this.vis).subscribe(
+    console.log(this.vis)
+    const modification = this._circleService.edit(1, this.vis).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[Visibility] : Visibility edit successful");
