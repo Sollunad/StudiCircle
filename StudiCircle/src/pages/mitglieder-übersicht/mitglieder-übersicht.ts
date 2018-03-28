@@ -23,7 +23,7 @@ export class MitgliederÜbersicht {
         memberList => this.memberList = memberList
     );
   }
-  
+
   itemSelected(item: string) {
     console.log("Selected Item", item);
   }

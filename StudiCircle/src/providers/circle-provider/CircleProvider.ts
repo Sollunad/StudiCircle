@@ -21,13 +21,10 @@ export class CircleProvider {
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=1`);
   }
   public removeCircleByCircleId(uid: number): Observable<any>{
-    return this.http.post(`http://localhost:8080/circle/remove`,
-      {
-        params: {
-          id : uid
-        }
-      })
+    console.log(uid);
+    let body = {"id": uid};
+    let header = {"headers" : {"Content-Type": "application/json"}};
+    return this.http.post(`http://localhost:8080/circle/remove`,body,header);
   }
 
 }
-
