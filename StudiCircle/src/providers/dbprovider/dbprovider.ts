@@ -55,7 +55,7 @@ public setLocation(lat, long) {
   public getLocationByAddress(address: string) {
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const subs: Subscription = this.http.get(
-      'https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1').subscribe(
+        'https://nominatim.openstreetmap.org/search/$'+ address +'?format=json&limit=1').subscribe(
       (res: GeoResponse) =>{
         subs.unsubscribe();
         console.log(res);
