@@ -72,24 +72,10 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.getLocationByAddress(address);
+          this.dbprovider.getLocationByAddress(address);
           }
         }]
     }).present();
-  }
-
-  private getLocationByAddress(address: string) {
-    this.http
-      .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
-      .map(res => res.json())
-      .subscribe(data => {
-        let json = data[0];
-        if (!json) {
-          this.showLocationPrompt();
-        } else {
-          this.dbprovider.setLocation(json.lat, json.lon);
-        }
-      });
   }
 
 }

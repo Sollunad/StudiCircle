@@ -60,4 +60,18 @@ export class DbProvider {
     //Jesse mach mal was
   }
 
+  public getLocationByAddress(address: string) {
+    this.http
+      .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
+      .map(res => res.json())
+      .subscribe(data => {
+        let json = data[0];
+        if (!json) {
+          this.showLocationPrompt();
+        } else {
+          this.setLocation(json.lat, json.lon);
+        }
+      });
+  }
+
 }
