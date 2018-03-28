@@ -36,6 +36,7 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     SettingsPage,
     SearchPage,
     PassManPage,
+    CircleStartseite,
     CircleEinstellungenPage
   ],
 
@@ -55,6 +56,7 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     SettingsPage,
     SearchPage,
     PassManPage,
+    CircleStartseite,
     CircleEinstellungenPage
   ],
   providers: [
