@@ -20,7 +20,7 @@ import {DashboardPage} from '../../pages/dashboard/dashboard';
 export class DbProvider{
   private result: any;
 
-constructor(public http: HttpClient, private api: ApiProvider) {}
+constructor(public http: HttpClient, private api: ApiProvider, private dashboard: DashboardPage) {}
 
 public getCircles(){
   /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
@@ -61,7 +61,7 @@ public setLocation(lat, long) {
         console.log(res);
         // successSubject.next(res.httpStatus === 200);
         if (!res) {
-          this.DashboardPage.showLocationPrompt();
+          this.dashboard.showLocationPrompt();
         } else {
           console.log(res[0].lat, res[0].lon);
           this.setLocation(res[0].lat, res[0].lon);

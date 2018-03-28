@@ -58,7 +58,7 @@ export class DashboardPage {
     this.dbprovider.getCircles();
   }
 
-  private showLocationPrompt() {
+  public showLocationPrompt() {
     this.alertCtrl.create({
       title: 'Enter Location',
       message: 'To use App, we need your location.',
