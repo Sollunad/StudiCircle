@@ -65,6 +65,17 @@ module.exports = {
         res.send(newCircle);
     },
 
+    editCircle : function (req,res) {
+      db.Circle.findById(req.body.id)
+      .then(circle => {
+          circle.updateAttributes({
+            //name: req.body.name,
+            visible:  req.body.vis
+          })
+          res.send();
+      })
+    },
+
     removeCircle : function (req, res) {
         const circleId = req.body.id;
 
