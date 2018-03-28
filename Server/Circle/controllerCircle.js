@@ -161,7 +161,10 @@ module.exports = {
     },
 
     getModules : function(req, res){
-      var circleId = req.query.circleId;
+      const circleId = req.query.circleId;
+
+      if (argumentMissing(res, circleId)) return;
+
       db.Circle.findById(circleId).then(circle => {
           if(circle == null){
             res.status(404).send("No circle with given id.");
