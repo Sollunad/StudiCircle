@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
 import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
-import {NavParams} from "ionic-angular";
 
 
 @Component({
@@ -53,6 +52,7 @@ export class CircleEinstellungenPage {
           text: 'Speichern',
           handler: () => {
             console.log('gespeichert');
+            this.editVisibility();
           }
         },
         {
@@ -77,7 +77,7 @@ export class CircleEinstellungenPage {
 
   editVisibility(){
     console.log(this.vis)
-    const modification = this._circleService.edit(1, this.vis).subscribe(
+    const modification = this._circleService.edit(1, this.vis).subscribe( //TO-DO: circleId übergeben!
       (success: boolean) => {
         if(success){
           console.log("[Visibility] : Visibility edit successful");
