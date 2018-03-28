@@ -101,8 +101,11 @@ module.exports = {
     //return all circles the user is following
     circlesForUserId : function (req, res) {
         var userId = req.body.id;
-        var circles = db.UsersCircles.findAll({where: {userID: 1}});
-        res.send({user: 1});
+        var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
+          console.log( res[0]);
+        }).catch(err => {console.log(err);});
+        console.log(circles);
+        res.send(circles);
     },
 
     circlesForLocation : function (req, res) {
