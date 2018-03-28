@@ -9,6 +9,7 @@
   <ion-list>
     <div ion-item *ngFor="let member of memberList" (click)="itemSelected(member)">
       {{ member.username }}
+      <button ion-button color="danger" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
     </div>
   </ion-list>
 </ion-content>
