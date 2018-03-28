@@ -157,27 +157,27 @@ module.exports = {
             res.status(404).send("No circle with given id.");
             return;
           }
-          var result = {};
+          var result = {modules: []};
           if(circle.blackboard){
-            result.blackboard = "blackboard";
+            result.modules.push("blackboard");
           }
           if(circle.calendar){
-            result.calendar = "calendar";
+            result.modules.push("calendar");
           }
           if(circle. bill){
-            result.bill = "bill";
+            result.modules.push("bill");
           }
           if(circle.bet){
-            result.bet = "bet";
+            result.modules.push("bet");
           }
           if(circle.filesharing){
-            result.filesharing = "filesharing";
+            result.modules.push("filesharing");
           }
           if(circle.chat){
-            result.chat = "chat";
+            result.modules.push("chat");
           }
           if(circle.market){
-            result.market = "market";
+            result.modules.push("market");
           }
           res.send(result);
           return;
