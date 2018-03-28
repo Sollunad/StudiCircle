@@ -48,6 +48,11 @@ export class CircleProvider {
     );
   }
 
+  public removeCircleByCircleId(uid: number): Observable<any>{
+    console.log(uid);
+    let body = {"id": uid};
+    return this.http.post(`http://localhost:8080/circle/remove`,body);
+  }
 }
 
 

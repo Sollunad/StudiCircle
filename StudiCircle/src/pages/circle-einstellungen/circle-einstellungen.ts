@@ -3,6 +3,7 @@ import {AlertController, NavController} from 'ionic-angular';
 import {ApiResponse} from "../../providers/declarations/ApiResponse";
 import {UserInfo} from "../../providers/declarations/UserInfo";
 import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+import {HttpClient} from "@angular/common/http";
 
 
 @Component({
@@ -12,7 +13,10 @@ import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
 
 export class CircleEinstellungenPage {
 
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _circleService : CircleProvider) {
+  private circleId : number;
+
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+    this.circleId = navParams.get('circleId');
   }
 
   openConfirmDialog() {
@@ -23,7 +27,9 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            console.log('Circle gelöscht');
+            this.circleProvider.removeCircleByCircleId(1).subscribe( //TO-DO: circleId übergeben!
+              message => console.log(message)
+            );
           }
         },
         {
@@ -65,7 +71,7 @@ export class CircleEinstellungenPage {
   id='';
   vis='';
   editVisibility(){
-    const modification = this._circleService.edit(this.id, this.vis).subscribe(
+    const modification = this.circleProvider.edit(this.id, this.vis).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[Visibility] : Visibility edit successful");
