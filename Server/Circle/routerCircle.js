@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    var circle = require('./controllerCircle');
+    var circle = require('./controllerCircle.js');
 
     // circle routes
     app.route('/circle/helloworld')
@@ -16,10 +16,14 @@ module.exports = function(app) {
         .post(circle.addUser);
 
     // name: circle name
-    // vis: visible
-    // loc: location{long,lat}
+    // vis: true/false
     app.route('/circle/new')
         .post(circle.newCircle);
+
+    // name: circle name
+    // vis: true/false
+    app.route('/circle/edit')
+        .post(circle.editCircle);
 
     // id: circleId
     app.route('/circle/remove')
@@ -40,4 +44,8 @@ module.exports = function(app) {
     app.route('/circle/members')
         .get(circle.members);
 
+    // circleId: circleId
+    // return: List of active modules for given circle
+    app.route('/circle/modules')
+        .get(circle.getModules);
 };

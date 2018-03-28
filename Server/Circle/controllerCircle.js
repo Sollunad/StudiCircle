@@ -55,18 +55,39 @@ module.exports = {
     },
 
     newCircle : function (req, res) {
-        var newCircle = {};
-        newCircle.name = req.body.name;
-        newCircle.visible = req.body.vis;
+        const name = req.body.name;
+        const visible = req.body.vis;
+        //const location = req.body.loc;
 
-        var location = req.body.loc;
+        if (argumentMissing(res, name, visible)) return;
 
-        db.Circle.create(newCircle);
-        res.send(newCircle);
+        db.Circle.create({"name":name,"visible":visible}).then(res => {
+            res.send("Circle created.");
+        }).error(err => {
+            res.status(500)
+            res.send("Server error.");
+        });
+    },
+
+    editCircle : function (req,res) {
+        const circleId = req.body.id;
+        const visible = req.body.vis;
+
+        if (argumentMissing(res, circleId, visible)) return;
+
+        db.Circle.findById(circleId)
+        .then(circle => {
+          circle.updateAttributes({
+            //name: req.body.name,
+            "visible": visible
+          })
+          res.send();
+        })
     },
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
+        console.log(req.body);
 
         if (argumentMissing(res, circleId)) return;
 
@@ -127,6 +148,43 @@ module.exports = {
             res.status(500);
             res.send("Server Error");
         });
+    },
+
+    getModules : function(req, res){
+      var circleId = req.query.circleId;
+      db.Circle.findById(circleId).then(circle => {
+          if(circle == null){
+            res.status(404).send("No circle with given id.");
+            return;
+          }
+          var result = {};
+          if(circle.blackboard){
+            result.blackboard = circle.blackboard;
+          }
+          if(circle.calendar){
+            result.calendar = circle.calendar;
+          }
+          if(circle. bill){
+            result.bill = circle.bill;
+          }
+          if(circle.bet){
+            result.bet = circle.bet;
+          }
+          if(circle.filesharing){
+            result.filesharing = circle.filesharing;
+          }
+          if(circle.chat){
+            result.chat = circle.chat;
+          }
+          if(circle.market){
+            result.market = circle.market;
+          }
+          res.send(result);
+          return;
+      }).error(err => {
+          res.status(500).send("Error.");
+          return;
+      });
     },
 
 };
