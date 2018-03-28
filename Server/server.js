@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // ionic erlauben auf die REST Endpoints zuzugreifen
 app.get('/*',function(req,res,next){
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
 });
 
