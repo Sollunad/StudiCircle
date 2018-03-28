@@ -3,7 +3,10 @@ const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
-        res.send('Hello World!');
+      res.status(200).json({
+        query: req.query,
+        message: 'Hello World!'
+      });
     },
 
     removeUser : function (req, res) {
@@ -61,11 +64,15 @@ module.exports = {
 
         if (argumentMissing(res, name, visible)) return;
 
-        db.Circle.create({"name":name,"visible":visible}).then(res => {
-            res.send("Circle created.");
+        db.Circle.create({"name":name,"visible":visible}).then(circle => {
+            res.status(200).json({
+              circle: circle,
+              message: 'Circle created'
+            });
         }).error(err => {
-            res.status(500)
-            res.send("Server error.");
+            res.status(500).json({
+              error: 'Server error'
+            });
         });
     },
 
@@ -109,9 +116,17 @@ module.exports = {
     },
 
     circlesForLocation : function (req, res) {
-        var location = req.body.loc;
-        res.send(location);
+        const location = req.body.loc;
+        // const Distance = req.body.dist;
 
+        db.Circle.findAll().then(circles => {
+          // circles.forEach(circle => {
+          //   console.log(circle.getLocations());
+          // });
+          res.status(200).json(
+            circles
+          );
+        });
 /*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
             var R = 6371; // Radius of the earth in km
             var dLat = deg2rad(lat2-lat1);  // deg2rad below
