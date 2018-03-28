@@ -25,6 +25,7 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {HttpModule} from "@angular/http";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -47,7 +48,6 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
 
   imports: [
     HttpModule,
-    HttpClientModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
@@ -78,7 +78,8 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbProvider,
-    HttpClientModule
+    HttpClientModule,
+    HttpModule
   ]
 })
 export class AppModule {}

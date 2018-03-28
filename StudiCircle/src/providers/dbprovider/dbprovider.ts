@@ -69,5 +69,4 @@ public setLocation(lat, long) {
        }
      );
   }
-
 }

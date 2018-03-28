@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
-import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 
 
@@ -12,8 +12,9 @@ import {HttpClient} from "@angular/common/http";
 export class CircleEinstellungenPage {
 
   private circleId : number;
+  public visibility : string = "test";
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+  constructor(private _circleService : CircleProvider, public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
     this.circleId = navParams.get('circleId');
   }
 
@@ -63,5 +64,30 @@ export class CircleEinstellungenPage {
       ]
     });
     alert.present();
+  }
+
+  id=this.circleId;
+  vis='';
+
+  onChange(){
+    console.log(this.visibility);
+    this.vis = this.visibility;
+  }
+
+  editVisibility(){
+    console.log(this.vis)
+    const modification = this._circleService.edit(1, this.vis).subscribe(
+      (success: boolean) => {
+        if(success){
+          console.log("[Visibility] : Visibility edit successful");
+          modification.unsubscribe();
+          return true;
+        }else{
+          console.log("[Visibility] : Visibility edit not successful");
+          modification.unsubscribe();
+          return false;
+        }
+      }
+    )
   }
 }
