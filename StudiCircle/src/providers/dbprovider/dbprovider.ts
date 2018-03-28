@@ -43,33 +43,36 @@ export class DbProvider {
   }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    console.log(lat, lon, distance);
+    console.log('getCirclesByLocation', lat, lon, distance);
 
     const url = `http://localhost:8080/circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
     return this.http.get<Circle[]>(url);
   }
 
-  public setLocation(lat, long) {
-    //Jesse mach mal was
+  public setLocation(lat, lon) {
+    console.log('setLocation', lat, lon);
   }
 
-  public getLocationByAddress(address: string) {
-    const successSubject: Subject<boolean> = new Subject<boolean>();
-    const subs: Subscription = this.http.get(
-      'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
-      (res: GeoResponse) => {
-        subs.unsubscribe();
-        console.log(res);
-        successSubject.next(true);
-        console.log(res[0].lat, res[0].lon);
-        this.setLocation(res[0].lat, res[0].lon);
-      },
-      (error: any) => {
-        console.log(error);
-        subs.unsubscribe();
-        successSubject.next(false);
-      }
-      );
+  public getLocationByAddress(address: string): Observable<GeoResponse> {
+    const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
+    return this.http.get<GeoResponse>(url);
+
+    // const successSubject: Subject<boolean> = new Subject<boolean>();
+    // const subs: Subscription = this.http.get(
+    //   'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
+    //   (res: GeoResponse) => {
+    //     subs.unsubscribe();
+    //     console.log(res);
+    //     successSubject.next(true);
+    //     console.log(res[0].lat, res[0].lon);
+    //     this.setLocation(res[0].lat, res[0].lon);
+    //   },
+    //   (error: any) => {
+    //     console.log(error);
+    //     subs.unsubscribe();
+    //     successSubject.next(false);
+    //   }
+    //   );
   }
 
 }
