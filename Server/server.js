@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var cors = require('cors');
 
 var bodyParser = require('body-parser');
 
@@ -21,3 +22,5 @@ console.log('todo list RESTful API server started on: 8080');
 
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
+
+app.use(cors());cd

@@ -50,11 +50,11 @@ export class SearchPage {
     this.lon = lon;
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
 
-    this.circles = this.dbProvider.getCircles();
-
-    this.dbProvider.getCirclesByLocation(lat, lon).subscribe(
-      circles => console.log('getCirclesByLocation', circles)
-    );
+    // this.circles = this.dbProvider.getCircles();
+    //
+    // this.dbProvider.getCirclesByLocation(lat, lon).subscribe(
+    //   circles => console.log('getCirclesByLocation', circles)
+    // );
   }
 
   private showLocationPrompt() {
