@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ApiProvider } from '../../providers/api/api';
+import { ApiProvider } from '../api/api';
 import { Injectable } from '@angular/core';
 import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
@@ -59,7 +59,7 @@ public setLocation(lat, long) {
       (res: GeoResponse) =>{
         subs.unsubscribe();
         console.log(res);
-        successSubject.next(res.httpStatus === 200);
+        // successSubject.next(res.httpStatus === 200);
         if (!res) {
           this.DashboardPage.showLocationPrompt();
         } else {
