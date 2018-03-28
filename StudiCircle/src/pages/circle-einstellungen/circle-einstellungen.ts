@@ -24,10 +24,9 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            this.circleProvider.removeCircleByCircleId(2).subscribe(
+            this.circleProvider.removeCircleByCircleId(1).subscribe( //TO-DO: circleId übergeben!
               message => console.log(message)
             );
-            console.log('Johannes Circle gelöscht');
           }
         },
         {
