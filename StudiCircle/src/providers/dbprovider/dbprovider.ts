@@ -42,9 +42,9 @@ public getCircles(){
     );
 }
 
-public getCirclesByLocation(lat: number, lon: number): Observable<Circle[]> {
-  // TODO: add location properties
-  return this.http.get<Circle[]>(`http://localhost:8080/circle/forLocation`);
+public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
+  const url = `http://localhost:8080/circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
+  return this.http.get<Circle[]>(url);
 }
 
 public setLocation(lat, long) {

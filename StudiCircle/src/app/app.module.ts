@@ -1,6 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+// import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -34,12 +34,13 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     DashboardPage,
     CircleErstellenPage,
     SettingsPage,
+    SearchPage,
     PassManPage,
     CircleEinstellungenPage
   ],
 
   imports: [
-    HttpModule,
+    HttpClientModule,
     BrowserModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -52,6 +53,7 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     DashboardPage,
     CircleErstellenPage,
     SettingsPage,
+    SearchPage,
     PassManPage,
     CircleEinstellungenPage
   ],
