@@ -9,7 +9,7 @@ import {LogInPage} from "../pages/log-in/log-in";
 })
 export class MyApp {
 
-    rootPage:any = LogInPage;
+  rootPage: any = LogInPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {

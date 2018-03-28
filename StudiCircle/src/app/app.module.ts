@@ -1,5 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GetInvolvedPage } from '../pages/get-involved/get-involved';
@@ -30,6 +31,7 @@ import {HttpClientModule} from "@angular/common/http";
     DashboardPage,
     CircleErstellenPage,
     SettingsPage,
+    SearchPage,
     PassManPage,
     CircleEinstellungenPage
   ],
@@ -48,6 +50,7 @@ import {HttpClientModule} from "@angular/common/http";
     DashboardPage,
     CircleErstellenPage,
     SettingsPage,
+    SearchPage,
     PassManPage,
     CircleEinstellungenPage
   ],
@@ -60,9 +63,7 @@ import {HttpClientModule} from "@angular/common/http";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
 
     DbProvider,
-    HttpClientModule,
-    ApiProvider,
-    CircleProvider
+    HttpClientModule
   ]
 })
 export class AppModule {}
