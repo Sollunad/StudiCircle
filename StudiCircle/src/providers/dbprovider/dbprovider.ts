@@ -8,7 +8,7 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Circle } from '../declarations/Circle';
-import {DashboardPage} from '../pages/dashboard/dashboard';
+import {DashboardPage} from '../../pages/dashboard/dashboard';
 
 /*
   Generated class for the DbProvider provider.
