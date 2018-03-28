@@ -24,11 +24,10 @@ export class CircleProvider {
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=1`);
   }
 
-  private _path = "http://localhost:8080/";
-  public edit(id : string, visibility : string){
+  public edit(id : number, visibility : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const editVisibility: Subscription = this.http.post(
-      this._path + "circle/edit",
+      "http://localhost:8080/circle/edit",
       {
         params: {
           id : id,
@@ -46,8 +45,8 @@ export class CircleProvider {
         successSubject.next(false);
       }
     );
+    return successSubject.asObservable();
   }
-
 }
 
 

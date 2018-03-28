@@ -3,6 +3,7 @@ import {AlertController, NavController} from 'ionic-angular';
 import {ApiResponse} from "../../providers/declarations/ApiResponse";
 import {UserInfo} from "../../providers/declarations/UserInfo";
 import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+import {NavParams} from "ionic-angular";
 
 
 @Component({
@@ -12,7 +13,10 @@ import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
 
 export class CircleEinstellungenPage {
 
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _circleService : CircleProvider) {
+  private  circleId : number;
+
+  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _circleService : CircleProvider, public navParams: NavParams) {
+    this.circleId = navParams.get('circleId')
   }
 
   openConfirmDialog() {
@@ -62,7 +66,7 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  id='';
+  id=this.circleId;
   vis='';
   editVisibility(){
     const modification = this._circleService.edit(this.id, this.vis).subscribe(

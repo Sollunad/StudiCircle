@@ -15,6 +15,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {CircleProvider} from "../providers/circle-provider/CircleProvider";
+import {HttpClient, HttpHandler} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -46,9 +48,12 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
   ],
   providers: [
     StatusBar,
+    HttpClient,
+    HttpModule,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ApiProvider
+    ApiProvider,
+    CircleProvider
   ]
 })
 export class AppModule {}
