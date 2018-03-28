@@ -1,21 +1,24 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { SettingsPage } from '../settings/settings';
 import { PassManPage } from '../pass-man/pass-man';
 import { LogInPage } from '../log-in/log-in';
 import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
-import { ChangeMailPage } from '../change-mail/change-mail';
 
 @Component({
-  selector: 'page-settings',
-  templateUrl: 'settings.html'
+  selector: 'page-change-mail',
+  templateUrl: 'change-mail.html'
 })
-export class SettingsPage {
+export class ChangeMailPage {
 
   constructor(public navCtrl: NavController) {
   }
-  goToPassMan(params){
+  goToSettings(params){
+    if (!params) params = {};
+    this.navCtrl.push(SettingsPage);
+  }goToPassMan(params){
     if (!params) params = {};
     this.navCtrl.push(PassManPage);
   }goToLogIn(params){
@@ -33,8 +36,5 @@ export class SettingsPage {
   }goToChangeMail(params){
     if (!params) params = {};
     this.navCtrl.push(ChangeMailPage);
-  }goToSettings(params){
-    if (!params) params = {};
-    this.navCtrl.push(SettingsPage);
   }
 }

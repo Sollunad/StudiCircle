@@ -5,6 +5,7 @@ import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
 import {Subscription} from "rxjs/Subscription";
 import {ApiProvider} from "../../providers/api/api";
+import {ForgotPasswordPage} from "../forgot-password/forgot-password";
 @Component({
   selector: 'page-log-in',
   templateUrl: 'log-in.html'
@@ -33,6 +34,10 @@ export class LogInPage {
   goToDashboard(params){
     if (!params) params = {};
     this.navCtrl.push(DashboardPage);
+  }
+  goToForgotPassword(params){
+    if (!params) params = {};
+    this.navCtrl.push(ForgotPasswordPage);
   }
 
   login(){
