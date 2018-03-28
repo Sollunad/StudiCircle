@@ -5,6 +5,8 @@ import { SearchPage  } from '../search/search';
 import { Geolocation } from '@ionic-native/geolocation'
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
+import { AlertController } from 'ionic-angular';
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'page-dashboard',
@@ -13,15 +15,17 @@ import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 export class DashboardPage {
 
   settings: SettingsPage;
-  clist:string[];
+  private clist:string[];
+  private res: any;
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient) {
       this.geolocation.getCurrentPosition().then((resp) => {
          let lat = resp.coords.latitude
          let long = resp.coords.longitude
          this.dbprovider.setLocation(lat, long)
         }).catch((error) => {
           console.log('Error getting location', error);
+          this.showLocationPrompt();
         });
 
   }
@@ -38,6 +42,7 @@ export class DashboardPage {
   }
 
  private onNewCircle(){
+    this.navCtrl.push(circleErstellen);
     this.navCtrl.push(CircleErstellenPage);
   }
 
@@ -51,9 +56,26 @@ export class DashboardPage {
   }
 
   ionViewWillEnter(){
-    this.clist = this.dbprovider.getCircles();
-    console.log("aufgerufen");
+    this.dbprovider.getCircles();
   }
 
+  private showLocationPrompt() {
+    this.alertCtrl.create({
+      title: 'Enter Location',
+      message: 'To use App, we need your location.',
+      enableBackdropDismiss: false,
+      inputs: [{
+          name: 'location',
+          placeholder: 'Location'
+        }],
+      buttons: [{
+        text: 'OK',
+        handler: data => {
+          let address = data.location;
+          this.dbprovider.getLocationByAddress(address);
+          }
+        }]
+    }).present();
+  }
 
 }
