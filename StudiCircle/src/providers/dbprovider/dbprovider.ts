@@ -17,8 +17,8 @@ export class DbproviderProvider {
   }
 
   public getCircles(){
-    if(this.circle_list == null){
-      return -1;
+    if(!this.circle_list){
+      return [];
     }
     else{
       return this.circle_list;
