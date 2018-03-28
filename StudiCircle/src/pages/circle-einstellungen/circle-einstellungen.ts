@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
-import {ApiResponse} from "../../providers/declarations/ApiResponse";
-import {UserInfo} from "../../providers/declarations/UserInfo";
+import {AlertController, NavController, NavParams} from 'ionic-angular';
 import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 
@@ -53,7 +51,6 @@ export class CircleEinstellungenPage {
           text: 'Speichern',
           handler: () => {
             console.log('gespeichert');
-            this.editVisibility();
           }
         },
         {
@@ -66,23 +63,5 @@ export class CircleEinstellungenPage {
       ]
     });
     alert.present();
-  }
-
-  id='';
-  vis='';
-  editVisibility(){
-    const modification = this.circleProvider.edit(this.id, this.vis).subscribe(
-      (success: boolean) => {
-        if(success){
-          console.log("[Visibility] : Visibility edit successful");
-          modification.unsubscribe();
-          return true;
-        }else{
-          console.log("[Visibility] : Visibility edit not successful");
-          modification.unsubscribe();
-          return false;
-        }
-      }
-    )
   }
 }
