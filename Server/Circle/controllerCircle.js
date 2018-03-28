@@ -145,6 +145,43 @@ module.exports = {
         });
     },
 
+    getModules : function(req, res){
+      var circleId = req.query.circleId;
+      db.Circle.findById(circleId).then(circle => {
+          if(circle == null){
+            res.status(404).send("No circle with given id.");
+            return;
+          }
+          var result = {};
+          if(circle.blackboard){
+            result.blackboard = circle.blackboard;
+          }
+          if(circle.calendar){
+            result.calendar = circle.calendar;
+          }
+          if(circle. bill){
+            result.bill = circle.bill;
+          }
+          if(circle.bet){
+            result.bet = circle.bet;
+          }
+          if(circle.filesharing){
+            result.filesharing = circle.filesharing;
+          }
+          if(circle.chat){
+            result.chat = circle.chat;
+          }
+          if(circle.market){
+            result.market = circle.market;
+          }
+          res.send(result);
+          return;
+      }).error(err => {
+          res.status(500).send("Error.");
+          return;
+      });
+    },
+
 };
 
 function argumentMissing(res, ...args){
