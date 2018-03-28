@@ -14,6 +14,9 @@
     <ion-item id="getInvolved-input2">
       <ion-input type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="profile.mail" pattern='^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'></ion-input>
     </ion-item>
+    <ion-item id="getInvolved-input7">
+      <ion-input type="text" placeholder="Firstname Lastname" name="user_name" [(ngModel)]="profile.name" pattern='(\w+ (\w+|\w+-\w+))'></ion-input>
+    </ion-item>
     <ion-item id="getInvolved-input3">
       <ion-input type="password" placeholder="Password" name="pw" [(ngModel)]="profile.password" pattern='[(\w+\W+\d)]{6,24}'></ion-input>
     </ion-item>

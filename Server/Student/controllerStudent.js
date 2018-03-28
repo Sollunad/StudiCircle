@@ -11,14 +11,12 @@ module.exports = {
     //Called when a user wants to create an account
     //Will send a validation Mail
     register : function (req, res) {
-        var mailAddress = req.body.mail;
-        var password = req.body.pwd;
-        var accountType = req.body.type;
+        let mailAddress = req.body.mail;
+        let password = req.body.pwd;
+        let accountType = req.body.type;
+        let userName = req.body.username;
 
-        //res.send(mailAddress + "\n pwd: " + password + "\ntype; " + accountType + "\n all: " + req.body);
-        //console.log(mailAddress + "\n" + password + "\n" + accountType + "\n" + res);
-
-        registration.register(mailAddress, password, accountType, res);
+        registration.register(mailAddress, password, accountType, userName, res);
     },
 
     //Called when user clicks the link in the validation Mail.
