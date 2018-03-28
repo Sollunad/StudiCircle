@@ -26,7 +26,8 @@ export class ApiProvider {
   }
 
   public changeMail(new_mail : string, pwd : string){
-    let data = {"session" : this.currentUser.session, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd}
+    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd}
+    console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
       this._apiPath + "user/updateMail",
@@ -59,8 +60,8 @@ export class ApiProvider {
           if(res.status !== 200) {
             return false;
           } else {
-            res.userData.session = res.session;
             this.currentUser = res.userData;
+            this.currentUser.session = res.session;
             return true;
           }
         }
