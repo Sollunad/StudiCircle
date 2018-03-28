@@ -158,25 +158,25 @@ module.exports = {
           }
           var result = {};
           if(circle.blackboard){
-            result.blackboard = circle.blackboard;
+            result.blackboard = "blackboard";
           }
           if(circle.calendar){
-            result.calendar = circle.calendar;
+            result.calendar = "calendar";
           }
           if(circle. bill){
-            result.bill = circle.bill;
+            result.bill = "bill";
           }
           if(circle.bet){
-            result.bet = circle.bet;
+            result.bet = "bet";
           }
           if(circle.filesharing){
-            result.filesharing = circle.filesharing;
+            result.filesharing = "filesharing";
           }
           if(circle.chat){
-            result.chat = circle.chat;
+            result.chat = "chat";
           }
           if(circle.market){
-            result.market = circle.market;
+            result.market = "market";
           }
           res.send(result);
           return;
