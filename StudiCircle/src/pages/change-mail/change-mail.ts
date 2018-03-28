@@ -6,6 +6,8 @@ import { LogInPage } from '../log-in/log-in';
 import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
+import {ApiProvider} from "../../providers/api/api";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'page-change-mail',
@@ -13,7 +15,12 @@ import { DashboardPage } from '../dashboard/dashboard';
 })
 export class ChangeMailPage {
 
-  constructor(public navCtrl: NavController) {
+  private oldMail : string;
+  private newMail : string;
+  private chkNewMail : string;
+  private pwd : string;
+
+  constructor(public navCtrl: NavController, private _api : ApiProvider) {
   }
   goToSettings(params){
     if (!params) params = {};
@@ -36,5 +43,20 @@ export class ChangeMailPage {
   }goToChangeMail(params){
     if (!params) params = {};
     this.navCtrl.push(ChangeMailPage);
+  }
+
+  onButtonClick(){
+    const requestMailChange : Subscription = this._api.changeMail(this.newMail, this.pwd).subscribe(
+      (data: boolean) => {
+        if (data) {
+          this.goToSettings({});
+          requestMailChange.unsubscribe();
+        } else {
+          console.log("[LOGIN] : Login failed");
+          requestMailChange.unsubscribe();
+        }
+      }
+    );
+
   }
 }
