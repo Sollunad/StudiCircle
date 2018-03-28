@@ -24,7 +24,6 @@ import { SearchPage } from '../pages/search/search';
 import { Geolocation } from '@ionic-native/geolocation';
 import { DbProvider } from '../providers/dbprovider/dbprovider';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
-import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -41,6 +40,7 @@ import {HttpClientModule} from "@angular/common/http";
 
   imports: [
     HttpModule,
+    HttpClientModule,
     BrowserModule,
     IonicModule.forRoot(MyApp)
   ],
