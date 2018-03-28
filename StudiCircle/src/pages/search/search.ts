@@ -3,18 +3,17 @@ import { NavController } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { Geolocation } from '@ionic-native/geolocation';
 import { AlertController } from 'ionic-angular';
-import { Http } from '@angular/http';
+import { HttpClient } from "@angular/common/http";
 import { DbProvider } from '../../providers/dbprovider/dbprovider';
-// import { Circle } from '../../providers/declarations/Circle';
-// import { CircleTest } from '../../../../Server/Database/circle.js';
-
-import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-search',
   templateUrl: 'search.html'
 })
 export class SearchPage {
+
+  search: '';
+  distance: 0;
 
   private distanceValues = [
     '1 km',
@@ -24,14 +23,13 @@ export class SearchPage {
     '50 km',
     '∞'
   ];
+  private lat: number;
+  private lon: number;
+
   circles: String[];
 
-  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http, private dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, public http: HttpClient, private dbProvider: DbProvider) {
     this.getCurrentPosition();
-    // CircleTest.Circle.create({
-    //   name: 'Test',
-    //   visibleble: true
-    // });
   }
 
   private getCurrentPosition() {
@@ -48,12 +46,15 @@ export class SearchPage {
   }
 
   private setUserCoordinates(lat: number, lon: number) {
+    this.lat = lat;
+    this.lon = lon;
     document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
 
     this.circles = this.dbProvider.getCircles();
-    // let circle = new Circle();
-    // circle.position = { lat, lon };
-    // this.circles.push(circle);
+
+    this.dbProvider.getCirclesByLocation(lat, lon).subscribe(
+      circles => console.log('getCirclesByLocation', circles)
+    );
   }
 
   private showLocationPrompt() {
@@ -84,7 +85,6 @@ export class SearchPage {
   private getLocationByAddress(address: string) {
     this.http
       .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
-      .map(res => res.json())
       .subscribe(data => {
         let json = data[0];
         // console.log('json', json);
@@ -97,26 +97,34 @@ export class SearchPage {
       });
   }
 
-  private distanceChanged(value: number) {
-    // console.log(value);
+  private distanceChanged() {
+    // console.log(this.distance);
 
-    document.getElementById('search-distance').innerText = this.distanceValues[value];
+    document.getElementById('search-distance').innerText = this.distanceValues[this.distance];
+
+    // TODO: filter circles by distance
   }
 
   private circleClicked(event: any) {
     console.log(event);
+
+    // TODO: go to circle details
   }
 
-  private searchCircles(event: any) {
-    let value = event.target.value;
+  private searchCircles() {
+    let value = this.search.trim();
 
-    if (value && value.trim() != '') {
+    if (value && value != '') {
       console.log('value', value);
+
+      // TODO: filter circles by name
+    } else {
+      console.log('value', 'empty');
+      // TODO: view all circles
     }
   }
 
-  private goToSettings(params) {
-    if (!params) params = {};
+  private goToSettings() {
     this.navCtrl.push(SettingsPage);
   }
 }
