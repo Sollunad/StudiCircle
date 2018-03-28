@@ -1,6 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -37,7 +36,6 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
     SearchPage
   ],
   imports: [
-    HttpClientModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
@@ -59,7 +57,6 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     CircleProvider,
     Geolocation,
