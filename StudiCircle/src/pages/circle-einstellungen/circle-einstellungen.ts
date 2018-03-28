@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'page-circle-einstellungen',
@@ -8,7 +10,10 @@ import {AlertController, NavController} from 'ionic-angular';
 
 export class CircleEinstellungenPage {
 
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController) {
+  private circleId : number;
+
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+    this.circleId = navParams.get('circleId');
   }
 
   openConfirmDialog() {
@@ -19,7 +24,10 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            console.log('Circle gelöscht');
+            this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
+              message => console.log(message)
+            );
+            console.log('Johannes Circle gelöscht');
           }
         },
         {

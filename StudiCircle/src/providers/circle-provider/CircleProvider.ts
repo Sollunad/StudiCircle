@@ -20,6 +20,14 @@ export class CircleProvider {
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=1`);
   }
+  public removeCircleByCircleId(uid: number): Observable<any>{
+    return this.http.post(`http://localhost:8080/circle/remove`,
+      {
+        params: {
+          id : uid
+        }
+      })
+  }
 
 }
 
