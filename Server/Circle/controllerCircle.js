@@ -55,14 +55,18 @@ module.exports = {
     },
 
     newCircle : function (req, res) {
-        var newCircle = {};
-        newCircle.name = req.body.name;
-        newCircle.visible = req.body.vis;
+        const name = req.body.name;
+        const visible = req.body.vis;
+        //const location = req.body.loc;
 
-        var location = req.body.loc;
+        if (argumentMissing(res, name, visible)) return;
 
-        db.Circle.create(newCircle);
-        res.send(newCircle);
+        db.Circle.create({"name":name,"visible":visible}).then(res => {
+            res.send("Circle created.");
+        }).error(err => {
+            res.status(500)
+            res.send("Server error.");
+        });
     },
 
     editCircle : function (req,res) {
