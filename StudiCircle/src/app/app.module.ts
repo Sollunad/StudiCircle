@@ -16,7 +16,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {CircleProvider} from "../providers/circle-provider/CircleProvider";
-import {HttpClient, HttpHandler} from "@angular/common/http";
+import {HttpClient, HttpHandler, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -33,6 +33,7 @@ import {HttpClient, HttpHandler} from "@angular/common/http";
   imports: [
     HttpModule,
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
