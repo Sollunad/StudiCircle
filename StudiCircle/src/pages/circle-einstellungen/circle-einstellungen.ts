@@ -12,7 +12,7 @@ import {HttpClient} from "@angular/common/http";
 export class CircleEinstellungenPage {
 
   private circleId : number;
-  public visibility : string = "test";
+  private visibility : string = "test";
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
@@ -76,7 +76,7 @@ export class CircleEinstellungenPage {
   }
 
   editVisibility(){
-    console.log(this.vis)
+    console.log(this.vis);
     const modification = this._circleService.edit(1, this.vis).subscribe(
     (success: boolean) => {
           if(success){
