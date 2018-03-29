@@ -15,12 +15,14 @@
         Name*
       </ion-label>
       <ion-input type="text" placeholder="Mustercircle" name="circlename" [(ngModel)]="newName"></ion-input>
+      <button clear item-right (click)="showExtraInfoName()">?</button>
     </ion-item>
     <ion-item id="circleErstellen-input2">
       <ion-label>
         Standort
       </ion-label>
       <ion-input type="text" placeholder="Musteradresse" name="address"></ion-input>
+      <button clear item-right (click)="showExtraInfoAdresse()">?</button>
     </ion-item>
     <ion-item id="circleErstellen-select1">
       <ion-label>
@@ -34,6 +36,7 @@
           privat
         </ion-option>
       </ion-select>
+      <button clear item-right (click)="showExtraInfoSichtbarkeit()">?</button> // TODO Button nicht drückbar, liegt hinter ion-select!
     </ion-item>
   </form>
   <div id="circleErstellen-markdown1" class="show-list-numbers-and-dots">
@@ -44,22 +47,6 @@
   <button id="circleErstellen-button1" ion-button color="positive" (click)="createCircle()" block>
     Erstellen
   </button>
-  <div id="circleErstellen-markdown2" class="show-list-numbers-and-dots">
-    <p style="color:#000000;font-size:11px;">
-      <strong>
-        Name
-      </strong>
-      Hier können sie einen beliebigen Namen für den Circle angeben unter dem dieser dann angezeigt wird
-    </p>
-  </div>
-  <div id="circleErstellen-markdown3" class="show-list-numbers-and-dots">
-    <p style="color:#000000;font-size:11px;">
-      <strong>
-        Standort
-      </strong>
-      Hier können sie einen beliebigen Standort für den Circle angeben um Leute in der Umgebung darauf aufmerksam zu machen.
-    </p>
-  </div>
   <div id="circleErstellen-markdown5" class="show-list-numbers-and-dots">
     <p style="color:#000000;font-size:11px;">
       <strong>
