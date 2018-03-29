@@ -41,12 +41,12 @@ console.log('todo list RESTful API server started on: 8080');
 function authorize(req, res, next){
     var url = req.originalUrl
     console.log(url);
-    if(allowedUrls.includes(url) || containsWildcard(url) ){
+    if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
-    }else if(req.session && req.session.userId){
+    }else if (req.session && req.session.userId){
         // eventuell checken ob UserID wirklich exestiert
         next();
-    }else{
+    }else {
         req.session.reset();
         res.status(401);
         res.send("Unauthorized!");
@@ -54,7 +54,7 @@ function authorize(req, res, next){
 }
 
 function containsWildcard(url){
-    for (var wildcard in allowedWildcards) {
+    for (var wildcard of allowedWildcards) {
         console.log(wildcard);
         if (url.startsWith(wildcard)) {
             return true;
