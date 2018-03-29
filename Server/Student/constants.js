@@ -16,9 +16,6 @@ const SALT_LENGTH = 48;
 const API_URL_ROOT_PRODUCTIVE = "https://api.sknx.de";
 const API_URL_ROOT_DEV = "https://api.dev.sknx.de";
 
-const UI_URL_ROOT_PRODUCTIVE = "https://studicircle.sknx.de";
-const UI_URL_ROOT_DEV = "https://studicircle.dev.sknx.de";
-
 const PASS_MIN_LENGTH = 8;
 const PASS_MAX_LENGTH = 64;
 
