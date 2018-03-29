@@ -91,8 +91,11 @@ module.exports = {
             //name: req.body.name,
             "visible": visible
           })
-          res.send();
-        })
+          res.send("OK");
+        }).error(err => {
+          res.status(500);
+          res.send("Save changes failed.")
+        });
     },
 
     removeCircle : function (req, res) {
