@@ -13,7 +13,7 @@ module.exports = {
                         '</head>\n' +
                         '<body>\n' +
                             '<p>\n' +
-                                'Please click on following link to reset your password for StuiCircle: <a href="' + constants.getPasswordChangeURL(resetId) + '">Reset my password</a><br/>\n' +
+                                'Please click on following link to reset your password for StuiCircle: <a href="' + constant.getPasswordChangeURL(resetId) + '">Reset my password</a><br/>\n' +
                                 'If you did not request a password reset please ignore this mail.' +
                             '</p>' +
                         '</body>\n' +
