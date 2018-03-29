@@ -16,8 +16,8 @@ module.exports = {
         let password = req.body.pwd;
         let accountType = req.body.type;
         let userName = req.body.username;
-
-        registration.register(mailAddress, password, accountType, userName, res);
+        let businessDescription = req.body.businessdescription;
+        registration.register(mailAddress, password, accountType, userName, res, businessDescription);
     },
 
     //Called when user clicks the link in the validation Mail.

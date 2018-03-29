@@ -45,18 +45,41 @@ export class ChangeMailPage {
     this.navCtrl.push(ChangeMailPage);
   }
 
-  onButtonClick(){
-    const requestMailChange : Subscription = this._api.changeMail(this.newMail, this.pwd).subscribe(
-      (data: boolean) => {
-        if (data) {
-          this.goToSettings({});
-          requestMailChange.unsubscribe();
-        } else {
-          console.log("[LOGIN] : Login failed");
-          requestMailChange.unsubscribe();
+  mailChange(){
+    if(this.oldMail && this.newMail && this.chkNewMail && this.pwd){
+      if(this.oldMail != this.newMail){
+        if(this.newMail == this.chkNewMail) {
+          const requestMailChange: Subscription = this._api.changeMail(this.newMail, this.pwd).subscribe(
+            (data: boolean) => {
+              if (data) {
+                console.log("[MAIL CHANGE] : Mail Change was successful");
+                requestMailChange.unsubscribe();
+                this.goToSettings({});
+              } else {
+                console.log("[MAIL CHANGE] : Mail Change not successful");
+                requestMailChange.unsubscribe();
+              }
+            }
+          );
+        }else{
+          console.log("[MAIL CHANGE] : Supplied new Mail differs from confirmation Mail");
         }
+      }else{
+        console.log("[MAIL CHANGE] : Old Mail and new Mail must be different");
       }
-    );
-
+    }else{
+      if(!this.oldMail){
+        console.log("[MAIL CHANGE] : Old Mail is required");
+      }
+      if(!this.newMail){
+        console.log("[MAIL CHANGE] : New Mail is required");
+      }
+      if(!this.chkNewMail){
+        console.log("[MAIL CHANGE] : Confirmation of new Mail is required");
+      }
+      if(!this.pwd){
+        console.log("[MAIL CHANGE] : Password is required");
+      }
+    }
   }
 }
