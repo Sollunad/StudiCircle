@@ -12,6 +12,7 @@ module.exports = function(app) {
         .post(user.forgotPassword);
 
     app.route('/user/resetPassword/:validationKey')
+        .get(user.passwordResetPage)
         .post(user.resetPassword);
 
     app.route('/user/login')
