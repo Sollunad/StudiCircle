@@ -68,6 +68,37 @@ module.exports = {
         }
     },
 
+    passwordResetPage : function (req, res) {
+        var validationKey = req.params.validationKey;
+        if (!validationKey) {
+            res.status(400);
+            res.send("Bad request. No validation key");
+            return;
+        } else {
+            var html = "<html>\n" +
+                            "<head>\n" +
+                                "<title>Reset your Password at Studicircle</title>\n" +
+                            "</head>\n" +
+                            "<body>\n" +
+                                "<h1>Reset your password at StudiCircle</h1>\n" +
+                                "<p>\n" +
+                                    "To reset your password please fill in the form below:" +
+                                "</p>\n"+
+                                "<form method='POST' action='" + constants.getPasswordChangeURL(validationKey) + "'>" +
+                                    "<label for='pw1'>Password:</label>\n" +
+                                    "<input type='password' name='newPassword' id='pw1'/><br>\n" +
+                                    "<label for='pw2'>Repeat Password:</label>\n" +
+                                    "<input type='password' name='repeatNewPassword' id='pw2'/><br>\n" +
+                                    "<input type='submit' value='submit'/>\n" +
+                                "</form>\n" +
+                            "</body>\n" +
+                        "</html>\n";
+
+            res.status(200);
+            res.send(html);
+        }
+    },
+
     //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : function (req, res) {
         var validationKey = req.params.validationKey;
