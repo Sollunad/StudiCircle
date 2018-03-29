@@ -14,7 +14,7 @@ module.exports = {
 
     userExists : function (userId) {
         try {
-            database.userExists(userId);
+            return database.userExists(userId);
         } catch (err){
             throw "Database Error";
         }
