@@ -14,15 +14,24 @@ module.exports = {
 
         const reqUserId = req.session.userId; // TODO: nur admin/mod im circle können user löschen
 
-        db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
-            result.destroy();
+        db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
+            if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
+                db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
+                    result.destroy();
+                    res.send("User from circle removed.");
+                }).error(err => {
+                    res.status(404);
+                    res.send("User not found in circle.");
+                });
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not Admin in the requested circle.")
+            }
         }).error(err => {
             res.status(404);
-            res.send("User in circle not found.");
+            res.send("User not found in circle.");
             return;
         });
-
-        res.send("User from circle removed.");
     },
 
     addUser : function (req, res) {
@@ -116,7 +125,8 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-        var userId = req.body.id; //TODO userId aus session ziehen -> kein übergabewert nötig
+        const userId = req.session.userId;
+
         var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
           console.log( res[0]);
         }).catch(err => {console.log(err);});
