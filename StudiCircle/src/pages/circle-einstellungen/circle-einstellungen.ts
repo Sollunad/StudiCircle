@@ -13,7 +13,7 @@ export class CircleEinstellungenPage {
 
   private circleId : number;
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
   }
 
@@ -69,18 +69,19 @@ export class CircleEinstellungenPage {
   id='';
   vis='';
   editVisibility(){
-    // const modification = this.circleProvider.edit(this.id, this.vis).subscribe(
-    //   (success: boolean) => {
-    //     if(success){
-    //       console.log("[Visibility] : Visibility edit successful");
-    //       modification.unsubscribe();
-    //       return true;
-    //     }else{
-    //       console.log("[Visibility] : Visibility edit not successful");
-    //       modification.unsubscribe();
-    //       return false;
-    //     }
-    //   }
-    // )
+    console.log(this.vis)
+    const modification = this._circleService.edit(1, this.vis).subscribe(
+    (success: boolean) => {
+          if(success){
+            console.log("[Visibility] : Visibility edit successful");
+            modification.unsubscribe();
+            return true;
+          }else{
+            console.log("[Visibility] : Visibility edit not successful");
+            modification.unsubscribe();
+            return false;
+          }
+      }
+    )
   }
 }
