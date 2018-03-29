@@ -12,7 +12,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
-        const reqUserId = req.session.userId; // TODO: nur admin/mod im circle können user löschen
+        const reqUserId = req.session.userId;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
             if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
