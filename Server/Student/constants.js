@@ -37,32 +37,27 @@ module.exports = {
     USERNAME_MAX_LENGTH: USERNAME_MAX_LENGTH,
 
     getActivationURL : function (activationToken) {
-        var root;
-        if (!process.env.StudicircleTest) {
-            root = API_URL_ROOT_PRODUCTIVE;
-        } else {
-            root = API_URL_ROOT_DEV;
-        }
+        var root = this.getRootURL();
         return root + "/user/activate/" + activationToken;
     },
 
     getPasswordChangeURL : function (activationToken) {
-        var root;
-        if (!process.env.StudicircleTest) {
-            root = UI_URL_ROOT_PRODUCTIVE;
-        } else {
-            root = UI_URL_ROOT_DEV;
-        }
+        var root = this.getRootURL();
         return root + "/user/resetPassword/" + activationToken;
     },
 
     getNewMailActivationURL : function (activationToken) {
+        var root = this.getRootURL();
+        return root + "/user/changeMail/" + activationToken;
+    },
+
+    getRootURL : function () {
         var root;
         if (!process.env.StudicircleTest) {
             root = API_URL_ROOT_PRODUCTIVE;
         } else {
             root = API_URL_ROOT_DEV;
         }
-        return root + "/user/changeMail/" + activationToken;
+        return root;
     }
 }
