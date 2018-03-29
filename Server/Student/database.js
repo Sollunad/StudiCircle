@@ -56,7 +56,11 @@ module.exports = {
         return true;
     },
 
-    userExists : function (mail) {
+    userMailExists : function (mail) {
+        return true;
+    },
+
+    userExists : function (userId) {
         return true;
     },
 

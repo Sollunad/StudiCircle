@@ -56,7 +56,7 @@ module.exports = {
         }
 
         try {
-            if (database.userExists(mail)) {
+            if (database.userMailExists(mail)) {
                 resetPwd.reset(mail);
             }
             res.status(200);
@@ -188,7 +188,6 @@ module.exports = {
                 var returnObject = {};
                 returnObject.status = 200;
                 returnObject.message = "Successfully Logged in";
-                returnObject.session = database.newSession(userId);
                 returnObject.userData = database.getUserData(userId);
 
                 req.session.userId = userId;

@@ -11,4 +11,12 @@ module.exports = {
         }
         return userData;
     },
+
+    userExists : function (userId) {
+        try {
+            database.userExists(userId);
+        } catch (err){
+            throw "Database Error";
+        }
+    },
 }
