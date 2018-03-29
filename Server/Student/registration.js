@@ -1,8 +1,7 @@
 var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
-const crypto = require('crypto');
-const pwdCheck = require('./passwordCheck');
+const passwordUtil = require('./passwordCheck');
 
 module.exports = {
 
@@ -29,12 +28,12 @@ module.exports = {
                 '</html>';
             subject = 'StudiCircle: Validate new business account';
 
-            var salt = this.generateSalt()
-            var userValue = salt + password;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+            var userAuthData = passwordUtil.generateUserAuthData(password);
+            var hash = userAuthData.hash;
+            var salt = userAuthData.salt;
 
             //insert userdata in database
-            result = database.insertNewPerson(mail, hash, salt, accountType, randomString);
+            result = database.insertNewPerson(mail, hash, salt, constant.AccountType.BUSINESS, randomString);
             if (result === "ok"){
                 break;
             }else if (res) {
@@ -154,7 +153,7 @@ module.exports = {
             return "invalidAccountType";
         }
 
-        let passwordCheck = pwdCheck.checkPassword(password);
+        let passwordCheck = passwordUtil.passwordIsCompliant(password);
         if (!passwordCheck){
             if (res){
                 res.status(412);
@@ -196,9 +195,9 @@ module.exports = {
                 '</html>';
             subject = 'StudiCircle: Validate your mail address';
 
-            var salt = this.generateSalt()
-            var userValue = salt + password;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+            var userAuthData = passwordUtil.generateUserAuthData(password);
+            var hash = userAuthData.hash;
+            var salt = userAuthData.salt;
 
             //insert userdata in database
             result = database.insertNewPerson(mail, hash, salt, accountType, randomString);
@@ -284,7 +283,4 @@ module.exports = {
             });
     },
 
-    generateSalt : function() {
-        return crypto.randomBytes(constant.SALT_LENGTH).toString('base64');
-    }
 };

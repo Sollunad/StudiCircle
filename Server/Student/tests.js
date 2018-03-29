@@ -51,18 +51,18 @@ module.exports = {
         let result = false;
         let response = "Start database test...\n";
 
-        result = database.checkPassword("user","password");
+        result = database.passwordIsCompliant("user","password");
         if (result){
-            response += "checkPassword passed\n";
+            response += "passwordIsCompliant passed\n";
         }else {
-            response += "error at checkPassword --------------------------------------\n";
+            response += "error at passwordIsCompliant --------------------------------------\n";
         }
 
         result = database.getUserData("user");
         if (result){
-            response += "checkPassword passed\n";
+            response += "passwordIsCompliant passed\n";
         }else {
-            response += "error at checkPassword --------------------------------------\n";
+            response += "error at passwordIsCompliant --------------------------------------\n";
         }
 
         result = database.insertNewPerson("mail", "password", 1, "randomString");

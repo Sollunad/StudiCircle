@@ -25,22 +25,26 @@ module.exports = {
         //invalidPwd
         //invalidAccountType
         //randomExisting
+        console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
         return resultMessage;
     },
 
-    setPasswordHash : function (userId, hash) {
-
+    setPassword : function (userId, hash, salt) {
+        console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
     },
     
     setState : function (validationKey, newState) {
+        console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         return true;
     },
 
     setValidationKey : function (mail, validationKey) {
+        console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
         return true;
     },
 
     setChangeMailKey : function (oldMail, newMail, validationKey) {
+        console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
         return true;
     },
 
@@ -49,7 +53,7 @@ module.exports = {
     },
 
     updateMail : function (userId, newMail) {
-
+        console.log("UPDATE MAIL - UserId: " + userId + " | NewMail: " + newMail);
     },
 
     validationKeyExists : function (validationKey) {
@@ -65,6 +69,6 @@ module.exports = {
     },
 
     deleteUser : function (userId) {
-
+        console.log("DELETE USER - UserId: " + userId);
     }
 }
