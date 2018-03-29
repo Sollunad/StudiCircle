@@ -12,6 +12,8 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
+        const reqUserId = req.session.userId; // TODO: nur admin/mod im circle können user löschen
+
         db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
             result.destroy();
         }).error(err => {
@@ -61,7 +63,7 @@ module.exports = {
 
         if (argumentMissing(res, name, visible)) return;
 
-        const userId = 1 //TODO session ???
+        const userId = req.session.userId;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
             db.User.findOne({where: {"id" : userId}}).then(user => {
@@ -85,6 +87,8 @@ module.exports = {
 
         if (argumentMissing(res, circleId, visible)) return;
 
+        const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+
         db.Circle.findById(circleId)
         .then(circle => {
           circle.updateAttributes({
@@ -103,7 +107,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = 1 //TODO session handling?
+        const userId = req.session.userId; //TODO: nur Admin darf löschen
 
         db.Circle.build({"id" : circleId}).destroy();
 
@@ -112,7 +116,7 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-        var userId = req.body.id;
+        var userId = req.body.id; //TODO userId aus session ziehen -> kein übergabewert nötig
         var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
           console.log( res[0]);
         }).catch(err => {console.log(err);});
@@ -144,7 +148,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = 1 //TODO: get by session
+        const userId = req.session.userId;
 
         db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
             var data = [];
