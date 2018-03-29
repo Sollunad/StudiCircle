@@ -27,9 +27,9 @@ const UsersCircles = sequelize.define('UsersCircles', {
 });
 
 // zur initialisierung, Stefan oder Marcel fragen
-Circle.sync({force:true});
-Location.sync({force:true});
-UsersCircles.sync({force:true});
+//Circle.sync({force:true});
+//Location.sync({force:true});
+//UsersCircles.sync({force:true});
 
 const CircleLocation = sequelize.define('CircleLocation', {});
 

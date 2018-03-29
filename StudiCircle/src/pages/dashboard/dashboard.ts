@@ -15,8 +15,8 @@ import { HttpClient } from "@angular/common/http";
 export class DashboardPage {
 
   settings: SettingsPage;
-  private clist: string[];
   private res: any;
+  private circles = new Array();
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient) {
     // this.geolocation.getCurrentPosition().then((resp) => {
@@ -66,7 +66,12 @@ export class DashboardPage {
   }
 
   ionViewWillEnter() {
-    this.dbprovider.getCircles();
+    this.dbprovider.getCircles().then(res =>{
+      this.circles = res;
+      console.log(res);
+    }).catch(err =>{
+      console.log(err);
+    });
   }
 
   public showLocationPrompt() {

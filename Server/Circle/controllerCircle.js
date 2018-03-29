@@ -108,11 +108,15 @@ module.exports = {
     //return all circles the user is following
     circlesForUserId : function (req, res) {
         var userId = req.body.id;
-        var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
-          console.log( res[0]);
-        }).catch(err => {console.log(err);});
-        console.log(circles);
-        res.send(circles);
+        var circles = db.User.findAll({where: {id: 1}, include: [db.Circle]}).then(result => {
+          var json = res.json({circles: result[0].Circles});
+          //res.send(circles);
+        }).catch(err => {
+        res.status(500);
+        res.send("Internal Server Error");
+        //console.log(err);});
+        //console.log(circles);
+      });
     },
 
     circlesForLocation : function (req, res) {
