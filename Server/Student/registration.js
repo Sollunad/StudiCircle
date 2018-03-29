@@ -1,5 +1,3 @@
-//import {register} from "../../StudiCircle/src/providers/api/api";
-
 var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
