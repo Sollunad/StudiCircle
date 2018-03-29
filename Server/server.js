@@ -15,4 +15,5 @@ console.log('todo list RESTful API server started on: 8080');
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
+app.use(cors());
 app.listen(8080);
