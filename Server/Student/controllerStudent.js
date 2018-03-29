@@ -126,6 +126,9 @@ module.exports = {
                 returnObject.session = database.newSession(userId);
                 returnObject.userData = database.getUserData(userId);
 
+                // in der session können beliebige Werte mitgegeben und gespeichert werden
+                req.session.userId = userId;
+
                 res.status(200);
                 res.send(returnObject);
             } else {
@@ -314,5 +317,10 @@ module.exports = {
     unknownpage : function (req, res) {
       res.status(404);
       res.send('Unknown Endpoint')
+    },
+
+    logout : function (req, res) {
+        req.session.reset();
+        res.send("Logout successfull.")
     }
 };

@@ -17,7 +17,7 @@
   <form id="search-form12">
     <ion-searchbar (ionInput)="searchCircles()" name="search" [(ngModel)]="search"></ion-searchbar>
 
-    <ion-label>Entfernung: <ion-badge id="search-distance" item-end>1 km</ion-badge></ion-label>
+    <ion-label>Entfernung: <ion-badge item-end><span id="search-distance">1</span> km</ion-badge></ion-label>
     <ion-range min="0" max="5" snaps="true" color="secondary" (ionChange)="distanceChanged()" name="distance" [(ngModel)]="distance">
       <ion-icon range-left small name="locate"></ion-icon>
       <ion-icon range-right name="locate"></ion-icon>

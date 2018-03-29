@@ -37,4 +37,7 @@ module.exports = function(app) {
 
     app.route('/*')
         .get(user.unknownpage);
+
+    app.route('/user/logout')
+        .post(user.logout);
 };
