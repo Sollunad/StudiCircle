@@ -43,7 +43,7 @@ module.exports = {
         } else {
             root = API_URL_ROOT_DEV;
         }
-        return root + "/user/" + activationToken + "/" + "activate";
+        return root + "/user/activate/" + activationToken;
     },
 
     getPasswordChangeURL : function (activationToken) {
@@ -53,7 +53,7 @@ module.exports = {
         } else {
             root = UI_URL_ROOT_DEV;
         }
-        return root + "/forgotPassword/" + activationToken;
+        return root + "/user/resetPassword/" + activationToken;
     },
 
     getNewMailActivationURL : function (activationToken) {
@@ -63,6 +63,6 @@ module.exports = {
         } else {
             root = API_URL_ROOT_DEV;
         }
-        return root + "/user/" + activationToken + "/" + "changeMail";
+        return root + "/user/changeMail/" + activationToken;
     }
 }
