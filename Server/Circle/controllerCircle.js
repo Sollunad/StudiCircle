@@ -68,13 +68,19 @@ module.exports = {
     newCircle : function (req, res) {
         const name = req.body.name;
         const visible = req.body.vis;
-        //const location = req.body.loc;
+        const location = req.body.loc;
 
-        if (argumentMissing(res, name, visible)) return;
+        if (argumentMissing(res, name, visible, location)) return;
+        if (argumentMissing(res, location.lat, location.lon)) return; // aus gründen -.-
 
         const userId = req.session.userId;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
+            // Location speichern
+            db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
+                circle.addLocation(locationObj);
+            });
+            // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
                     result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
@@ -86,7 +92,7 @@ module.exports = {
             });;
         }).error(err => {
             res.status(500)
-            res.send("Server error.");
+            res.send("Server error. Creating circle failed.");
         });
     },
 
