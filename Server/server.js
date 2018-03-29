@@ -2,6 +2,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
 var session = require('client-sessions');
+var student = require('./Student/moduleInterface')
 var app = express();
 
 app.use(cors());
@@ -34,20 +35,27 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-app.listen(9080);
-console.log('todo list RESTful API server started on: 8080');
+const port = 9080;
+app.listen(port);
+console.log('todo list RESTful API server started on: ' + port );
 
 function authorize(req, res, next){
     var url = req.originalUrl
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (req.session && req.session.userId){
-        // eventuell checken ob UserID wirklich exestiert
-        next();
+        var userExists = false;
+        try {
+            userExists = student.userExists(req.session.userId);
+        } catch (err) {
+        }
+        if (userExists) {
+            next();
+        } else {
+            responseWhenUnauthorized(req, res);
+        }
     }else {
-        req.session.reset();
-        res.status(401);
-        res.send("Unauthorized!");
+        responseWhenUnauthorized(req, res);
     }
 }
 
@@ -58,4 +66,10 @@ function containsWildcard(url){
         }
     }
     return false;
+}
+
+function responseWhenUnauthorized (req, res) {
+    req.session.reset();
+    res.status(401);
+    res.send("Unauthorized!");
 }
