@@ -25,6 +25,7 @@ module.exports = {
         console.log("insert new person");
         let resultMessage = "ok";
         //duplicateMail
+        //duplicateUsername
         //invalidPwd
         //invalidAccountType
         //randomExisting

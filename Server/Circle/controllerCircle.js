@@ -64,11 +64,18 @@ module.exports = {
 
         if (argumentMissing(res, name, visible)) return;
 
+        const userId = 1 //TODO session ???
+
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
-            res.status(200).json({
-              circle: circle,
-              message: 'Circle created'
-            });
+            db.User.findOne({where: {"id" : userId}}).then(user => {
+                circle.addUser(user).then(result => {
+                    result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
+                    res.send("Circle created and User added.");
+                });
+            }).error(err => {
+                res.status(404)
+                res.send("User from session not found.");
+            });;
         }).error(err => {
             res.status(500).json({
               error: 'Server error'
@@ -94,7 +101,6 @@ module.exports = {
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
-        console.log(req.body);
 
         if (argumentMissing(res, circleId)) return;
 
@@ -173,33 +179,36 @@ module.exports = {
     },
 
     getModules : function(req, res){
-      var circleId = req.query.circleId;
+      const circleId = req.query.circleId;
+
+      if (argumentMissing(res, circleId)) return;
+
       db.Circle.findById(circleId).then(circle => {
           if(circle == null){
             res.status(404).send("No circle with given id.");
             return;
           }
-          var result = {};
+          var result = {modules: []};
           if(circle.blackboard){
-            result.blackboard = circle.blackboard;
+            result.modules.push("blackboard");
           }
           if(circle.calendar){
-            result.calendar = circle.calendar;
+            result.modules.push("calendar");
           }
           if(circle. bill){
-            result.bill = circle.bill;
+            result.modules.push("bill");
           }
           if(circle.bet){
-            result.bet = circle.bet;
+            result.modules.push("bet");
           }
           if(circle.filesharing){
-            result.filesharing = circle.filesharing;
+            result.modules.push("filesharing");
           }
           if(circle.chat){
-            result.chat = circle.chat;
+            result.modules.push("chat");
           }
           if(circle.market){
-            result.market = circle.market;
+            result.modules.push("market");
           }
           res.send(result);
           return;

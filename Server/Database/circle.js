@@ -26,11 +26,6 @@ const UsersCircles = sequelize.define('UsersCircles', {
 	circleID: Sequelize.INTEGER
 });
 
-// zur initialisierung, Stefan oder Marcel fragen
-//Circle.sync({force:true});
-//Location.sync({force:true});
-//UsersCircles.sync({force:true});
-
 const CircleLocation = sequelize.define('CircleLocation', {});
 
 Circle.belongsToMany(Location, { as: 'locations', through: { model: CircleLocation }, foreignKey: 'circle_id' });

@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
-import { ApiProvider } from '../api/api';
-import { Injectable } from '@angular/core';
-import { Subscription } from "rxjs/Subscription";
-import { Subject } from "rxjs/Subject";
-import { ApiResponse } from "../declarations/ApiResponse";
-import { GeoResponse } from "../declarations/GeoResponse";
+import {HttpClient} from '@angular/common/http';
+import {ApiProvider} from '../api/api';
+import {Injectable} from '@angular/core';
+import {Subscription} from "rxjs/Subscription";
+import {Subject} from "rxjs/Subject";
+import {ApiResponse} from "../declarations/ApiResponse";
+import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import { Circle } from '../declarations/Circle';
+import {Observable} from 'rxjs/Observable';
+import {Circle} from '../declarations/Circle';
 
 /*
   Generated class for the DbProvider provider.
@@ -80,5 +80,4 @@ export class DbProvider {
     //   }
     //   );
   }
-
 }

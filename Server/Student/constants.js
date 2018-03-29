@@ -19,12 +19,22 @@ const API_URL_ROOT_DEV = "https://api.dev.sknx.de";
 const UI_URL_ROOT_PRODUCTIVE = "https://studicircle.sknx.de";
 const UI_URL_ROOT_DEV = "https://studicircle.dev.sknx.de";
 
+const PASS_MIN_LENGTH = 8;
+const PASS_MAX_LENGTH = 64;
+
+const USERNAME_MIN_LENGTH = 4;
+const USERNAME_MAX_LENGTH = 50;
+
 module.exports = {
 
     AccountState: AccountState,
     AccountType: AccountType,
     KEY_LENGTH: KEY_LENGTH,
     SALT_LENGTH : SALT_LENGTH,
+    PASS_MAX_LENGTH: PASS_MAX_LENGTH,
+    PASS_MIN_LENGTH: PASS_MIN_LENGTH,
+    USERNAME_MIN_LENGTH: USERNAME_MIN_LENGTH,
+    USERNAME_MAX_LENGTH: USERNAME_MAX_LENGTH,
 
     getActivationURL : function (activationToken) {
         var root;

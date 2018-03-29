@@ -15,6 +15,8 @@ export class GetInvolvedPage {
   user : UserInfo;
 
   profile = {
+    mail : '',
+    name : '',
     password : '',
     profileType : ''
   };
@@ -47,23 +49,34 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    const registration = this._apiService.register(this.user, this.profile.password, this.profile.profileType).subscribe(
+    const registration = this._apiService.register(this.profile.mail, this.profile.name,this.profile.password, this.profile.profileType).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[REGISTER] : Registration successful");
-          registration.unsubscribe();
-          return true;
+          this.goToVerifyNow({});
         }else{
           console.log("[REGISTER] : Registration not successful");
-          registration.unsubscribe();
-          return false;
         }
+        registration.unsubscribe();
+        return success;
       }
     )
   }
 
+  usernameCheck(){
+    if(this.profile.name){
+      if(this.profile.name.match('(\\w+ (\\w+|\\w+-\\w+))')){
+        console.log("[REGISTER] : User Name is valid")
+        return true;
+      }else{
+        console.log("[REGISTER] : Set User - Name not valid")
+      }
+    }
+    return false;
+  }
+
   passwdCheck(){
-    if(this.profile.password.match('[(\\w+\\W+\\d)]{6,24}')){
+    if(this.profile.password.match('[(\\w+\\W+\\d+)]{8,64}')){
       console.log("[REGISTER] : Password complies to policy");
       if((this.profile.password === this.passwdChk)){
         console.log("[REGISTER] : PasswordCheck successful");
@@ -81,15 +94,15 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    if(this.user.username && this.profile.password && this.passwdChk){
+    if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.user.username.match('(@student\.)|(\.edu$)') && this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
-            if(this.registerNow()){
-              this.goToVerifyNow({});
+            if(this.usernameCheck()){
+              this.registerNow();
             }
           }
         }else{
@@ -98,11 +111,11 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.user.username.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
-              if(this.registerNow()){
-                this.goToVerifyNow({});
+              if(this.usernameCheck()){
+                this.registerNow();
               }
             }
           }
@@ -111,7 +124,10 @@ export class GetInvolvedPage {
         }
       }
     }else{
-      if(!this.user.username){
+      if(!this.profile.name){
+        console.log("[REGISTER] : User Name is a required field")
+      }
+      if(!this.profile.mail){
         console.log("[REGISTER] : Mail is a required field")
       }
       if(!this.profile.password){
