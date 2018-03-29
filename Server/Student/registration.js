@@ -1,3 +1,5 @@
+import {register} from "../../StudiCircle/src/providers/api/api";
+
 var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
@@ -5,7 +7,121 @@ const crypto = require('crypto');
 const pwdCheck = require('./passwordCheck');
 
 module.exports = {
-    register: function (mail, password, accountType, userName, res) {
+
+
+    registerBusiness: function (mail, password, userName, businessDescription, res) {
+
+        let result = "";
+        let counter = 10;
+        while (result !== "ok" && counter > 0) {
+            counter--;
+            let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
+            html = '<html lang="de-DE">\n' +
+                '<head>\n' +
+                '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
+                '</head>\n' +
+                '<body>\n' +
+                '<h1>Validation of new business account "' + userName + '"</h1>'+
+                '<p>There´s a new user "' + userName + '".</p> '+
+                '<p>The business description of the new user is:</p>'+
+                '<p>' + businessDescription + '</p>'+
+                '<p>The mail address is: ' + mail + '</p>'+
+                '<p>Please click on following link to activate this account on StudiCircle: <a href="' + constant.getActivationURL(randomString) + '">Validate new account</a></p>' +
+                '</body>\n' +
+                '</html>';
+            subject = 'StudiCircle: Validate new business account';
+
+            var salt = this.generateSalt()
+            var userValue = salt + password;
+            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+
+            //insert userdata in database
+            result = database.insertNewPerson(mail, hash, salt, accountType, randomString);
+            if (result === "ok"){
+                break;
+            }else if (res) {
+                //errors
+                if (result === "duplicateMail") {
+
+                    res.status(409);
+                    res.send({
+                        httpStatus: 409,
+                        message:  "Mail address already registered more than 3 times."
+                    });
+                    return result;
+                }
+                if (result === "duplicateUsername") {
+
+                    res.status(409);
+                    res.send({
+                        httpStatus: 409,
+                        message:  "User name already registered."
+                    });
+                    return result;
+                }
+                if (result === "invalidPwd") {
+                    res.status(400);
+                    res.send({
+                        httpStatus: 400,
+                        message:  "Invalid password entered."
+                    });
+                    return result;
+                }
+                if (result === "invalidAccountType") {
+                    res.status(400);
+                    res.send({
+                        httpStatus: 400,
+                        message:  "Error at account type."
+                    });
+                    return result;
+                }
+            }else{
+                return "error";
+            }
+            if (result === "randomExisting"){
+                console.log("Random string already exists.");
+            }
+        }
+
+        if (result === "randomExisting"){
+            if (res){
+                res.status(418);
+                res.send({
+                    httpStatus: 418,
+                    message:  "10 random generated strings already exist."
+                });
+            }
+            return result;
+        }
+
+        //send registration Mail
+        mailer.sendMail('studicircle@web.de', html, subject)
+            .then(resp => {
+                console.log(resp);
+                if (res){
+                    res.send({
+                        httpStatus: 200,
+                        message:  "Activation link sent"
+                    });
+                }
+                return true;
+            })
+            .catch(err => {
+                console.log(err);
+                if (res){
+                    res.status(412);
+                    res.send({
+                        httpStatus: 412,
+                        message:  "Error at sending activation link."
+                    });
+                }
+                return false;
+            });
+
+        return "ok";
+    },
+
+    register: function (mail, password, accountType, userName, res, businessDescription) {
 
         if (!mail || !password || !accountType || !userName ) {
             if (res) {
@@ -61,6 +177,10 @@ module.exports = {
                 });
             }
             return "wrong username";
+        }
+
+        if ( accountType == constant.AccountType.BUSINESS ){
+            return this.registerBusiness(mail,password,userName,businessDescription,res);
         }
 
         let result = "";
