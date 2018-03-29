@@ -126,7 +126,6 @@ module.exports = {
                 returnObject.session = database.newSession(userId);
                 returnObject.userData = database.getUserData(userId);
 
-                // in der session können beliebige Werte mitgegeben und gespeichert werden
                 req.session.userId = userId;
 
                 res.status(200);
@@ -143,26 +142,25 @@ module.exports = {
 
     },
 
+    logout : function (req, res) {
+        req.session.reset();
+        res.send("Logout successfull.")
+    },
+
     //Called when the user sets a new password
     setPassword : function (req, res) {
-        var session = req.body.session;
+
+        var userId = req.session.userId
         var oldPw = req.body.oldPwd;
         var newPw = req.body.newPwd;
 
-        if (!session || !oldPw || !newPw || !pwdCheck.checkPassword(newPw)) {
+        if (!userId || !oldPw || !newPw || !pwdCheck.checkPassword(newPw)) {
             res.status(400);
             res.send("Bad request. No session, old or new password not set or not compliant to guidelines.");
             return;
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Unauthorized. Invalid session!")
-                return;
-            }
-
-            var userId = database.getUserIdFromSession(session);
             var userAuthData = database.getUserAuthData(userId);
 
             var userValue = userAuthData.salt + oldPw;
@@ -186,22 +184,16 @@ module.exports = {
 
     //Called when the user wants to delete the account
     deleteAccount : function (req, res) {
-        var session = req.body.session;
+        var userId = req.session.userId;
         var pass = req.body.pwd;
 
-        if (!session || !pass) {
+        if (!userId || !pass) {
             res.status(400);
             res.send("Bad request. Either no session or no password.");
             return;
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Invalid Session!")
-                return;
-            }
-            var userId = database.getUserIdFromSession(session);
             var userAuthData = database.getUserAuthData(userId);
 
             var userValue = userAuthData.salt + pass;
@@ -226,12 +218,12 @@ module.exports = {
 
     //
     updateMail : function (req, res) {
-        var session = req.body.session;
+        var userId = req.session.userId;
         var oldMail = req.body.oldMail;
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
-        if (!session || !oldMail || !newMail || !pass) {
+        if (!userId || !oldMail || !newMail || !pass) {
             res.status(400);
             res.send("Bad request. Either no session, oldMail, newMail or no password.");
             return;
@@ -244,13 +236,6 @@ module.exports = {
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Invalid Session!");
-                return;
-            }
-            var userId = database.getUserIdFromSession(session);
-
             if (!userId == database.getUserIdFromMail(oldMail)) {
                 res.status(401);
                 res.send("Unauthorized! Mail and session do not match!");
@@ -317,10 +302,5 @@ module.exports = {
     unknownpage : function (req, res) {
       res.status(404);
       res.send('Unknown Endpoint')
-    },
-
-    logout : function (req, res) {
-        req.session.reset();
-        res.send("Logout successfull.")
     }
 };

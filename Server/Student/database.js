@@ -9,10 +9,6 @@ module.exports = {
         return 1;
     },
 
-    getUserIdFromSession : function(session) {
-        return 1;
-    },
-
     getUserIdFromValidationKey : function(validationKey) {
         return 1;
     },
@@ -30,14 +26,6 @@ module.exports = {
         //invalidAccountType
         //randomExisting
         return resultMessage;
-    },
-
-    newSession : function (userId) {
-        return {"sessionId":"lorem"};
-    },
-
-    sessionExists : function (session) {
-        return true;
     },
 
     setPasswordHash : function (userId, hash) {

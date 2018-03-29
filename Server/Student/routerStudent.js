@@ -5,17 +5,20 @@ module.exports = function(app) {
     app.route('/user/register')
         .post(user.register);
 
-    app.route('/user/:validationKey/activate')
+    app.route('/user/activate/:validationKey')
         .get(user.activate);
 
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
-    app.route('/user/:validationKey/resetPassword')
+    app.route('/user/resetPassword/:validationKey')
         .post(user.resetPassword);
 
     app.route('/user/login')
         .post(user.login);
+
+    app.route('/user/logout')
+        .post(user.logout);
 
     app.route('/user/setPassword')
         .post(user.setPassword);
@@ -26,7 +29,7 @@ module.exports = function(app) {
     app.route('/user/updateMail')
         .post(user.updateMail);
 
-    app.route('/user/:validationKey/changeMail')
+    app.route('/user/changeMail/:validationKey')
         .get(user.confirmNewMail);
 
     app.route('/user/test')
@@ -37,7 +40,4 @@ module.exports = function(app) {
 
     app.route('/*')
         .get(user.unknownpage);
-
-    app.route('/user/logout')
-        .post(user.logout);
 };

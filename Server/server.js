@@ -16,7 +16,15 @@ app.use(session({
 }));
 
 // urls protecten
-const allowedUrls = ["/user/login", "/user/logout", "/user/forgotPassword", "/user/register"];
+const allowedUrls = ["/user/login",
+                        "/user/logout",
+                        "/user/forgotPassword",
+                        "/user/register",
+                    ];
+const allowedWildcards = ["/user/activate/",
+                            "/user/resetPassword/",
+                            "/user/changeMail/",
+                        ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
 
@@ -26,12 +34,14 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-app.listen(8080);
+app.listen(9080);
 console.log('todo list RESTful API server started on: 8080');
 
 
 function authorize(req, res, next){
-    if(allowedUrls.includes(req.originalUrl)){
+    var url = req.originalUrl
+    console.log(url);
+    if(allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if(req.session && req.session.userId){
         // eventuell checken ob UserID wirklich exestiert
@@ -41,4 +51,14 @@ function authorize(req, res, next){
         res.status(401);
         res.send("Unauthorized!");
     }
+}
+
+function containsWildcard(url){
+    for (var wildcard in allowedWildcards) {
+        console.log(wildcard);
+        if (url.startsWith(wildcard)) {
+            return true;
+        }
+    }
+    return false;
 }
