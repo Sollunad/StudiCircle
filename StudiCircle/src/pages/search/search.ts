@@ -15,6 +15,7 @@ export class SearchPage {
   public search: '';
   public distance: 0;
   public circles: Array<Circle>;
+  private nonFilteredCircles = Array<Circle>();
 
   private distances = [
     { label: '1', value: 1 },
@@ -40,28 +41,27 @@ export class SearchPage {
     this.dbProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
       circles => {
         console.log('getCirclesByLocation', circles);
-        this.circles = circles;
+        this.circles = this.nonFilteredCircles = circles;
       });
   }
 
   private distanceChanged() {
     // console.log(this.distance);
-
     document.getElementById('search-distance').innerText = this.distances[this.distance].label;
 
+    this.search = '';
     this.getCirclesByLocation();
   }
 
   private searchCircles() {
-    let value = this.search.trim();
+    let value = this.search.trim().toLowerCase();
 
     if (value && value != '') {
       console.log('value', value);
-
-      // TODO: filter circles by name
+      this.circles = this.nonFilteredCircles.filter(circle => circle.name.toLowerCase().startsWith(value));
     } else {
       console.log('value', 'empty');
-      // TODO: view all circles
+      this.circles = this.nonFilteredCircles;
     }
   }
 
