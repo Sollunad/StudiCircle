@@ -4,5 +4,7 @@ export interface UserInfo{
     username: string;
     uuid: string;
     circles?: Array<Circle>;
-    session : string;
+    session : {
+      sessionId : string
+    }
 }

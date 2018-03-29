@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
-import { SearchPage } from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {SearchPage} from "../search/search";
 
 @Component({
   templateUrl: 'circle-startseite.html'
@@ -18,16 +18,16 @@ export class CircleStartseite {
   circleName : string;
 
   staticModules = [
-  { title: 'Rechnungen', component: '', imageName: 'rechnungen.jpg'},
-      { title: 'Blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
-  { title: 'Chat', component: '' , imageName: 'chat.jpg'},
-  { title: 'Mitglieder', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'},
-  { title: 'Kalender', component: '' ,imageName: 'kalender.jpg'},
-  { title: 'Wetten', component:'',imageName: 'wetten.jpg'},
-  { title: 'File-Sharing', component:'',imageName: 'file-sharing.jpg'},
-  { title: 'Flohmarkt', component:'',imageName: 'flohmarkt.jpg'},
-  { title: 'Einstellungen', component:SettingsPage,imageName: 'einstellungen.jpg'}
-];
+    { title: 'Rechnungen', component: '', imageName: 'rechnungen.jpg'},
+    { title: 'Blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
+    { title: 'Chat', component: '' , imageName: 'chat.jpg'},
+    { title: 'Mitglieder', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'},
+    { title: 'Kalender', component: '' ,imageName: 'kalender.jpg'},
+    { title: 'Wetten', component:'',imageName: 'wetten.jpg'},
+    { title: 'File-Sharing', component:'',imageName: 'file-sharing.jpg'},
+    { title: 'Flohmarkt', component:'',imageName: 'flohmarkt.jpg'},
+    { title: 'Einstellungen', component:SettingsPage,imageName: 'einstellungen.jpg'}
+  ];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: HttpClient,
               public circleProvider:CircleProvider) {

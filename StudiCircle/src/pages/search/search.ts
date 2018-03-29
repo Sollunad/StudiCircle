@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { SettingsPage } from '../settings/settings';
-import { CircleStartseite } from '../circle-startseite/circle-startseite';
-import { Geolocation } from '@ionic-native/geolocation';
-import { AlertController } from 'ionic-angular';
-import { HttpClient } from "@angular/common/http";
-import { DbProvider } from '../../providers/dbprovider/dbprovider';
-import { Circle } from '../../providers/declarations/Circle';
+import {Component} from '@angular/core';
+import {AlertController, NavController} from 'ionic-angular';
+import {SettingsPage} from '../settings/settings';
+import {CircleStartseite} from '../circle-startseite/circle-startseite';
+import {Geolocation} from '@ionic-native/geolocation';
+import {HttpClient} from "@angular/common/http";
+import {DbProvider} from '../../providers/dbprovider/dbprovider';
+import {Circle} from '../../providers/declarations/Circle';
 
 @Component({
   selector: 'page-search',

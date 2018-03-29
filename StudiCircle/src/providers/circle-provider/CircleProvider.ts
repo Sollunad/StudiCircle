@@ -2,9 +2,9 @@
  * Created by MartinThissen on 26.03.2018.
  */
 
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
 import {ApiResponse} from "../declarations/ApiResponse";
