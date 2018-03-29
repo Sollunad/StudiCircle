@@ -125,8 +125,7 @@ module.exports = {
                 returnObject.session = database.newSession(userId);
                 returnObject.userData = database.getUserData(userId);
 
-                // der session können beliebige werte mitgegeben und gespeichert werden
-                // manuelle Rückgabe der Nutzerdaten entfällt
+                // in der session können beliebige Werte mitgegeben und gespeichert werden
                 req.session.userId = userId;
 
                 res.status(200);
