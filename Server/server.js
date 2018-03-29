@@ -37,10 +37,8 @@ routesStudents(app); //register the route
 app.listen(9080);
 console.log('todo list RESTful API server started on: 8080');
 
-
 function authorize(req, res, next){
     var url = req.originalUrl
-    console.log(url);
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (req.session && req.session.userId){
@@ -55,7 +53,6 @@ function authorize(req, res, next){
 
 function containsWildcard(url){
     for (var wildcard of allowedWildcards) {
-        console.log(wildcard);
         if (url.startsWith(wildcard)) {
             return true;
         }
