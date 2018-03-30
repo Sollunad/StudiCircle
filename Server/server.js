@@ -38,7 +38,6 @@ const allowedUrls = ["/user/login",
                         "/user/logout",
                         "/user/forgotPassword",
                         "/user/register",
-                        "/user/delete",
                     ];
 const allowedWildcards = ["/user/activate/",
                             "/user/resetPassword/",
