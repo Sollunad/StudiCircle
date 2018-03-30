@@ -1,6 +1,6 @@
-var mailer = require('./mailer');
-var database = require('./database');
 const constant = require('./constants');
+var database = require('./database');
+var mailer = require('./mailer');
 const passwordUtil = require('./passwordCheck');
 
 module.exports = {

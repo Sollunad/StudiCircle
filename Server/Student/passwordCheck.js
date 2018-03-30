@@ -1,5 +1,6 @@
 const constant = require('./constants');
 const crypto = require('crypto');
+
 module.exports = {
     passwordIsCompliant: function (password) {
 

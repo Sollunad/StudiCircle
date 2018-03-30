@@ -1,10 +1,10 @@
+const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
+const passwordResetForm = require('./passwordResetForm');
+const passwordUtil = require('./passwordCheck');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
-const changeMail = require('./changeMailMail');
-const passwordUtil = require('./passwordCheck');
-const passwordResetForm = require('./passwordResetForm');
 const tests = require('./tests');
 
 module.exports = {
