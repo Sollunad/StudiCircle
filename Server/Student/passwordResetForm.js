@@ -56,8 +56,8 @@ module.exports = {
                     "\t\t}\n" +
                     "\t}\n" +
                     "\tfunction checkCompliance() {\n" +
-                    "\t\tif (pass1.value.length <  8  || pass1.value.length >  64 ) {\n" +
-                    "\t\t\tmessageCompliance.innerHTML = 'Passwords have to be at least 8 characters long and not longer than 64 characters';\n" +
+                    "\t\tif (pass1.value.length <  " + constants.PASS_MIN_LENGTH + " || pass1.value.length >  " + constants.PASS_MAX_LENGTH + " ) {\n" +
+                    "\t\t\tmessageCompliance.innerHTML = 'Passwords have to be at least " + constants.PASS_MIN_LENGTH + " characters long and not longer than " + constants.PASS_MAX_LENGTH + " characters';\n" +
                     "\t\t\tmessageCompliance.style.color = badColor;\n" +
                     "\t\t\tpass2.style.backgroundColor = pass1.style.backgroundColor = badColor;\n" +
                     "\t\t\treturn false;\n" +
