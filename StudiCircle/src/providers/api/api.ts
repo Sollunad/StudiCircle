@@ -115,6 +115,9 @@ export class ApiProvider {
       this._apiPath + "user/forgotPassword",
       {
         mail: mail
+      },
+      {
+        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -136,6 +139,9 @@ export class ApiProvider {
       this._apiPath + "user/deleteUser",
       {
         pwd: password
+      },
+      {
+        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -158,6 +164,9 @@ export class ApiProvider {
       {
         oldPwd: oldPwd,
         newPwd: newPwd
+      },
+      {
+        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
