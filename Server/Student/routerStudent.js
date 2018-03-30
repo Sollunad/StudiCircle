@@ -19,6 +19,7 @@ module.exports = function(app) {
         .post(user.login);
 
     app.route('/user/logout')
+        .get(user.logout)
         .post(user.logout);
 
     app.route('/user/setPassword')

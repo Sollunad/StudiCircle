@@ -75,5 +75,5 @@ function containsWildcard(url){
 function responseWhenUnauthorized (req, res) {
     req.session.reset();
     res.status(401);
-    res.send("Unauthorized!");
+    res.send("Unauthorized! Failed in Server.js");
 }
