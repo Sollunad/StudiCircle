@@ -25,7 +25,11 @@
       Change Password
     </ion-item>
   </ion-list>
-  <button id="settings-button8" ion-button color="danger" block on-click="goToLogIn()">
+  <ion-item id="settings-list-item666">
+    <ion-label></ion-label>
+    <ion-input type="password" placeholder="Confirm Password" [(ngModel)]="pw_confirm"></ion-input>
+  </ion-item>
+  <button id="settings-button8" ion-button color="danger" block on-click="deleteAccount()">
     Delete Account
   </button>
 </ion-content>

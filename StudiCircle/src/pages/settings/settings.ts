@@ -6,6 +6,8 @@ import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
 import { ChangeMailPage } from '../change-mail/change-mail';
+import {ApiProvider} from "../../providers/api/api";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'page-settings',
@@ -13,7 +15,9 @@ import { ChangeMailPage } from '../change-mail/change-mail';
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController) {
+  public pw_confirm: string;
+  constructor(public navCtrl: NavController,
+              private _api: ApiProvider) {
   }
   goToPassMan(params){
     if (!params) params = {};
@@ -36,5 +40,19 @@ export class SettingsPage {
   }goToSettings(params){
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
+  }
+
+  public deleteAccount(): void {
+    const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
+      (success: boolean) => {
+        deleteAccountSub.unsubscribe();
+        if(success) {
+          console.log("Account deletion successful!");
+          this.goToLogIn({});
+        } else {
+          console.log("Account deletion FAILED using password " + this.pw_confirm + "!");
+        }
+      }
+    );
   }
 }

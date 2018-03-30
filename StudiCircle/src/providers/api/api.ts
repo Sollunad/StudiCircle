@@ -133,7 +133,7 @@ export class ApiProvider {
   public deleteUser(password: string): Observable<boolean> {
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const requestSub: Subscription = this.http.post(
-      this._apiPath + "user/forgotPassword",
+      this._apiPath + "user/deleteUser",
       {
         pwd: password
       }
@@ -154,7 +154,7 @@ export class ApiProvider {
   public setPassword(oldPwd: string, newPwd: string): Observable<boolean> {
     const successSubject: Subject<boolean> = new Subject<boolean>();
     const requestSub: Subscription = this.http.post(
-      this._apiPath + "user/forgotPassword",
+      this._apiPath + "user/setPassword",
       {
         oldPwd: oldPwd,
         newPwd: newPwd

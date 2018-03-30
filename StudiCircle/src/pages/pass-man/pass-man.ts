@@ -4,6 +4,9 @@ import { LogInPage } from '../log-in/log-in';
 import { GetInvolvedPage } from '../get-involved/get-involved';
 import { VerifyNowPage } from '../verify-now/verify-now';
 import { DashboardPage } from '../dashboard/dashboard';
+import {ApiProvider} from "../../providers/api/api";
+import {SubscriptionLog} from "rxjs/testing/SubscriptionLog";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'page-pass-man',
@@ -15,7 +18,8 @@ export class PassManPage {
   pw_new : '';
   pw_new_confirm : '';
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+              private _api: ApiProvider) {
   }
   goToLogIn(params){
     if (!params) params = {};
@@ -31,16 +35,26 @@ export class PassManPage {
     this.navCtrl.push(DashboardPage);
   }
 
-  managePassword(){
+  public managePassword(): void {
     if(this.pw_old && this.pw_new && this.pw_new_confirm){
       console.log("[PassMan]: Fields not empty");
       if(this.pw_new === this.pw_new_confirm && this.pw_old !== this.pw_new){
         console.log("[PassMan]: Old Password differs from new one. Success!");
-        this.goToLogIn({});
-      }else{
+        const setPasswordSub: Subscription = this._api.setPassword(this.pw_old, this.pw_new).subscribe(
+          (success: boolean) => {
+            setPasswordSub.unsubscribe();
+            if(success) {
+              console.log("[PassMan]: Password changed successfully");
+              this.goToLogIn({});
+            } else {
+              console.log("[PassMan]: Password change FAILED!");
+            }
+          }
+        );
+      } else {
         console.log("[PassMan]: Old and new Password same");
       }
-    }else{
+    } else {
       console.log("[PassMan]: All fields have to be filled");
     }
   }
