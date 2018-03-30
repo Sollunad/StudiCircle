@@ -17,8 +17,8 @@ app.use(session({
 
 // urls protecten
 const allowedUrls = ["/user/login", "/user/logout", "/user/forgotPassword", "/user/register"];
-app.route('/circle/*').all(authorize);
-app.route('/user/*').all(authorize);
+//app.route('/circle/*').all(authorize);
+//app.route('/user/*').all(authorize);
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
