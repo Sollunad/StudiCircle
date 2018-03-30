@@ -5,9 +5,22 @@ var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
 var app = express();
 
-app.use(cors());
+var whitelist = ['http://*.sknx.de']
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+
 
 app.use(session({
   cookieName: 'session',
