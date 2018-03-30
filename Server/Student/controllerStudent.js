@@ -181,7 +181,7 @@ module.exports = {
                 res.status(200);
                 res.send("Successfully set Password")
             } else {
-                res.status(401);
+                res.status(402);
                 res.send("Unauthorized. Invalid password!")
             }
         } catch (err) {
