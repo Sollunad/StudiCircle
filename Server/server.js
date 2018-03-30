@@ -14,6 +14,10 @@ app.use(session({
   secret: 'F4Z4o@fKNjZzY!ymm%1F&tBGigJ%VG', // key zur Verschlüsselung der Session-Daten
   duration: 30 * 60 * 1000, // 30 min gültigkeit des cookies
   activeDuration: 5 * 60 * 1000, // 5 min verlängerung bei jeder Anfrage des clients
+  cookie: {
+    httpOnly: false, // when true, cookie is not accessible from javascript
+    secure: false // when true, cookie will only be sent over SSL. use key 'secureProxy' instead if you handle SSL not in your node process
+  }
 }));
 
 // urls protecten
@@ -71,5 +75,5 @@ function containsWildcard(url){
 function responseWhenUnauthorized (req, res) {
     req.session.reset();
     res.status(401);
-    res.send("Unauthorized!");
+    res.send("Unauthorized! Failed in Server.js");
 }
