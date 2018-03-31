@@ -21,6 +21,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { DbProvider } from '../providers/dbprovider/dbprovider';
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     SettingsPage,
     SearchPage,
     PassManPage,
+    CircleStartseite,
     CircleEinstellungenPage
   ],
 
@@ -52,6 +54,7 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     SettingsPage,
     SearchPage,
     PassManPage,
+    CircleStartseite,
     CircleEinstellungenPage
   ],
   providers: [

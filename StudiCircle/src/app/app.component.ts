@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {LogInPage} from "../pages/log-in/log-in";
+import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 
 @Component({
   templateUrl: 'app.html'
