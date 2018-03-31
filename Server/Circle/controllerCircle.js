@@ -78,7 +78,7 @@ module.exports = {
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
             // Location speichern
             db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
-                circle.addLocation(locationObj);
+                locationObj.addCircle(circle);
             });
             // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
