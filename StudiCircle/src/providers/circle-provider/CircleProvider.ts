@@ -68,9 +68,13 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
-  public removeCircleByCircleId(uid: number): Observable<any>{
-    console.log(uid);
-    let body = {"id": uid};
+  public removeCircleByCircleId(CircleId: number): Observable<any>{
+    let body = {"id": CircleId};
     return this.http.post(`http://localhost:8080/circle/remove`,body);
+  }
+
+  public removeCircleMember(userId: number, circleId: number): Observable<any>{
+    let body = {"userId": userId, "circleId": circleId};
+    return this.http.post(`http://localhost:8080/circle/removeUser`,body);
   }
 }
