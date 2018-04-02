@@ -22,6 +22,7 @@ app.use(session({
 
 // urls protecten
 const allowedUrls = ["/user/login",
+                        "/user/test",
                         "/user/logout",
                         "/user/forgotPassword",
                         "/user/register",
