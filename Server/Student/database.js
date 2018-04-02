@@ -9,7 +9,7 @@ module.exports = {
             return  "username = user.name error";
             //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
         });
-
+        return  "username = user.name 2";
     },
 
     getUserIdFromMail : function(mail) {
