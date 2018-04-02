@@ -3,10 +3,10 @@ const db = require('../Database/database.js');
 
 module.exports = {
     getUserData : function(userId) {
-        db.User.findById(userId).then(user => {
-            return  "username = user.name";
+        return db.User.findById(userId).then(user => {
+            return    {"userId":userId, "username": user.name, "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
         }).error(err => {
-            return  "username = user.name error";
+            return   {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
             //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
         });
         return  "username = user.name 2";
