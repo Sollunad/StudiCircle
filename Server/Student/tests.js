@@ -8,7 +8,7 @@ let resetPwd = require('./passwordResetMail');
 module.exports = {
     startUnitTests : function (req, res) {
         let response = "Start tests ...\n";
-
+        response += database.getUserData(1);
 /*        response += this.testActivation();
         response += this.testDatabase();
         response += this.testMailer();

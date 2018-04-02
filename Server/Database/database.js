@@ -5,6 +5,7 @@ const User = require('./user.js');
 const Circle = require('./circle.js');
 const Location = require('./location.js');
 //const Module = require('./module.js');
+const ValidationKey = require('./validationKey');
 
 /**
  * n:m - CIRCLES AND LOCATIONS
@@ -44,10 +45,17 @@ User.references.circle = Circle;
 /*Circle.hasMany(Module);
 Module.belongsTo(Circle);*/
 
+/**
+ * 0/1:1 - USER AND VALIDATIONKEY
+ **/
+ValidationKey.belongsTo(User);
+
+
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
 function init() {
 	console.log("Database init");
 	User.sync({force:true}).then(() => {
+		ValidationKey.sync({force:true});
 		Circle.sync({force:true}).then(() => {
 			//Module.sync({force:true}).then(() => {
 				Location.sync({force:true}).then(() => {
@@ -64,6 +72,7 @@ module.exports = {
 	Circle: Circle,
 	Location: Location,
 	User: User,
+	ValidationKey: ValidationKey,
 	//Module: Module,
 	CircleLocation: CircleLocation,
 	UserInCircles: UserInCircles
