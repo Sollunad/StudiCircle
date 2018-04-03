@@ -8,7 +8,7 @@ module.exports = {
     },
 
     getNewMailFromValidationKey : function (validationKey) {
-        return "test@example.com"
+        return "test@example.com";
     },
 
     getUserData : async function(userId) {
