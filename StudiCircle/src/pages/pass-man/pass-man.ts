@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { LogInPage } from '../log-in/log-in';
-import { GetInvolvedPage } from '../get-involved/get-involved';
-import { VerifyNowPage } from '../verify-now/verify-now';
-import { DashboardPage } from '../dashboard/dashboard';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {LogInPage} from '../log-in/log-in';
+import {GetInvolvedPage} from '../get-involved/get-involved';
+import {VerifyNowPage} from '../verify-now/verify-now';
+import {DashboardPage} from '../dashboard/dashboard';
 import {ApiProvider} from "../../providers/api/api";
-import {SubscriptionLog} from "rxjs/testing/SubscriptionLog";
 import {Subscription} from "rxjs/Subscription";
 
 @Component({

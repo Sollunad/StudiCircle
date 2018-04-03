@@ -4,9 +4,10 @@ var express = require('express');
 var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
 var mySession = require('./Session/session');
+
 var app = express();
 
-const port = 9080;
+const port = 8080;
 
 var corsOptions = {
     origin: '*',
