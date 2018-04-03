@@ -3,7 +3,10 @@ const Sequelize = require('sequelize'),
 
 const User = sequelize.define('User', {
 	name: Sequelize.STRING,
-	email: Sequelize.STRING,
+	email: {
+        type: Sequelize.STRING,
+		unique: true
+	},
 	pwdHash: Sequelize.STRING,
 	salt: Sequelize.STRING,
 	lastActivity: Sequelize.DATE,
@@ -22,3 +25,4 @@ const User = sequelize.define('User', {
 	timestamps: false
 });
 module.exports = User;
+//
