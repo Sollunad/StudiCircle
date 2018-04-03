@@ -3,7 +3,10 @@ const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
-        res.send('Hello World!');
+      res.status(200).json({
+        query: req.query,
+        message: 'Hello World!'
+      });
     },
 
     removeUser : function (req, res) {
@@ -116,18 +119,30 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-        var userId = req.body.id; //TODO userId aus session ziehen -> kein übergabewert nötig
-        var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
-          console.log( res[0]);
-        }).catch(err => {console.log(err);});
-        console.log(circles);
-        res.send(circles);
+        var userId = req.body.id;
+        var circles = db.User.findAll({where: {id: 1}, include: [db.Circle]}).then(result => {
+          var json = res.json({circles: result[0].Circles});
+          //res.send(circles);
+        }).catch(err => {
+        res.status(500);
+        res.send("Internal Server Error");
+        //console.log(err);});
+        //console.log(circles);
+      });
     },
 
     circlesForLocation : function (req, res) {
-        var location = req.body.loc;
-        res.send(location);
+        const location = req.body.loc;
+        // const Distance = req.body.dist;
 
+        db.Circle.findAll().then(circles => {
+          // circles.forEach(circle => {
+          //   console.log(circle.getLocations());
+          // });
+          res.status(200).json(
+            circles
+          );
+        });
 /*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
             var R = 6371; // Radius of the earth in km
             var dLat = deg2rad(lat2-lat1);  // deg2rad below
