@@ -2,9 +2,9 @@
  * Created by MartinThissen on 26.03.2018.
  */
 
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
 import {Circle} from "../declarations/Circle";
@@ -75,7 +75,22 @@ export class CircleProvider {
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 
+  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
+    // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
+
+    const url = `http://localhost:8080/circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
+    return this.http.get<Circle[]>(url);
+  }
+
   public getCircleVisibility(cid: number): Observable<boolean>{
     return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
   }
+
+  public addUserToCircle(userId: number, circleId: number) {
+    return this.http.post('http://localhost:8080/circle/addUser', {
+      userId: userId,
+      circleId: circleId
+    });
+  }
+
 }

@@ -3,7 +3,10 @@ const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
-        res.send('Hello World!');
+      res.status(200).json({
+        query: req.query,
+        message: 'Hello World!'
+      });
     },
 
     removeUser : function (req, res) {
@@ -12,26 +15,14 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
-        const reqUserId = req.session.userId || 1;
-
-        db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
-                db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
-                    result.destroy();
-                    res.send("User from circle removed.");
-                }).error(err => {
-                    res.status(404);
-                    res.send("User not found in circle.");
-                });
-            }else{
-                res.status(403);
-                res.send("Permission denied. User who made the request is not Admin in the requested circle.")
-            }
-        }).error(err => {
+        db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
+            result.destroy();
+    }).error(err => {
             res.status(404);
             res.send("User not found in circle.");
-            return;
-        });
+        return;
+    });
+        res.send("User from circle removed.");
     },
 
     addUser : function (req, res) {
@@ -76,11 +67,6 @@ module.exports = {
         const userId = req.session.userId || 1;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
-            // Location speichern
-            db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
-                locationObj.addCircle(circle);
-            });
-            // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
                     result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
@@ -140,7 +126,63 @@ module.exports = {
         res.send(circles);
     },
 
+    //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
+      const deg2rad = (deg) => deg * (Math.PI/180);
+      const distanceBetweenCoords = (lat1, lon1, lat2, lon2) => {
+        // console.log('distanceBetweenCoords', lat1, lon1, lat2, lon2);
+
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distance in km
+      }
+
+      const lat1 = req.query.lat;
+      const lon1 = req.query.lon;
+      const distance = req.query.dist;
+
+      if (argumentMissing(res, lat1, lon1, distance)) return;
+
+      db.Circle.findAll({
+        include: [{
+          model: db.Location,
+      //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+         }]
+      }).then(circles => {
+
+        if(distance == -1) {
+          res.status(200).json(circles);
+          return;
+        }
+
+        let json = [];
+
+        circles.forEach(circle => {
+
+          circle.Locations.forEach(circleLocation => {
+
+            var lat2 = circleLocation.latitude;
+            var lon2 = circleLocation.longitude;
+
+            var coordDistance = distanceBetweenCoords(lat1, lon1, lat2, lon2);
+            if (coordDistance <= distance){
+              json.push(circle);
+            }
+          });
+        });
+
+        res.status(200).json(json);
+      }).error(err => {
+        res.status(500).json({
+          'error': 'Server Error'
+        });
+      });
         var location = req.body.loc;
         res.send(location);
 
