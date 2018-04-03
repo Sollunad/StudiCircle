@@ -1,19 +1,22 @@
 let crypto = require('crypto');
-const constant = require('../Student/constants');
+const constant = require('./constants');
 let HashMap = require('hashmap');
 
 var sessionsObj = new HashMap();
 
 module.exports = {
-    session: sessionsObj,
-
     generateSession : function (userID) {
-        let sessionID = crypto.randomBytes(constant.SALT_LENGTH).toString('base64');
-        sessionsObj.set(sessionID, userID);
+        let sessionID = crypto.randomBytes(constant.SESSION_ID_LENGTH).toString('base64');
+        var singleSession = {};
+        singleSession.userID = userID;
+        singleSession.start = new Date();
+        singleSession.update = new Date();
+        sessionsObj.set(sessionID, singleSession);
+        //console.log("Sessions Object: %j", sessionsObj);
         return sessionID;
     },
 
     getUserID : function (sessionID) {
-        return sessionObj.get(sessionID);
+        return sessionsObj.get(sessionID);
     }
 };
