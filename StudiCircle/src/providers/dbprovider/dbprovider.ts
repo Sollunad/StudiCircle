@@ -8,7 +8,6 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Circle} from '../declarations/Circle';
-
 /*
   Generated class for the DbProvider provider.
 
@@ -55,29 +54,8 @@ export class DbProvider {
     return this.http.get<Circle[]>(url);
   }
 
-  public setLocation(lat, lon) {
-    console.log('setLocation', lat, lon);
-  }
-
   public getLocationByAddress(address: string): Observable<GeoResponse> {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
-
-    // const successSubject: Subject<boolean> = new Subject<boolean>();
-    // const subs: Subscription = this.http.get(
-    //   'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
-    //   (res: GeoResponse) => {
-    //     subs.unsubscribe();
-    //     console.log(res);
-    //     successSubject.next(true);
-    //     console.log(res[0].lat, res[0].lon);
-    //     this.setLocation(res[0].lat, res[0].lon);
-    //   },
-    //   (error: any) => {
-    //     console.log(error);
-    //     subs.unsubscribe();
-    //     successSubject.next(false);
-    //   }
-    //   );
   }
 }
