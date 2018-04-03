@@ -6,17 +6,22 @@ let resetPwd = require('./passwordResetMail');
 
 
 module.exports = {
-    startUnitTests : function (req, res) {
+    startUnitTests : async function (req, res) {
         let response = "Start tests ...\n";
-        response += database.getUserData(1);
+        let t1 = await database.getUserData(1);
+        t1 = t1.username;
+        console.log("test-return:");
+        console.log(t1);
+        response += t1.toString();
 /*        response += this.testActivation();
         response += this.testDatabase();
         response += this.testMailer();
         response += this.testRegistration();
         response += this.testResetPassword();
 */
-        response += "End of tests :)"
+        response += "\nEnd of tests :)"
         res.send(response);
+        //res.send(t1);
     },
 
     testActivation : function () {

@@ -2,12 +2,15 @@ const constant = require('./constants');
 const db = require('../Database/database.js');
 
 module.exports = {
-    getUserData : function(userId) {
+    getUserData : async function(userId) {
         var returnVal = {};
         console.log(returnVal);
         try {
-            returnVal = db.User.findById(userId).then(user => {
-                return    {"userId":userId, "username": user.name, "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+            returnVal = await db.User.findById(userId).then(user => {
+                console.log(user.dataValues);
+                console.log("!");
+                console.log(user.dataValues.id);
+                return    {"userId":userId, "username": user.dataValues.name, "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
             }).error(err => {
                 return   {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
                 //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
@@ -15,6 +18,7 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+        console.log("return:");
         console.log(returnVal);
         return returnVal;
     },
