@@ -9,7 +9,7 @@ var app = express();
 const port = 8080;
 
 var corsOptions = {
-    origin: '*.sknx.de, localhost:' + port + ', localhost:8100, openstreetmap.org',
+    origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
