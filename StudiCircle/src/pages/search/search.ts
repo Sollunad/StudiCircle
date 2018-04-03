@@ -28,13 +28,21 @@ export class SearchPage {
   ];
   private lat: number;
   private lon: number;
+  private userId: number;
 
   constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider) {
-    this.lat = 0;
-    this.lon = 0;
     this.distance = 0;
 
+    this.getUserData();
     this.getCirclesByLocation();
+  }
+
+  private getUserData() {
+    // TODO:
+
+    this.lat = 0;
+    this.lon = 0;
+    this.userId = 1;
   }
 
   private getCirclesByLocation() {
@@ -73,6 +81,15 @@ export class SearchPage {
       circleId: circle.id,
       circleName: circle.name
     });
+  }
+
+  private joinCircle(circle: Circle) {
+    console.log(circle);
+
+    this.circleProvider.addUserToCircle(this.userId, circle.id).subscribe(
+      result => {
+        console.log('joinCircle', result);
+      });
   }
 
   private goToSettings() {

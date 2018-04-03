@@ -61,4 +61,12 @@ export class CircleProvider {
     const url = `http://localhost:8080/circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
     return this.http.get<Circle[]>(url);
   }
+
+  public addUserToCircle(userId: number, circleId: number) {
+    return this.http.post('http://localhost:8080/circle/addUser', {
+      userId: userId,
+      circleId: circleId
+    });
+  }
+
 }
