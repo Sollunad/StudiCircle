@@ -5,6 +5,7 @@ const passwordResetForm = require('./passwordResetForm');
 const passwordUtil = require('./passwordCheck');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
+const mySession = require('../Session/session');
 const tests = require('./tests');
 
 module.exports = {
@@ -128,7 +129,11 @@ module.exports = {
         }
 
         try {
+
             var userId = database.getUserIdFromMail(mail);
+            console.log("User ID" + userId)
+            userId = 3;
+            console.log("User ID" + userId)
             var userAuthData = database.getUserAuthData(userId);
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
@@ -137,13 +142,13 @@ module.exports = {
                 returnObject.message = "Successfully Logged in";
                 returnObject.userData = database.getUserData(userId);
 
-                req.session.userId = userId;
+                returnObject.session = mySession.generateSession(userId);
 
                 res.status(200);
                 res.send(returnObject);
             } else {
                 res.status(401);
-                res.send('Unauthorized!');
+                res.send('Unauthorized! Controller Student');
             }
         } catch (err) {
             console.log(err)

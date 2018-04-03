@@ -19,6 +19,7 @@ module.exports = {
     },
 
     getUserIdFromMail : async function(mail) {
+        /*
         var returnVal = "";
         try {
             returnVal = await db.User.findAll({ where:{ 'email': mail }}).then(user => {
@@ -33,6 +34,8 @@ module.exports = {
             throw "database error";
         }
         return returnVal;
+        */
+        return 1;
     },
 
     getUserIdFromValidationKey : function(validationKey) {
@@ -40,7 +43,7 @@ module.exports = {
     },
 
     getUserAuthData : function(userId) {
-        return {"salt":"s3cureSalt", "hash":"7b51f5fb4d524cd29f5057cc2859244e520b74a20ffe35773ea16b9c253e5229"};
+        return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){

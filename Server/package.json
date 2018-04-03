@@ -14,6 +14,7 @@
     "cors": "^2.8.4",
     "email-validator": "^1.1.1",
     "express": "^4.16.3",
+    "hashmap": "^2.3.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.3",
     "npm": "^5.8.0",

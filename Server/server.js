@@ -3,10 +3,10 @@ var cors = require('cors');
 var express = require('express');
 var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
-var dbShit = require('./Database/database')
+var mySession = require('./Session/session');
 var app = express();
 
-const port = 8080;
+const port = 9080;
 
 var corsOptions = {
     origin: '*',
@@ -54,15 +54,23 @@ console.log('todo list RESTful API server started on: ' + port );
 
 function authorize(req, res, next){
     var url = req.originalUrl
+    var sessionID = req.body.mySession || req.query.mySession;
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
-    }else if (req.session && req.session.userId){
+    }else if (sessionID){
         var userExists = false;
+        var userId = null;
         try {
-            userExists = student.userExists(req.session.userId);
+            userId = mySession.getUserID(sessionID);
+            if (!userId) {
+                responseWhenUnauthorized(req, res);
+            }
+            userExists = student.userExists(userId);
         } catch (err) {
         }
         if (userExists) {
+            req.session = {};
+            req.session.userId = userId;
             next();
         } else {
             responseWhenUnauthorized(req, res);
