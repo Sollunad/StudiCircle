@@ -22,6 +22,7 @@ import { DbProvider } from '../providers/dbprovider/dbprovider';
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
+import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
     SearchPage,
     PassManPage,
     CircleStartseite,
+    MitgliederÜbersicht,
     CircleEinstellungenPage
   ],
 
@@ -55,6 +57,7 @@ import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
     SearchPage,
     PassManPage,
     CircleStartseite,
+    MitgliederÜbersicht,
     CircleEinstellungenPage
   ],
   providers: [
