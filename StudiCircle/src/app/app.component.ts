@@ -11,7 +11,7 @@ import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-ü
 })
 export class MyApp {
 
-  rootPage: any = MitgliederÜbersicht;
+  rootPage: any = CircleStartseite;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
