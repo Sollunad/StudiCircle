@@ -3,13 +3,20 @@ const db = require('../Database/database.js');
 
 module.exports = {
     getUserData : function(userId) {
-        return db.User.findById(userId).then(user => {
-            return    {"userId":userId, "username": user.name, "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
-        }).error(err => {
-            return   {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
-            //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
-        });
-        return  "username = user.name 2";
+        var returnVal = {};
+        console.log(returnVal);
+        try {
+            returnVal = db.User.findById(userId).then(user => {
+                return    {"userId":userId, "username": user.name, "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+            }).error(err => {
+                return   {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+                //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+            });
+        } catch (err) {
+            console.log(err);
+        }
+        console.log(returnVal);
+        return returnVal;
     },
 
     getUserIdFromMail : function(mail) {

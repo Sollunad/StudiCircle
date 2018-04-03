@@ -3,6 +3,7 @@ var cors = require('cors');
 var express = require('express');
 var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
+var db = require('./Database/database')
 var app = express();
 
 app.use(cors());
@@ -43,6 +44,7 @@ routesStudents(app); //register the route
 const port = 8080;
 app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
+db.init();
 
 function authorize(req, res, next){
     var url = req.originalUrl
