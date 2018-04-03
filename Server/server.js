@@ -1,24 +1,35 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
-var session = require('client-sessions');
+var student = require('./Student/moduleInterface')
+var mySession = require('./Session/session');
+
 var app = express();
 
-app.use(cors());
+const port = 8080;
+
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-app.use(session({
-  cookieName: 'session',
-  secret: 'F4Z4o@fKNjZzY!ymm%1F&tBGigJ%VG', // key zur Verschlüsselung der Session-Daten
-  duration: 30 * 60 * 1000, // 30 min gültigkeit des cookies
-  activeDuration: 5 * 60 * 1000, // 5 min verlängerung bei jeder Anfrage des clients
-}));
-
 // urls protecten
-const allowedUrls = ["/user/login", "/user/logout", "/user/forgotPassword", "/user/register"];
-//app.route('/circle/*').all(authorize);
-//app.route('/user/*').all(authorize);
+const allowedUrls = ["/user/login",
+                        "/user/test",
+                        "/user/logout",
+                        "/user/forgotPassword",
+                        "/user/register",
+                    ];
+const allowedWildcards = ["/user/activate/",
+                            "/user/resetPassword/",
+                            "/user/changeMail/",
+                        ];
+app.route('/circle/*').all(authorize);
+app.route('/user/*').all(authorize);
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
@@ -26,20 +37,49 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-app.use(cors());
-app.listen(8080);
-console.log('todo list RESTful API server started on: 8080');
+app.listen(port);
+console.log('todo list RESTful API server started on: ' + port );
 
 
 function authorize(req, res, next){
-    if(allowedUrls.includes(req.originalUrl)){
+    var url = req.originalUrl
+    var sessionID = req.body.mySession || req.query.mySession;
+    if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
-    }else if(req.session && req.session.userId){
-        // eventuell checken ob UserID wirklich exestiert
-        next();
-    }else{
-        req.session.reset();
-        res.status(401);
-        res.send("Unauthorized!");
+    }else if (sessionID){
+        var userExists = false;
+        var userId = null;
+        try {
+            userId = mySession.getUserID(sessionID);
+            if (!userId) {
+                responseWhenUnauthorized(req, res);
+            }
+            userExists = student.userExists(userId);
+        } catch (err) {
+        }
+        if (userExists) {
+            req.session = {};
+            req.session.userId = userId;
+            next();
+        } else {
+            responseWhenUnauthorized(req, res);
+        }
+    }else {
+        responseWhenUnauthorized(req, res);
     }
+}
+
+function containsWildcard(url){
+    for (var wildcard of allowedWildcards) {
+        if (url.startsWith(wildcard)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function responseWhenUnauthorized (req, res) {
+    req.session.reset();
+    res.status(401);
+    res.send("Unauthorized! Failed in Server.js");
 }
