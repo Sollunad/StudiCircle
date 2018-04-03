@@ -48,7 +48,7 @@ module.exports = {
 
         var returnVal = "";
         try {
-            db.User.create({
+              db.User.create({
                 name: username,
                 email: mail,
                 pwdHash: password,

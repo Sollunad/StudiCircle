@@ -1,5 +1,5 @@
 const constant = require('./constants');
-var database = require('./database');
+var db = require('../Database/database');
 var mailer = require('./mailer');
 const passwordUtil = require('./passwordCheck');
 
@@ -9,11 +9,8 @@ module.exports = {
     registerBusiness: function (mail, password, userName, businessDescription, res) {
 
         let result = "";
-        let counter = 10;
-        while (result !== "ok" && counter > 0) {
-            counter--;
-            let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
-            html = '<html lang="de-DE">\n' +
+        let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
+        html = '<html lang="de-DE">\n' +
                 '<head>\n' +
                 '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
                 '</head>\n' +
@@ -26,12 +23,76 @@ module.exports = {
                 '<p>Please click on following link to activate this account on StudiCircle: <a href="' + constant.getActivationURL(randomString) + '">Validate new account</a></p>' +
                 '</body>\n' +
                 '</html>';
-            subject = 'StudiCircle: Validate new business account';
+        subject = 'StudiCircle: Validate new business account';
 
-            var userAuthData = passwordUtil.generateUserAuthData(password);
-            var hash = userAuthData.hash;
-            var salt = userAuthData.salt;
+        var userAuthData = passwordUtil.generateUserAuthData(password);
+        var hash = userAuthData.hash;
+        var salt = userAuthData.salt;
 
+
+        try {
+                db.User.create({
+                    name: userName,
+                    email: mail,
+                    pwdHash: password,
+                    salt:salt,
+                    type:constant.AccountType.BUSINESS,
+                    state:constant.AccountState.PENDING
+                }).then( (user)=> {
+                    db.ValidationKey.create({
+                        validationKey: randomString
+                    }).then( validationKey => {
+                        validationKey.setUser(user);
+                        mailer.sendMail('studicircle@web.de', html, subject)
+                            .then(resp => {
+                                console.log(resp);
+                                if (res){
+                                    res.send({
+                                        httpStatus: 200,
+                                        message:  "Activation link sent"
+                                    });
+                                }
+                                return true;
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                if (res){
+                                    res.status(412);
+                                    res.send({
+                                        httpStatus: 412,
+                                        message:  "Error at sending activation link."
+                                    });
+                                }
+                                return false;
+                            });
+                    }).error( err =>{
+                        res.status(409);
+                        res.send({
+                            httpStatus: 409,
+                            message:  "Database error"
+                        });
+                        return err;
+                    });
+                }).error(err => {
+                    res.status(409);
+                    res.send({
+                        httpStatus: 409,
+                        message:  "Database error"
+                    });
+                    return err;
+                });
+            } catch (err) {
+                res.status(409);
+                res.send({
+                    httpStatus: 409,
+                    message:  "Database error"
+                });
+                return err;
+            }
+
+
+
+/*
             //insert userdata in database
             result = database.insertNewPerson(mail, userName ,hash, salt, constant.AccountType.BUSINESS, randomString);
             if (result === "ok"){
@@ -89,33 +150,10 @@ module.exports = {
                 });
             }
             return result;
-        }
+        }*/
 
         //send registration Mail
-        mailer.sendMail('studicircle@web.de', html, subject)
-            .then(resp => {
-                console.log(resp);
-                if (res){
-                    res.send({
-                        httpStatus: 200,
-                        message:  "Activation link sent"
-                    });
-                }
-                return true;
-            })
-            .catch(err => {
-                console.log(err);
-                if (res){
-                    res.status(412);
-                    res.send({
-                        httpStatus: 412,
-                        message:  "Error at sending activation link."
-                    });
-                }
-                return false;
-            });
 
-        return "ok";
     },
 
     register: function (mail, password, accountType, userName, res, businessDescription) {
