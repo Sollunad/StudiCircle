@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { VerifyNowPage } from '../verify-now/verify-now';
-import { LogInPage } from '../log-in/log-in';
-import { DashboardPage } from '../dashboard/dashboard';
-import { ApiProvider } from "../../providers/api/api";
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {VerifyNowPage} from '../verify-now/verify-now';
+import {LogInPage} from '../log-in/log-in';
+import {DashboardPage} from '../dashboard/dashboard';
+import {ApiProvider} from "../../providers/api/api";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import { stringHasAppropiateLength, getMailRegex } from "../../util/stringUtils";
+import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 
 @Component({
   selector: 'page-get-involved',
@@ -23,7 +23,7 @@ export class GetInvolvedPage {
   };
 
   public mailValidation = getMailRegex();
-  
+
   passwdChk = '';
   business : boolean;
   student : boolean;
@@ -52,9 +52,9 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    const registration = this._apiService.register(this.profile.mail, 
+    const registration = this._apiService.register(this.profile.mail,
                                                    this.profile.name,
-                                                   this.profile.password, 
+                                                   this.profile.password,
                                                    this.profile.profileType).subscribe(
       (success: boolean) => {
         if(success){

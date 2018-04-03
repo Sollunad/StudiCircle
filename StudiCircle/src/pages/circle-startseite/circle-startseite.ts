@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
-import { SettingsPage } from "../settings/settings";
-import { SearchPage } from "../search/search";
+import {SettingsPage} from "../settings/settings";
+import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";

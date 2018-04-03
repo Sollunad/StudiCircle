@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { GetInvolvedPage } from '../get-involved/get-involved';
-import { VerifyNowPage } from '../verify-now/verify-now';
-import { DashboardPage } from '../dashboard/dashboard';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {GetInvolvedPage} from '../get-involved/get-involved';
+import {VerifyNowPage} from '../verify-now/verify-now';
+import {DashboardPage} from '../dashboard/dashboard';
 import {Subscription} from "rxjs/Subscription";
 import {ApiProvider} from "../../providers/api/api";
 import {ForgotPasswordPage} from "../forgot-password/forgot-password";
-import { stringHasAppropiateLength, getMailRegex } from "../../util/stringUtils";
+import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 
 @Component({
   selector: 'page-log-in',

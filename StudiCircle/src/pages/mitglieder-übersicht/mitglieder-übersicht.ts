@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {Observable} from "rxjs";
 import {NavParams} from "ionic-angular";
 
 @Component({
@@ -23,7 +22,7 @@ export class MitgliederÜbersicht {
         memberList => this.memberList = memberList
     );
   }
-  
+
   itemSelected(item: string) {
     console.log("Selected Item", item);
   }

@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {SettingsPage} from '../settings/settings';
 import {CircleStartseite} from '../circle-startseite/circle-startseite';
-import {Geolocation} from '@ionic-native/geolocation';
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from '../../providers/circle-provider/CircleProvider';
 import {Circle} from '../../providers/declarations/Circle';

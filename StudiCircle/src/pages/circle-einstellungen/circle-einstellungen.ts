@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
-import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 
 
