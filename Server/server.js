@@ -4,6 +4,8 @@ var express = require('express');
 var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
 var dbShit = require('./Database/database')
+
+dbShit.init();
 var app = express();
 
 const port = 8080;
