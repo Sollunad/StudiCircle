@@ -15,7 +15,7 @@ module.exports = {
         const reqUserId = req.session.userId || 1;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
+            if (result && result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
                     result.destroy();
                     res.send("User from circle removed.");
