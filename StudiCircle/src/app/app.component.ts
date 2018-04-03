@@ -5,7 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LogInPage } from '../pages/log-in/log-in';
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
-import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 
 @Component({
   templateUrl: 'app.html'

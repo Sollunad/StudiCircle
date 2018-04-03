@@ -19,11 +19,11 @@ export class MitgliederÜbersicht {
   }
 
   ionViewDidLoad(){
-    this.circleProvider.getMemberListByCircleId(1).subscribe(
+    this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
   }
-
+  
   removeCircleMember(userId: number, circleId: number){
     this.circleProvider.removeCircleMember(userId, circleId).subscribe();
     window.location.reload();
