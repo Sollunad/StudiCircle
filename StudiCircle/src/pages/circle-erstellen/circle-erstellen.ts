@@ -51,12 +51,12 @@ export class CircleErstellenPage {
   }
 
   createCircle(){
-    const response = this.dbprovider.getLocationByAddress(newAddress);
+    const response = this.dbprovider.getLocationByAddress(this.newAddress);
     const lat = response[0].lat;
     const lon = response[0].lon;
     const loc = {'lat' : lat, 'lon' : lon};
     console.log(this.vis, this.newName);
-    const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
+    const modification = this._circleService.create(this.newName, this.vis).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[CREATE] : Circle created successful");
