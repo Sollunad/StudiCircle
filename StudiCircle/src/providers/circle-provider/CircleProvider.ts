@@ -7,6 +7,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
+import {Circle} from "../declarations/Circle";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
@@ -52,5 +53,9 @@ export class CircleProvider {
     console.log(uid);
     let body = {"id": uid};
     return this.http.post(`http://localhost:8080/circle/remove`,body);
+  }
+
+  public allCirclesInRange(lat: number, long: number, range: number): Observable<Circle[]>{
+    return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
   }
 }
