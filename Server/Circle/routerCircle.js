@@ -47,4 +47,9 @@ module.exports = function(app) {
     // return: List of active modules for given circle
     app.route('/circle/modules')
         .get(circle.getModules);
+
+    // circleId: circleId
+    // return: visibility for circle
+    app.route('/circle/getVisibility')
+        .get(circle.getVisibility)
 };

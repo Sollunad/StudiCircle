@@ -225,6 +225,21 @@ module.exports = {
       });
     },
 
+    getVisibility : function(req, res){
+      var circleId = req.query.circleId
+      db.Circle.findById(circleId).then(circle => {
+        if(circle == null){
+          res.status(404).send("No circle with given id.");
+          return;
+        }
+        res.send(circle.visible);
+        return;
+      }).error(err => {
+        res.status(500).send("Error");
+        return;
+      });
+    }
+
 };
 
 function argumentMissing(res, ...args){
