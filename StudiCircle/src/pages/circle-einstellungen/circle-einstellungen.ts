@@ -14,6 +14,7 @@ export class CircleEinstellungenPage {
   private circleId : number;
   private visibility : string = "1";
 
+
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
   }
