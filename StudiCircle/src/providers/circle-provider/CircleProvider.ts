@@ -28,9 +28,9 @@ export class CircleProvider {
     return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid);
   }
 
-  public create(name : string, visibility : string){
+  public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
-    let body = {name : name, vis : visibility};
+    let body = {name : name, vis : visibility, loc : location};
     let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/new", body, header

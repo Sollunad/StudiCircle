@@ -54,7 +54,7 @@ export class DbProvider {
   }
 
   public getLocationByAddress(address: string) {
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+    /*const successSubject: Subject<boolean> = new Subject<boolean>();
     const subs: Subscription = this.http.get(
       'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
       (res: GeoResponse) => {
@@ -69,6 +69,8 @@ export class DbProvider {
         subs.unsubscribe();
         successSubject.next(false);
       }
-      );
+      );*/
+    const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
+    return this.http.get<GeoResponse>(url);
   }
 }
