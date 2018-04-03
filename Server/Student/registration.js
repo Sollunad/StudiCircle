@@ -2,6 +2,7 @@ var mailer = require('./mailer');
 var database = require('./database');
 const constant = require('./constants');
 const crypto = require('crypto');
+const pwdCheck = require('./passwordCheck');
 
 module.exports = {
     register: function (mail, password, accountType, userName, res) {
@@ -39,15 +40,16 @@ module.exports = {
             return "invalidAccountType";
         }
 
-        if (password.length < constant.PASS_MIN_LENGTH || password.length > constant.PASS_MAX_LENGTH) {
+        let passwordCheck = pwdCheck.checkPassword(password);
+        if (!passwordCheck){
             if (res){
                 res.status(412);
                 res.send({
                     httpStatus: 412,
-                    message:  "Password length is not between " + constant.PASS_MIN_LENGTH + " and "+ constant.PASS_MAX_LENGTH +" characters."
+                    message:  "wrong passsword"
                 });
             }
-            return "wrongPwd";
+            return "wrong password";
         }
 
         if (userName.length < constant.USERNAME_MIN_LENGTH || userName.length > constant.USERNAME_MAX_LENGTH) {

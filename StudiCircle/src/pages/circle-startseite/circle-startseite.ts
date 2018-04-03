@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
-import { SearchPage } from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {SearchPage} from "../search/search";
 
 @Component({
   templateUrl: 'circle-startseite.html'
@@ -18,6 +18,7 @@ export class CircleStartseite {
   circleName : string;
 
   staticModules = [
+
   { title: 'Rechnungen', mapName:'bill', component: '', imageName: 'rechnungen.jpg'},
   { title: 'Blackboard', mapName:'blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
   { title: 'Chat', mapName:'chat', component: '' , imageName: 'chat.jpg'},

@@ -26,6 +26,28 @@ export class ApiProvider {
 
   }
 
+  public changeMail(new_mail : string, pwd : string){
+    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd}
+    console.log(data);
+    let header = { "headers": {"Content-Type": "application/json"} };
+    return this.http.post(
+      this._apiPath + "user/updateMail",
+      data,
+      header
+    ).pipe(
+      map(
+        (res: ApiResponse) => {
+          if(res.httpStatus !== 200) {
+            return false;
+          } else {
+            this.currentUser.username = new_mail;
+            return true;
+          }
+        }
+      )
+    );
+  }
+
   public login(username: string, password: string): Observable<boolean>{
     let userCredentials = {"mail": username, "pwd": password};
     var header = { "headers": {"Content-Type": "application/json"} };
@@ -39,8 +61,8 @@ export class ApiProvider {
           if(res.status !== 200) {
             return false;
           } else {
-            res.userData.session = res.session;
             this.currentUser = res.userData;
+            this.currentUser.session = res.session;
             return true;
           }
         }
