@@ -9,7 +9,7 @@
   <ion-list>
     <ion-item *ngFor="let member of memberList" (click)="itemSelected(member)">
       {{ member.username }}
-      <button ion-button color="danger" (click)="removeCircleMember(member.uuid, 6)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
+      <button ion-button color="danger" (click)="removeCircleMember(member.uuid, 1)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
     </ion-item>
   </ion-list>
 </ion-content>
