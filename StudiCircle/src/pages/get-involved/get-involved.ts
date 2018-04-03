@@ -5,6 +5,7 @@ import { LogInPage } from '../log-in/log-in';
 import { DashboardPage } from '../dashboard/dashboard';
 import { ApiProvider } from "../../providers/api/api";
 import {UserInfo} from "../../providers/declarations/UserInfo";
+import { stringHasAppropiateLength, getMailRegex } from "../../util/stringUtils";
 
 @Component({
   selector: 'page-get-involved',
@@ -21,6 +22,8 @@ export class GetInvolvedPage {
     profileType : ''
   };
 
+  public mailValidation = getMailRegex();
+  
   passwdChk = '';
   business : boolean;
   student : boolean;
@@ -49,7 +52,10 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    const registration = this._apiService.register(this.profile.mail, this.profile.name,this.profile.password, this.profile.profileType).subscribe(
+    const registration = this._apiService.register(this.profile.mail, 
+                                                   this.profile.name,
+                                                   this.profile.password, 
+                                                   this.profile.profileType).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[REGISTER] : Registration successful");
@@ -65,7 +71,7 @@ export class GetInvolvedPage {
 
   usernameCheck(){
     if(this.profile.name){
-      if(this.profile.name.match('(\\w+ (\\w+|\\w+-\\w+))')){
+      if(this.profile.name.match('([a-zA-Z\-]+ (([a-zA-Z]+\-{0,1}[a-zA-Z]+)+))$')){
         console.log("[REGISTER] : User Name is valid")
         return true;
       }else{
@@ -76,7 +82,7 @@ export class GetInvolvedPage {
   }
 
   passwdCheck(){
-    if(this.profile.password.match('[(\\w+\\W+\\d+)]{8,64}')){
+    if(stringHasAppropiateLength(this.profile.password,8,64)){
       console.log("[REGISTER] : Password complies to policy");
       if((this.profile.password === this.passwdChk)){
         console.log("[REGISTER] : PasswordCheck successful");
@@ -86,7 +92,7 @@ export class GetInvolvedPage {
       }
       return false;
     }else{
-      console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of six characters");
+      console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of eight characters");
     }
     this.profile.password = '';
     this.passwdChk = '';
@@ -97,7 +103,7 @@ export class GetInvolvedPage {
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match(getMailRegex())){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
@@ -111,7 +117,7 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+          if(this.profile.mail.match(getMailRegex())){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
               if(this.usernameCheck()){
