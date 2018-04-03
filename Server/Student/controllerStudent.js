@@ -128,48 +128,28 @@ module.exports = {
             res.send("Bad request. Either no username or no password.");
             return;
         }
-
         try {
-            db.User.findAll({ where:{ 'email': mail }}).then(user1 => { // get id by mail
-                if ( user1 &&  user1[0] && user1[0].dataValues.id){
-                    let userId =  user1[0].dataValues.id;
-                    console.log("User ID" + userId);
-                    userId = 3;
-                    console.log("User ID" + userId);
-                    db.User.findById(userId).then(user => {
-                        let userAuthData ={"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
-                        let testausgabe=  pass + " : " + userAuthData.salt + " hash " + userAuthData.hash;
-                         if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                            var returnObject = {};
-                            returnObject.status = 200;
-                            returnObject.message = "Successfully Logged in";
-                            returnObject.userData = database.getUserData(userId);
+           var userId = database.getUserIdFromMail(mail);
+            console.log("User ID" + userId)
+            userId = 3;
+            console.log("User ID" + userId)
+             var userAuthData = database.getUserAuthData(userId);
+            if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
+                var returnObject = {};
+                returnObject.status = 200;
+                returnObject.message = "Successfully Logged in";
+                returnObject.userData = database.getUserData(userId);
+                returnObject.session = mySession.generateSession(userId);
 
-                            returnObject.session = mySession.generateSession(userId);
-
-                            res.status(200);
-                            res.send(returnObject);
-                        } else {
-                            res.status(401);
-                            res.send('Unauthorized.' + pass + ',' + userAuthData.salt + ',' + userAuthData.hash + ' password util');
-                        }
-                    }).error(err => {
-                        res.status(402);
-                        res.send('Unauthorized! Controller Student' );
-                    });
-                }else {
-                    res.status(403);
-                    res.send('Unauthorized! Controller Student');
-                }
-            }).error(err => {
-                res.status(404);
+                res.status(200);
+                res.send(returnObject);
+            } else {res.status(401);
                 res.send('Unauthorized! Controller Student');
-            });
-
+            }
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+        console.log(err)
+        res.status(500);
+        res.send("Server Error");
         }
     },
 
