@@ -24,6 +24,10 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+import {ChatPage} from "../pages/chat/chat";
+const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
+
 @NgModule({
   declarations: [
     MyApp,
@@ -37,13 +41,15 @@ import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-ü
     PassManPage,
     CircleStartseite,
     CircleEinstellungenPage,
-    MitgliederÜbersicht
+    MitgliederÜbersicht,
+    ChatPage
   ],
 
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    SocketIoModule.forRoot(config)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -58,7 +64,8 @@ import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-ü
     PassManPage,
     CircleStartseite,
     CircleEinstellungenPage,
-    MitgliederÜbersicht
+    MitgliederÜbersicht,
+    ChatPage
   ],
   providers: [
     StatusBar,
