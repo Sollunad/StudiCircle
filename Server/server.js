@@ -1,13 +1,12 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
-var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
 var mySession = require('./Session/session');
 
 var app = express();
 
-const port = 8080;
+const port = 9080;
 
 var corsOptions = {
     origin: '*',
@@ -17,17 +16,6 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
-app.use(session({
-  cookieName: 'session',
-  secret: 'F4Z4o@fKNjZzY!ymm%1F&tBGigJ%VG', // key zur Verschlüsselung der Session-Daten
-  duration: 30 * 60 * 1000, // 30 min gültigkeit des cookies
-  activeDuration: 5 * 60 * 1000, // 5 min verlängerung bei jeder Anfrage des clients
-  cookie: {
-    httpOnly: false, // when true, cookie is not accessible from javascript
-    secure: false // when true, cookie will only be sent over SSL. use key 'secureProxy' instead if you handle SSL not in your node process
-  }
-}));
 
 // urls protecten
 const allowedUrls = ["/user/login",

@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "client-sessions": "^0.8.0",
     "cors": "^2.8.4",
     "email-validator": "^1.1.1",
     "express": "^4.16.3",
