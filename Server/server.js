@@ -44,7 +44,7 @@ routesStudents(app); //register the route
 const port = 8080;
 app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
-db.init();
+//db.init();
 
 function authorize(req, res, next){
     var url = req.originalUrl

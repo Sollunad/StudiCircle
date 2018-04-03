@@ -61,6 +61,7 @@ function init() {
 				Location.sync({force:true}).then(() => {
 					CircleLocation.sync({force:true});
 					UserInCircles.sync({force:true});
+                    console.log("Database done");
 				});
 			//});
 		});
