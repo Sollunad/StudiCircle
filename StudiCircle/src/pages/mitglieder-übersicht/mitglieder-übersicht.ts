@@ -19,7 +19,7 @@ export class MitgliederÜbersicht {
   }
 
   ionViewDidLoad(){
-    this.circleProvider.getMemberListByCircleId(1).subscribe(
+    this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
   }

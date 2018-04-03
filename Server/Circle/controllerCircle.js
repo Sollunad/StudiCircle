@@ -12,7 +12,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
-        const reqUserId = req.session.userId || 3;
+        const reqUserId = req.session.userId || 1;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
             if (result && result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
@@ -164,7 +164,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId || 3;
+        const userId = req.session.userId || 1;
 
         db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
             var data = [];
