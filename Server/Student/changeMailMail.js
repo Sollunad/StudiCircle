@@ -1,6 +1,6 @@
 const constant = require('./constants');
-var database = require('./database');
-var mailer = require('./mailer');
+const database = require('./database');
+const mailer = require('./mailer');
 
 module.exports = {
     send: function (oldMail, newMail) {

@@ -6,17 +6,39 @@ let resetPwd = require('./passwordResetMail');
 
 
 module.exports = {
-    startUnitTests : function (req, res) {
+    startUnitTests : async function (req, res) {
         let response = "Start tests ...\n";
+        let t1 = await database.getUserData(1);
+        let t2 = "";
+        try {
+            t2 = await database.getUserIdFromMail("studicircle@googlegroups.com");
+        }catch (err){
+            console.log("catch-return " + err);
+        }
+        t1 = t1.username;
+        console.log("test-return:");
+        console.log(t2);
+        response += t1.toString();
+        response += "12\n";
+        response += t2;
 
+        let t3 = "";
+        try{
+            t3 = database.insertNewPerson("mail", "password", "salt", constant.AccountType.STUDENT, "randomString");
+            console.log(t3.toString());
+        }catch (err){
+            console.log("error "  + err);
+        }
+        response += t3;
 /*        response += this.testActivation();
         response += this.testDatabase();
         response += this.testMailer();
         response += this.testRegistration();
         response += this.testResetPassword();
 */
-        response += "End of tests :)"
+        response += "\nEnd of tests :)"
         res.send(response);
+        //res.send(t1);
     },
 
     testActivation : function () {
@@ -51,18 +73,18 @@ module.exports = {
         let result = false;
         let response = "Start database test...\n";
 
-        result = database.checkPassword("user","password");
+        result = database.passwordIsCompliant("user","password");
         if (result){
-            response += "checkPassword passed\n";
+            response += "passwordIsCompliant passed\n";
         }else {
-            response += "error at checkPassword --------------------------------------\n";
+            response += "error at passwordIsCompliant --------------------------------------\n";
         }
 
         result = database.getUserData("user");
         if (result){
-            response += "checkPassword passed\n";
+            response += "passwordIsCompliant passed\n";
         }else {
-            response += "error at checkPassword --------------------------------------\n";
+            response += "error at passwordIsCompliant --------------------------------------\n";
         }
 
         result = database.insertNewPerson("mail", "password", 1, "randomString");

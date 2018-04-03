@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { SettingsPage } from "../settings/settings";
-import { SearchPage } from '../search/search';
-import { Geolocation } from '@ionic-native/geolocation'
-import { DbProvider } from '../../providers/dbprovider/dbprovider';
-import { CircleErstellenPage } from '../circle-erstellen/circle-erstellen';
-import { AlertController } from 'ionic-angular';
-import { HttpClient } from "@angular/common/http";
+import {Component} from '@angular/core';
+import {AlertController, NavController} from 'ionic-angular';
+import {SettingsPage} from "../settings/settings";
+import {SearchPage} from '../search/search';
+import {Geolocation} from '@ionic-native/geolocation'
+import {DbProvider} from '../../providers/dbprovider/dbprovider';
+import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'page-dashboard',

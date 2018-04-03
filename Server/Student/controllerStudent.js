@@ -1,10 +1,10 @@
-const crypto = require('crypto');
+const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
+const passwordResetForm = require('./passwordResetForm');
+const passwordUtil = require('./passwordCheck');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
-const changeMail = require('./changeMailMail');
-const pwdCheck = require('./passwordCheck');
 const tests = require('./tests');
 
 module.exports = {
@@ -16,8 +16,8 @@ module.exports = {
         let password = req.body.pwd;
         let accountType = req.body.type;
         let userName = req.body.username;
-
-        registration.register(mailAddress, password, accountType, userName, res);
+        let businessDescription = req.body.businessdescription;
+        registration.register(mailAddress, password, accountType, userName, res, businessDescription);
     },
 
     //Called when user clicks the link in the validation Mail.
@@ -56,7 +56,7 @@ module.exports = {
         }
 
         try {
-            if (database.userExists(mail)) {
+            if (database.userMailExists(mail)) {
                 resetPwd.reset(mail);
             }
             res.status(200);
@@ -68,10 +68,24 @@ module.exports = {
         }
     },
 
+    passwordResetPage : function (req, res) {
+        var validationKey = req.params.validationKey;
+        if (!validationKey) {
+            res.status(400);
+            res.send("Bad request. No validation key");
+            return;
+        } else {
+            res.status(200);
+            res.send(passwordResetForm.getForm(validationKey));
+        }
+    },
+
     //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : function (req, res) {
         var validationKey = req.params.validationKey;
         var newPassword = req.body.pwd;
+
+        console.log(validationKey + " | " + newPassword);
 
         if (!validationKey || !newPassword) {
             res.status(400);
@@ -82,12 +96,12 @@ module.exports = {
         try {
             if (database.validationKeyExists(validationKey)) {
                 var userId = database.getUserIdFromValidationKey(validationKey);
-                var userAuthData = database.getUserAuthData(userId);
 
-                var userValue = userAuthData.salt + newPassword;
-                var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
+                var userAuthData = passwordUtil.generateUserAuthData(newPassword);
+                var hash = userAuthData.hash;
+                var salt = userAuthData.salt;
 
-                database.setPasswordHash(userId, hash);
+                database.setPassword(userId, hash, salt);
 
                 res.status(200);
                 res.send("Password successfully reset.");
@@ -96,6 +110,7 @@ module.exports = {
                 res.send("Invalid validation key!");
             }
         } catch (err) {
+            console.log(err);
             res.status(500);
             res.send("Server Error");
         }
@@ -116,15 +131,13 @@ module.exports = {
             var userId = database.getUserIdFromMail(mail);
             var userAuthData = database.getUserAuthData(userId);
 
-            var userValue = userAuthData.salt + pass;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-
-            if (hash == userAuthData.hash) {
+            if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 var returnObject = {};
                 returnObject.status = 200;
                 returnObject.message = "Successfully Logged in";
-                returnObject.session = database.newSession(userId);
                 returnObject.userData = database.getUserData(userId);
+
+                req.session.userId = userId;
 
                 res.status(200);
                 res.send(returnObject);
@@ -140,39 +153,35 @@ module.exports = {
 
     },
 
+    logout : function (req, res) {
+        req.session.reset();
+        res.send("Logout successfull.")
+    },
+
     //Called when the user sets a new password
     setPassword : function (req, res) {
-        var session = req.body.session;
+
+        var userId = req.session.userId
         var oldPw = req.body.oldPwd;
         var newPw = req.body.newPwd;
 
-        if (!session || !oldPw || !newPw || !pwdCheck.checkPassword(newPw)) {
+        if (!userId || !oldPw || !newPw || !passwordUtil.passwordIsCompliant(newPw)) {
             res.status(400);
             res.send("Bad request. No session, old or new password not set or not compliant to guidelines.");
             return;
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Unauthorized. Invalid session!")
-                return;
-            }
-
-            var userId = database.getUserIdFromSession(session);
             var userAuthData = database.getUserAuthData(userId);
 
-            var userValue = userAuthData.salt + oldPw;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-
-            if (hash == userAuthData.hash) {
-                var newHash = userAuthData.salt + newPw;
-                database.setPasswordHash(userId, newHash);
+            if (passwordUtil.passwordCorrect(oldPw, userAuthData.salt, userAuthData.hash)) {
+                var newUserAuthData = passwordUtil.generateUserAuthData(newPw);
+                database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
 
                 res.status(200);
                 res.send("Successfully set Password")
             } else {
-                res.status(401);
+                res.status(402);
                 res.send("Unauthorized. Invalid password!")
             }
         } catch (err) {
@@ -183,32 +192,23 @@ module.exports = {
 
     //Called when the user wants to delete the account
     deleteAccount : function (req, res) {
-        var session = req.body.session;
+        var userId = req.session.userId;
         var pass = req.body.pwd;
 
-        if (!session || !pass) {
+        if (!userId || !pass) {
             res.status(400);
             res.send("Bad request. Either no session or no password.");
             return;
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Invalid Session!")
-                return;
-            }
-            var userId = database.getUserIdFromSession(session);
             var userAuthData = database.getUserAuthData(userId);
 
-            var userValue = userAuthData.salt + pass;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-
-            if (hash == userAuthData.hash) {
+            if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 database.deleteUser(userId);
                 res.status(200);
-                res.send("Successfully deleted Account")
-                return;
+                res.send("Successfully deleted Account");
+                req.session.reset();
             } else {
                 res.status(401);
                 res.send("Unauthorized. Invalid password.")
@@ -223,12 +223,12 @@ module.exports = {
 
     //
     updateMail : function (req, res) {
-        var session = req.body.session;
+        var userId = req.session.userId;
         var oldMail = req.body.oldMail;
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
-        if (!session || !oldMail || !newMail || !pass) {
+        if (!userId || !oldMail || !newMail || !pass) {
             res.status(400);
             res.send("Bad request. Either no session, oldMail, newMail or no password.");
             return;
@@ -241,13 +241,6 @@ module.exports = {
         }
 
         try {
-            if (!database.sessionExists(session)) {
-                res.status(401);
-                res.send("Invalid Session!");
-                return;
-            }
-            var userId = database.getUserIdFromSession(session);
-
             if (!userId == database.getUserIdFromMail(oldMail)) {
                 res.status(401);
                 res.send("Unauthorized! Mail and session do not match!");
@@ -256,10 +249,7 @@ module.exports = {
 
             var userAuthData = database.getUserAuthData(userId);
 
-            var userValue = userAuthData.salt + pass;
-            var hash = crypto.createHash('sha256').update(userValue, 'utf8').digest('hex');
-
-            if (hash == userAuthData.hash) {
+            if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 changeMail.send(oldMail, newMail);
                 res.status(200);
                 res.send("Send an validation E-Mail");
@@ -287,7 +277,7 @@ module.exports = {
         }
 
         try {
-            if (!database.validationKeyExists(validationKey)) {
+            if (database.validationKeyExists(validationKey)) {
                 var userId = database.getUserIdFromValidationKey(validationKey);
                 var newMail = database.getNewMailFromValidationKey(validationKey);
 
