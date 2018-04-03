@@ -13,8 +13,26 @@ module.exports = {
 
     getUserData : async function(userId) {
         try {
-            await db.User.findById(userId).then(user => {
-                return    {"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
+            return await db.User.findById(userId).then(user => {
+                if ( user ) {
+                    console.log(
+                        "id: " + userId,
+                        "username: "+ user.dataValues.name+
+                        "mail: "+ user.dataValues.email+
+                        "type: "+ user.dataValues.type+
+                        "state: "+ user.dataValues.state+
+                        "businessDescription: "+ user.dataValues.businessDescription+
+                        "lastActivity: " + user.dataValues.lastActivity);
+                    return {
+                        "id": userId,
+                        "username": user.dataValues.name,
+                        "mail": user.dataValues.email,
+                        "type": user.dataValues.type,
+                        "state": user.dataValues.state,
+                        "businessDescription": user.dataValues.businessDescription,
+                        "lastActivity": user.dataValues.lastActivity
+                    };
+                }
             }).error(err => {
                 throw  "database error";
             });
@@ -22,6 +40,7 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
+
     },
 
     getUserIdFromMail : async function(mail) {
@@ -123,7 +142,7 @@ module.exports = {
     setState : async function (validationKey, newState) {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         try {
-            let userId = await getUserIdFromValidationKey(validationKey);
+            let userId = await this.getUserIdFromValidationKey(validationKey);
             await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
                     user.dataValues.state = newState;
