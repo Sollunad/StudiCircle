@@ -6,6 +6,7 @@ import {Geolocation} from '@ionic-native/geolocation'
 import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import {HttpClient} from "@angular/common/http";
+import {ApiProvider} from "../../providers/api/api";
 
 @Component({
   selector: 'page-dashboard',
