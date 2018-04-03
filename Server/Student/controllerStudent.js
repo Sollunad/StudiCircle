@@ -129,25 +129,31 @@ module.exports = {
             return;
         }
         try {
-           let userId = await database.getUserIdFromMail(mail);
+            let userId = await database.getUserIdFromMail(mail);
             console.log("User ID" + userId);
 
-            console.log("User data: " + await database.getUserData(userId).toString());
+            let userData = await database.getUserData(userId);
 
-            let  userAuthData = await database.getUserAuthData(userId);
-            console.log("auth data: " + userAuthData.toString());
+            if (userData.state == 'ACTIVE') {
 
-            if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                var returnObject = {};
-                returnObject.status = 200;
-                returnObject.message = "Successfully Logged in";
-                returnObject.userData = database.getUserData(userId);
-                returnObject.session = mySession.generateSession(userId);
+                let userAuthData = await database.getUserAuthData(userId);
 
-                res.status(200);
-                res.send(returnObject);
-            } else {res.status(401);
-                res.send('Unauthorized! Controller Student');
+                if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
+                    var returnObject = {};
+                    returnObject.status = 200;
+                    returnObject.message = "Successfully Logged in";
+                    returnObject.userData = (await database.getUserData(userId));
+                    returnObject.session = mySession.generateSession(userId);
+
+                    res.status(200);
+                    res.send(returnObject);
+                } else {
+                    res.status(401);
+                    res.send('Unauthorized! Wrong Password');
+                }
+            } else {
+                res.status(412);
+                res.send("Profile not activated!");
             }
         } catch (err) {
         console.log(err)
@@ -157,7 +163,8 @@ module.exports = {
     },
 
     logout : function (req, res) {
-        req.session.reset();
+        mySession.invalidate(req.session.sessionId);
+
         res.send("Logout successfull.")
     },
 
