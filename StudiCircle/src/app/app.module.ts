@@ -23,8 +23,6 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
-import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
-import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 
 @NgModule({
   declarations: [
