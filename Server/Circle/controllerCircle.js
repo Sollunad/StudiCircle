@@ -127,40 +127,61 @@ module.exports = {
 
     //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
-        const lat1 = req.body.location.latitude;
-        const lon1 = req.body.location.longitude;
-        const range = req.body.location.range;
+      const deg2rad = (deg) => deg * (Math.PI/180);
+      const distanceBetweenCoords = (lat1, lon1, lat2, lon2) => {
+        // console.log('distanceBetweenCoords', lat1, lon1, lat2, lon2);
 
-        db.Circle.findAll().then(circles => {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distance in km
+      }
 
-            //set the appropriate HTTP header
-            res.setHeader('Content-Type', 'text/html');
+      const lat1 = req.query.lat;
+      const lon1 = req.query.lon;
+      const distance = req.query.dist;
 
-          circles.forEach(circle => {
+      if (argumentMissing(res, lat1, lon1, distance)) return;
 
-            var lat2 = circle.Location.latitude;
-            var lon2 = circle.Location.longitude;
+      db.Circle.findAll({
+        include: [{
+          model: db.Location,
+      //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+         }]
+      }).then(circles => {
 
-                  var R = 6371; // Radius of the earth in km
-                  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-                  var dLon = deg2rad(lon2-lon1);
-                  var a =
-                      Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2)
-                  ;
-                  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                  var d = R * c; // Distance in km
-              if (d<range){
-                  res.write(circle);
-              }
+        if(distance == -1) {
+          res.status(200).json(circles);
+          return;
+        }
+
+        let json = [];
+
+        circles.forEach(circle => {
+
+          circle.Locations.forEach(circleLocation => {
+
+            var lat2 = circleLocation.latitude;
+            var lon2 = circleLocation.longitude;
+
+            var coordDistance = distanceBetweenCoords(lat1, lon1, lat2, lon2);
+            if (coordDistance <= distance){
+              json.push(circle);
+            }
           });
-
-            //end the response process
-            res.end();
-
         });
 
+        res.status(200).json(json);
+      }).error(err => {
+        res.status(500).json({
+          'error': 'Server Error'
+        });
+      });
     },
 
     members : function (req, res) {

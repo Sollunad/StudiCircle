@@ -1,12 +1,10 @@
-
-import { NavController } from 'ionic-angular';
 import {Component} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {SettingsPage} from '../settings/settings';
 import {CircleStartseite} from '../circle-startseite/circle-startseite';
 import {Geolocation} from '@ionic-native/geolocation';
 import {HttpClient} from "@angular/common/http";
-import {DbProvider} from '../../providers/dbprovider/dbprovider';
+import {CircleProvider} from '../../providers/circle-provider/CircleProvider';
 import {Circle} from '../../providers/declarations/Circle';
 
 @Component({
@@ -31,7 +29,7 @@ export class SearchPage {
   private lat: number;
   private lon: number;
 
-  constructor(public navCtrl: NavController, public http: HttpClient, private dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider) {
     this.lat = 0;
     this.lon = 0;
     this.distance = 0;
@@ -41,7 +39,7 @@ export class SearchPage {
 
   private getCirclesByLocation() {
     const dist = this.distances[this.distance].value;
-    this.dbProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
+    this.circleProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
       circles => {
         console.log('getCirclesByLocation', circles);
         this.circles = this.nonFilteredCircles = circles;

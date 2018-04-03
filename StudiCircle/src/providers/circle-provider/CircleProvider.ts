@@ -55,7 +55,10 @@ export class CircleProvider {
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 
-  public allCirclesInRange(lat: number, long: number, range: number): Observable<Circle[]>{
-    return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
+  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]>{
+    // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
+
+    const url = `http://localhost:8080/circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
+    return this.http.get<Circle[]>(url);
   }
 }
