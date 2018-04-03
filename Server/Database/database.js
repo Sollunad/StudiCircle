@@ -68,6 +68,7 @@ function init() {
 		});
 	});
 }
+User.sync();
 
 module.exports = {
 	init: init,
