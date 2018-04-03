@@ -2,6 +2,15 @@ const constant = require('./constants');
 const db = require('../Database/database.js');
 
 module.exports = {
+
+    deleteUser : function (userId) {
+        console.log("DELETE USER - UserId: " + userId);
+    },
+
+    getNewMailFromValidationKey : function (validationKey) {
+        return "test@example.com"
+    },
+
     getUserData : async function(userId) {
         try {
             await db.User.findById(userId).then(user => {
@@ -30,29 +39,27 @@ module.exports = {
         }
     },
 
-    getUserIdFromValidationKey : async function(validationKey) {
+    getUserIdFromValidationKey : async function( validationKey ) {
         try {
-            return await db.ValidationKey.findAll({ where:{ 'id': validationKey }}).then(validationKey => {
-                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
-                    return  validationKey[0].dataValues.id;
-                throw  false;
+            return await db.ValidationKey.findById( validationKey ).then( validationKey => {
+                if ( validationKey &&  validationKey && validationKey.dataValues.id)
+                    return  validationKey.dataValues.id;
+                throw false;
             }).error(err => {
-                throw   "error";
+                throw "error";
             });
         } catch (err) {
             console.log(err);
             throw "database error";
         }
-
-
         return 1;
     },
 
-    getUserAuthData : async function(userId) {
+    getUserAuthData : async function( userId ) {
         try {
-            return await db.User.findAll({ where:{ 'id': userId }}).then(user => {
-                if ( user &&  user[0] && user[0].dataValues.id)
-                    return  {"salt": user[0].dataValues.salt, "hash": user[0].dataValues.pwdHash};
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id)
+                    return  {"salt": user.dataValues.salt, "hash": user.dataValues.pwdHash};
                 throw  "database error";
             }).error(err => {
                 throw   "error";
@@ -104,45 +111,28 @@ module.exports = {
         return resultMessage;
     },
 
-    setPassword : function (userId, hash, salt) {
-        console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
-    },
-    
-    setState : async function (validationKey, newState) {
-        try {
-            let userId = await getUserIdFromValidationKey(validationKey);
-        } catch (err) {
-            console.log(err);
-            throw "database error";
-        }
-        console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
-        return true;
-    },
-
-    setValidationKey : function (mail, validationKey) {
-        console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
-        return true;
-    },
-
     setChangeMailKey : function (oldMail, newMail, validationKey) {
         console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
         return true;
     },
 
-    getNewMailFromValidationKey : function (validationKey) {
-        return "test@example.com"
+    setPassword : function (userId, hash, salt) {
+        console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
     },
-
-    updateMail : function (userId, newMail) {
-        console.log("UPDATE MAIL - UserId: " + userId + " | NewMail: " + newMail);
-    },
-
-    validationKeyExists : async function (validationKey) {
+    
+    setState : async function (validationKey, newState) {
+        console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'id': validationKey }}).then(validationKey => {
-                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
-                    return  true;
-                throw  false;
+            let userId = await getUserIdFromValidationKey(validationKey);
+            await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    user.dataValues.state = newState;
+                    user.save().then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
             }).error(err => {
                 throw   "error";
             });
@@ -152,15 +142,40 @@ module.exports = {
         }
     },
 
-    userMailExists : function (mail) {
+    setValidationKey : function (mail, validationKey) {
+        console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
         return true;
+    },
+
+    updateMail : async function (userId, newMail) {
+        console.log("UPDATE MAIL - UserId: " + userId + " | NewMail: " + newMail);
+
+    },
+
+    userMailExists : async function (mail) {
+        try {
+            return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
+                if ( user &&  user[0] && user[0].dataValues.id)
+                    return  !!user[0].dataValues.mail;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
     userExists : function (userId) {
         return true;
     },
 
-    deleteUser : function (userId) {
-        console.log("DELETE USER - UserId: " + userId);
+    validationKeyExists : async function (validationKey) {
+        try {
+            return  !!this.getUserIdFromValidationKey(validationKey); // convert int to bool
+        }catch (err) {
+            throw "database error";
+        }
     }
 }
