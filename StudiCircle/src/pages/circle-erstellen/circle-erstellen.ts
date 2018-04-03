@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {DbProvider} from "../../providers/dbprovider/dbprovider"
 
 @Component({
   selector: 'page-circle-erstellen',
@@ -10,8 +11,9 @@ export class CircleErstellenPage {
 
   private visibility : string = "1";
   private newName : string = "";
+  private newAddress : string = "";
 
-  constructor(public navCtrl: NavController, private _circleService : CircleProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private _circleService : CircleProvider, private alertCtrl: AlertController, private dbprovider: DbProvider) {
   }
 
   showExtraInfoName() {
@@ -49,8 +51,12 @@ export class CircleErstellenPage {
   }
 
   createCircle(){
+    const response = this.dbprovider.getLocationByAddress(newAddress);
+    const lat = response[0].lat;
+    const lon = response[0].lon;
+    const loc = {'lat' : lat, 'lon' : lon};
     console.log(this.vis, this.newName);
-    const modification = this._circleService.create(this.newName, this.vis).subscribe(
+    const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[CREATE] : Circle created successful");
