@@ -138,7 +138,8 @@ module.exports = {
                     console.log("User ID" + userId);
                     db.User.findById(userId).then(user => {
                         let userAuthData ={"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
-                        if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
+                        let testausgabe=  pass + " : " + userAuthData.salt + " hash " + userAuthData.hash;
+                         if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                             var returnObject = {};
                             returnObject.status = 200;
                             returnObject.message = "Successfully Logged in";
@@ -150,19 +151,19 @@ module.exports = {
                             res.send(returnObject);
                         } else {
                             res.status(401);
-                            res.send('Unauthorized! password util');
+                            res.send('Unauthorized! password util' + testausgabe);
                         }
                     }).error(err => {
                         res.status(402);
-                        res.send('Unauthorized! Controller Student');
+                        res.send('Unauthorized! Controller Student' + testausgabe);
                     });
                 }else {
                     res.status(403);
-                    res.send('Unauthorized! Controller Student');
+                    res.send('Unauthorized! Controller Student' + testausgabe);
                 }
             }).error(err => {
                 res.status(404);
-                res.send('Unauthorized! Controller Student');
+                res.send('Unauthorized! Controller Student' + testausgabe);
             });
 
         } catch (err) {
