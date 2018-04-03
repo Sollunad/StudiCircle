@@ -3,19 +3,16 @@ const db = require('../Database/database.js');
 
 module.exports = {
     getUserData : async function(userId) {
-        var returnVal = {};
         try {
-            returnVal = await db.User.findById(userId).then(user => {
+            await db.User.findById(userId).then(user => {
                 return    {"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
             }).error(err => {
-                return   "error";
-                //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+                throw  "database error";
             });
         } catch (err) {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
     },
 
     getUserIdFromMail : async function(mail) {
@@ -25,7 +22,7 @@ module.exports = {
                     return  user[0].dataValues.id;
                 throw  "database error";
             }).error(err => {
-                throw   "error";
+                throw   "database error";
             });
         } catch (err) {
             console.log(err);
@@ -33,7 +30,21 @@ module.exports = {
         }
     },
 
-    getUserIdFromValidationKey : function(validationKey) {
+    getUserIdFromValidationKey : async function(validationKey) {
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'id': validationKey }}).then(validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.id;
+                throw  false;
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+
+
         return 1;
     },
 
@@ -97,7 +108,13 @@ module.exports = {
         console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
     },
     
-    setState : function (validationKey, newState) {
+    setState : async function (validationKey, newState) {
+        try {
+            let userId = await getUserIdFromValidationKey(validationKey);
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         return true;
     },
@@ -120,8 +137,19 @@ module.exports = {
         console.log("UPDATE MAIL - UserId: " + userId + " | NewMail: " + newMail);
     },
 
-    validationKeyExists : function (validationKey) {
-        return true;
+    validationKeyExists : async function (validationKey) {
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'id': validationKey }}).then(validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  true;
+                throw  false;
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
     userMailExists : function (mail) {

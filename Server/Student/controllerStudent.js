@@ -23,7 +23,7 @@ module.exports = {
     },
 
     //Called when user clicks the link in the validation Mail.
-    activate : function (req, res) {
+    activate : async function (req, res) {
         var validationKey = req.params.validationKey;
 
         if (!validationKey) {
@@ -33,8 +33,8 @@ module.exports = {
         }
 
         try {
-            if (database.validationKeyExists(validationKey)) {
-                database.setState(validationKey, constants.AccountState.ACTIVE);
+            if ( await database.validationKeyExists(validationKey)) {
+                await database.setState(validationKey, constants.AccountState.ACTIVE);
                 res.status(201);
                 res.send("Successfully validated new user account.");
             } else {
