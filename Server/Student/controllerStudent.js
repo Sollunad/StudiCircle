@@ -131,6 +131,7 @@ module.exports = {
         try {
            let userId = await database.getUserIdFromMail(mail);
             console.log("User ID" + userId);
+            console.log("User data: " + await database.getUserData(userId));
             let  userAuthData = await database.getUserAuthData(userId);
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 var returnObject = {};
