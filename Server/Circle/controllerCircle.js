@@ -3,10 +3,7 @@ const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
-      res.status(200).json({
-        query: req.query,
-        message: 'Hello World!'
-      });
+        res.send('Hello World!');
     },
 
     removeUser : function (req, res) {
@@ -17,15 +14,24 @@ module.exports = {
 
         const reqUserId = req.session.userId; // TODO: nur admin/mod im circle können user löschen
 
-        db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
-            result.destroy();
+        db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
+            if (result && result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
+                db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
+                    result.destroy();
+                    res.send("User from circle removed.");
+                }).error(err => {
+                    res.status(404);
+                    res.send("User not found in circle.");
+                });
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not Admin in the requested circle.")
+            }
         }).error(err => {
             res.status(404);
-            res.send("User in circle not found.");
+            res.send("User not found in circle.");
             return;
         });
-
-        res.send("User from circle removed.");
     },
 
     addUser : function (req, res) {
@@ -62,13 +68,19 @@ module.exports = {
     newCircle : function (req, res) {
         const name = req.body.name;
         const visible = req.body.vis;
-        //const location = req.body.loc;
+        const location = req.body.loc;
 
-        if (argumentMissing(res, name, visible)) return;
+        if (argumentMissing(res, name, visible, location)) return;
+        if (argumentMissing(res, location.lat, location.lon)) return; // aus gründen -.-
 
         const userId = req.session.userId;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
+            // Location speichern
+            db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
+                locationObj.addCircle(circle);
+            });
+            // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
                     result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
@@ -80,7 +92,7 @@ module.exports = {
             });;
         }).error(err => {
             res.status(500)
-            res.send("Server error.");
+            res.send("Server error. Creating circle failed.");
         });
     },
 
@@ -119,54 +131,33 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-        var userId = req.body.id;
-        var circles = db.User.findAll({where: {id: 1}, include: [db.Circle]}).then(result => {
-          var json = res.json({circles: result[0].Circles});
-          //res.send(circles);
-        }).catch(err => {
-        res.status(500);
-        res.send("Internal Server Error");
-        //console.log(err);});
-        //console.log(circles);
-      });
+        const userId = req.session.userId;
+
+        var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
+          console.log( res[0]);
+        }).catch(err => {console.log(err);});
+        console.log(circles);
+        res.send(circles);
     },
 
     //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
-        const lat1 = req.body.location.latitude;
-        const lon1 = req.body.location.longitude;
-        const range = req.body.location.range;
+        var location = req.body.loc;
+        res.send(location);
 
-        db.Circle.findAll().then(circles => {
-
-            //set the appropriate HTTP header
-            res.setHeader('Content-Type', 'text/html');
-
-          circles.forEach(circle => {
-
-            var lat2 = circle.Location.latitude;
-            var lon2 = circle.Location.longitude;
-
-                  var R = 6371; // Radius of the earth in km
-                  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-                  var dLon = deg2rad(lon2-lon1);
-                  var a =
-                      Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2)
-                  ;
-                  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                  var d = R * c; // Distance in km
-              if (d<range){
-                  res.write(circle);
-              }
-          });
-
-            //end the response process
-            res.end();
-
-        });
-
+/*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var dLon = deg2rad(lon2-lon1);
+            var a =
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon/2) * Math.sin(dLon/2)
+            ;
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c; // Distance in km
+            return d;
+        }*/
     },
 
     members : function (req, res) {

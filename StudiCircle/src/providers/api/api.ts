@@ -19,6 +19,7 @@ import {LoginResponse} from "../declarations/LoginResponse";
 export class ApiProvider {
 
   private _apiPath = "https://api.dev.sknx.de/";
+  //private _apiPath = "http://localhost:8080/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient) {

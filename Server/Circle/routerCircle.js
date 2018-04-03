@@ -29,7 +29,6 @@ module.exports = function(app) {
     app.route('/circle/remove')
         .post(circle.removeCircle);
 
-    // id: userId
     // return: List circles
     app.route('/circle/forUser')
         .get(circle.circlesForUserId);
