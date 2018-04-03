@@ -41,6 +41,8 @@ module.exports = {
             db.User.findById(userId).then(user => {
                 circle.addUser(user).then(result => {
                     result[0][0].update({"role" : cons.CircleRole.MEMBER});
+                    res.send("User added to circle.");
+                    return;
                 });
             }).error(err => {
                 res.status(404);
@@ -52,8 +54,6 @@ module.exports = {
             res.send("No circle with given id.");
             return;
         });
-
-        res.send("User added to circle.");
     },
 
     newCircle : function (req, res) {
