@@ -3,10 +3,19 @@ var cors = require('cors');
 var express = require('express');
 var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
-var db = require('./Database/database')
+var dbShit = require('./Database/database')
+
+dbShit.init();
 var app = express();
 
-app.use(cors());
+const port = 8080;
+
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -41,10 +50,9 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-const port = 8080;
 app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
-//db.init();
+
 
 function authorize(req, res, next){
     var url = req.originalUrl
