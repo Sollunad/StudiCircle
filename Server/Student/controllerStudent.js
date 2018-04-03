@@ -150,18 +150,18 @@ module.exports = {
                             res.send(returnObject);
                         } else {
                             res.status(401);
-                            res.send('Unauthorized! Controller Student');
+                            res.send('Unauthorized! password util');
                         }
                     }).error(err => {
-                        res.status(401);
+                        res.status(402);
                         res.send('Unauthorized! Controller Student');
                     });
                 }else {
-                    res.status(401);
+                    res.status(403);
                     res.send('Unauthorized! Controller Student');
                 }
             }).error(err => {
-                res.status(401);
+                res.status(404);
                 res.send('Unauthorized! Controller Student');
             });
 
