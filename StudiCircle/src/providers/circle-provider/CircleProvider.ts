@@ -73,4 +73,8 @@ export class CircleProvider {
     let body = {"id": uid};
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
+
+  public getCircleVisibility(cid: number): Observable<boolean>{
+    return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
+  }
 }
