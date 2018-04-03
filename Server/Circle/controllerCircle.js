@@ -3,7 +3,10 @@ const cons = require('./constants.js');
 
 module.exports = {
     helloworld : function (req, res) {
-        res.send('Hello World!');
+      res.status(200).json({
+        query: req.query,
+        message: 'Hello World!'
+      });
     },
 
     removeUser : function (req, res) {
@@ -12,10 +15,10 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
-        const reqUserId = req.session.userId || 3;
+        const reqUserId = req.session.userId || 1;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result && result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
+            if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
                     result.destroy();
                     res.send("User from circle removed.");
@@ -50,6 +53,8 @@ module.exports = {
             db.User.findById(userId).then(user => {
                 circle.addUser(user).then(result => {
                     result[0][0].update({"role" : cons.CircleRole.MEMBER});
+                    res.send("User added to circle.");
+                    return;
                 });
             }).error(err => {
                 res.status(404);
@@ -61,8 +66,6 @@ module.exports = {
             res.send("No circle with given id.");
             return;
         });
-
-        res.send("User added to circle.");
     },
 
     newCircle : function (req, res) {
@@ -91,8 +94,10 @@ module.exports = {
                 res.send("User from session not found.");
             });;
         }).error(err => {
+
             res.status(500)
             res.send("Server error. Creating circle failed.");
+
         });
     },
 
@@ -131,6 +136,7 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
+
         const userId = req.session.userId || 1;
 
         var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
@@ -138,12 +144,21 @@ module.exports = {
         }).catch(err => {console.log(err);});
         console.log(circles);
         res.send(circles);
+
     },
 
     circlesForLocation : function (req, res) {
-        var location = req.body.loc;
-        res.send(location);
+        const location = req.body.loc;
+        // const Distance = req.body.dist;
 
+        db.Circle.findAll().then(circles => {
+          // circles.forEach(circle => {
+          //   console.log(circle.getLocations());
+          // });
+          res.status(200).json(
+            circles
+          );
+        });
 /*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
             var R = 6371; // Radius of the earth in km
             var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -164,7 +179,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId || 3;
+        const userId = req.session.userId || 1;
 
         db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
             var data = [];
@@ -224,6 +239,21 @@ module.exports = {
           return;
       });
     },
+
+    getVisibility : function(req, res){
+      var circleId = req.query.circleId
+      db.Circle.findById(circleId).then(circle => {
+        if(circle == null){
+          res.status(404).send("No circle with given id.");
+          return;
+        }
+        res.send(circle.visible);
+        return;
+      }).error(err => {
+        res.status(500).send("Error");
+        return;
+      });
+    }
 
 };
 

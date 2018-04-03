@@ -21,7 +21,7 @@
       <ion-label>
         Standort
       </ion-label>
-      <ion-input type="text" placeholder="Musteradresse" name="address"></ion-input>
+      <ion-input type="text" placeholder="Musteradresse" name="address" [(ngModel)]="newAddress"></ion-input>
       <button clear item-right (click)="showExtraInfoAdresse()">?</button>
     </ion-item>
     <ion-item id="circleErstellen-select1">
@@ -36,7 +36,7 @@
           privat
         </ion-option>
       </ion-select>
-      <button clear item-right (click)="showExtraInfoSichtbarkeit()">?</button> // TODO Button nicht drückbar, liegt hinter ion-select!
+      <button clear class="visibilityhint" item-right (click)="showExtraInfoSichtbarkeit()">?</button> // TODO Button nicht drückbar, liegt hinter ion-select!
     </ion-item>
   </form>
   <div id="circleErstellen-markdown1" class="show-list-numbers-and-dots">
@@ -47,12 +47,5 @@
   <button id="circleErstellen-button1" ion-button color="positive" (click)="createCircle()" block>
     Erstellen
   </button>
-  <div id="circleErstellen-markdown5" class="show-list-numbers-and-dots">
-    <p style="color:#000000;font-size:11px;">
-      <strong>
-        Sichtbarkeit
-      </strong>
-      Hier können sie auswählen ob alle User ihren Circel sehen und ihm beitreten können (Öffentlich), oder ob das nur auf Einladung möglich sein soll (Privat)
-    </p>
-  </div>
+
 </ion-content>

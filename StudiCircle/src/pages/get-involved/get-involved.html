@@ -18,10 +18,10 @@
       <ion-input type="text" placeholder="Firstname Lastname" name="user_name" [(ngModel)]="profile.name" pattern='(\w+ (\w+|\w+-\w+))'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input3">
-      <ion-input type="password" placeholder="Password" name="pw" [(ngModel)]="profile.password" pattern='[(\w+\W+\d)]{6,24}'></ion-input>
+      <ion-input type="password" placeholder="Password" name="pw" [(ngModel)]="profile.password" pattern='[(\w+\W+\d+)]{8,64}'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input6">
-      <ion-input type="password" placeholder="Retype Password" name="pw_check" [(ngModel)]="passwdChk" pattern='[(\w+\W+\d)]{6,24}'></ion-input>
+      <ion-input type="password" placeholder="Retype Password" name="pw_check" [(ngModel)]="passwdChk" pattern='[(\w+\W+\d)]{8,64}'></ion-input>
     </ion-item>
     <div class="spacer" style="width:300px;height:36px;" id="getInvolved-spacer4"></div>
     <ion-item name="studentProfile" id="getInvolved-checkbox1">

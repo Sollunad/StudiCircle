@@ -2,9 +2,9 @@
  * Created by MartinThissen on 26.03.2018.
  */
 
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
 import {ApiResponse} from "../declarations/ApiResponse";
@@ -28,9 +28,9 @@ export class CircleProvider {
     return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid);
   }
 
-  public create(name : string, visibility : string){
+  public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
-    let body = {name : name, vis : visibility};
+    let body = {name : name, vis : visibility, loc : location};
     let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/new", body, header
@@ -68,13 +68,13 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
-  public removeCircleByCircleId(CircleId: number): Observable<any>{
-    let body = {"id": CircleId};
+  public removeCircleByCircleId(uid: number): Observable<any>{
+    console.log(uid);
+    let body = {"id": uid};
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 
-  public removeCircleMember(userId: number, circleId: number): Observable<any>{
-    let body = {"userId": userId, "circleId": circleId};
-    return this.http.post(`http://localhost:8080/circle/removeUser`,body);
+  public getCircleVisibility(cid: number): Observable<boolean>{
+    return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
   }
 }

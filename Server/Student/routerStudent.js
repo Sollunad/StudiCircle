@@ -27,7 +27,7 @@ module.exports = function(app) {
         .post(user.updateMail);
 
     app.route('/user/:validationKey/changeMail')
-        .post(user.confirmNewMail);
+        .get(user.confirmNewMail);
 
     app.route('/user/test')
         .get(user.test);

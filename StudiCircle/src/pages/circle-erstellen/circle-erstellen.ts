@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {DbProvider} from "../../providers/dbprovider/dbprovider"
 
 @Component({
   selector: 'page-circle-erstellen',
@@ -10,8 +11,10 @@ export class CircleErstellenPage {
 
   private visibility : string = "1";
   private newName : string = "";
+  private newAddress : string = "";
+  private loc : any = "";
 
-  constructor(public navCtrl: NavController, private _circleService : CircleProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private _circleService : CircleProvider, private alertCtrl: AlertController, private dbprovider: DbProvider) {
   }
 
   showExtraInfoName() {
@@ -49,20 +52,32 @@ export class CircleErstellenPage {
   }
 
   createCircle(){
-    console.log(this.vis, this.newName);
-    const modification = this._circleService.create(this.newName, this.vis).subscribe(
-      (success: boolean) => {
-        if(success){
-          console.log("[CREATE] : Circle created successful");
-          modification.unsubscribe();
-          return true;
-        }else{
-          console.log("[CREATE] : Circle created not successful");
-          modification.unsubscribe();
-          return false;
+    this.dbprovider.getLocationByAddress(this.newAddress).subscribe(
+      responsefile => {
+        if(responsefile[0] === undefined){
+          console.log("undefined: " + responsefile[0])
+        } else {
+          const lat = responsefile[0].lat;
+          const lon = responsefile[0].lon;
+          this.loc = {'lat': lat, 'lon': lon};
+          
+          console.log(this.vis, this.newName, this.loc);
+          const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
+            (success: boolean) => {
+              if(success){
+                console.log("[CREATE] : Circle created successful");
+                modification.unsubscribe();
+                return true;
+              }else{
+                console.log("[CREATE] : Circle created not successful");
+                modification.unsubscribe();
+                return false;
+              }
+            }
+          )
         }
       }
-    )
+    );
   }
 
 }

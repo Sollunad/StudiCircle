@@ -4,6 +4,7 @@ const database = require('./database');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
 const changeMail = require('./changeMailMail');
+const pwdCheck = require('./passwordCheck');
 const tests = require('./tests');
 
 module.exports = {
@@ -148,9 +149,9 @@ module.exports = {
         var oldPw = req.body.oldPwd;
         var newPw = req.body.newPwd;
 
-        if (!session || !oldPw || !newPw) {
+        if (!session || !oldPw || !newPw || !pwdCheck.checkPassword(newPw)) {
             res.status(400);
-            res.send("Bad request. No session, old or new password.");
+            res.send("Bad request. No session, old or new password not set or not compliant to guidelines.");
             return;
         }
 
@@ -299,7 +300,7 @@ module.exports = {
                 res.send("Successfully updated mail address");
             } else {
                 res.status(401);
-                res.send("Unauthorized. No invalid validation key.");
+                res.send("Unauthorized. Invalid validation key.");
                 return;
             }
         } catch (err) {
