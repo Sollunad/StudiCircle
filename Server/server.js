@@ -3,6 +3,7 @@ var cors = require('cors');
 var express = require('express');
 var student = require('./Student/moduleInterface')
 var mySession = require('./Session/session');
+var sessionConstants = require('./Session/constants');
 
 var app = express();
 
@@ -40,17 +41,24 @@ routesStudents(app); //register the route
 app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
 
+// timeout sessions
+setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
+console.error('Registerd Session Timer')
+
 
 function authorize(req, res, next){
     var url = req.originalUrl
     var sessionID = req.body.mySession || req.query.mySession;
+    req.session = {};
+    req.session.sessionId = sessionID;
+
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (sessionID){
         var userExists = false;
         var userId = null;
         try {
-            userId = mySession.getUserID(sessionID);
+            userId = mySession.getSessionData(sessionID).userId;
             if (!userId) {
                 responseWhenUnauthorized(req, res);
             }
@@ -58,7 +66,6 @@ function authorize(req, res, next){
         } catch (err) {
         }
         if (userExists) {
-            req.session = {};
             req.session.userId = userId;
             next();
         } else {
