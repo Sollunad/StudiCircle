@@ -52,27 +52,24 @@ function authorize(req, res, next){
     req.session = {};
     req.session.sessionId = sessionID;
 
+    console.log(sessionID);
+
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (sessionID){
-        var userExists = false;
-        var userId = null;
-        try {
-            userId = mySession.getSessionData(sessionID).userId;
-            if (!userId) {
-                responseWhenUnauthorized(req, res);
-            }
-            userExists = student.userExists(userId);
-        } catch (err) {
-        }
-        if (userExists) {
-            req.session.userId = userId;
-            next();
-        } else {
+        var userId = mySession.getSessionData(sessionID).userID;
+        console.log("user id: " + userId);
+        if (!userId) {
+            console.log("userid not set");
             responseWhenUnauthorized(req, res);
+            return;
         }
-    }else {
+        req.session.userId = userId;
+        next();
+    } else {
+        console.log("no session id");
         responseWhenUnauthorized(req, res);
+        return;
     }
 }
 
@@ -86,7 +83,7 @@ function containsWildcard(url){
 }
 
 function responseWhenUnauthorized (req, res) {
-    req.session.reset();
+    mySession.invalidate(req.session.sessionId);
     res.status(401);
     res.send("Unauthorized! Failed in Server.js");
 }

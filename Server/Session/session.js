@@ -22,6 +22,7 @@ module.exports = {
         var currentSession = sessionsObj.get(sessionID);
         currentSession.lastUpdated = new Date();
         sessionsObj.set(sessionID, currentSession);
+        console.log(currentSession);
         return currentSession;
     },
 
