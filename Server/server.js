@@ -9,7 +9,7 @@ var app = express();
 const port = 8080;
 
 var corsOptions = {
-    origin: '*.sknx.de',
+    origin: '*.trickm.de',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
