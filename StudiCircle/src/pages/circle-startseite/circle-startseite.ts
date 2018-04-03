@@ -11,7 +11,7 @@ import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellun
 })
 export class CircleStartseite {
 
-  moduleList: Array<{title: string, component: any, imageName: string}> = [];
+  moduleList: Array<{title: string, mapName: string, component: any, imageName: string}> = [];
 
   circleId : number;
 
