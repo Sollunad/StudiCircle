@@ -25,8 +25,28 @@ export class CircleProvider {
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=uid`);
   }
 
-  public getModuleListByCircleId(uid:number): Observable<String[]>{
-    return this.http.get<String[]>(`http://localhost:8080/circle/modules?circleId=uid`);
+  public getModuleListByCircleId(uid:number): Observable<any>{
+    return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid);
+  }
+
+  public create(name : string, visibility : string, location: any){
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    let body = {name : name, vis : visibility, loc : location};
+    let header = {"headers" : {"Content-Type": "application/json"}}
+    const editVisibility: Subscription = this.http.post(
+      "http://localhost:8080/circle/new", body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editVisibility.unsubscribe();
+        successSubject.next(res.httpStatus === 200);
+      },
+      (error: any) => {
+        console.log(error);
+        editVisibility.unsubscribe();
+        successSubject.next(false);
+      }
+    );
+    return successSubject.asObservable();
   }
 
   public edit(id : number, visibility : string){
@@ -55,11 +75,15 @@ export class CircleProvider {
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 
-  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]>{
+  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
     // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
 
     const url = `http://localhost:8080/circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
     return this.http.get<Circle[]>(url);
+  }
+
+  public getCircleVisibility(cid: number): Observable<boolean>{
+    return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
   }
 
   public addUserToCircle(userId: number, circleId: number) {

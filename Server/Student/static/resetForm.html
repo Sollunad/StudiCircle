@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Reset your Password at Studicircle</title>
+    </head>
+    <body>
+        <h1>Reset your password at StudiCircle</h1>
+        <p>
+            To reset your password please fill in the form below:
+        </p>
+        <form method='POST' action='localhost:9080/user/resetPassword'>
+            <label for='pw1'>Password:</label>
+            <input type='password' name='pwd' id='pw1' onkeyup='checkPass()'/><br>
+            <label for='pw2'>Repeat Password:</label>
+            <input type='password' name='rpwd' id='pw2' onkeyup='checkPass()'/><br>
+            <input type='submit' value='submit' id='btn' disabled/>
+        </form>
+        <p id='outputCompare'></p>
+        <p id='outputCompliance'></p>
+        <script src="passwordGuidelines.js"></script>
+    </body>
+</html>

@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
@@ -8,7 +9,6 @@ import { CircleErstellenPage } from '../circle-erstellen/circle-erstellen';
 import { AlertController } from 'ionic-angular';
 import { HttpClient } from "@angular/common/http";
 import { ApiProvider } from '../../providers/api/api';
-
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html'

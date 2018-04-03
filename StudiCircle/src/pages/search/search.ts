@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {SettingsPage} from '../settings/settings';
 import {CircleStartseite} from '../circle-startseite/circle-startseite';
-import {Geolocation} from '@ionic-native/geolocation';
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from '../../providers/circle-provider/CircleProvider';
 import {Circle} from '../../providers/declarations/Circle';
@@ -32,7 +31,7 @@ export class SearchPage {
 
   constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider) {
     this.distance = 0;
-
+    this.lat = 0;
     this.getUserData();
     this.getCirclesByLocation();
   }
@@ -40,7 +39,6 @@ export class SearchPage {
   private getUserData() {
     // TODO:
 
-    this.lat = 0;
     this.lon = 0;
     this.userId = 1;
   }

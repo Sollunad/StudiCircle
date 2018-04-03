@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { UserInfo } from '../../providers/declarations/UserInfo';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {UserInfo} from '../../providers/declarations/UserInfo';
 import {Subscription} from "rxjs/Subscription";
 import {map} from "rxjs/operators/map";
 import {Subject} from "rxjs/Subject";
@@ -26,7 +26,7 @@ export class ApiProvider {
   }
 
   public changeMail(new_mail : string, pwd : string){
-    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd}
+    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -49,7 +49,7 @@ export class ApiProvider {
 
   public login(username: string, password: string): Observable<boolean>{
     let userCredentials = {"mail": username, "pwd": password};
-    var header = { "headers": {"Content-Type": "application/json"} };
+    const header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
       this._apiPath + "user/login",
       userCredentials,
@@ -82,14 +82,14 @@ export class ApiProvider {
       }
     }
 
-    var data = JSON.stringify({
+    const data = JSON.stringify({
       "mail": mail,
       "username" : name,
       "pwd": passwd,
       "type": typeAsInt
     });
 
-    var header = { "headers": {"Content-Type": "application/json"} };
+    const header = { "headers": {"Content-Type": "application/json"} };
 
     const registerNewUser: Subscription = this.http.post(
       this._apiPath + "user/register",
@@ -109,10 +109,84 @@ export class ApiProvider {
     return successSubject.asObservable();
   }
 
+
+  public forgotPassword(mail: string): Observable<boolean> {
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const requestSub: Subscription = this.http.post(
+      this._apiPath + "user/forgotPassword",
+      {
+        mail: mail
+      },
+      {
+        withCredentials: true
+      }
+    ).subscribe(
+      (res: ApiResponse) => {
+        successSubject.next(res.httpStatus === 200);
+        requestSub.unsubscribe();
+      },
+          () => {
+        successSubject.next(false);
+        requestSub.unsubscribe();
+      }
+    );
+
+    return successSubject.asObservable();
+  }
+
+  public deleteUser(password: string): Observable<boolean> {
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const requestSub: Subscription = this.http.post(
+      this._apiPath + "user/deleteUser",
+      {
+        pwd: password
+      },
+      {
+        withCredentials: true
+      }
+    ).subscribe(
+      (res: ApiResponse) => {
+        successSubject.next(res.httpStatus === 200);
+        requestSub.unsubscribe();
+      },
+      () => {
+        successSubject.next(false);
+        requestSub.unsubscribe();
+      }
+    );
+
+    return successSubject.asObservable();
+  }
+
+  public setPassword(oldPwd: string, newPwd: string): Observable<boolean> {
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const requestSub: Subscription = this.http.post(
+      this._apiPath + "user/setPassword",
+      {
+        oldPwd: oldPwd,
+        newPwd: newPwd
+      },
+      {
+        withCredentials: true
+      }
+    ).subscribe(
+      (res: ApiResponse) => {
+        successSubject.next(res.httpStatus === 200);
+        requestSub.unsubscribe();
+      },
+      () => {
+        successSubject.next(false);
+        requestSub.unsubscribe();
+      }
+    );
+
+    return successSubject.asObservable();
+  }
   public setLocation(lat, lon) {
     //console.log('CurrentUser:', this.currentUser);
     //console.log('setLocation', lat, lon);
     this.currentUser.coords = {lat: lat, lon: lon};
     console.log('storedLocation:', this.currentUser);
+
   }
 }

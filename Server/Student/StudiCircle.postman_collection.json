@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "2e69ca63-8457-4b2a-8284-318bb3dfb2b1",
+		"name": "StudiCircle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/user",
+			"description": "",
+			"item": [
+				{
+					"name": "01_register Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mail\": \"studicircle@wegwerfemail.info\",\n    \"pwd\": \"MeinPa$$wort\",\n    \"type\" : 1,\n    \"username\" : \"ArnoNymus\",\n    \"businessdescription\" : \"my Personal Business\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/register",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"register"
+							]
+						},
+						"description": "Register a new account"
+					},
+					"response": []
+				},
+				{
+					"name": "02_register Business",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mail\": \"studicircle@wegwerfemail.info\",\n    \"pwd\": \"MeinPa$$wort\",\n    \"type\" : 1,\n    \"username\" : \"ArnoNymus\",\n    \"businessdescription\" : \"my Personal Business\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/register",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"register"
+							]
+						},
+						"description": "Register a new account"
+					},
+					"response": []
+				},
+				{
+					"name": "03_activate",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mail\": \"studicircle@wegwerfemail.info\",\n    \"pwd\": \"MeinPa$$wort\",\n    \"type\" : 1,\n    \"username\" : \"ArnoNymus\",\n    \"businessdescription\" : \"my Personal Business\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/activate/PEeq5RWbedXk8GX9whtCXwokFbAB3EASmbEmAAO9pRbl1fIJOOxQ_h6SHGgejItS",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"activate",
+								"PEeq5RWbedXk8GX9whtCXwokFbAB3EASmbEmAAO9pRbl1fIJOOxQ_h6SHGgejItS"
+							]
+						},
+						"description": "Register a new account"
+					},
+					"response": []
+				},
+				{
+					"name": "04_forgot password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"mail\" : \"studicircle@wegwerfemail.info\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/forgotPassword",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05_forgot password form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:9080/user/resetPassword/pOlozoribsdpFO9h1hmfktnCTrLyvdXuVhskNDgELs0AuBy73GEeAEVG1zaQ8hBJ",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"resetPassword",
+								"pOlozoribsdpFO9h1hmfktnCTrLyvdXuVhskNDgELs0AuBy73GEeAEVG1zaQ8hBJ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06_forgot password set",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pwd\" : \"MyP4$$w0rd!\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/resetPassword/pOlozoribsdpFO9h1hmfktnCTrLyvdXuVhskNDgELs0AuBy73GEeAEVG1zaQ8hBJ",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"resetPassword",
+								"pOlozoribsdpFO9h1hmfktnCTrLyvdXuVhskNDgELs0AuBy73GEeAEVG1zaQ8hBJ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "07_login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"mail\" : \"studicircle@wegwerfemail.info\",\n\t\"pwd\" : \"123456789\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/login",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:9080/user/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "09_set password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"oldPwd\" : \"123456789\",\n\t\"newPwd\" : \"MyNewPa$$\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/setPassword",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"setPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_delete account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pwd\" : \"123456789\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11_update mail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"oldMail\" : \"studicircle@wegwerfemail.info\",\n\t\"newMail\" : \"newcircle@wegwerfemail.info\",\n\t\"pwd\" : \"123456789\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9080/user/updateMail",
+							"host": [
+								"localhost"
+							],
+							"port": "9080",
+							"path": [
+								"user",
+								"updateMail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12_change mail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1106e2d8-5975-47a3-8468-0918c02a7cf5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "26e1faf3-003e-404f-ba23-5aad54f898cc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
