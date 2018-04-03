@@ -12,10 +12,22 @@ import {HttpClient} from "@angular/common/http";
 export class CircleEinstellungenPage {
 
   private circleId : number;
-  private visibility : string = "test";
+  private visibility : string = "1";
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
+  }
+
+  ionViewDidLoad() {
+    console.log(this._circleService.getCircleVisibility(1).subscribe(actualvisibility =>
+    {
+      if(actualvisibility){
+        this.visibility = "1";
+      } else {
+        this.visibility = "0";
+      }
+    }
+    ));
   }
 
   openConfirmDialog() {

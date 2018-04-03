@@ -15,7 +15,7 @@ module.exports = {
         const reqUserId = req.session.userId || 1;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result && result.dataValues.role == cons.CircleRole.ADMINISTRATOR){
+            if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
                     result.destroy();
                     res.send("User from circle removed.");
@@ -224,6 +224,21 @@ module.exports = {
           return;
       });
     },
+
+    getVisibility : function(req, res){
+      var circleId = req.query.circleId
+      db.Circle.findById(circleId).then(circle => {
+        if(circle == null){
+          res.status(404).send("No circle with given id.");
+          return;
+        }
+        res.send(circle.visible);
+        return;
+      }).error(err => {
+        res.status(500).send("Error");
+        return;
+      });
+    }
 
 };
 
