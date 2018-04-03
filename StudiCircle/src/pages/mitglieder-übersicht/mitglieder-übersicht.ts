@@ -23,7 +23,7 @@ export class MitgliederÜbersicht {
         memberList => this.memberList = memberList
     );
   }
-
+  
   removeCircleMember(userId: number, circleId: number){
     this.circleProvider.removeCircleMember(userId, circleId).subscribe();
     window.location.reload();

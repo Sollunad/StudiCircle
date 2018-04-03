@@ -36,8 +36,8 @@ import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-ü
     SearchPage,
     PassManPage,
     CircleStartseite,
-    CircleEinstellungenPage,
-    MitgliederÜbersicht
+    MitgliederÜbersicht,
+    CircleEinstellungenPage
   ],
 
   imports: [
@@ -57,8 +57,8 @@ import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-ü
     SearchPage,
     PassManPage,
     CircleStartseite,
-    CircleEinstellungenPage,
-    MitgliederÜbersicht
+    MitgliederÜbersicht,
+    CircleEinstellungenPage
   ],
   providers: [
     StatusBar,
