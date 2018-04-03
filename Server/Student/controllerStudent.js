@@ -119,7 +119,7 @@ module.exports = {
     },
 
     //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
-    login : function (req, res) {
+    login : async function (req, res) {
         var mail = req.body.mail;
         var pass = req.body.pwd;
 
@@ -129,11 +129,9 @@ module.exports = {
             return;
         }
         try {
-           var userId = database.getUserIdFromMail(mail);
-            console.log("User ID" + userId)
-            userId = 3;
-            console.log("User ID" + userId)
-             var userAuthData = database.getUserAuthData(userId);
+           let userId = await database.getUserIdFromMail(mail);
+            console.log("User ID" + userId);
+            let  userAuthData = await database.getUserAuthData(userId);
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 var returnObject = {};
                 returnObject.status = 200;

@@ -19,10 +19,8 @@ module.exports = {
     },
 
     getUserIdFromMail : async function(mail) {
-        /*
-        var returnVal = "";
         try {
-            returnVal = await db.User.findAll({ where:{ 'email': mail }}).then(user => {
+            return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
                 if ( user &&  user[0] && user[0].dataValues.id)
                     return  user[0].dataValues.id;
                 throw  "database error";
@@ -33,17 +31,26 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
-        */
-        return 1;
     },
 
     getUserIdFromValidationKey : function(validationKey) {
         return 1;
     },
 
-    getUserAuthData : function(userId) {
-        return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+    getUserAuthData : async function(userId) {
+        try {
+            return await db.User.findAll({ where:{ 'id': userId }}).then(user => {
+                if ( user &&  user[0] && user[0].dataValues.id)
+                    return  {"salt": user[0].dataValues.salt, "hash": user[0].dataValues.pwdHash};
+                throw  "database error";
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
