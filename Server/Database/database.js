@@ -48,6 +48,7 @@ Module.belongsTo(Circle);*/
 /**
  * 0/1:1 - USER AND VALIDATIONKEY
  **/
+//User.has(ValidationKey);
 ValidationKey.belongsTo(User);
 
 

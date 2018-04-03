@@ -33,7 +33,7 @@ module.exports = {
             var salt = userAuthData.salt;
 
             //insert userdata in database
-            result = database.insertNewPerson(mail, hash, salt, constant.AccountType.BUSINESS, randomString);
+            result = database.insertNewPerson(mail, userName ,hash, salt, constant.AccountType.BUSINESS, randomString);
             if (result === "ok"){
                 break;
             }else if (res) {

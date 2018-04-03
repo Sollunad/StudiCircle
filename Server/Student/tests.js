@@ -9,10 +9,27 @@ module.exports = {
     startUnitTests : async function (req, res) {
         let response = "Start tests ...\n";
         let t1 = await database.getUserData(1);
+        let t2 = "";
+        try {
+            t2 = await database.getUserIdFromMail("studicircle@googlegroups.com");
+        }catch (err){
+            console.log("catch-return " + err);
+        }
         t1 = t1.username;
         console.log("test-return:");
-        console.log(t1);
+        console.log(t2);
         response += t1.toString();
+        response += "12\n";
+        response += t2;
+
+        let t3 = "";
+        try{
+            t3 = database.insertNewPerson("mail", "password", "salt", constant.AccountType.STUDENT, "randomString");
+            console.log(t3.toString());
+        }catch (err){
+            console.log("error "  + err);
+        }
+        response += t3;
 /*        response += this.testActivation();
         response += this.testDatabase();
         response += this.testMailer();
