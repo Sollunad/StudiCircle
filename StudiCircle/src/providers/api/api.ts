@@ -25,10 +25,10 @@ export class ApiProvider {
 
   }
 
-  public changeMail(new_mail : string, pwd : string){
+  public changeMail(old_mail : string, new_mail : string, pwd : string){
     let data = {
       "mySession" : this.currentUser.session,
-      "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
+      "oldMail" : old_mail, "newMail" : new_mail, "pwd" : pwd};
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
