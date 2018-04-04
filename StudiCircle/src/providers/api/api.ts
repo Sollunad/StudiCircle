@@ -181,4 +181,11 @@ export class ApiProvider {
 
     return successSubject.asObservable();
   }
+
+  public setLocation(lat, lon) {
+    //console.log('CurrentUser:', this.currentUser);
+    //console.log('setLocation', lat, lon);
+    this.currentUser.coords = {lat: lat, lon: lon};
+    console.log('storedLocation:', this.currentUser);
+  }
 }

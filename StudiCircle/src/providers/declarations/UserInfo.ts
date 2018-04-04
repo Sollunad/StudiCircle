@@ -5,6 +5,10 @@ export interface UserInfo{
     uuid: string;
     circles?: Array<Circle>;
     session : {
-      sessionId : string
+      sessionId : string;
+    };
+    coords : {
+      lat: number;
+      lon: number;
     }
 }
