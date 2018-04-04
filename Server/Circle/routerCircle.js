@@ -12,8 +12,8 @@ module.exports = function(app) {
 
     // circleId
     // userId
-    app.route('/circle/addUser')
-        .post(circle.addUser);
+    app.route('/circle/joinOpen')
+        .post(circle.joinOpenCircle);
 
     // name: circle name
     // vis: true/false

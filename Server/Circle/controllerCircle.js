@@ -37,7 +37,7 @@ module.exports = {
         });
     },
 
-    addUser : function (req, res) {
+    joinOpenCircle : function (req, res) {
         const circleId = req.body.circleId;
         const userId = req.body.userId;
         //const userRole = req.body.role;
@@ -86,6 +86,7 @@ module.exports = {
             // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
+                    // TODO: Abfrage result == []
                     result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
                     res.send("Circle created and User added.");
                 });
