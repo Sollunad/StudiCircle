@@ -17,25 +17,28 @@ module.exports = {
 
         const reqUserId = req.session.userId;
 
-        db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result[0] && result[0][0].role == cons.CircleRole.ADMINISTRATOR){
-                db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
-                    result.destroy();
+        db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result1 => {
+            if (result1 && result1[0] && result1[0][0].role == cons.CircleRole.ADMINISTRATOR){
+                db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result2 => {
+                    result2.destroy();
                     res.send("User from circle removed.");
+                    return;
                 }).error(err => {
                     res.status(404);
                     res.send("User not found in circle.");
+                    return;
                 });
             }else{
                 res.status(403);
                 res.send("Permission denied. User who made the request is not Admin in the requested circle.")
+                return;
             }
         }).error(err => {
             res.status(404);
             res.send("User not found in circle.");
-        return;
-    });
-        res.send("User from circle removed.");
+            return;
+        });
+        // res.send("User from circle removed.");
     },
 
     joinOpenCircle : function (req, res) {
