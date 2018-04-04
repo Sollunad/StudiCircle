@@ -33,9 +33,11 @@ module.exports = {
 
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                await database.setState(validationKey, constants.AccountState.ACTIVE);
-                res.status(201);
-                res.send("Successfully validated new user account.");
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    res.status(201);
+                    res.send("Successfully validated new user account.");
+                }
             } else {
                 res.status(401);
                 res.send("Unauthorized. Invalid validation key.");
@@ -58,7 +60,7 @@ module.exports = {
 
         try {
             if (await database.userMailExists(mail)) {
-                resetPwd.reset(mail);
+                await resetPwd.reset(mail);
             }
             res.status(200);
             res.send("Reset mail sent if user is known.");
@@ -310,9 +312,13 @@ module.exports = {
     trigger : async function (req, res) {
         console.log('Trigger');
 
-        var result = await database.setPassword(13, "hash", "salt");
-        console.log(result);
-
+        try {
+            console.log("start");
+            var result = await database.setPassword(13, "hash", "salt");
+            console.log(result);
+        } catch (err) {
+            console.log("error at set password: " + err);
+        }
         res.send('OK');
     },
 

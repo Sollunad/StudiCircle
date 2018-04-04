@@ -92,18 +92,17 @@ module.exports = {
 
     getUserIdFromValidationKey : async function( validationKey ) {
         try {
-            return await db.ValidationKey.findById( validationKey ).then( validationKey => {
-                if ( validationKey &&  validationKey && validationKey.dataValues.id)
-                    return  validationKey.dataValues.id;
+            return await db.ValidationKey.findAll({ where:{ 'validationKey': validationKey }}).then( validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.UserId;
                 throw false;
             }).error(err => {
                 throw "error";
             });
         } catch (err) {
             console.log(err);
-            throw "database error";
+            throw "database error: user doesn't exists";
         }
-        return 1;
     },
 
     getUserAuthData : async function( userId ) {
@@ -125,7 +124,7 @@ module.exports = {
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
         console.log("insert new person");
         try {
-              db.User.create({
+              return db.User.create({
                 name: username,
                 email: mail,
                 pwdHash: password,
@@ -148,8 +147,6 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
-
         //console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
     },
 
@@ -161,12 +158,15 @@ module.exports = {
     setPassword : async function (userId, hash, salt) {
         console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
         try {
-            await db.User.findById(userId).then(user => {
+            return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
-                    user.dataValues.pwdHash = hash;
-                    user.dataValues.salt = salt;
-                    user.save().then(() =>{
+                    return user.updateAttributes({
+                        'pwdHash': hash,
+                        'salt': salt
+                    }).then(() => {
                         return true;
+                    }).error(() => {
+                        throw false;
                     });
                 }else{
                     throw  false;
@@ -184,10 +184,12 @@ module.exports = {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         try {
             let userId = await this.getUserIdFromValidationKey(validationKey);
-            await db.User.findById(userId).then(user => {
+            return await db.User.findById(userId).then(user => {
+                console.log("user:" + user + user.dataValues.state);
                 if ( user && user.dataValues.id){
-                    user.dataValues.state = newState;
-                    user.save().then(() =>{
+                    return user.updateAttributes({
+                        'state' : newState
+                    }).then(() =>{
                         return true;
                     });
                 }else{
@@ -205,10 +207,33 @@ module.exports = {
     setValidationKey : async function (mail, validationKey) {
         console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'email': mail }}).then(validationKey => {
+            return await db.ValidationKey.findAll({ where:{ 'newMail': mail }}).then(validationKey => {
                 if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
-                    validationKey[0].dataValues.validationKey = validationKey;
-                    validationKey[0].save().then(() =>{
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey
+                    }).then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    setValidationKeyByyUserId : async function (userId, validationKey1) {
+        console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
+                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey1
+                    }).then(() =>{
                         return true;
                     });
                 }else{
@@ -228,8 +253,9 @@ module.exports = {
         try {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
-                    user.dataValues.mail = mail;
-                    user.save().then(() =>{
+                    return user.updateAttributes({
+                        'email' : mail
+                    }).then(() =>{
                         return true;
                     });
                 }else{
@@ -249,7 +275,8 @@ module.exports = {
         try {
             return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
                 if ( user &&  user[0] && user[0].dataValues.id)
-                    return  !!user[0].dataValues.mail;
+                    console.log("exists!!");
+                    return  !!user[0].dataValues.email;
                 throw  "database error";
             }).error(err => {
                 throw   "database error";
@@ -280,7 +307,7 @@ module.exports = {
         try {
             return  !!this.getUserIdFromValidationKey(validationKey); // convert int to bool
         }catch (err) {
-            throw "database error";
+            throw "database error at validationKey";
         }
     }
 }

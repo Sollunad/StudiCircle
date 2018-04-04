@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // urls protecten
 const allowedUrls = ["/user/login",
                         "/user/test",
+                        "/user/trigger",
                         "/user/logout",
                         "/user/forgotPassword",
                         "/user/register",
