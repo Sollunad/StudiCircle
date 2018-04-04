@@ -17,23 +17,21 @@ import {ApiProvider} from "../api/api";
 @Injectable()
 export class CircleProvider {
 
-  public memberList: Array<string> = [];
-
   constructor(public http: HttpClient, public apiProvider: ApiProvider) {
   }
 
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
-    return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=uid`);
+    return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=`+ uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public getModuleListByCircleId(uid:number): Observable<any>{
-    return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid+'&mySession='+this.apiProvider.currentUser.session);
+    return this.http.get<any>('http://localhost:8080/circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};
-    let header = {"headers" : {"Content-Type": "application/json"}}
+    let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/new", body, header
     ).subscribe(
@@ -52,7 +50,7 @@ export class CircleProvider {
 
   public edit(id : number, visibility : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
-    let body = {id : id, vis : visibility};
+    let body = {id : id, vis : visibility, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/edit", body, header
@@ -72,9 +70,14 @@ export class CircleProvider {
 
   public removeCircleByCircleId(uid: number): Observable<any>{
     console.log(uid);
-    let body = {"id": uid};
+    let body = {"id": uid, mySession : this.apiProvider.currentUser.session};
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
+
+  public removeCircleMember(userId: number, circleId: number): Observable<any>{
+    let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    return this.http.post(`http://localhost:8080/circle/removeUser`,body);
+    }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
     // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
@@ -84,7 +87,7 @@ export class CircleProvider {
   }
 
   public getCircleVisibility(cid: number): Observable<boolean>{
-    return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
+    return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public addUserToCircle(userId: number, circleId: number) {

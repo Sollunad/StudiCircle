@@ -23,6 +23,11 @@ export class MitgliederÜbersicht {
     );
   }
 
+  removeCircleMember(userId: number, circleId: number){
+    this.circleProvider.removeCircleMember(userId, circleId).subscribe();
+    window.location.reload();
+    }
+
   itemSelected(item: string) {
     console.log("Selected Item", item);
   }
