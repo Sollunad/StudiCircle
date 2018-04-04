@@ -138,12 +138,25 @@ module.exports = {
     circlesForUserId : function (req, res) {
         const userId = req.session.userId;
 
-        var circles = db.Circle.findAll({where: {id: userId}, include: [db.User]}).then(res => {
-          console.log( res[0]);
-        }).catch(err => {console.log(err);});
-        console.log(circles);
-        // res.send(circles);
-        res.send({circles: [{name:"DHBW",id:1}]});
+        db.User.findAll({where: {id: userId}, include: [db.Circle]}).then(result => {
+            // console.log(result[0].Circles);
+            if (result[0] && result[0].Circles){
+                const circles = result[0].Circles;
+                let data = [];
+                circles.forEach(circle => {
+                    data.push({"name": circle.name, "id": circle.id});
+                });
+                res.send({"circles": data});
+            }else{
+                res.status(404);
+                res.send("No User with given id.");
+            };
+        }).catch(err => {
+            res.status(500);
+            res.send("Getting data from database failed.")
+        });
+
+        // res.send({circles: [{name:"DHBW",id:1}]});
     },
 
     //returns all circles at a certain distance(km) to a point(lat/long)

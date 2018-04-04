@@ -10,7 +10,7 @@ module.exports = {
     generateSession : function (userID) {
         let sessionID = crypto.randomBytes(constant.SESSION_ID_LENGTH).toString('base64');
         // remove '+' hack
-        sessionID = sessionID.replace("+","-");
+        sessionID = sessionID.split("+").join("-");
         var singleSession = {};
         singleSession.userID = userID;
         singleSession.start = new Date();
