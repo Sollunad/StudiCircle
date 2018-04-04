@@ -8,6 +8,7 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Circle} from '../declarations/Circle';
+import {UserInfo} from "../declarations/UserInfo";
 
 /*
   Generated class for the DbProvider provider.
@@ -18,16 +19,17 @@ import {Circle} from '../declarations/Circle';
 @Injectable()
 export class DbProvider {
   private result: any;
-  private circles = new Array();
+  private circles: Circle[] = [];
 
   constructor(public http: HttpClient, private api: ApiProvider) { }
 
-  public getCircles() {
+  public getCircles(): Observable<Circle[]> {
+      return this.http.get<Circle[]>('http://localhost:8080/circle/forUser?mySession=' + this.api.currentUser.session);
     /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
        this.res = res;
        console.log(res);
      });*/
-     return new Promise<Array<string>>((resolve, reject) => {
+     /*return new Promise<Array<string>>((resolve, reject) => {
        const successSubject: Subject<boolean> = new Subject<boolean>();
        const subs: Subscription = this.http.get(
          'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
@@ -46,7 +48,7 @@ export class DbProvider {
            successSubject.next(false);
          }
        );
-     });
+     });*/
   }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
