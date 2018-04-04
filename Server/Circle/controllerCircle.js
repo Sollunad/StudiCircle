@@ -18,7 +18,7 @@ module.exports = {
         const reqUserId = req.session.userId;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
-            if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
+            if (result[0] && result[0][0].role == cons.CircleRole.ADMINISTRATOR){
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result => {
                     result.destroy();
                     res.send("User from circle removed.");
@@ -53,9 +53,14 @@ module.exports = {
             }
             db.User.findById(userId).then(user => {
                 circle.addUser(user).then(result => {
-                    result[0][0].update({"role" : cons.CircleRole.MEMBER});
-                    res.send("User added to circle.");
-                    return;
+                    if(result[0]){
+                        result[0][0].update({"role" : cons.CircleRole.MEMBER});
+                        res.send("User added to circle.");
+                        return;
+                    }else{
+                        res.send("User already in circle.");
+                        return;
+                    }
                 });
             }).error(err => {
                 res.status(404);
@@ -87,9 +92,12 @@ module.exports = {
             // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
-                    // TODO: Abfrage result == []
-                    result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
-                    res.send("Circle created and User added.");
+                    if (result[0]){
+                        result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
+                        res.send("Circle created and User added.");
+                    }else{
+                        res.send("User already in circle.");
+                    }
                 });
             }).error(err => {
                 res.status(404)
