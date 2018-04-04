@@ -169,6 +169,7 @@ export class ApiProvider {
         requestSub.unsubscribe();
       },
       () => {
+        //TODO investigate on what exactly is causing the error
         successSubject.next(false);
         requestSub.unsubscribe();
       }
