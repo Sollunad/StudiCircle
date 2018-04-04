@@ -37,6 +37,9 @@ module.exports = function(app) {
     app.route('/user/test')
         .get(user.test);
 
+    app.route('/user/trigger')
+        .get(user.trigger);
+
     app.route('/user/*')
         .get(user.unknownpage);
 

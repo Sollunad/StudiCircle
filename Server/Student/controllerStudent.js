@@ -307,6 +307,15 @@ module.exports = {
         }
     },
 
+    trigger : async function (req, res) {
+        console.log('Trigger');
+
+        var result = await database.setPassword(13, "hash", "salt");
+        console.log(result);
+
+        res.send('OK');
+    },
+
     test : function (req, res) {
         tests.startUnitTests(req,res);
     },
