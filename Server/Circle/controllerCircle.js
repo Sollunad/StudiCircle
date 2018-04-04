@@ -158,7 +158,7 @@ module.exports = {
                 circles.forEach(circle => {
                     data.push({"name": circle.name, "id": circle.id});
                 });
-                res.send({"circles": data});
+                res.send(data);
             }else{
                 res.status(404);
                 res.send("No circles for this user.");
@@ -235,27 +235,27 @@ module.exports = {
             res.status(404).send("No circle with given id.");
             return;
           }
-          var result = {modules: []};
+          var result = [];
           if(circle.blackboard){
-            result.modules.push("blackboard");
+            result.push("blackboard");
           }
           if(circle.calendar){
-            result.modules.push("calendar");
+            result.push("calendar");
           }
           if(circle. bill){
-            result.modules.push("bill");
+            result.push("bill");
           }
           if(circle.bet){
-            result.modules.push("bet");
+            result.push("bet");
           }
           if(circle.filesharing){
-            result.modules.push("filesharing");
+            result.push("filesharing");
           }
           if(circle.chat){
-            result.modules.push("chat");
+            result.push("chat");
           }
           if(circle.market){
-            result.modules.push("market");
+            result.push("market");
           }
           res.send(result);
           return;

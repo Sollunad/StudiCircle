@@ -24,8 +24,8 @@ export class CircleProvider {
     return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=`+ uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
-  public getModuleListByCircleId(uid:number): Observable<any>{
-    return this.http.get<any>('http://localhost:8080/circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
+  public getModuleListByCircleId(uid:number): Observable<string[]>{
+    return this.http.get<string[]>('http://localhost:8080/circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public create(name : string, visibility : string, location: any){
