@@ -310,9 +310,13 @@ module.exports = {
     trigger : async function (req, res) {
         console.log('Trigger');
 
-        var result = await database.setPassword(13, "hash", "salt");
-        console.log(result);
-
+        try {
+            console.log("start");
+            var result = await database.setPassword(13, "hash", "salt");
+            console.log(result);
+        } catch (err) {
+            console.log("error at set password: " + err);
+        }
         res.send('OK');
     },
 

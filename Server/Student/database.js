@@ -161,11 +161,11 @@ module.exports = {
     setPassword : async function (userId, hash, salt) {
         console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
         try {
-            await db.User.findById(userId).then(user => {
+            return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
                     user.dataValues.pwdHash = hash;
                     user.dataValues.salt = salt;
-                    user.save().then(() =>{
+                     return  user.save().then(() =>{
                         return true;
                     });
                 }else{
