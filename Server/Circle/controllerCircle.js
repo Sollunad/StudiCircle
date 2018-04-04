@@ -15,7 +15,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId, userId)) return;
 
-        const reqUserId = req.session.userId || 1;
+        const reqUserId = req.session.userId;
 
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result => {
             if (result[0][0].role == cons.CircleRole.ADMINISTRATOR){
@@ -77,7 +77,7 @@ module.exports = {
         if (argumentMissing(res, name, visible, location)) return;
         if (argumentMissing(res, location.lat, location.lon)) return; // aus gründen -.-
 
-        const userId = req.session.userId || 1;
+        const userId = req.session.userId;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
             // Location speichern
@@ -107,7 +107,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId, visible)) return;
 
-        const userId = req.session.userId || 1; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
 
         db.Circle.findById(circleId)
         .then(circle => {
@@ -127,7 +127,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId || 1; //TODO: nur Admin darf löschen
+        const userId = req.session.userId; //TODO: nur Admin darf löschen
 
         db.Circle.build({"id" : circleId}).destroy();
 
@@ -136,7 +136,7 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-        const userId = req.session.userId || 1;
+        const userId = req.session.userId;
 
         var circles = db.Circle.findAll({where: {id: userId}, include: [db.User]}).then(res => {
           console.log( res[0]);
@@ -178,7 +178,7 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId || 1;
+        const userId = req.session.userId;
 
         db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
             var data = [];

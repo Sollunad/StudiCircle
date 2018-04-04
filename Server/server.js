@@ -44,7 +44,7 @@ console.log('todo list RESTful API server started on: ' + port );
 
 // timeout sessions
 setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
-console.error('Registerd Session Timer')
+console.error('[SESSION] Registerd Session Timer')
 
 
 function authorize(req, res, next){
@@ -58,17 +58,16 @@ function authorize(req, res, next){
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (sessionID){
-        var userId = mySession.getSessionData(sessionID).userID;
-        console.log("user id: " + userId);
-        if (!userId) {
-            console.log("userid not set");
+        const sessionData = mySession.getSessionData(sessionID);
+        if (!sessionData || !sessionData.userID) {
+            console.log("[SESSION] no valid session found");
             responseWhenUnauthorized(req, res);
             return;
         }
-        req.session.userId = userId;
+        req.session.userId = sessionData.userID;
         next();
     } else {
-        console.log("no session id");
+        console.log("[SESSION] no session id given");
         responseWhenUnauthorized(req, res);
         return;
     }
