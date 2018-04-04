@@ -51,7 +51,8 @@ export class CircleProvider {
   public edit(id : number, visibility : string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let body = {id : id, vis : visibility, mySession : this.apiProvider.currentUser.session};
-    let header = {"headers" : {"Content-Type": "application/json"}}
+    console.log(body);
+    let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/edit", body, header
     ).subscribe(
