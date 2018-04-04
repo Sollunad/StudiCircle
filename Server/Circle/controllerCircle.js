@@ -142,7 +142,8 @@ module.exports = {
           console.log( res[0]);
         }).catch(err => {console.log(err);});
         console.log(circles);
-        res.send(circles);
+        // res.send(circles);
+        res.send({circles: [{name:"DHBW",id:1}]});
     },
 
     //returns all circles at a certain distance(km) to a point(lat/long)
