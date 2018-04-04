@@ -11,6 +11,7 @@ import {Circle} from "../declarations/Circle";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
+import {ApiProvider} from "../api/api";
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class CircleProvider {
 
   public memberList: Array<string> = [];
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, public apiProvider: ApiProvider) {
   }
 
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
@@ -26,7 +27,7 @@ export class CircleProvider {
   }
 
   public getModuleListByCircleId(uid:number): Observable<any>{
-    return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid);
+    return this.http.get<any>('http://localhost:8080/circle/modules?circleId='+uid+'&mySession='+this.apiProvider.currentUser.session);
   }
 
   public create(name : string, visibility : string, location: any){
