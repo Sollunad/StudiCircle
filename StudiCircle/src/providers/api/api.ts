@@ -25,10 +25,13 @@ export class ApiProvider {
 
   }
 
-  public changeMail(old_mail : string, new_mail : string, pwd : string){
+  public changeMail(new_mail : string, pwd : string){
     let data = {
       "mySession" : this.currentUser.session,
-      "oldMail" : old_mail, "newMail" : new_mail, "pwd" : pwd};
+      "oldMail" : this.currentUser.mail,
+      "newMail" : new_mail,
+      "pass" : pwd
+    };
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -41,7 +44,7 @@ export class ApiProvider {
           if(res.httpStatus !== 200) {
             return false;
           } else {
-            this.currentUser.username = new_mail;
+            this.currentUser.mail = new_mail;
             return true;
           }
         }
