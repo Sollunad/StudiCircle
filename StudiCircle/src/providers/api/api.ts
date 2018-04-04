@@ -26,7 +26,9 @@ export class ApiProvider {
   }
 
   public changeMail(new_mail : string, pwd : string){
-    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
+    let data = {
+      "mySession" : this.currentUser.session,
+      "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -114,6 +116,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
+        mySession : this.currentUser.session,
         mail: mail
       },
       {
@@ -138,6 +141,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/deleteUser",
       {
+        mySession : this.currentUser.session,
         pwd: password
       },
       {
@@ -162,6 +166,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/setPassword",
       {
+        mySession : this.currentUser.session,
         oldPwd: oldPwd,
         newPwd: newPwd
       },
