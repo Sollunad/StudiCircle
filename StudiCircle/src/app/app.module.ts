@@ -23,10 +23,7 @@ import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
-
-import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import {ChatPage} from "../pages/chat/chat";
-const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 
 @NgModule({
   declarations: [
@@ -48,8 +45,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp),
-    SocketIoModule.forRoot(config)
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
+import * as io from 'socket.io-client';
 
 @Component({
   selector: 'chat',
@@ -11,10 +12,11 @@ export class ChatPage {
   messages = [];
   nickname = '';
   message = '';
+  socket:any;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) {
+  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController) {
     this.nickname = "Test";
-    this.socket.connect();
+    this.socket=io('http://localhost:3001');
     this.socket.emit('set-nickname', this.nickname);
 
     this.getMessages().subscribe(message => {
