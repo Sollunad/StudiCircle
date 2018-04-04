@@ -116,11 +116,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
-        mySession : this.currentUser.session,
         mail: mail
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -143,9 +139,6 @@ export class ApiProvider {
       {
         mySession : this.currentUser.session,
         pwd: password
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -169,9 +162,6 @@ export class ApiProvider {
         mySession : this.currentUser.session,
         oldPwd: oldPwd,
         newPwd: newPwd
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {

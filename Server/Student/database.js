@@ -207,10 +207,32 @@ module.exports = {
     setValidationKey : async function (mail, validationKey) {
         console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'email': mail }}).then(validationKey => {
+            return await db.ValidationKey.findAll({ where:{ 'newMail': mail }}).then(validationKey => {
                 if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
                     return validationKey[0].updateAttributes({
                         'validationKey' : validationKey
+                    }).then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    setValidationKeyByyUserId : async function (userId, validationKey1) {
+        console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
+                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey1
                     }).then(() =>{
                         return true;
                     });
@@ -253,7 +275,8 @@ module.exports = {
         try {
             return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
                 if ( user &&  user[0] && user[0].dataValues.id)
-                    return  !!user[0].dataValues.mail;
+                    console.log("exists!!");
+                    return  !!user[0].dataValues.email;
                 throw  "database error";
             }).error(err => {
                 throw   "database error";

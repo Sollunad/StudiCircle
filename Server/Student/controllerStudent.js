@@ -60,7 +60,7 @@ module.exports = {
 
         try {
             if (await database.userMailExists(mail)) {
-                resetPwd.reset(mail);
+                await resetPwd.reset(mail);
             }
             res.status(200);
             res.send("Reset mail sent if user is known.");
