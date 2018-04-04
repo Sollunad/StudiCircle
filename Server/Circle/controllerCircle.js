@@ -149,7 +149,7 @@ module.exports = {
                 res.send({"circles": data});
             }else{
                 res.status(404);
-                res.send("No User with given id.");
+                res.send("No circles for this user.");
             };
         }).catch(err => {
             res.status(500);
