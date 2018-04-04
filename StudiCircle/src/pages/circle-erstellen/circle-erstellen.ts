@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {DbProvider} from "../../providers/dbprovider/dbprovider"
@@ -60,7 +60,7 @@ export class CircleErstellenPage {
           const lat = responsefile[0].lat;
           const lon = responsefile[0].lon;
           this.loc = {'lat': lat, 'lon': lon};
-          
+
           console.log(this.vis, this.newName, this.loc);
           const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
             (success: boolean) => {

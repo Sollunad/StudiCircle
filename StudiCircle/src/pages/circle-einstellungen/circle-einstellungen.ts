@@ -80,8 +80,14 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  id='';
+  id=this.circleId;
   vis='';
+
+  onChange(){
+    console.log(this.visibility);
+    this.vis = this.visibility;
+  }
+
   editVisibility(){
     console.log(this.vis);
     const modification = this._circleService.edit(1, this.vis).subscribe(

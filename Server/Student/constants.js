@@ -16,9 +16,6 @@ const SALT_LENGTH = 48;
 const API_URL_ROOT_PRODUCTIVE = "https://api.sknx.de";
 const API_URL_ROOT_DEV = "https://api.dev.sknx.de";
 
-const UI_URL_ROOT_PRODUCTIVE = "https://studicircle.sknx.de";
-const UI_URL_ROOT_DEV = "https://studicircle.dev.sknx.de";
-
 const PASS_MIN_LENGTH = 8;
 const PASS_MAX_LENGTH = 64;
 
@@ -37,32 +34,27 @@ module.exports = {
     USERNAME_MAX_LENGTH: USERNAME_MAX_LENGTH,
 
     getActivationURL : function (activationToken) {
-        var root;
-        if (!process.env.StudicircleTest) {
-            root = API_URL_ROOT_PRODUCTIVE;
-        } else {
-            root = API_URL_ROOT_DEV;
-        }
-        return root + "/user/" + activationToken + "/" + "activate";
+        var root = this.getRootURL();
+        return root + "/user/activate/" + activationToken;
     },
 
     getPasswordChangeURL : function (activationToken) {
-        var root;
-        if (!process.env.StudicircleTest) {
-            root = UI_URL_ROOT_PRODUCTIVE;
-        } else {
-            root = UI_URL_ROOT_DEV;
-        }
-        return root + "/forgotPassword/" + activationToken;
+        var root = this.getRootURL();
+        return root + "/user/resetPassword/" + activationToken;
     },
 
     getNewMailActivationURL : function (activationToken) {
+        var root = this.getRootURL();
+        return root + "/user/changeMail/" + activationToken;
+    },
+
+    getRootURL : function () {
         var root;
         if (!process.env.StudicircleTest) {
             root = API_URL_ROOT_PRODUCTIVE;
         } else {
             root = API_URL_ROOT_DEV;
         }
-        return root + "/user/" + activationToken + "/" + "changeMail";
+        return root;
     }
 }

@@ -33,8 +33,9 @@ module.exports = {
         }).error(err => {
             res.status(404);
             res.send("User not found in circle.");
-            return;
-        });
+        return;
+    });
+        res.send("User from circle removed.");
     },
 
     joinOpenCircle : function (req, res) {
@@ -95,10 +96,8 @@ module.exports = {
                 res.send("User from session not found.");
             });;
         }).error(err => {
-
             res.status(500)
             res.send("Server error. Creating circle failed.");
-
         });
     },
 
@@ -137,7 +136,6 @@ module.exports = {
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
-
         const userId = req.session.userId || 1;
 
         var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
@@ -145,9 +143,9 @@ module.exports = {
         }).catch(err => {console.log(err);});
         console.log(circles);
         res.send(circles);
-
     },
 
+    //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
         const location = req.body.loc;
         // const Distance = req.body.dist;

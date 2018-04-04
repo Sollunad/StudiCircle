@@ -7,6 +7,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {UserInfo} from "../declarations/UserInfo";
+import {Circle} from "../declarations/Circle";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
@@ -21,7 +22,7 @@ export class CircleProvider {
   }
 
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
-    return this.http.get<UserInfo[]>('http://localhost:8080/circle/members?id='+uid);
+    return this.http.get<UserInfo[]>(`http://localhost:8080/circle/members?id=uid`);
   }
 
   public getModuleListByCircleId(uid:number): Observable<any>{
@@ -74,7 +75,22 @@ export class CircleProvider {
     return this.http.post(`http://localhost:8080/circle/remove`,body);
   }
 
+  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
+    // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
+
+    const url = `http://localhost:8080/circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
+    return this.http.get<Circle[]>(url);
+  }
+
   public getCircleVisibility(cid: number): Observable<boolean>{
     return this.http.get<boolean>(`http://localhost:8080/circle/getVisibility?circleId=`+cid);
   }
+
+  public addUserToCircle(userId: number, circleId: number) {
+    return this.http.post('http://localhost:8080/circle/addUser', {
+      userId: userId,
+      circleId: circleId
+    });
+  }
+
 }

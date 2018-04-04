@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { LogInPage } from '../log-in/log-in';
-import { GetInvolvedPage } from '../get-involved/get-involved';
-import { DashboardPage } from '../dashboard/dashboard';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {LogInPage} from '../log-in/log-in';
+import {GetInvolvedPage} from '../get-involved/get-involved';
+import {DashboardPage} from '../dashboard/dashboard';
 
 @Component({
   selector: 'page-verify-now',
