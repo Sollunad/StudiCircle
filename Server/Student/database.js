@@ -92,16 +92,16 @@ module.exports = {
 
     getUserIdFromValidationKey : async function( validationKey ) {
         try {
-            return await db.ValidationKey.findById( validationKey ).then( validationKey => {
-                if ( validationKey &&  validationKey && validationKey.dataValues.id)
-                    return  validationKey.dataValues.id;
+            return await db.ValidationKey.findAll({ where:{ 'validationKey': validationKey }}).then( validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.UserId;
                 throw false;
             }).error(err => {
                 throw "error";
             });
         } catch (err) {
             console.log(err);
-            throw "database error";
+            throw "database error: user doesn't exists";
         }
     },
 
@@ -185,6 +185,7 @@ module.exports = {
         try {
             let userId = await this.getUserIdFromValidationKey(validationKey);
             return await db.User.findById(userId).then(user => {
+                console.log("user:" + user + user.dataValues.state);
                 if ( user && user.dataValues.id){
                     return user.updateAttributes({
                         'state' : newState
@@ -283,7 +284,7 @@ module.exports = {
         try {
             return  !!this.getUserIdFromValidationKey(validationKey); // convert int to bool
         }catch (err) {
-            throw "database error";
+            throw "database error at validationKey";
         }
     }
 }

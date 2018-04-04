@@ -33,9 +33,11 @@ module.exports = {
 
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                await database.setState(validationKey, constants.AccountState.ACTIVE);
-                res.status(201);
-                res.send("Successfully validated new user account.");
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    res.status(201);
+                    res.send("Successfully validated new user account.");
+                }
             } else {
                 res.status(401);
                 res.send("Unauthorized. Invalid validation key.");
