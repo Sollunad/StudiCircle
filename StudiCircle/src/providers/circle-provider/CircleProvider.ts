@@ -32,7 +32,7 @@ export class CircleProvider {
 
   public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
-    let body = {name : name, vis : visibility, loc : location};
+    let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}}
     const editVisibility: Subscription = this.http.post(
       "http://localhost:8080/circle/new", body, header
