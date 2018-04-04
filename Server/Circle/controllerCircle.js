@@ -138,7 +138,7 @@ module.exports = {
     circlesForUserId : function (req, res) {
         const userId = req.session.userId || 1;
 
-        var circles = db.Circle.findAll({where: {id: 1}, include: [db.User]}).then(res => {
+        var circles = db.Circle.findAll({where: {id: userId}, include: [db.User]}).then(res => {
           console.log( res[0]);
         }).catch(err => {console.log(err);});
         console.log(circles);

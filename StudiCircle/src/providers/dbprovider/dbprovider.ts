@@ -30,7 +30,7 @@ export class DbProvider {
      return new Promise<Array<string>>((resolve, reject) => {
        const successSubject: Subject<boolean> = new Subject<boolean>();
        const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser?id=1').subscribe(
+         'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
          (res: ApiResponse) => {
            subs.unsubscribe();
            successSubject.next(res.httpStatus === 200);
