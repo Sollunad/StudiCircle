@@ -34,6 +34,7 @@ export class DbProvider {
          (res: ApiResponse) => {
            subs.unsubscribe();
            successSubject.next(res.httpStatus === 200);
+           this.circles = [];
            for(let i of res["circles"]){
             this.circles.push(i["name"]);
            }

@@ -79,16 +79,20 @@ module.exports = {
         const visible = req.body.vis;
         const location = req.body.loc;
 
-        if (argumentMissing(res, name, visible, location)) return;
-        if (argumentMissing(res, location.lat, location.lon)) return; // aus gründen -.-
+        if (argumentMissing(res, name, visible)) return;
+        if (location !== null && location){
+            if (argumentMissing(res, location.lat, location.lon)) return; // aus gründen -.-
+        }
 
         const userId = req.session.userId;
 
         db.Circle.create({"name":name,"visible":visible}).then(circle => {
             // Location speichern
-            db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
-                locationObj.addCircle(circle);
-            });
+            if (location !== null){
+                db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
+                    locationObj.addCircle(circle);
+                });
+            }
             // Ersteller als Admin zum Circle hinzufügen
             db.User.findOne({where: {"id" : userId}}).then(user => {
                 circle.addUser(user).then(result => {
