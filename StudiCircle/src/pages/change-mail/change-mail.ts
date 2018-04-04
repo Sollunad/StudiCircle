@@ -49,7 +49,7 @@ export class ChangeMailPage {
     if(this.oldMail && this.newMail && this.chkNewMail && this.pwd){
       if(this.oldMail != this.newMail){
         if(this.newMail == this.chkNewMail) {
-          const requestMailChange: Subscription = this._api.changeMail(this.newMail, this.pwd).subscribe(
+          const requestMailChange: Subscription = this._api.changeMail(this.oldMail, this.newMail , this.pwd).subscribe(
             (data: boolean) => {
               if (data) {
                 console.log("[MAIL CHANGE] : Mail Change was successful");
