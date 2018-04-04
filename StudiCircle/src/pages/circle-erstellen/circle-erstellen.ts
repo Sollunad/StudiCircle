@@ -53,34 +53,30 @@ export class CircleErstellenPage {
   }
 
   createCircle(){
-    if (this.newAddress==="") {
-      console.log("Keine Adresse angegeben");
-      this.loc = null;
-    } else {
       this.dbprovider.getLocationByAddress(this.newAddress).subscribe(
         responsefile => {
           if (responsefile[0] === undefined) {
             console.log("undefined: " + responsefile[0]);
             this.loc = null;
           } else {
+            console.log("lat lon von Adresse");
             const lat = responsefile[0].lat;
             const lon = responsefile[0].lon;
             this.loc = {'lat': lat, 'lon': lon};
           }
-        });
-    }
-    console.log(this.vis, this.newName, this.loc);
-    const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
-      (success: boolean) => {
-        if(success){
-          console.log("[CREATE] : Circle created successful");
-          modification.unsubscribe();
-          return true;
-        }else{
-          console.log("[CREATE] : Circle created not successful");
-          modification.unsubscribe();
-          return false;
-        }
+          console.log(this.vis, this.newName, this.loc);
+          const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
+            (success: boolean) => {
+              if (success) {
+                console.log("[CREATE] : Circle created successful");
+                modification.unsubscribe();
+                return true;
+              } else {
+                console.log("[CREATE] : Circle created not successful");
+                modification.unsubscribe();
+                return false;
+              }
+            });
       }
     )
   }
