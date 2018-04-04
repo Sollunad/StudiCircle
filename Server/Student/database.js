@@ -103,7 +103,6 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return 1;
     },
 
     getUserAuthData : async function( userId ) {
@@ -125,7 +124,7 @@ module.exports = {
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
         console.log("insert new person");
         try {
-              db.User.create({
+              return db.User.create({
                 name: username,
                 email: mail,
                 pwdHash: password,
@@ -148,8 +147,6 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
-
         //console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
     },
 
@@ -163,10 +160,13 @@ module.exports = {
         try {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
-                    user.dataValues.pwdHash = hash;
-                    user.dataValues.salt = salt;
-                     return  user.save().then(() =>{
+                    return user.updateAttributes({
+                        'pwdHash': hash,
+                        'salt': salt
+                    }).then(() => {
                         return true;
+                    }).error(() => {
+                        throw false;
                     });
                 }else{
                     throw  false;
@@ -184,10 +184,11 @@ module.exports = {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
         try {
             let userId = await this.getUserIdFromValidationKey(validationKey);
-            await db.User.findById(userId).then(user => {
+            return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
-                    user.dataValues.state = newState;
-                    user.save().then(() =>{
+                    return user.updateAttributes({
+                        'state' : newState
+                    }).then(() =>{
                         return true;
                     });
                 }else{
@@ -207,8 +208,9 @@ module.exports = {
         try {
             return await db.ValidationKey.findAll({ where:{ 'email': mail }}).then(validationKey => {
                 if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
-                    validationKey[0].dataValues.validationKey = validationKey;
-                    validationKey[0].save().then(() =>{
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey
+                    }).then(() =>{
                         return true;
                     });
                 }else{
@@ -228,8 +230,9 @@ module.exports = {
         try {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
-                    user.dataValues.mail = mail;
-                    user.save().then(() =>{
+                    return user.updateAttributes({
+                        'email' : mail
+                    }).then(() =>{
                         return true;
                     });
                 }else{
