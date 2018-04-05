@@ -24,6 +24,7 @@ import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {constants} from "../consts/constants";
+import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {constants} from "../consts/constants";
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    AdminAuswaehlenPage
   ],
 
   imports: [
@@ -68,7 +70,8 @@ import {constants} from "../consts/constants";
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    AdminAuswaehlenPage
   ],
   providers: [
     StatusBar,
