@@ -150,9 +150,46 @@ module.exports = {
         //console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
     },
 
-    setChangeMailKey : function (oldMail, newMail, validationKey) {
+    setChangeMailKey : async function (oldMail, newMail, validationKey) {
         console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
-        return true;
+        try {
+            let userId=this.getUserIdFromMail(oldMail);
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id) {
+                    return user.updateAttributes({
+                        'state': constant.AccountState.PENDING
+                        }).then(() => {
+                            return db.ValidationKey.create({
+                                validationKey: validationKey,
+                                newMail: newMail,
+                                UserId: userId
+                            }).then((user) => {
+                                db.ValidationKey.create({
+                                    validationKey: randomString
+                                }).then(validationKey => {
+                                    validationKey.setUser(user);
+                                    return true;
+                                }).error( (err) => {
+                                    console.log(err);
+                                    throw  "database error";
+                                });
+                            }).error( (err) => {
+                                console.log(err);
+                                throw  "database error";
+                            });
+                    }).error(() => {
+                        throw false;
+                    });
+                }
+                throw  "database error";
+            }).error( (err) => {
+                console.log(err);
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
     setPassword : async function (userId, hash, salt) {

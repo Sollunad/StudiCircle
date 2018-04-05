@@ -30,7 +30,7 @@ export class ApiProvider {
       "mySession" : this.currentUser.session,
       "oldMail" : this.currentUser.mail,
       "newMail" : new_mail,
-      "pass" : pwd
+      "pwd" : pwd
     };
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
