@@ -283,9 +283,12 @@ module.exports = {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
                     return user.updateAttributes({
-                        'email' : newMail
-                    }).then(() =>{
+                        'email' : newMail,
+                        'state': constant.AccountState.ACTIVE
+                    }).then(() => {
                         return true;
+                    }).error(() => {
+                        throw "error";
                     });
                 }else{
                     throw  false;
