@@ -4,6 +4,8 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {DashboardPage} from "../dashboard/dashboard";
 import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
+import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
+import {SearchPage} from "../search/search";
 
 
 @Component({
@@ -105,7 +107,7 @@ export class CircleEinstellungenPage {
   }
 
   openAdminSelect(){
-    this.navCtrl.push(AdminAuswaehlenPage);
+    this.navCtrl.push(AdminAuswaehlenPage,{circleId: this.circleId});
   }
 
 }
