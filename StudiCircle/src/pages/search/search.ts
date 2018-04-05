@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { SettingsPage } from "../settings/settings";
-import { Geolocation } from '@ionic-native/geolocation';
-import { AlertController } from 'ionic-angular';
-import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/map';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {SettingsPage} from '../settings/settings';
+import {CircleStartseite} from '../circle-startseite/circle-startseite';
+import {HttpClient} from "@angular/common/http";
+import {CircleProvider} from '../../providers/circle-provider/CircleProvider';
+import {Circle} from '../../providers/declarations/Circle';
 
 @Component({
   selector: 'page-search',
@@ -13,98 +12,85 @@ import 'rxjs/add/operator/map';
 })
 export class SearchPage {
 
-  settings: SettingsPage;
-  distanceValues = [
-    '1 km',
-    '5 km',
-    '10 km',
-    '20 km',
-    '50 km',
-    '∞'
+  public search: '';
+  public distance: 0;
+  public circles: Array<Circle>;
+  private nonFilteredCircles = Array<Circle>();
+
+  private distances = [
+    { label: '1', value: 1 },
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '50', value: 50 },
+    { label: '∞', value: -1 }
   ];
+  private lat: number;
+  private lon: number;
+  private userId: number;
 
-  constructor(public navCtrl: NavController, private geo: Geolocation, private alertCtrl: AlertController, private http: Http) {
-    this.getCurrentPosition();
+  constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider) {
+    this.distance = 0;
+    this.lat = 0;
+    this.getUserData();
+    this.getCirclesByLocation();
   }
 
-  private getCurrentPosition() {
-    this.geo.getCurrentPosition().then((position) => {
-      // console.log('position', position);
-      let coords = position.coords;
+  private getUserData() {
+    // TODO:
 
-      this.setUserCoordinates(coords.latitude, coords.longitude)
-    }, (err) => {
-      // console.log('error', err);
-
-      this.showLocationPrompt();
-    });
+    this.lon = 0;
+    this.userId = 1;
   }
 
-  private setUserCoordinates(lat: number, lon: number) {
-    document.getElementById('search-location').innerText = ` @ ${lat}, ${lon}`;
-  }
-
-  private showLocationPrompt() {
-    this.alertCtrl.create({
-      title: 'Location',
-      message: 'Enter your location',
-      enableBackdropDismiss: false,
-      inputs: [
-        {
-          name: 'location',
-          placeholder: 'Location'
-        },
-      ],
-      buttons: [
-        {
-          text: 'OK',
-          handler: data => {
-            // console.log('data', data);
-            let address = data.location;
-
-            this.getLocationByAddress(address);
-          }
-        }
-      ]
-    }).present();
-  }
-
-  private getLocationByAddress(address: string) {
-    this.http
-      .get(`https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`)
-      .map(res => res.json())
-      .subscribe(data => {
-        let json = data[0];
-        // console.log('json', json);
-
-        if (json === undefined) {
-          this.showLocationPrompt();
-        } else {
-          this.setUserCoordinates(json.lat, json.lon);
-        }
+  private getCirclesByLocation() {
+    const dist = this.distances[this.distance].value;
+    this.circleProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
+      circles => {
+        console.log('getCirclesByLocation', circles);
+        this.circles = this.nonFilteredCircles = circles;
       });
   }
 
-  private distanceChanged(event: any) {
-    // console.log(event);
+  private distanceChanged() {
+    // console.log(this.distance);
+    document.getElementById('search-distance').innerText = this.distances[this.distance].label;
 
-    document.getElementById('search-distance').innerText = this.distanceValues[event.value];
+    this.search = '';
+    this.getCirclesByLocation();
   }
 
-  private circleClicked(event: any) {
-    console.log(event);
-  }
+  private searchCircles() {
+    let value = this.search.trim().toLowerCase();
 
-  private getCircles(event: any) {
-    let value = event.target.value;
-
-    if (value && value.trim() != '') {
+    if (value && value != '') {
       console.log('value', value);
+      this.circles = this.nonFilteredCircles.filter(circle => circle.name.toLowerCase().startsWith(value));
+    } else {
+      console.log('value', 'empty');
+      this.circles = this.nonFilteredCircles;
     }
   }
 
-  private goToSettings(params) {
-    if (!params) params = {};
+  private circleClicked(circle: Circle) {
+    console.log(circle);
+
+    this.navCtrl.push(CircleStartseite, {
+      circleId: circle.id,
+      circleName: circle.name
+    });
+  }
+
+  private joinCircle(circle: Circle) {
+    console.log(circle);
+
+    this.circleProvider.addUserToCircle(this.userId, circle.id).subscribe(
+      result => {
+        console.log('joinCircle', result);
+      });
+  }
+
+  private goToSettings() {
     this.navCtrl.push(SettingsPage);
   }
 }

@@ -1,11 +1,12 @@
 const constant = require('./constants');
-var database = require('./database');
-var mailer = require('./mailer');
+const database = require('./database');
+const mailer = require('./mailer');
 
 module.exports = {
-    reset: function (mail) {
+    reset: async function (mail) {
         var resetId = mailer.generateRandomString(constant.KEY_LENGTH);
-        database.setValidationKey(mail, resetId);
+        let id = await database.getUserIdFromMail(mail);
+        await database.setValidationKeyByyUserId(id, resetId);
 
         let html = '<html lang="de-DE">\n' +
                         '<head>\n' +
@@ -13,7 +14,7 @@ module.exports = {
                         '</head>\n' +
                         '<body>\n' +
                             '<p>\n' +
-                                'Please click on following link to reset your password for StuiCircle: <a href="' + constants.getPasswordChangeURL(resetId) + '">Reset my password</a><br/>\n' +
+                                'Please click on following link to reset your password for StuiCircle: <a href="' + constant.getPasswordChangeURL(resetId) + '">Reset my password</a><br/>\n' +
                                 'If you did not request a password reset please ignore this mail.' +
                             '</p>' +
                         '</body>\n' +

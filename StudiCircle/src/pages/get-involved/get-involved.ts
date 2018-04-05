@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { VerifyNowPage } from '../verify-now/verify-now';
-import { LogInPage } from '../log-in/log-in';
-import { DashboardPage } from '../dashboard/dashboard';
-import { ApiProvider } from "../../providers/api/api";
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {VerifyNowPage} from '../verify-now/verify-now';
+import {LogInPage} from '../log-in/log-in';
+import {DashboardPage} from '../dashboard/dashboard';
+import {ApiProvider} from "../../providers/api/api";
 import {UserInfo} from "../../providers/declarations/UserInfo";
+import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 
 @Component({
   selector: 'page-get-involved',
@@ -16,9 +17,12 @@ export class GetInvolvedPage {
 
   profile = {
     mail : '',
+    name : '',
     password : '',
     profileType : ''
   };
+
+  public mailValidation = getMailRegex();
 
   passwdChk = '';
   business : boolean;
@@ -48,7 +52,10 @@ export class GetInvolvedPage {
   }
 
   registerNow(){
-    const registration = this._apiService.register(this.profile.mail, this.profile.password, this.profile.profileType).subscribe(
+    const registration = this._apiService.register(this.profile.mail,
+                                                   this.profile.name,
+                                                   this.profile.password,
+                                                   this.profile.profileType).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[REGISTER] : Registration successful");
@@ -62,8 +69,20 @@ export class GetInvolvedPage {
     )
   }
 
+  usernameCheck(){
+    if(this.profile.name){
+      if(this.profile.name.match('([a-zA-Z\-]+ (([a-zA-Z]+\-{0,1}[a-zA-Z]+)+))$')){
+        console.log("[REGISTER] : User Name is valid")
+        return true;
+      }else{
+        console.log("[REGISTER] : Set User - Name not valid")
+      }
+    }
+    return false;
+  }
+
   passwdCheck(){
-    if(this.profile.password.match('[(\\w+\\W+\\d)]{6,24}')){
+    if(stringHasAppropiateLength(this.profile.password,8,64)){
       console.log("[REGISTER] : Password complies to policy");
       if((this.profile.password === this.passwdChk)){
         console.log("[REGISTER] : PasswordCheck successful");
@@ -73,7 +92,7 @@ export class GetInvolvedPage {
       }
       return false;
     }else{
-      console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of six characters");
+      console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of eight characters");
     }
     this.profile.password = '';
     this.passwdChk = '';
@@ -84,11 +103,13 @@ export class GetInvolvedPage {
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.student && !this.business){
         console.log("[REGISTER] : Student Profile");
-        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+        if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match(getMailRegex())){
           console.log("[REGISTER] : Valid Student Mail")
           if(this.passwdCheck()){
             this.profile.profileType = 'student';
-            this.registerNow();
+            if(this.usernameCheck()){
+              this.registerNow();
+            }
           }
         }else{
           console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities")
@@ -96,10 +117,12 @@ export class GetInvolvedPage {
       }else{
         if(this.business && !this.student){
           console.log("[REGISTER] : Business User detected");
-          if(this.profile.mail.match('^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')){
+          if(this.profile.mail.match(getMailRegex())){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
-              this.registerNow();
+              if(this.usernameCheck()){
+                this.registerNow();
+              }
             }
           }
         }else{
@@ -107,6 +130,9 @@ export class GetInvolvedPage {
         }
       }
     }else{
+      if(!this.profile.name){
+        console.log("[REGISTER] : User Name is a required field")
+      }
       if(!this.profile.mail){
         console.log("[REGISTER] : Mail is a required field")
       }

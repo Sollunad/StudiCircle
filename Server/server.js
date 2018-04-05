@@ -1,61 +1,89 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
+var student = require('./Student/moduleInterface')
+var mySession = require('./Session/session');
+var sessionConstants = require('./Session/constants');
 
 var app = express();
 
-//CORS middleware
-// var allowCrossDomain = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', '*.sknx.de');
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type');
-//
-//     next();
-// }
+const port = 8080;
 
-//app.all('*', function(req, res, next) {
-  //  res.header("Access-Control-Allow-Origin", "*");
-    //res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    //res.header('Access-Control-Allow-Headers', 'Content-Type');
-    //next();
-//});
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
-// Add headers
-// app.use(function (req, res, next) {
-//
-//     // Website you wish to allow to connect
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//
-//     // Request methods you wish to allow
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//
-//     // Request headers you wish to allow
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
-//
-//     // Set to true if you need the website to include cookies in the requests sent
-//     // to the API (e.g. in case you use sessions)
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//
-//     // Pass to next layer of middleware
-//     next();
-// });
-
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// ionic erlauben auf die REST Endpoints zuzugreifen
-app.get('/*',function(req,res,next){
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
-    next();
-});
+// urls protecten
+const allowedUrls = ["/user/login",
+                        "/user/test",
+                        "/user/trigger",
+                        "/user/logout",
+                        "/user/forgotPassword",
+                        "/user/register",
+                    ];
+const allowedWildcards = ["/user/activate/",
+                            "/user/resetPassword/",
+                            "/user/changeMail/",
+                        ];
+app.route('/circle/*').all(authorize);
+app.route('/user/*').all(authorize);
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
 
-app.listen(8080);
-
-console.log('todo list RESTful API server started on: 8080');
-
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
+
+app.listen(port);
+console.log('todo list RESTful API server started on: ' + port );
+
+// timeout sessions
+setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
+console.error('[SESSION] Registerd Session Timer')
+
+
+function authorize(req, res, next){
+    var url = req.originalUrl
+    var sessionID = req.body.mySession || req.query.mySession;
+    req.session = {};
+    req.session.sessionId = sessionID;
+
+    console.log(sessionID);
+
+    if (allowedUrls.includes(url) || containsWildcard(url) ){
+        next();
+    }else if (sessionID){
+        const sessionData = mySession.getSessionData(sessionID);
+        if (!sessionData || !sessionData.userID) {
+            console.log("[SESSION] no valid session found");
+            responseWhenUnauthorized(req, res);
+            return;
+        }
+        req.session.userId = sessionData.userID;
+        next();
+    } else {
+        console.log("[SESSION] no session id given");
+        responseWhenUnauthorized(req, res);
+        return;
+    }
+}
+
+function containsWildcard(url){
+    for (var wildcard of allowedWildcards) {
+        if (url.startsWith(wildcard)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function responseWhenUnauthorized (req, res) {
+    mySession.invalidate(req.session.sessionId);
+    res.status(401);
+    res.send("Unauthorized! Failed in Server.js");
+}
