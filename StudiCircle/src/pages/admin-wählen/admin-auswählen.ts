@@ -2,7 +2,8 @@ import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {NavParams} from "ionic-angular";
+import {AlertController, NavController, NavParams} from "ionic-angular";
+import {CircleStartseite} from "../circle-startseite/circle-startseite";
 
 @Component({
   templateUrl: 'admin-auswählen.html'
@@ -10,11 +11,12 @@ import {NavParams} from "ionic-angular";
 export class AdminAuswaehlenPage {
 
   public memberList: UserInfo[];
+  circleName: string = "";
+  circleId : number;
 
-  private circleId : number;
-
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController) {
     this.circleId = navParams.get('circleId');
+    this.circleName = navParams.get('circleName');
   }
 
   ionViewDidLoad(){
@@ -23,10 +25,31 @@ export class AdminAuswaehlenPage {
     );
   }
 
-  selectNewAdmin(userId: number, circleId: number){
-    this.circleProvider.selectNewAdmin(userId, circleId).subscribe();
-    window.location.reload();
-    }
+  openConfirmDialog(userId: number, userName: string) {
+    let alert = this.alertCtrl.create({
+      title: 'Adminauswahl bestätigen',
+      message: userName+' wirklich zum Admin machen? Mit dieser Auswahl werden die Adminrechte an '+userName+' weitergegeben.',
+      buttons: [
+        {
+          text: 'Akzeptieren',
+          handler: () => {
+            this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
+              message => console.log(message)
+            );
+            this.navCtrl.push(CircleStartseite, {circleId: this.circleId, circleName: this.circleName});
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Löschung abgebrochen');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 
   itemSelected(item: string) {
     console.log("Selected Item", item);

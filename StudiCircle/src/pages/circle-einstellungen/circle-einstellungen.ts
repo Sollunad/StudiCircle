@@ -12,12 +12,14 @@ import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 
 export class CircleEinstellungenPage {
 
-  private circleId : number;
+  circleId : number;
+  circleName : string;
   private visibility : string = "1";
 
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
+    this.circleName = navParams.get('circleName');
   }
 
   ionViewDidLoad() {
@@ -104,7 +106,7 @@ export class CircleEinstellungenPage {
   }
 
   openAdminSelect(){
-    this.navCtrl.push(AdminAuswaehlenPage,{circleId: this.circleId});
+    this.navCtrl.push(AdminAuswaehlenPage,{circleId: this.circleId, circleName: this.circleName});
   }
 
 }

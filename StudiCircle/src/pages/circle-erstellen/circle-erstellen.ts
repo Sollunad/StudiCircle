@@ -3,7 +3,6 @@ import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {DbProvider} from "../../providers/dbprovider/dbprovider"
 import {DashboardPage} from "../dashboard/dashboard";
-import {convertDeepLinkConfigEntriesToString} from "@ionic/app-scripts/dist/deep-linking/util";
 
 @Component({
   selector: 'page-circle-erstellen',
