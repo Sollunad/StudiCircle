@@ -104,8 +104,4 @@ export class CircleProvider {
     return this.http.post(this.consts.url+'circle/newAdmin',body);
   }
 
-  getUserNameByUserId(userId: number): Observable<string>{
-    return this.http.get<string>(this.consts.url+'circle/newAdmin?circleId=' + userId + '&mySession=' + this.apiProvider.currentUser.session);
-  }
-
 }
