@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {DbProvider} from "../../providers/dbprovider/dbprovider"
+import {DashboardPage} from "../dashboard/dashboard";
 import {convertDeepLinkConfigEntriesToString} from "@ionic/app-scripts/dist/deep-linking/util";
 
 @Component({
@@ -67,6 +68,7 @@ export class CircleErstellenPage {
           console.log(this.vis, this.newName, this.loc);
           const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
             (success: boolean) => {
+              this.navCtrl.push(DashboardPage);
               if (success) {
                 console.log("[CREATE] : Circle created successful");
                 modification.unsubscribe();
@@ -76,9 +78,11 @@ export class CircleErstellenPage {
                 modification.unsubscribe();
                 return false;
               }
+
             });
       }
     )
+
   }
 
 }
