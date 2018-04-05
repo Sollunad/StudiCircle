@@ -172,7 +172,9 @@ module.exports = {
                 var newUserAuthData = passwordUtil.generateUserAuthData(newPw);
                 await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
 
-                responder.sendResponse(res, 200, "Successfully set Password");
+                res.status(200);
+                res.send(true);
+//                responder.sendResponse(res, 200, "Successfully set Password");
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid password!");
             }
