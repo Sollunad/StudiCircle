@@ -25,7 +25,7 @@ module.exports = function(app) {
     app.route('/user/setPassword')
         .post(user.setPassword);
 
-    app.route('/user/delete')
+    app.route('/user/deleteUser')
         .post(user.deleteAccount);
 
     app.route('/user/updateMail')
@@ -36,6 +36,9 @@ module.exports = function(app) {
 
     app.route('/user/test')
         .get(user.test);
+
+    app.route('/user/trigger')
+        .get(user.trigger);
 
     app.route('/user/*')
         .get(user.unknownpage);

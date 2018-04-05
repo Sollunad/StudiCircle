@@ -67,11 +67,11 @@
     <h1>
       Your Circles
     </h1>
-    <ion-item *ngFor="let i of circles">{{i}}</ion-item>
+    <ion-item *ngFor="let circle of circles" (click)="goToStartPage(circle.id, circle.name)">{{circle.name}}</ion-item>
     <h1>
       Circles Close To You
     </h1>
-    <ion-item *ngFor="let i of clist">{{i}}</ion-item>
+    <ion-item *ngFor="let circle of clist">{{circle.name}}</ion-item>
 
   </ion-list>
 </ion-content>

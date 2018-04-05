@@ -6,6 +6,9 @@ import {Geolocation} from '@ionic-native/geolocation'
 import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import {HttpClient} from "@angular/common/http";
+import {ApiProvider} from "../../providers/api/api";
+import {Circle} from "../../providers/declarations/Circle";
+import {CircleStartseite} from "../circle-startseite/circle-startseite";
 
 @Component({
   selector: 'page-dashboard',
@@ -15,17 +18,9 @@ export class DashboardPage {
 
   settings: SettingsPage;
   private res: any;
-  private circles = new Array();
+  private circles : Circle[]=[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient) {
-    // this.geolocation.getCurrentPosition().then((resp) => {
-    //    let lat = resp.coords.latitude
-    //    let long = resp.coords.longitude
-    //    this.dbprovider.setLocation(lat, long)
-    //   }).catch((error) => {
-    //     console.log('Error getting location', error);
-    //     this.showLocationPrompt();
-    //   });
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient, private api: ApiProvider) {
     this.getCurrentPosition();
   }
 
@@ -33,12 +28,16 @@ export class DashboardPage {
     this.geolocation.getCurrentPosition().then((position) => {
       // console.log('position', position);
       let coords = position.coords;
-      this.dbprovider.setLocation(coords.latitude, coords.longitude);
+      this.api.setLocation(coords.latitude, coords.longitude);
     }, (err) => {
       // console.log('error', err);
 
       this.showLocationPrompt();
     });
+  }
+
+  goToStartPage(circleId: number, circleName: string) {
+    this.navCtrl.push(CircleStartseite, {circleId: circleId, circleName: circleName});
   }
 
   private goToSearch(params) {
@@ -65,12 +64,7 @@ export class DashboardPage {
   }
 
   ionViewWillEnter() {
-    this.dbprovider.getCircles().then(res =>{
-      this.circles = res;
-      console.log(res);
-    }).catch(err =>{
-      console.log(err);
-    });
+    this.dbprovider.getCircles().subscribe(data => this.circles = data);
   }
 
   public showLocationPrompt() {
@@ -87,13 +81,12 @@ export class DashboardPage {
         handler: data => {
           let address = data.location;
           this.dbprovider.getLocationByAddress(address).subscribe(geoResponses => {
-            // console.log(geoResponse);
             let json = geoResponses[0];
 
             if (json === undefined) {
               this.showLocationPrompt();
             } else {
-              this.dbprovider.setLocation(json.lat, json.lon);
+              this.api.setLocation(json.lat, json.lon);
             }
           });
         }

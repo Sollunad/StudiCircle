@@ -8,6 +8,7 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Circle} from '../declarations/Circle';
+import {UserInfo} from "../declarations/UserInfo";
 
 /*
   Generated class for the DbProvider provider.
@@ -18,22 +19,24 @@ import {Circle} from '../declarations/Circle';
 @Injectable()
 export class DbProvider {
   private result: any;
-  private circles = new Array();
+  private circles: Circle[] = [];
 
   constructor(public http: HttpClient, private api: ApiProvider) { }
 
-  public getCircles() {
+  public getCircles(): Observable<Circle[]> {
+      return this.http.get<Circle[]>('http://localhost:8080/circle/forUser?mySession=' + this.api.currentUser.session);
     /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
        this.res = res;
        console.log(res);
      });*/
-     return new Promise<Array<string>>((resolve, reject) => {
+     /*return new Promise<Array<string>>((resolve, reject) => {
        const successSubject: Subject<boolean> = new Subject<boolean>();
        const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser?id=1').subscribe(
+         'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
          (res: ApiResponse) => {
            subs.unsubscribe();
            successSubject.next(res.httpStatus === 200);
+           this.circles = [];
            for(let i of res["circles"]){
             this.circles.push(i["name"]);
            }
@@ -45,7 +48,7 @@ export class DbProvider {
            successSubject.next(false);
          }
        );
-     });
+     });*/
   }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
@@ -59,23 +62,8 @@ export class DbProvider {
     console.log('setLocation', lat, lon);
   }
 
-  public getLocationByAddress(address: string) {
-    /*const successSubject: Subject<boolean> = new Subject<boolean>();
-    const subs: Subscription = this.http.get(
-      'https://nominatim.openstreetmap.org/search/$' + address + '?format=json&limit=1').subscribe(
-      (res: GeoResponse) => {
-        subs.unsubscribe();
-        console.log(res);
-        successSubject.next(true);
-        console.log(res[0].lat, res[0].lon);
-        this.setLocation(res[0].lat, res[0].lon);
-      },
-      (error: any) => {
-        console.log(error);
-        subs.unsubscribe();
-        successSubject.next(false);
-      }
-      );*/
+
+  public getLocationByAddress(address: string): Observable<GeoResponse> {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
   }

@@ -14,6 +14,7 @@ export class CircleEinstellungenPage {
   private circleId : number;
   private visibility : string = "1";
 
+
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
   }
@@ -38,7 +39,7 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            this.circleProvider.removeCircleByCircleId(1).subscribe( //TO-DO: circleId übergeben!
+            this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
           }
