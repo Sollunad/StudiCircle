@@ -23,6 +23,7 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {constants} from "../consts/constants";
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbProvider,
     HttpModule,
-    HttpClientModule
+    HttpClientModule,
+    constants
   ]
 })
 export class AppModule {}
