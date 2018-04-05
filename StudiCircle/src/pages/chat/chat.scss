@@ -2,14 +2,7 @@ chat {
   .user_name {
     color: #afafaf;
   }
-  .message {
-    padding: 10px !important;
-    transition: all 250ms ease-in-out !important;
-    border-radius: 10px !important;
-    margin-bottom: 4px !important;
-  }
   .my_message {
-    background: color($colors, primary) !important;
     color: #000 !important;
   }
   .other_message {
@@ -23,5 +16,13 @@ chat {
   }
   .message_row {
     background-color: #fff;
+  }
+
+  .card {
+    margin: 5px;
+  }
+
+  .message {
+    padding: 0;
   }
 }
