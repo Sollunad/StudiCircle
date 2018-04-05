@@ -3,9 +3,10 @@ const database = require('./database');
 const mailer = require('./mailer');
 
 module.exports = {
-    reset: function (mail) {
+    reset: async function (mail) {
         var resetId = mailer.generateRandomString(constant.KEY_LENGTH);
-        database.setValidationKey(mail, resetId);
+        let id = await database.getUserIdFromMail(mail);
+        await database.setValidationKeyByyUserId(id, resetId);
 
         let html = '<html lang="de-DE">\n' +
                         '<head>\n' +

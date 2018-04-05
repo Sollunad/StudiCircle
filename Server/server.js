@@ -1,11 +1,10 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
-var session = require('client-sessions');
 var student = require('./Student/moduleInterface')
-var dbShit = require('./Database/database')
+var mySession = require('./Session/session');
+var sessionConstants = require('./Session/constants');
 
-dbShit.init();
 var app = express();
 
 const port = 8080;
@@ -19,20 +18,10 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-app.use(session({
-  cookieName: 'session',
-  secret: 'F4Z4o@fKNjZzY!ymm%1F&tBGigJ%VG', // key zur Verschlüsselung der Session-Daten
-  duration: 30 * 60 * 1000, // 30 min gültigkeit des cookies
-  activeDuration: 5 * 60 * 1000, // 5 min verlängerung bei jeder Anfrage des clients
-  cookie: {
-    httpOnly: false, // when true, cookie is not accessible from javascript
-    secure: false // when true, cookie will only be sent over SSL. use key 'secureProxy' instead if you handle SSL not in your node process
-  }
-}));
-
 // urls protecten
 const allowedUrls = ["/user/login",
                         "/user/test",
+                        "/user/trigger",
                         "/user/logout",
                         "/user/forgotPassword",
                         "/user/register",
@@ -53,24 +42,34 @@ routesStudents(app); //register the route
 app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
 
+// timeout sessions
+setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
+console.error('[SESSION] Registerd Session Timer')
+
 
 function authorize(req, res, next){
     var url = req.originalUrl
+    var sessionID = req.body.mySession || req.query.mySession;
+    req.session = {};
+    req.session.sessionId = sessionID;
+
+    console.log(sessionID);
+
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
-    }else if (req.session && req.session.userId){
-        var userExists = false;
-        try {
-            userExists = student.userExists(req.session.userId);
-        } catch (err) {
-        }
-        if (userExists) {
-            next();
-        } else {
+    }else if (sessionID){
+        const sessionData = mySession.getSessionData(sessionID);
+        if (!sessionData || !sessionData.userID) {
+            console.log("[SESSION] no valid session found");
             responseWhenUnauthorized(req, res);
+            return;
         }
-    }else {
+        req.session.userId = sessionData.userID;
+        next();
+    } else {
+        console.log("[SESSION] no session id given");
         responseWhenUnauthorized(req, res);
+        return;
     }
 }
 
@@ -84,7 +83,7 @@ function containsWildcard(url){
 }
 
 function responseWhenUnauthorized (req, res) {
-    req.session.reset();
+    mySession.invalidate(req.session.sessionId);
     res.status(401);
     res.send("Unauthorized! Failed in Server.js");
 }
