@@ -210,11 +210,13 @@ module.exports = {
 
     //
     updateMail : async function (req, res) {
+        console.log("update Mail");
         var userId = req.session.userId;
         var oldMail = req.body.oldMail;
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
+        console.log("update Mail");
         if (!userId || !oldMail || !newMail || !pass) {
             responder.sendResponse(res, 400, "Bad request. Either no session, oldMail, newMail or no password.");
             return;
