@@ -4,9 +4,6 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {DashboardPage} from "../dashboard/dashboard";
 import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
-import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
-import {SearchPage} from "../search/search";
-
 
 @Component({
   selector: 'page-circle-einstellungen',
