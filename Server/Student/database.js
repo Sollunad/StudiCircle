@@ -153,7 +153,7 @@ module.exports = {
     setChangeMailKey : async function (oldMail, newMail, validationKey) {
         console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
         try {
-            let userId=this.getUserIdFromMail(oldMail);
+            let userId= await this.getUserIdFromMail(oldMail);
             return await db.User.findById( userId ).then( user => {
                 if ( user &&  user && user.dataValues.id) {
                     return user.updateAttributes({
@@ -163,16 +163,8 @@ module.exports = {
                                 validationKey: validationKey,
                                 newMail: newMail,
                                 UserId: userId
-                            }).then((user) => {
-                                db.ValidationKey.create({
-                                    validationKey: randomString
-                                }).then(validationKey => {
-                                    validationKey.setUser(user);
-                                    return true;
-                                }).error( (err) => {
-                                    console.log(err);
-                                    throw  "database error";
-                                });
+                            }).then(() => {
+                                return true;
                             }).error( (err) => {
                                 console.log(err);
                                 throw  "database error";
@@ -291,7 +283,7 @@ module.exports = {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
                     return user.updateAttributes({
-                        'email' : mail
+                        'email' : newMail
                     }).then(() =>{
                         return true;
                     });
