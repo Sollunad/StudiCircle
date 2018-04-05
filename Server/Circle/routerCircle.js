@@ -28,6 +28,12 @@ module.exports = function(app) {
     // id: circleId
     app.route('/circle/remove')
         .post(circle.removeCircle);
+		
+	// id (Number): current circle
+	// user (Number): selected users id
+	// role (String): admin | member | mod for selected user
+	app.route('/circle/rolechange')
+		.post(circle.changeRole);
 
     // return: List circles
     app.route('/circle/forUser')
