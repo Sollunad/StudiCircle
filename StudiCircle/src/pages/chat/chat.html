@@ -10,7 +10,8 @@
   <ion-grid>
     <ion-row *ngFor="let message of messages">
 
-      <ion-col col-9 *ngIf="message.from !== nickname" class="message" [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
+      <ion-col col-9 *ngIf="message.from !== nickname" class="message"
+               [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
         <ion-card>
           <ion-item>
             <span class="user_name">{{ message.from }}:</span><br>
@@ -20,8 +21,9 @@
         </ion-card>
       </ion-col>
 
-      <ion-col offset-3 col-9 *ngIf="message.from === nickname" class="message" [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
-        <ion-card (press)="pressEvent($event)">
+      <ion-col offset-3 col-9 *ngIf="message.from === nickname" class="message"
+               [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
+        <ion-card (press)="doConfirm()">
           <ion-item>
             <span class="user_name">{{ message.from }}:</span><br>
             <span>{{ message.text }}</span>
@@ -37,17 +39,11 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-row class="message_row">
-      <ion-col col-9>
-        <ion-item no-lines>
-          <ion-input type="text" placeholder="Message" [(ngModel)]="message"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col col-3>
-        <button ion-button clear color="primary" (click)="sendMessage()" [disabled]="message === ''">
-          Send
-        </button>
-      </ion-col>
-    </ion-row>
+    <ion-item>
+      <ion-input type="text" placeholder="Message" [(ngModel)]="message"></ion-input>
+      <button ion-button item-right icon-only clear (click)="sendMessage()" [disabled]="message === ''">
+        <ion-icon name='send'></ion-icon>
+      </button>
+    </ion-item>
   </ion-toolbar>
 </ion-footer>

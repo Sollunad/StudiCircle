@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import {NavController, NavParams, ToastController, AlertController} from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
@@ -14,7 +14,8 @@ export class ChatPage {
   message = '';
   socket:any;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController) {
+  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
+              private alerCtrl: AlertController) {
     this.nickname = "Test";
     this.socket=io('http://localhost:3001');
     this.socket.emit('set-nickname', this.nickname);
@@ -66,5 +67,29 @@ export class ChatPage {
       duration: 2000
     });
     toast.present();
+  }
+
+  doConfirm() {
+    //TODO check whether user is allowed to remove messages
+
+    let confirm = this.alerCtrl.create({
+      title: 'Nachricht löschen?',
+      message: 'Möchten Sie diese Nachricht wirklich löschen?',
+      buttons: [
+        {
+          text: 'Abbrechen',
+          handler: () => {
+            console.log('Abbrechen');
+          }
+        },
+        {
+          text: 'Nachricht löschen',
+          handler: () => {
+            console.log('Nachricht löschen');
+          }
+        }
+      ]
+    });
+    confirm.present()
   }
 }
