@@ -282,7 +282,32 @@ module.exports = {
         res.status(500).send("Error");
         return;
       });
-    }
+    },
+	
+	changeRole : function(request, response) {
+		let circleId = req.query.circle,
+			selectedUser = req.query.user,
+			newRole = req.query.role;
+		db.UserInCircle.findOne({
+			where: {
+				CircleId: circleId,
+				UserId: selectedUser
+			}
+		}).then((relation) => {
+			relation.update({
+				role: newRole
+			}).then(() => {
+				res.status(200)
+					.send("Changed Role for " + selectedUser.toString() 
+						+ " to " + newRole
+						+ "in Circle " + circleId + ".");
+			}).error((error) => {
+				res.status(500).send("Update failed.");
+			});
+		}).error((error) => {
+			res.status(500).send("Could not find user in circle.");
+		});
+	}
 
 };
 
