@@ -3,6 +3,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
+  console.log(socket.request._query);
 
   socket.on('disconnect', function(){
     io.emit('users-changed', {user: socket.nickname, event: 'left'});
