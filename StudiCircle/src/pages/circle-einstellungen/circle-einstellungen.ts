@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
+import {DashboardPage} from "../dashboard/dashboard";
 
 
 @Component({
@@ -42,6 +43,7 @@ export class CircleEinstellungenPage {
             this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
+            this.navCtrl.push(DashboardPage);
           }
         },
         {
