@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Mitglieder</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+
+  <ion-list>
+    <ion-item *ngFor="let member of memberList" (click)="itemSelected(member)">
+      {{ member.username }}
+      <button ion-button color="danger" (click)="removeCircleMember(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
+    </ion-item>
+  </ion-list>
+</ion-content>

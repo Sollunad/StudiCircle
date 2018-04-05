@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>
+      Log In
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="page3">
+  <div class="spacer" style="height:100px;" id="logIn-spacer2"></div>
+  <div style="width:100%;height:220px;margin:0px 0px;line-height:250px;background-color:#e8ebef;text-align:center;">
+    <i class="icon ion-image" style="font-size:64px;color:#888;vertical-align:middle;"></i>
+  </div>
+  <form id="logIn-form6">
+    <ion-item id="logIn-input13">
+      <ion-input clearInput type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="mail" pattern='^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'></ion-input>
+    </ion-item>
+    <ion-item id="logIn-input14">
+      <ion-input clearInput clearOnEdit="false" type="password" placeholder="your password goes here" name="pw" [(ngModel)]="pw" maxlength="64" minlength="8"></ion-input>
+    </ion-item>
+    <button id="logIn-button4" ion-button color="dark" block style="font-weight:500;" on-click="login()">
+      Log In
+    </button>
+  </form>
+  <button id="logIn-button3" ion-button color="balanced" block style="font-weight:300;" on-click="goToGetInvolved()">
+    Register now!
+  </button>
+  <button id="logIn-button5" ion-button color="danger" block style="font-weight:300;" on-click="goToForgotPassword()">
+    Forgot Password
+  </button>
+</ion-content>
