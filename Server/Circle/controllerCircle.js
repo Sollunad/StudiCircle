@@ -90,7 +90,7 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.create({"name":name,"visible":visible}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
@@ -283,7 +283,7 @@ module.exports = {
         return;
       });
     },
-	
+
 	changeRole : function(request, response) {
 		let circleId = req.query.circle,
 			selectedUser = req.query.user,
@@ -298,7 +298,7 @@ module.exports = {
 				role: newRole
 			}).then(() => {
 				res.status(200)
-					.send("Changed Role for " + selectedUser.toString() 
+					.send("Changed Role for " + selectedUser.toString()
 						+ " to " + newRole
 						+ "in Circle " + circleId + ".");
 			}).error((error) => {
