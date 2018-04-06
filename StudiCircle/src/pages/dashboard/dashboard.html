@@ -4,6 +4,11 @@
       Dashboard
     </ion-title>
     <ion-buttons end>
+      <button ion-button on-click="goToSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
       <button ion-button on-click="goToSettings()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -11,7 +16,10 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page5">
-  <h1 id="dashboard-heading3" style="color:#000000;">
+  <ion-buttons end>
+  <button ion-button (click)="onNewCircle()" style="float: right; margin: 0;"><ion-icon name="add"></ion-icon> Circle</button>
+  </ion-buttons>
+  <h1 id="dashboard-heading3" style="color:#000000; float: left; margin: 0;">
     Hello Student!
   </h1>
   <form id="dashboard-form12">
@@ -23,40 +31,47 @@
         <img />
       </ion-thumbnail>
       <h2>
-        Item
+        Feed
       </h2>
     </ion-item>
+  <!-- </ion-list>
+  <ion-list id="dashboard-list5">
     <ion-item color="none" id="dashboard-list-item20">
       <ion-thumbnail item-left>
         <img />
-        </ion-thumbnail>
-          <h2>
-            Item
-          </h2>
+      </ion-thumbnail>
+      <h2>
+        Feed
+      </h2>
     </ion-item>
+  <!-- </ion-list>
+  <ion-list id="dashboard-list6">
     <ion-item color="none" id="dashboard-list-item21">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
       <h2>
-        Item
+        Feed
       </h2>
     </ion-item>
+  <!-- </ion-list>
+  <ion-list id="dashboard-list7">
     <ion-item color="none" id="dashboard-list-item22">
       <ion-thumbnail item-left>
         <img />
       </ion-thumbnail>
       <h2>
-        Item
+        Feed
       </h2>
-    </ion-item>
-    <ion-item color="none" id="dashboard-list-item22">
-      <button ion-button on-click="addCircle()">Add Circle</button>
-    </ion-item> -->
-  <div id="listContainer">
-    <ion-item coclor="none" id="dashboard-list4" *ngFor="let i of circle_list">{{i}}</ion-item>
-    <br>
-    <div id="addButton"><button ion-button (click)="addCircle()">Add Circle</button></div>
-  </div>
+    </ion-item>-->
+    <h1>
+      Your Circles
+    </h1>
+    <ion-item *ngFor="let circle of circles" (click)="goToStartPage(circle.id, circle.name)">{{circle.name}}</ion-item>
+    <h1>
+      Circles Close To You
+    </h1>
+    <ion-item *ngFor="let circle of clist">{{circle.name}}</ion-item>
+
   </ion-list>
 </ion-content>

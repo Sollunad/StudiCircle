@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Circle Erstellen
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="page3">
+  <form id="circleErstellen-form1">
+    <ion-item id="circleErstellen-input1">
+      <ion-label>
+        Name*
+      </ion-label>
+      <ion-input type="text" placeholder="Mustercircle" name="circlename" [(ngModel)]="newName"></ion-input>
+      <button clear item-right (click)="showExtraInfoName()">?</button>
+    </ion-item>
+    <ion-item id="circleErstellen-input2">
+      <ion-label>
+        Standort
+      </ion-label>
+      <ion-input type="text" placeholder="Musteradresse" name="address" [(ngModel)]="newAddress"></ion-input>
+      <button clear item-right (click)="showExtraInfoAdresse()">?</button>
+    </ion-item>
+    <ion-item id="circleErstellen-select1">
+      <ion-label>
+        Sichtbarkeit
+      </ion-label>
+      <ion-select name="visibilty" [(ngModel)]="visibility" name="maul" (ionChange)="onChange()">
+        <ion-option value="1" [selected]="true">
+          öffentlich
+        </ion-option>
+        <ion-option value="0">
+          privat
+        </ion-option>
+      </ion-select>
+      <button clear class="visibilityhint" item-right (click)="showExtraInfoSichtbarkeit()">?</button> // TODO Button nicht drückbar, liegt hinter ion-select!
+    </ion-item>
+  </form>
+  <div id="circleErstellen-markdown1" class="show-list-numbers-and-dots">
+    <p style="color:#000000;font-size:11px;">
+      Alle mit * Markierten Felder müssen ausgefüllt werden
+    </p>
+  </div>
+  <button id="circleErstellen-button1" ion-button color="positive" (click)="createCircle()" block>
+    Erstellen
+  </button>
+
+</ion-content>

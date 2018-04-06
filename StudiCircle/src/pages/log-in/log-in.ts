@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { GetInvolvedPage } from '../get-involved/get-involved';
-import { VerifyNowPage } from '../verify-now/verify-now';
-import { DashboardPage } from '../dashboard/dashboard';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {GetInvolvedPage} from '../get-involved/get-involved';
+import {VerifyNowPage} from '../verify-now/verify-now';
+import {DashboardPage} from '../dashboard/dashboard';
+import {Subscription} from "rxjs/Subscription";
+import {ApiProvider} from "../../providers/api/api";
+import {ForgotPasswordPage} from "../forgot-password/forgot-password";
+import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 
 @Component({
   selector: 'page-log-in',
@@ -10,19 +14,54 @@ import { DashboardPage } from '../dashboard/dashboard';
 })
 export class LogInPage {
 
-  constructor(public navCtrl: NavController) {
+  public mail : '';
+  public pw : '';
+
+  constructor(public navCtrl: NavController, private _api : ApiProvider) {
+
   }
+
   goToGetInvolved(params){
     if (!params) params = {};
     this.navCtrl.push(GetInvolvedPage);
-  }goToVerifyNow(params){
+  }
+  goToVerifyNow(params){
     if (!params) params = {};
     this.navCtrl.push(VerifyNowPage);
-  }goToLogIn(params){
+  }
+  goToLogIn(params){
     if (!params) params = {};
     this.navCtrl.push(LogInPage);
-  }goToDashboard(params){
+  }
+  goToDashboard(params){
     if (!params) params = {};
     this.navCtrl.push(DashboardPage);
+  }
+  goToForgotPassword(params){
+    if (!params) params = {};
+    this.navCtrl.push(ForgotPasswordPage);
+  }
+
+  login(){
+    if(!this.mail && !this.pw) {
+      console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
+    }else{
+      if(this.mail.match(getMailRegex()) && stringHasAppropiateLength(this.pw,8,64)) {
+        console.log("[LOGIN] : Logging in");
+        const loginSub: Subscription = this._api.login(this.mail, this.pw).subscribe(
+          (data: boolean) => {
+            if (data) {
+              this.goToDashboard({});
+              loginSub.unsubscribe();
+            } else {
+              console.log("[LOGIN] : Login failed");
+              loginSub.unsubscribe();
+            }
+          }
+        )
+      }else{
+        console.log("[LOGIN] : Non-compliant E-Mail or Password")
+      }
+    }
   }
 }

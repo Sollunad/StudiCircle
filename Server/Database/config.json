@@ -1,0 +1,8 @@
+{
+	"username": "studicircle",
+    "password": "TINF16AIBI",
+    "database": "studicircle",
+    "host": "db.sknx.de",
+	"port": 3306,
+    "dialect": "mysql"
+}
