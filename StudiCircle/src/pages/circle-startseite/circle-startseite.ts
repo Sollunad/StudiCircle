@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
 import {SettingsPage} from "../settings/settings";
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
@@ -30,7 +30,7 @@ export class CircleStartseite {
 ];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: HttpClient,
-              public circleProvider:CircleProvider) {
+              public circleProvider:CircleProvider, public alertCtrl: AlertController) {
     this.circleId = navParams.get('circleId');
     this.circleName = navParams.get('circleName');
   }
@@ -51,4 +51,31 @@ export class CircleStartseite {
   openPage(module) {
     this.navCtrl.push(module.component,{circleId: this.circleId});
   }
+
+  openConfirmDialog(userId: number){
+    let alert = this.alertCtrl.create({
+      title: 'Adminauswahl bestätigen',
+      message: this.circleName+' wirklich verlassen?',
+      buttons: [
+        {
+          text: 'Verlassen',
+          handler: () => {
+            this.circleProvider.leaveCircle(userId, this.circleId).subscribe(
+              message => console.log(message)
+            );
+            this.navCtrl.pop();
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Verlassen abgebrochen');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
 }
