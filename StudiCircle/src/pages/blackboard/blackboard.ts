@@ -24,4 +24,6 @@ export class BlackboardPage {
     console.log(this.circleId);
   }
 
+
+
 }
