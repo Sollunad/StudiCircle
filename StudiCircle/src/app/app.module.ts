@@ -24,6 +24,7 @@ import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {BlackboardPage} from "../pages/blackboard/blackboard";
+import { BlackboardPostPage} from '../pages/blackboard-post/blackboard-post';
 import {constants} from "../consts/constants";
 
 @NgModule({
@@ -44,7 +45,8 @@ import {constants} from "../consts/constants";
     MitgliederÜbersicht,
     SearchPage,
     CircleEinstellungenPage,
-    BlackboardPage
+    BlackboardPage,
+    BlackboardPostPage
   ],
 
   imports: [
@@ -71,7 +73,8 @@ import {constants} from "../consts/constants";
     MitgliederÜbersicht,
     SearchPage,
     CircleEinstellungenPage,
-    BlackboardPage
+    BlackboardPage,
+    BlackboardPostPage
   ],
   providers: [
     StatusBar,

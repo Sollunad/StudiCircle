@@ -1,0 +1,38 @@
+<!--
+  Generated template for the BlackboardPostPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Post von {{this.postCreator}} am {{this.postDate}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-card color="primary">
+    <ion-card-header>
+      {{this.postCreator}}:
+    </ion-card-header>
+    <ion-card-content>
+      {{this.postText}}
+    </ion-card-content>
+  </ion-card>
+  <div  style="margin-left: 5%;" *ngFor="let comment of comments">
+    <ion-card color="secondary">
+      <ion-card-header>
+        {{comment.userName}}:
+      </ion-card-header>
+      <ion-card-content>
+        {{comment.text}}
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>

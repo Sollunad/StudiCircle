@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DbProvider} from "../../providers/dbprovider/dbprovider";
 import { BlackboardPost} from "../../providers/declarations/BlackboardPost";
+import { BlackboardPostPage} from "../blackboard-post/blackboard-post";
 
 /**
  * Generated class for the BlackboardPage page.
@@ -30,7 +31,7 @@ export class BlackboardPage {
 
   private showPost(post: any){
     console.log(this.posts[post].userName);
-    //this.navCtrl.push(Seite, {PostID: x});
+    this.navCtrl.push(BlackboardPostPage, {post: this.posts[post]});
   }
 
 }
