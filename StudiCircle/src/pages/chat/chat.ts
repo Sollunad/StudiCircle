@@ -17,7 +17,7 @@ export class ChatPage {
   constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
               private alerCtrl: AlertController) {
     this.nickname = "Test";
-    this.socket=io('http://localhost:3001');
+    this.socket=io('http://localhost:3001', { query: "circleId=" + 1 });
     this.socket.emit('set-nickname', this.nickname);
 
     this.getMessages().subscribe(message => {
