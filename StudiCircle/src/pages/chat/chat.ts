@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams, ToastController, AlertController} from 'ionic-angular';
-import { Socket } from 'ng-socket-io';
+import Socket = SocketIOClient.Socket;
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 @Component({
   selector: 'chat',
@@ -12,12 +13,12 @@ export class ChatPage {
   messages = [];
   nickname = '';
   message = '';
-  socket:any;
+  socket:Socket;
 
   constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
-              private alerCtrl: AlertController) {
+              private alerCtrl: AlertController, private circleProvider:CircleProvider) {
     this.nickname = "Test";
-    this.socket=io('http://localhost:3001');
+    this.socket=circleProvider.openSocketConnection();
     this.socket.emit('set-nickname', this.nickname);
 
     this.getMessages().subscribe(message => {
