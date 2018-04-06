@@ -32,7 +32,7 @@ export class CircleProvider {
   }
 
   public openSocketConnection():Socket{
-    return io('http://localhost:3001',{sessionId:this.apiProvider.currentUser.session});
+    return io('http://localhost:3001',{query: "sessionId=" + 42 + ", circleId=" + 1});
   }
 
   public create(name : string, visibility : string, location: any){
