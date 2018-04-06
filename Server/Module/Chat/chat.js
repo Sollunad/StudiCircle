@@ -5,24 +5,25 @@ module.exports = function(app, server){
   const io = require('socket.io')(http, { path: '/socket/socket.io'}).listen(server);
 
   io.on('connection', (socket) => {
-    // console.log("request: " + socket.request);
-    // console.log(socket.request._query);
-    // console.log(socket.request._query.sessionId);
-    // socket.sessionData = session.getSessionData(socket.request._query.sessionId);
-    // console.log(socket.sessionData);
-
-    socket.on('disconnect', function(){
-      io.emit('users-changed', {user: socket.nickname, event: 'left'});
+    socket.sessionData = session.getSessionData(socket.request._query.sessionId);
+    socket.circleId = socket.request._query.circleId;
+    if(socket.sessionData) socket.userId = socket.sessionData.userID;
+    console.log("[CHAT.JS]sessionData: " + socket.sessionData);
+    console.log("[CHAT.JS]circleId: " + socket.circleId);
+    console.log("[CHAT.JS]userId: " + socket.userId);
+    socket.join(socket.circleId);
+    db.User.findById(socket.userId).then(user => {
+      socket.userName = user.name;
+      console.log("[CHAT.JS]userName:" + socket.userName);
+      io.to(socket.circleId).emit('users-changed', {user: socket.userName, event: 'joined'});
     });
 
-    socket.on('set-nickname', (nickname) => {
-      console.log("[SET-NICKNAME]");
-      socket.nickname = nickname;
-      io.emit('users-changed', {user: nickname, event: 'joined'});
+    socket.on('disconnect', function(){
+      io.to(socket.circleId).emit('users-changed', {user: socket.userName, event: 'left'});
     });
 
     socket.on('add-message', (message) => {
-      io.emit('message', {text: message.text, from: socket.nickname, created: new Date()});
+      io.to(socket.circleId).emit('message', {text: message.text, from: socket.userName, created: new Date()});
     });
   });
 }
