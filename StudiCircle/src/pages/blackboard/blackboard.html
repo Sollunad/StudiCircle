@@ -14,5 +14,33 @@
 
 
 <ion-content padding>
+  <h1>Posts</h1>
+  <ion-list id="posts">
+    <ion-item-sliding *ngFor="let post of posts; let ind = index" (click)="showPost(ind)">
+    <ion-item >
+      <ion-card>
+        <ion-item>
+          <h2>{{post.userName}}</h2>
+          <p>{{post.date}}</p>
+        </ion-item>
+        <ion-card-content>{{post.text}}</ion-card-content>
+
+        <ion-row>
+          <ion-col>
+            <button ion-button icon-left small>
+              <ion-icon name="text"></ion-icon>
+              <div>Comments</div>
+            </button>
+          </ion-col>
+          <ion-col center text-center>
+            <ion-note>
+              11h ago
+            </ion-note>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-item>
+  </ion-item-sliding>
+  </ion-list>
 
 </ion-content>

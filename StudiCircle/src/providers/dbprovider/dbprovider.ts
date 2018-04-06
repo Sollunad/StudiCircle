@@ -5,6 +5,7 @@ import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Circle} from '../declarations/Circle';
+import {BlackboardPost} from "../declarations/BlackboardPost";
 import {constants} from "../../consts/constants";
 
 /*
@@ -17,6 +18,7 @@ import {constants} from "../../consts/constants";
 export class DbProvider {
   private result: any;
   private circles: Circle[] = [];
+  private psot = new Array<BlackboardPost>();
 
   constructor(public http: HttpClient, private api: ApiProvider, public consts: constants) { }
 
@@ -65,9 +67,14 @@ export class DbProvider {
     return this.http.get<GeoResponse>(url);
   }
 
+  private count = 1; // WIEDER RAUSNEHMEN!!!!
   public getBlackboardPosts(circleId: number){
     //Code
-    
+    if(this.count != 0){
+        this.psot.push({postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406"}, {postID: 2, userName: "TestUser2", text: "Test", date: "20170406"});
+        this.count = this.count -1;
+    }
+    return this.psot;
     //return posots;
   }
 }
