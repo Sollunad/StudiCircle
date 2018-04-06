@@ -12,7 +12,7 @@ module.exports = {
             "        <p>\n" +
             "            To reset your password please fill in the form below:\n" +
             "        </p>\n" +
-            "        <form method='POST' action='localhost:9080/user/resetPassword'>\n" +
+            "        <form method='POST' action='api.dev.sknx/user/resetPassword'>\n" +
             "            <label for='pw1'>Password:</label>\n" +
             "            <input type='password' name='pwd' id='pw1' onkeyup='checkPass()'/><br>\n" +
             "            <label for='pw2'>Repeat Password:</label>\n" +

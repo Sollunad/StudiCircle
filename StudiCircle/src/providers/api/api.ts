@@ -18,7 +18,7 @@ import {LoginResponse} from "../declarations/LoginResponse";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.dev.sknx.de/";
+  private _apiPath = "https://api.sknx.de/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient) {
@@ -26,7 +26,12 @@ export class ApiProvider {
   }
 
   public changeMail(new_mail : string, pwd : string){
-    let data = {"session" : this.currentUser.session.sessionId, "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
+    let data = {
+      "mySession" : this.currentUser.session,
+      "oldMail" : this.currentUser.mail,
+      "newMail" : new_mail,
+      "pwd" : pwd
+    };
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -39,7 +44,7 @@ export class ApiProvider {
           if(res.httpStatus !== 200) {
             return false;
           } else {
-            this.currentUser.username = new_mail;
+            this.currentUser.mail = new_mail;
             return true;
           }
         }
@@ -115,9 +120,6 @@ export class ApiProvider {
       this._apiPath + "user/forgotPassword",
       {
         mail: mail
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -138,10 +140,8 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/deleteUser",
       {
+        mySession : this.currentUser.session,
         pwd: password
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -162,11 +162,9 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/setPassword",
       {
+        mySession : this.currentUser.session,
         oldPwd: oldPwd,
         newPwd: newPwd
-      },
-      {
-        withCredentials: true
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -174,6 +172,7 @@ export class ApiProvider {
         requestSub.unsubscribe();
       },
       () => {
+        //TODO investigate on what exactly is causing the error
         successSubject.next(false);
         requestSub.unsubscribe();
       }

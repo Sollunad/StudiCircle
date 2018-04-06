@@ -7,6 +7,7 @@ const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
 const mySession = require('../Session/session');
 const tests = require('./tests');
+const responder = require('./responseSender');
 
 module.exports = {
 
@@ -26,23 +27,20 @@ module.exports = {
         var validationKey = req.params.validationKey;
 
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No uuid.");
+            responder.sendResponse(res, 400, "Bad request. No uuid.");
             return;
         }
-
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                await database.setState(validationKey, constants.AccountState.ACTIVE);
-                res.status(201);
-                res.send("Successfully validated new user account.");
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    responder.sendResponse(res, 201, "Successfully validated new user account.");
+                }
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid validation key.");
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
@@ -51,30 +49,25 @@ module.exports = {
         var mail = req.body.mail;
 
         if (!mail) {
-            res.status(400);
-            res.send("Bad request. No mail.");
+            responder.sendResponse(res, 400, "Bad request. No mail.");
             return;
         }
 
         try {
             if (await database.userMailExists(mail)) {
-                resetPwd.reset(mail);
+                await resetPwd.reset(mail);
             }
-            res.status(200);
-            res.send("Reset mail sent if user is known.");
+            responder.sendResponse(res, 200, "Reset mail sent if user is known.");
         } catch (err) {
             console.log(err);
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     passwordResetPage : function (req, res) {
-        var validationKey = req.params.validationKey;
+        let validationKey = req.params.validationKey;
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No validation key");
-            return;
+            responder.sendResponse(res, 400, "Bad request. No validation key.");
         } else {
             res.status(200);
             res.send(passwordResetForm.getForm(validationKey));
@@ -83,14 +76,13 @@ module.exports = {
 
     //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : async function (req, res) {
-        var validationKey = req.params.validationKey;
-        var newPassword = req.body.pwd;
+        let validationKey = req.params.validationKey;
+        let newPassword = req.body.pwd;
 
         console.log(validationKey + " | " + newPassword);
 
         if (!validationKey || !newPassword) {
-            res.status(400);
-            res.send("Bad request. No validation key or password.");
+            responder.sendResponse(res, 400, "Bad request. No validation key or password.");
             return;
         }
 
@@ -104,27 +96,23 @@ module.exports = {
 
                 await database.setPassword(userId, hash, salt);
 
-                res.status(200);
-                res.send("Password successfully reset.");
+                responder.sendResponse(res, 200, "Password successfully reset.");
             } else {
-                res.status(401);
-                res.send("Invalid validation key!");
+                responder.sendResponse(res, 401, "Invalid validation key!");
             }
         } catch (err) {
             console.log(err);
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
     login : async function (req, res) {
-        var mail = req.body.mail;
-        var pass = req.body.pwd;
+        let mail = req.body.mail;
+        let pass = req.body.pwd;
 
         if (!mail || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no username or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no username or no password.");
             return;
         }
         try {
@@ -147,24 +135,21 @@ module.exports = {
                     res.status(200);
                     res.send(returnObject);
                 } else {
-                    res.status(401);
-                    res.send('Unauthorized! Wrong Password');
+                    responder.sendResponse( res, 401, "Unauthorized! Wrong Password");
                 }
             } else {
-                res.status(412);
-                res.send("Profile not activated!");
+                responder.sendResponse(res, 412, "Profile not activated!");
             }
         } catch (err) {
-        console.log(err)
-        res.status(500);
-        res.send("Server Error");
+            console.log(err);
+            this.sendResponse(res, 500);
         }
     },
 
     logout : function (req, res) {
         mySession.invalidate(req.session.sessionId);
 
-        res.send("Logout successfull.")
+        responder.sendResponse(res, 200,"Logout successfull.");
     },
 
     //Called when the user sets a new password
@@ -175,8 +160,7 @@ module.exports = {
         var newPw = req.body.newPwd;
 
         if (!userId || !oldPw || !newPw || !passwordUtil.passwordIsCompliant(newPw)) {
-            res.status(400);
-            res.send("Bad request. No session, old or new password not set or not compliant to guidelines.");
+            responder.sendResponse(res, 400, "Bad request. No session, old or new password not set or not compliant to guidelines.");
             return;
         }
 
@@ -189,14 +173,13 @@ module.exports = {
                 await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
 
                 res.status(200);
-                res.send("Successfully set Password")
+                res.send(true);
+//                responder.sendResponse(res, 200, "Successfully set Password");
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid password!")
+                responder.sendResponse(res, 401, "Unauthorized. Invalid password!");
             }
         } catch (err) {
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
@@ -206,8 +189,7 @@ module.exports = {
         var pass = req.body.pwd;
 
         if (!userId || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no session or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no session or no password.");
             return;
         }
 
@@ -216,44 +198,40 @@ module.exports = {
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 await database.deleteUser(userId);
-                res.status(200);
-                res.send("Successfully deleted Account");
+                responder.sendResponse(res, 200, "Successfully deleted Account");
                 req.session.reset();
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid password.")
+                responder.sendResponse(res, 401, "Unauthorized. Invalid password.");
             }
 
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
     },
 
     //
     updateMail : async function (req, res) {
+        console.log("update Mail");
         var userId = req.session.userId;
         var oldMail = req.body.oldMail;
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
+        console.log("update Mail");
         if (!userId || !oldMail || !newMail || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no session, oldMail, newMail or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no session, oldMail, newMail or no password.");
             return;
         }
 
         if (oldMail == newMail) {
-            res.status(400);
-            res.send("Bad request. Old mail is new mail.");
+            responder.sendResponse(res, 400, "Bad request. Old mail is new mail.");
             return;
         }
 
         try {
             if (!userId == (await database.getUserIdFromMail(oldMail))) {
-                res.status(401);
-                res.send("Unauthorized! Mail and session do not match!");
+                responder.sendResponse(res, 401, "Unauthorized! Mail and session do not match!");
                 return;
             }
 
@@ -261,18 +239,14 @@ module.exports = {
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 changeMail.send(oldMail, newMail);
-                res.status(200);
-                res.send("Send an validation E-Mail");
-                return;
+                responder.sendResponse(res, 200, "Send an validation E-Mail");
             } else {
-                res.status(401);
-                res.send("Error updating the email")
+                responder.sendResponse(res, 401, "Error updating the email");
             }
 
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
 
     },
@@ -281,8 +255,7 @@ module.exports = {
         var validationKey = req.params.validationKey;
 
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No validation key.");
+            responder.sendResponse(res, 400, "Bad request. No validation key.");
             return;
         }
 
@@ -293,27 +266,27 @@ module.exports = {
 
                 await database.updateMail(userId, newMail);
 
-                res.status(200);
-                res.send("Successfully updated mail address");
+                responder.sendResponse(res, 200, "Successfully updated mail address");
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid validation key.");
-                return;
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
     },
 
     trigger : async function (req, res) {
         console.log('Trigger');
 
-        var result = await database.setPassword(13, "hash", "salt");
-        console.log(result);
-
-        res.send('OK');
+        try {
+            console.log("start");
+            let result = await database.setPassword(13, "hash", "salt");
+            console.log(result);
+        } catch (err) {
+            console.log("error at set password: " + err);
+        }
+        responder.sendResponse(res, 200, "OK");
     },
 
     test : function (req, res) {
@@ -321,7 +294,6 @@ module.exports = {
     },
 
     unknownpage : function (req, res) {
-      res.status(404);
-      res.send('Unknown Endpoint')
+        responder.sendResponse(res, 404, "Unknown Endpoint");
     }
 };
