@@ -23,6 +23,7 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {BlackboardPage} from "../pages/blackboard/blackboard";
 import {constants} from "../consts/constants";
 
 @NgModule({
@@ -42,7 +43,8 @@ import {constants} from "../consts/constants";
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    BlackboardPage
   ],
 
   imports: [
@@ -68,7 +70,8 @@ import {constants} from "../consts/constants";
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    BlackboardPage
   ],
   providers: [
     StatusBar,

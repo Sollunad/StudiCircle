@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { BlacboardPost } from "../../providers/declarations/BlackboardPost";
 
 /**
  * Generated class for the BlackboardPage page.
@@ -22,7 +21,7 @@ export class BlackboardPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BlackboardPage');
+    console.log(this.circleId);
   }
 
 }
