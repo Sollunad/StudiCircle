@@ -1,12 +1,10 @@
-module.exports = function(app){
-  console.log("[CHAT.JS]");
+module.exports = function(app, server){
   const db = require('../../Database/database.js');
   const session = require('../../Session/session.js')
   const http = require('http').Server(app);
-  const io = require('socket.io')(http);
+  const io = require('socket.io')(http, { path: '/socket/socket.io'}).listen(server);
 
   io.on('connection', (socket) => {
-    console.log("[CONNECT]");
     // console.log("request: " + socket.request);
     // console.log(socket.request._query);
     // console.log(socket.request._query.sessionId);

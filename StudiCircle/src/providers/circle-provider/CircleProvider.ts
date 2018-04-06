@@ -40,6 +40,7 @@ export class CircleProvider {
                   sessionId:  this.apiProvider.currentUser.session,
                   circleId:   1
                 },
+                path: '/socket/socket.io'
                 //transports: ['websocket']
               }
             );
