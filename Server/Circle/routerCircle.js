@@ -58,4 +58,9 @@ module.exports = function(app) {
     // return: visibility for circle
     app.route('/circle/getVisibility')
         .get(circle.getVisibility)
+
+    // circleId (Number): current circle
+	// userId (Number): selected users id
+	app.route('/circle/newAdmin')
+		.post(circle.newAdmin);
 };

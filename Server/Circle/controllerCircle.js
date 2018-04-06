@@ -284,14 +284,14 @@ module.exports = {
       });
     },
 
-	changeRole : function(request, response) {
+	changeRole : function(req, res) {
 		let circleId = req.query.circle,
 			selectedUser = req.query.user,
 			newRole = req.query.role;
 
-        argumentMissing(response, circleId, selectedUser, newRole) return;
+        if(argumentMissing(res, circleId, selectedUser, newRole)) return;
 
-		db.UserInCircle.findOne({
+		db.UserInCircles.findOne({
 			where: {
 				CircleId: circleId,
 				UserId: selectedUser
@@ -316,28 +316,52 @@ module.exports = {
         const circleId = req.body.circleId
         const newAdminId = req.body.userId
 
-        argumentMissing(res, circleId, newAdminId) return;
+        if(argumentMissing(res, circleId, newAdminId)) return;
 
         const oldAdminId = req.session.userId;
 
-        //TODO was machen
-
+        isAdminInCircle(oldAdminId, circleId, result => {
+            if(result){
+                changeRole({query: {
+                    "circle": circleId,
+                    "user": newAdminId,
+                    "role": cons.CircleRole.ADMINISTRATOR,
+                }});
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not admin in the requested circle.");
+            }
+        });
     },
+
+    // keine geroutete function
+    isAdminAnywhere : function(userId, callback){
+        db.UserInCircles.findAll({
+            where: {UserId: userId, role: cons.CircleRole.ADMINISTRATOR}
+        }).then(result => {
+            if(result.length > 0){
+                if(callback) callback(true);
+            }else{
+                if(callback) callback(false);
+            }
+        });
+    }
 
 
 };
 
 // locale Funktionen
 
-function isAdminInCircle(userId, circleId){
-    db.UserInCircle.findOne({
+function isAdminInCircle(userId, circleId, callback){
+    db.UserInCircles.findOne({
         where: {CircleId: circleId, UserId: userId}
     }).then(result => {
         if(result && result.role == cons.CircleRole.ADMINISTRATOR){
-            return true;
+            if(callback) callback(true);
+        }else{
+            if(callback) callback(false);
         }
     });
-    return false;
 }
 
 function argumentMissing(res, ...args){
