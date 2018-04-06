@@ -20,18 +20,18 @@ export class BlackboardPostPage {
   private postDate: String;
   private postText: String;
   private comments : BlackboardPost[];
-  private postID: BlackboardPost;
+  private post: BlackboardPost;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    this.postID = this.navParams.get('post');
-    this.postCreator = "Test User";
-    this.postDate = "06.04.2018";
-    this.postText = "This is my first Post";
-    this.comments = [{postID: this.postID.postID, userName: "Jonas", text: "Schlechter Beitrag", date: "20160215"},
-                    {postID: this.postID.postID, userName: "Jonas", text: "Schlechter Beitrag", date: "20160215"}];
+    this.post = this.navParams.get('post');
+    this.postCreator = this.post.userName;
+    this.postDate = this.post.date;
+    this.postText = this.post.text;
+    this.comments = [{postID: this.post.postID, userName: "Jonas", text: "Schlechter Beitrag", date: "20160215"},
+                    {postID: this.post.postID, userName: "Jesse", text: "Schnauze!!!", date: "20160215"}];
   }
 
 }

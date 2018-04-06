@@ -23,8 +23,13 @@
       {{this.postText}}
     </ion-card-content>
   </ion-card>
+  <ion-card>
+      <ion-textarea placeholder="Leave a comment..." style="height: 68px;"></ion-textarea>
+      <button float-right ion-button icon-only><ion-icon name="send"></ion-icon></button>
+  </ion-card>
+
   <div  style="margin-left: 5%;" *ngFor="let comment of comments">
-    <ion-card color="secondary">
+    <ion-card color="light">
       <ion-card-header>
         {{comment.userName}}:
       </ion-card-header>
