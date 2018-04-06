@@ -6,7 +6,7 @@ module.exports = function(app, server){
 
   io.on('connection', (socket) => {
     socket.sessionData = session.getSessionData(socket.request._query.sessionId);
-    socket.circleId = socket.request._query.circleId;
+    socket.circleId = Number(socket.request._query.circleId);
     if(socket.sessionData) socket.userId = socket.sessionData.userID;
     console.log("[CHAT.JS]sessionData: " + socket.sessionData);
     console.log("[CHAT.JS]circleId: " + socket.circleId);
@@ -23,7 +23,9 @@ module.exports = function(app, server){
     });
 
     socket.on('add-message', (message) => {
-      io.to(socket.circleId).emit('message', {text: message.text, from: socket.userName, created: new Date()});
+      var created = new Date();
+      db.ChatMessage.create({"body": message.text, "time": created, "CircleId": socket.circleId, "UserId": socket.userId});
+      io.to(socket.circleId).emit('message', {text: message.text, from: socket.userName, created: created});
     });
   });
 }

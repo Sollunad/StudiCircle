@@ -38,7 +38,7 @@ export class CircleProvider {
               {
                 query: {
                   sessionId:  this.apiProvider.currentUser.session,
-                  circleId:   1
+                  circleId:   2
                 },
                 path: '/socket/socket.io'
                 //transports: ['websocket']
