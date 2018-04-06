@@ -6,6 +6,7 @@ import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersic
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
+import {BlackboardPage} from "../blackboard/blackboard";
 
 @Component({
   templateUrl: 'circle-startseite.html'
@@ -13,7 +14,7 @@ import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellun
 export class CircleStartseite {
 
   moduleList: Array<{title: string, mapName:string, component: any, imageName: string}> = [
-    { title: 'Blackboard', mapName:'blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
+    { title: 'Blackboard', mapName:'blackboard', component: BlackboardPage , imageName: 'blackboard.jpg'},
     { title: 'Chat', mapName:'chat', component: '' , imageName: 'chat.jpg'}
   ];
 

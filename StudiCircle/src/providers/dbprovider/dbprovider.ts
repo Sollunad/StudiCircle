@@ -64,4 +64,10 @@ export class DbProvider {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
   }
+
+  public getBlackboardPosts(circleId: number){
+    //Code
+    
+    //return posots;
+  }
 }
