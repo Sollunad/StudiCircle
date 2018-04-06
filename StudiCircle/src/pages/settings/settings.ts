@@ -16,8 +16,12 @@ import {Subscription} from "rxjs/Subscription";
 export class SettingsPage {
 
   public pw_confirm: string;
+  private accountName : string;
   constructor(public navCtrl: NavController,
               private _api: ApiProvider) {
+    if(this._api.currentUser.username){
+      this.accountName = this._api.currentUser.username;
+    }
   }
   goToPassMan(params){
     if (!params) params = {};
@@ -43,16 +47,20 @@ export class SettingsPage {
   }
 
   public deleteAccount(): void {
-    const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
-      (success: boolean) => {
-        deleteAccountSub.unsubscribe();
-        if(success) {
-          console.log("Account deletion successful!");
-          this.goToLogIn({});
-        } else {
-          console.log("Account deletion FAILED using password " + this.pw_confirm + "!");
+    if(this.pw_confirm){
+      const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
+        (success: boolean) => {
+          deleteAccountSub.unsubscribe();
+          if(success) {
+            console.log("[SETTINGS] : Account deletion successful");
+            this.goToLogIn({});
+          } else {
+            console.log("[SETTINGS] : Account deletion failed");
+          }
         }
-      }
-    );
+      );
+    }else{
+      console.log("[SETTINGS] : No Password provided. Account not deleted");
+    }
   }
 }

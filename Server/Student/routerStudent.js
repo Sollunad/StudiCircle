@@ -11,9 +11,11 @@ module.exports = function(app) {
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
-    app.route('/user/resetPassword/:validationKey')
-        .get(user.passwordResetPage)
+    app.route('/user/resetPassword')
         .post(user.resetPassword);
+
+    app.route('/user/resetPassword/:validationKey')
+        .get(user.passwordResetPage);
 
     app.route('/user/login')
         .post(user.login);
@@ -25,7 +27,7 @@ module.exports = function(app) {
     app.route('/user/setPassword')
         .post(user.setPassword);
 
-    app.route('/user/delete')
+    app.route('/user/deleteUser')
         .post(user.deleteAccount);
 
     app.route('/user/updateMail')
@@ -36,6 +38,9 @@ module.exports = function(app) {
 
     app.route('/user/test')
         .get(user.test);
+
+    app.route('/user/trigger')
+        .get(user.trigger);
 
     app.route('/user/*')
         .get(user.unknownpage);

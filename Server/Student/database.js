@@ -2,29 +2,114 @@ const constant = require('./constants');
 const db = require('../Database/database.js');
 
 module.exports = {
-    getUserData : async function(userId) {
-        var returnVal = {};
+
+    deleteUser : async function (userId) {
+        console.log("DELETE USER - UserId: " + userId);
         try {
-            returnVal = await db.User.findById(userId).then(user => {
-                return    {"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id) {
+                    try {
+                        return !! db.User.destroy({
+                            where: {
+                                id: userId
+                            }
+                        });
+                    } catch (e) {
+                        return false;
+                    }
+                } else
+                    throw  "database error";
             }).error(err => {
-                return   "error";
-                //return  {"userId":userId, "username":"testUser", "mail":"studicircle@googlegroups.com", "role":constant.AccountType.STUDENT, "status":constant.AccountState.ACTIVE};
+                throw   "error";
             });
         } catch (err) {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
+    },
+
+    getNewMailFromValidationKey : async function (validationKey) {
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'validationKey': validationKey }}).then(validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.newMail;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    getUserData : async function(userId) {
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user ) {
+                    console.log(
+                        "id: " + userId,
+                        "username: "+ user.dataValues.name+
+                        "mail: "+ user.dataValues.email+
+                        "type: "+ user.dataValues.type+
+                        "state: "+ user.dataValues.state+
+                        "businessDescription: "+ user.dataValues.businessDescription+
+                        "lastActivity: " + user.dataValues.lastActivity);
+                    return {
+                        "id": userId,
+                        "username": user.dataValues.name,
+                        "mail": user.dataValues.email,
+                        "type": user.dataValues.type,
+                        "state": user.dataValues.state,
+                        "businessDescription": user.dataValues.businessDescription,
+                        "lastActivity": user.dataValues.lastActivity
+                    };
+                }
+            }).error(err => {
+                throw  "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+
     },
 
     getUserIdFromMail : async function(mail) {
-        /*
-        var returnVal = "";
         try {
-            returnVal = await db.User.findAll({ where:{ 'email': mail }}).then(user => {
+            return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
                 if ( user &&  user[0] && user[0].dataValues.id)
                     return  user[0].dataValues.id;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    getUserIdFromValidationKey : async function( validationKey ) {
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'validationKey': validationKey }}).then( validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.UserId;
+                throw false;
+            }).error(err => {
+                throw "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error: user doesn't exists";
+        }
+    },
+
+    getUserAuthData : async function( userId ) {
+        try {
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id)
+                    return  {"salt": user.dataValues.salt, "hash": user.dataValues.pwdHash};
                 throw  "database error";
             }).error(err => {
                 throw   "error";
@@ -33,25 +118,13 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
-        */
-        return 1;
-    },
-
-    getUserIdFromValidationKey : function(validationKey) {
-        return 1;
-    },
-
-    getUserAuthData : function(userId) {
-        return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
         console.log("insert new person");
-
-        var returnVal = "";
         try {
-              db.User.create({
+              return db.User.create({
                 name: username,
                 email: mail,
                 pwdHash: password,
@@ -74,58 +147,199 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        return returnVal;
-
-        let resultMessage = "ok";
-        //duplicateMail
-        //duplicateUsername
-        //invalidPwd
-        //invalidAccountType
-        //randomExisting
-        console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
-        return resultMessage;
+        //console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
     },
 
-    setPassword : function (userId, hash, salt) {
+    setChangeMailKey : async function (oldMail, newMail, validationKey) {
+        console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
+        try {
+            let userId= await this.getUserIdFromMail(oldMail);
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id) {
+                    return user.updateAttributes({
+                        'state': constant.AccountState.PENDING
+                        }).then(() => {
+                            return db.ValidationKey.create({
+                                validationKey: validationKey,
+                                newMail: newMail,
+                                UserId: userId
+                            }).then(() => {
+                                return true;
+                            }).error( (err) => {
+                                console.log(err);
+                                throw  "database error";
+                            });
+                    }).error(() => {
+                        throw false;
+                    });
+                }
+                throw  "database error";
+            }).error( (err) => {
+                console.log(err);
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    setPassword : async function (userId, hash, salt) {
         console.log("SET PASSWORD - userId: " + userId + " | Hash: " + hash + " | Salt: " + salt);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'pwdHash': hash,
+                        'salt': salt
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw false;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
     
-    setState : function (validationKey, newState) {
+    setState : async function (validationKey, newState) {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
-        return true;
+        try {
+            let userId = await this.getUserIdFromValidationKey(validationKey);
+            return await db.User.findById(userId).then(user => {
+                console.log("user:" + user + user.dataValues.state);
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'state' : newState
+                    }).then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
-    setValidationKey : function (mail, validationKey) {
+    setValidationKey : async function (mail, validationKey) {
         console.log("SET VALIDATION KEY - Token: " + validationKey + " | Mail: " + mail);
-        return true;
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'newMail': mail }}).then(validationKey => {
+                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey
+                    }).then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
-    setChangeMailKey : function (oldMail, newMail, validationKey) {
-        console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
-        return true;
+    setValidationKeyByyUserId : async function (userId, validationKey1) {
+        console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
+                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
+                    return validationKey[0].updateAttributes({
+                        'validationKey' : validationKey1
+                    }).then(() =>{
+                        return true;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
-    getNewMailFromValidationKey : function (validationKey) {
-        return "test@example.com"
-    },
-
-    updateMail : function (userId, newMail) {
+    updateMail : async function (userId, newMail) {
         console.log("UPDATE MAIL - UserId: " + userId + " | NewMail: " + newMail);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'email' : newMail,
+                        'state': constant.AccountState.ACTIVE
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw "error";
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+
     },
 
-    validationKeyExists : function (validationKey) {
-        return true;
+    userMailExists : async function (mail) {
+        try {
+            return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
+                if ( user &&  user[0] && user[0].dataValues.id)
+                    console.log("exists!!");
+                    return  !!user[0].dataValues.email;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
-    userMailExists : function (mail) {
-        return true;
+    userExists : async  function (userId) {
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id)
+                    return true;
+                else
+                    return false;
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
-    userExists : function (userId) {
-        return true;
-    },
-
-    deleteUser : function (userId) {
-        console.log("DELETE USER - UserId: " + userId);
+    validationKeyExists : async function (validationKey) {
+        try {
+            return  !!this.getUserIdFromValidationKey(validationKey); // convert int to bool
+        }catch (err) {
+            throw "database error at validationKey";
+        }
     }
 }

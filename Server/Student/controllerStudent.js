@@ -1,13 +1,13 @@
 const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
-const db = require('../Database/database');
 const passwordResetForm = require('./passwordResetForm');
 const passwordUtil = require('./passwordCheck');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
 const mySession = require('../Session/session');
 const tests = require('./tests');
+const responder = require('./responseSender');
 
 module.exports = {
 
@@ -23,59 +23,51 @@ module.exports = {
     },
 
     //Called when user clicks the link in the validation Mail.
-    activate : function (req, res) {
+    activate : async function (req, res) {
         var validationKey = req.params.validationKey;
 
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No uuid.");
+            responder.sendResponse(res, 400, "Bad request. No uuid.");
             return;
         }
-
         try {
-            if (database.validationKeyExists(validationKey)) {
-                database.setState(validationKey, constants.AccountState.ACTIVE);
-                res.status(201);
-                res.send("Successfully validated new user account.");
+            if ( await database.validationKeyExists(validationKey)) {
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    responder.sendResponse(res, 201, "Successfully validated new user account.");
+                }
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid validation key.");
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     //Called when user requests a Mail to reset her/his password
-    forgotPassword: function (req, res) {
+    forgotPassword: async function (req, res) {
         var mail = req.body.mail;
 
         if (!mail) {
-            res.status(400);
-            res.send("Bad request. No mail.");
+            responder.sendResponse(res, 400, "Bad request. No mail.");
             return;
         }
 
         try {
-            if (database.userMailExists(mail)) {
-                resetPwd.reset(mail);
+            if (await database.userMailExists(mail)) {
+                await resetPwd.reset(mail);
             }
-            res.status(200);
-            res.send("Reset mail sent if user is known.");
+            responder.sendResponse(res, 200, "Reset mail sent if user is known.");
         } catch (err) {
             console.log(err);
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     passwordResetPage : function (req, res) {
-        var validationKey = req.params.validationKey;
+        let validationKey = req.params.validationKey;
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No validation key");
-            return;
+            responder.sendResponse(res, 400, "Bad request. No validation key.");
         } else {
             res.status(200);
             res.send(passwordResetForm.getForm(validationKey));
@@ -83,237 +75,223 @@ module.exports = {
     },
 
     //Called when user sends a new Password after requesting a password reset mail using the client
-    resetPassword : function (req, res) {
-        var validationKey = req.params.validationKey;
-        var newPassword = req.body.pwd;
+    resetPassword : async function (req, res) {
+        let validationKey = req.body.validationKey;
+        let newPassword = req.body.pwd;
 
         console.log(validationKey + " | " + newPassword);
 
         if (!validationKey || !newPassword) {
-            res.status(400);
-            res.send("Bad request. No validation key or password.");
+            responder.sendResponse(res, 400, "Bad request. No validation key or password.");
             return;
         }
 
         try {
-            if (database.validationKeyExists(validationKey)) {
-                var userId = database.getUserIdFromValidationKey(validationKey);
+            if (await database.validationKeyExists(validationKey)) {
+                try {
+                    var userId = await database.getUserIdFromValidationKey(validationKey);
 
-                var userAuthData = passwordUtil.generateUserAuthData(newPassword);
-                var hash = userAuthData.hash;
-                var salt = userAuthData.salt;
+                    var userAuthData = passwordUtil.generateUserAuthData(newPassword);
+                    var hash = userAuthData.hash;
+                    var salt = userAuthData.salt;
 
-                database.setPassword(userId, hash, salt);
+                    await database.setPassword(userId, hash, salt);
 
-                res.status(200);
-                res.send("Password successfully reset.");
+                    responder.sendResponse(res, 200, "Password successfully reset.");
+                } catch (err) {
+                    console.log(err);
+                    responder.sendResponse(res, 500);
+                }
             } else {
-                res.status(401);
-                res.send("Invalid validation key!");
+                responder.sendResponse(res, 401, "Invalid validation key!");
             }
         } catch (err) {
             console.log(err);
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     //Called when the user wants to login to studiCircle. Will send session an d user data if credentials are valid
-    login : function (req, res) {
-        var mail = req.body.mail;
-        var pass = req.body.pwd;
+    login : async function (req, res) {
+        let mail = req.body.mail;
+        let pass = req.body.pwd;
 
         if (!mail || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no username or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no username or no password.");
             return;
         }
-
         try {
-            db.User.findAll({ where:{ 'email': mail }}).then(user1 => { // get id by mail
-                if ( user1 &&  user1[0] && user1[0].dataValues.id){
-                    let userId =  user1[0].dataValues.id;
-                    console.log("User ID" + userId);
-                    userId = 3;
-                    console.log("User ID" + userId);
-                    db.User.findById(userId).then(user => {
-                        let userAuthData ={"id":userId, "username": user.dataValues.name, "mail": user.dataValues.email, "type": user.dataValues.type, "state": user.dataValues.state, "businessDescription": user.dataValues.businessDescription, "lastActivity": user.dataValues.lastActivity};
-                        if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                            var returnObject = {};
-                            returnObject.status = 200;
-                            returnObject.message = "Successfully Logged in";
-                            returnObject.userData = database.getUserData(userId);
+            let userId = await database.getUserIdFromMail(mail);
+            console.log("User ID" + userId);
 
-                            returnObject.session = mySession.generateSession(userId);
+            let userData = await database.getUserData(userId);
 
-                            res.status(200);
-                            res.send(returnObject);
-                        } else {
-                            res.status(401);
-                            res.send('Unauthorized! password util');
-                        }
-                    }).error(err => {
-                        res.status(402);
-                        res.send('Unauthorized! Controller Student');
-                    });
-                }else {
-                    res.status(403);
-                    res.send('Unauthorized! Controller Student');
+            if (userData.state == 'ACTIVE') {
+
+                let userAuthData = await database.getUserAuthData(userId);
+
+                if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
+                    var returnObject = {};
+                    returnObject.status = 200;
+                    returnObject.message = "Successfully Logged in";
+                    returnObject.userData = (await database.getUserData(userId));
+                    returnObject.session = mySession.generateSession(userId);
+
+                    res.status(200);
+                    res.send(returnObject);
+                } else {
+                    responder.sendResponse( res, 401, "Unauthorized! Wrong Password");
                 }
-            }).error(err => {
-                res.status(404);
-                res.send('Unauthorized! Controller Student');
-            });
-
+            } else {
+                responder.sendResponse(res, 412, "Profile not activated!");
+            }
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            this.sendResponse(res, 500);
         }
     },
 
     logout : function (req, res) {
-        req.session.reset();
-        res.send("Logout successfull.")
+        mySession.invalidate(req.session.sessionId);
+
+        responder.sendResponse(res, 200,"Logout successfull.");
     },
 
     //Called when the user sets a new password
-    setPassword : function (req, res) {
+    setPassword : async function (req, res) {
 
         var userId = req.session.userId
         var oldPw = req.body.oldPwd;
         var newPw = req.body.newPwd;
 
         if (!userId || !oldPw || !newPw || !passwordUtil.passwordIsCompliant(newPw)) {
-            res.status(400);
-            res.send("Bad request. No session, old or new password not set or not compliant to guidelines.");
+            responder.sendResponse(res, 400, "Bad request. No session, old or new password not set or not compliant to guidelines.");
             return;
         }
 
         try {
-            var userAuthData = database.getUserAuthData(userId);
+            var userAuthData = await database.getUserAuthData(userId);
+            console.log(userAuthData);
 
             if (passwordUtil.passwordCorrect(oldPw, userAuthData.salt, userAuthData.hash)) {
                 var newUserAuthData = passwordUtil.generateUserAuthData(newPw);
-                database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
+                await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
 
                 res.status(200);
-                res.send("Successfully set Password")
+                res.send(true);
+//                responder.sendResponse(res, 200, "Successfully set Password");
             } else {
-                res.status(402);
-                res.send("Unauthorized. Invalid password!")
+                responder.sendResponse(res, 401, "Unauthorized. Invalid password!");
             }
         } catch (err) {
-            res.status(500);
-            res.send("Server Error");
+            responder.sendResponse(res, 500);
         }
     },
 
     //Called when the user wants to delete the account
-    deleteAccount : function (req, res) {
+    deleteAccount : async function (req, res) {
         var userId = req.session.userId;
         var pass = req.body.pwd;
 
         if (!userId || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no session or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no session or no password.");
             return;
         }
 
         try {
-            var userAuthData = database.getUserAuthData(userId);
+            var userAuthData = await database.getUserAuthData(userId);
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                database.deleteUser(userId);
-                res.status(200);
-                res.send("Successfully deleted Account");
+                await database.deleteUser(userId);
+                responder.sendResponse(res, 200, "Successfully deleted Account");
                 req.session.reset();
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid password.")
+                responder.sendResponse(res, 401, "Unauthorized. Invalid password.");
             }
 
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
     },
 
     //
-    updateMail : function (req, res) {
+    updateMail : async function (req, res) {
+        console.log("update Mail");
         var userId = req.session.userId;
         var oldMail = req.body.oldMail;
         var newMail = req.body.newMail;
         var pass = req.body.pwd;
 
+        console.log("update Mail");
         if (!userId || !oldMail || !newMail || !pass) {
-            res.status(400);
-            res.send("Bad request. Either no session, oldMail, newMail or no password.");
+            responder.sendResponse(res, 400, "Bad request. Either no session, oldMail, newMail or no password.");
             return;
         }
 
         if (oldMail == newMail) {
-            res.status(400);
-            res.send("Bad request. Old mail is new mail.");
+            responder.sendResponse(res, 400, "Bad request. Old mail is new mail.");
             return;
         }
 
         try {
-            if (!userId == database.getUserIdFromMail(oldMail)) {
-                res.status(401);
-                res.send("Unauthorized! Mail and session do not match!");
+            if (!userId == (await database.getUserIdFromMail(oldMail))) {
+                responder.sendResponse(res, 401, "Unauthorized! Mail and session do not match!");
                 return;
             }
 
-            var userAuthData = database.getUserAuthData(userId);
+            var userAuthData = await database.getUserAuthData(userId);
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                 changeMail.send(oldMail, newMail);
-                res.status(200);
-                res.send("Send an validation E-Mail");
-                return;
+                responder.sendResponse(res, 200, "Send an validation E-Mail");
             } else {
-                res.status(401);
-                res.send("Error updating the email")
+                responder.sendResponse(res, 401, "Error updating the email");
             }
 
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
 
     },
 
-    confirmNewMail : function (req, res) {
+    confirmNewMail : async function (req, res) {
         var validationKey = req.params.validationKey;
 
         if (!validationKey) {
-            res.status(400);
-            res.send("Bad request. No validation key.");
+            responder.sendResponse(res, 400, "Bad request. No validation key.");
             return;
         }
 
         try {
-            if (database.validationKeyExists(validationKey)) {
-                var userId = database.getUserIdFromValidationKey(validationKey);
-                var newMail = database.getNewMailFromValidationKey(validationKey);
+            if (await database.validationKeyExists(validationKey)) {
+                var userId = await database.getUserIdFromValidationKey(validationKey);
+                var newMail = await database.getNewMailFromValidationKey(validationKey);
 
-                database.updateMail(userId, newMail);
+                await database.updateMail(userId, newMail);
 
-                res.status(200);
-                res.send("Successfully updated mail address");
+                responder.sendResponse(res, 200, "Successfully updated mail address");
             } else {
-                res.status(401);
-                res.send("Unauthorized. Invalid validation key.");
-                return;
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
-            console.log(err)
-            res.status(500);
-            res.send("Server Error");
+            console.log(err);
+            responder.sendResponse(res, 500);
         }
+    },
+
+    trigger : async function (req, res) {
+        console.log('Trigger');
+
+        try {
+            console.log("start");
+            let result = await database.setPassword(13, "hash", "salt");
+            console.log(result);
+        } catch (err) {
+            console.log("error at set password: " + err);
+        }
+        responder.sendResponse(res, 200, "OK");
     },
 
     test : function (req, res) {
@@ -321,7 +299,6 @@ module.exports = {
     },
 
     unknownpage : function (req, res) {
-      res.status(404);
-      res.send('Unknown Endpoint')
+        responder.sendResponse(res, 404, "Unknown Endpoint");
     }
 };
