@@ -12,8 +12,8 @@ module.exports = function(app) {
 
     // circleId
     // userId
-    app.route('/circle/addUser')
-        .post(circle.addUser);
+    app.route('/circle/joinOpen')
+        .post(circle.joinOpenCircle);
 
     // name: circle name
     // vis: true/false
@@ -28,6 +28,12 @@ module.exports = function(app) {
     // id: circleId
     app.route('/circle/remove')
         .post(circle.removeCircle);
+		
+	// id (Number): current circle
+	// user (Number): selected users id
+	// role (String): admin | member | mod for selected user
+	app.route('/circle/rolechange')
+		.post(circle.changeRole);
 
     // return: List circles
     app.route('/circle/forUser')
@@ -47,4 +53,9 @@ module.exports = function(app) {
     // return: List of active modules for given circle
     app.route('/circle/modules')
         .get(circle.getModules);
+
+    // circleId: circleId
+    // return: visibility for circle
+    app.route('/circle/getVisibility')
+        .get(circle.getVisibility)
 };

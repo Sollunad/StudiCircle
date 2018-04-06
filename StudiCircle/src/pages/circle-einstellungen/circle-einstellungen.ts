@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
-import { CircleProvider } from "../../providers/circle-provider/CircleProvider";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
+import {DashboardPage} from "../dashboard/dashboard";
 
 
 @Component({
@@ -12,10 +13,23 @@ import {HttpClient} from "@angular/common/http";
 export class CircleEinstellungenPage {
 
   private circleId : number;
-  private visibility : string = "test";
+  private visibility : string = "1";
+
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
     this.circleId = navParams.get('circleId');
+  }
+
+  ionViewDidLoad() {
+    console.log(this._circleService.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
+    {
+      if(actualvisibility){
+        this.visibility = "1";
+      } else {
+        this.visibility = "0";
+      }
+    }
+    ));
   }
 
   openConfirmDialog() {
@@ -26,9 +40,10 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            this.circleProvider.removeCircleByCircleId(1).subscribe( //TO-DO: circleId übergeben!
+            this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
+            this.navCtrl.push(DashboardPage);
           }
         },
         {
@@ -67,17 +82,13 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  id=this.circleId;
-  vis='';
-
   onChange(){
     console.log(this.visibility);
-    this.vis = this.visibility;
   }
 
   editVisibility(){
-    console.log(this.vis);
-    const modification = this._circleService.edit(1, this.vis).subscribe(
+    console.log(this.visibility);
+    const modification = this._circleService.edit(this.circleId, this.visibility).subscribe(
     (success: boolean) => {
           if(success){
             console.log("[Visibility] : Visibility edit successful");

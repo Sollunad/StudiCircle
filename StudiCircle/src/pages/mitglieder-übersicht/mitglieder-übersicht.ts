@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {Observable} from "rxjs";
 import {NavParams} from "ionic-angular";
 
 @Component({
@@ -19,7 +18,7 @@ export class MitgliederÜbersicht {
   }
 
   ionViewDidLoad(){
-    this.circleProvider.getMemberListByCircleId(1).subscribe(
+    this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
   }
@@ -27,7 +26,7 @@ export class MitgliederÜbersicht {
   removeCircleMember(userId: number, circleId: number){
     this.circleProvider.removeCircleMember(userId, circleId).subscribe();
     window.location.reload();
-  }
+    }
 
   itemSelected(item: string) {
     console.log("Selected Item", item);
