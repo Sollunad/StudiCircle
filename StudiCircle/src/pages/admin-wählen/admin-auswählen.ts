@@ -13,6 +13,7 @@ export class AdminAuswaehlenPage {
   public memberList: UserInfo[];
   circleName: string = "";
   circleId : number;
+  startIndex: number;
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController) {
     this.circleId = navParams.get('circleId');
@@ -36,7 +37,11 @@ export class AdminAuswaehlenPage {
             this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
               message => console.log(message)
             );
-            this.navCtrl.push(CircleStartseite, {circleId: this.circleId, circleName: this.circleName});
+            //this.navCtrl.push(CircleStartseite, {circleId: this.circleId, circleName: this.circleName});
+            this.navCtrl.remove(this.startIndex);
+            this.navCtrl.pop().then(() => {
+              this.navCtrl.pop();
+            });
           }
         },
         {
