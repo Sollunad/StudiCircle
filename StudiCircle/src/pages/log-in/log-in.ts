@@ -16,6 +16,7 @@ export class LogInPage {
 
   public mail : '';
   public pw : '';
+  private loginError : boolean;
 
   constructor(public navCtrl: NavController, private _api : ApiProvider) {
 
@@ -43,6 +44,7 @@ export class LogInPage {
   }
 
   login(){
+    this.loginError = false;
     if(!this.mail && !this.pw) {
       console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
     }else{
@@ -54,7 +56,8 @@ export class LogInPage {
               this.goToDashboard({});
               loginSub.unsubscribe();
             } else {
-              console.log("[LOGIN] : Login failed");
+              this.loginError = true;
+              console.log("[LOGIN] : Login failed | loginError: " + this.loginError);
               loginSub.unsubscribe();
             }
           }
