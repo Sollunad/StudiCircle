@@ -283,11 +283,14 @@ module.exports = {
         return;
       });
     },
-	
+
 	changeRole : function(request, response) {
 		let circleId = req.query.circle,
 			selectedUser = req.query.user,
 			newRole = req.query.role;
+
+        argumentMissing(response, circleId, selectedUser, newRole) return;
+
 		db.UserInCircle.findOne({
 			where: {
 				CircleId: circleId,
@@ -298,7 +301,7 @@ module.exports = {
 				role: newRole
 			}).then(() => {
 				res.status(200)
-					.send("Changed Role for " + selectedUser.toString() 
+					.send("Changed Role for " + selectedUser.toString()
 						+ " to " + newRole
 						+ "in Circle " + circleId + ".");
 			}).error((error) => {
@@ -307,9 +310,35 @@ module.exports = {
 		}).error((error) => {
 			res.status(500).send("Could not find user in circle.");
 		});
-	}
+	},
+
+    newAdmin : function(req, res){
+        const circleId = req.body.circleId
+        const newAdminId = req.body.userId
+
+        argumentMissing(res, circleId, newAdminId) return;
+
+        const oldAdminId = req.session.userId;
+
+        //TODO was machen
+
+    },
+
 
 };
+
+// locale Funktionen
+
+function isAdminInCircle(userId, circleId){
+    db.UserInCircle.findOne({
+        where: {CircleId: circleId, UserId: userId}
+    }).then(result => {
+        if(result && result.role == cons.CircleRole.ADMINISTRATOR){
+            return true;
+        }
+    });
+    return false;
+}
 
 function argumentMissing(res, ...args){
     if(!args.every(arg => {return arg != undefined;})){
