@@ -2,8 +2,7 @@ import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {AlertController, NavController, NavParams} from "ionic-angular";
-import {CircleStartseite} from "../circle-startseite/circle-startseite";
+import {AlertController, NavController, NavParams, ViewController} from "ionic-angular";
 
 @Component({
   templateUrl: 'admin-auswählen.html'
@@ -11,13 +10,10 @@ import {CircleStartseite} from "../circle-startseite/circle-startseite";
 export class AdminAuswaehlenPage {
 
   public memberList: UserInfo[];
-  circleName: string = "";
   circleId : number;
-  startIndex: number;
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, public viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
-    this.circleName = navParams.get('circleName');
   }
 
   ionViewDidLoad(){
@@ -37,11 +33,8 @@ export class AdminAuswaehlenPage {
             this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
               message => console.log(message)
             );
-            //this.navCtrl.push(CircleStartseite, {circleId: this.circleId, circleName: this.circleName});
-            this.navCtrl.remove(this.startIndex);
-            this.navCtrl.pop().then(() => {
-              this.navCtrl.pop();
-            });
+            this.navCtrl.remove(this.viewCtrl.index-1);
+            this.navCtrl.pop();
           }
         },
         {
