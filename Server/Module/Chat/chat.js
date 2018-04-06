@@ -1,10 +1,12 @@
 module.exports = function(app){
+  console.log("[CHAT.JS]");
   const db = require('../../Database/database.js');
   const session = require('../../Session/session.js')
   const http = require('http').Server(app);
   const io = require('socket.io')(http);
 
   io.on('connection', (socket) => {
+    console.log("[CONNECT]");
     // console.log("request: " + socket.request);
     // console.log(socket.request._query);
     // console.log(socket.request._query.sessionId);
@@ -16,6 +18,7 @@ module.exports = function(app){
     });
 
     socket.on('set-nickname', (nickname) => {
+      console.log("[SET-NICKNAME]");
       socket.nickname = nickname;
       io.emit('users-changed', {user: nickname, event: 'joined'});
     });

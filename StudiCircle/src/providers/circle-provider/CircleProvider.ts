@@ -32,7 +32,17 @@ export class CircleProvider {
   }
 
   public openSocketConnection():Socket{
-    return io('http://localhost:8080', {path: '/socket/chat', query: "sessionId=" + this.apiProvider.currentUser.session + "&circleId=" + 1});
+    console.log("[OPENSOCKETCONNECTION]");
+    return io(
+              'http://localhost:8080',
+              {
+                query: {
+                  sessionId:  this.apiProvider.currentUser.session,
+                  circleId:   1
+                },
+                //transports: ['websocket']
+              }
+            );
   }
 
   public create(name : string, visibility : string, location: any){

@@ -34,7 +34,7 @@ app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
 
 //Sockets
-require('./Module/Chat/chat.js')(app);
+var chat = require('./Module/Chat/chat.js')(app);
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
