@@ -28,7 +28,7 @@ module.exports = function(app) {
     // id: circleId
     app.route('/circle/remove')
         .post(circle.removeCircle);
-		
+
 	// id (Number): current circle
 	// user (Number): selected users id
 	// role (String): admin | member | mod for selected user
@@ -58,4 +58,9 @@ module.exports = function(app) {
     // return: visibility for circle
     app.route('/circle/getVisibility')
         .get(circle.getVisibility)
+
+    // circleId (Number): current circle
+	// userId (Number): selected users id
+	app.route('/circle/newAdmin')
+		.post(circle.newAdmin);
 };

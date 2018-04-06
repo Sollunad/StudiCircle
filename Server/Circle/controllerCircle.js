@@ -20,7 +20,6 @@ module.exports = {
         db.UserInCircles.findOne({where: {"UserId" : reqUserId, "CircleId" : circleId}}).then(result1 => {
             if (result1 && result1.role == cons.CircleRole.ADMINISTRATOR){
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result2 => {
-                    console.log(result2);
                     result2.destroy();
                     res.send("User from circle removed.");
                     return;
@@ -284,11 +283,14 @@ module.exports = {
       });
     },
 
-	changeRole : function(request, response) {
+	changeRole : function(req, res) {
 		let circleId = req.query.circle,
 			selectedUser = req.query.user,
 			newRole = req.query.role;
-		db.UserInCircle.findOne({
+
+        if(argumentMissing(res, circleId, selectedUser, newRole)) return;
+
+		db.UserInCircles.findOne({
 			where: {
 				CircleId: circleId,
 				UserId: selectedUser
@@ -307,9 +309,59 @@ module.exports = {
 		}).error((error) => {
 			res.status(500).send("Could not find user in circle.");
 		});
-	}
+	},
+
+    newAdmin : function(req, res){
+        const circleId = req.body.circleId
+        const newAdminId = req.body.userId
+
+        if(argumentMissing(res, circleId, newAdminId)) return;
+
+        const oldAdminId = req.session.userId;
+
+        isAdminInCircle(oldAdminId, circleId, result => {
+            if(result){
+                changeRole({query: {
+                    "circle": circleId,
+                    "user": newAdminId,
+                    "role": cons.CircleRole.ADMINISTRATOR,
+                }});
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not admin in the requested circle.");
+            }
+        });
+    },
+
+    // keine geroutete function
+    isAdminAnywhere : function(userId, callback){
+        db.UserInCircles.findAll({
+            where: {UserId: userId, role: cons.CircleRole.ADMINISTRATOR}
+        }).then(result => {
+            if(result.length > 0){
+                if(callback) callback(true);
+            }else{
+                if(callback) callback(false);
+            }
+        });
+    }
+
 
 };
+
+// locale Funktionen
+
+function isAdminInCircle(userId, circleId, callback){
+    db.UserInCircles.findOne({
+        where: {CircleId: circleId, UserId: userId}
+    }).then(result => {
+        if(result && result.role == cons.CircleRole.ADMINISTRATOR){
+            if(callback) callback(true);
+        }else{
+            if(callback) callback(false);
+        }
+    });
+}
 
 function argumentMissing(res, ...args){
     if(!args.every(arg => {return arg != undefined;})){

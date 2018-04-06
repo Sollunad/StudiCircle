@@ -3,7 +3,7 @@ import {AlertController, NavController, NavParams} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {DashboardPage} from "../dashboard/dashboard";
-
+import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 
 @Component({
   selector: 'page-circle-einstellungen',
@@ -12,7 +12,7 @@ import {DashboardPage} from "../dashboard/dashboard";
 
 export class CircleEinstellungenPage {
 
-  private circleId : number;
+  circleId : number;
   private visibility : string = "1";
 
 
@@ -102,4 +102,9 @@ export class CircleEinstellungenPage {
       }
     )
   }
+
+  openAdminSelect(){
+    this.navCtrl.push(AdminAuswaehlenPage,{circleId: this.circleId});
+  }
+
 }

@@ -99,4 +99,14 @@ export class CircleProvider {
     });
   }
 
+  public selectNewAdmin(userId: number, circleId: number){
+    let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    return this.http.post(this.consts.url+'circle/newAdmin',body);
+  }
+
+  public leaveCircle(userId: number, circleId: number){
+    let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    return this.http.post(this.consts.url+'circle/leaveCircle',body);
+  }
+
 }

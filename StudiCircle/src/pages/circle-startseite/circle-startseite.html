@@ -1,6 +1,12 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar >
     <ion-title>{{circleName}}</ion-title>
+    <ion-buttons color="danger" end>
+      <button ion-button (click)="openConfirmDialog(member.uid)">
+        <ion-icon name="exit"></ion-icon>
+        Circle verlassen
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 

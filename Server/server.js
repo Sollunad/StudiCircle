@@ -53,8 +53,6 @@ function authorize(req, res, next){
     req.session = {};
     req.session.sessionId = sessionID;
 
-    console.log(sessionID);
-
     if (allowedUrls.includes(url) || containsWildcard(url) ){
         next();
     }else if (sessionID){
