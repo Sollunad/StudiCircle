@@ -1,6 +1,6 @@
-export interface BlacboardPost{
+export interface BlackboardPost{
   userName: string;
   text: string;
   date: string;
-  
+
 }

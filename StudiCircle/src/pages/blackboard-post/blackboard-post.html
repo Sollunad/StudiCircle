@@ -15,4 +15,24 @@
 
 <ion-content padding>
 
+  <ion-card color="primary">
+    <ion-card-header>
+      {{this.postCreator}}:
+    </ion-card-header>
+    <ion-card-content>
+      {{this.postText}}
+    </ion-card-content>
+  </ion-card>
+  <div  style="margin-left: 5%;" *ngFor="let comment of comments">
+    <ion-card color="secondary">
+      <ion-card-header>
+        {{comment.userName}}:
+      </ion-card-header>
+      <ion-card-content>
+        {{comment.text}}
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
 </ion-content>

@@ -180,9 +180,7 @@ export class ApiProvider {
   }
 
   public setLocation(lat, lon) {
-    //console.log('CurrentUser:', this.currentUser);
-    //console.log('setLocation', lat, lon);
     this.currentUser.coords = {lat: lat, lon: lon};
-    console.log('storedLocation:', this.currentUser);
+    //console.log('storedLocation:', this.currentUser);
   }
 }
