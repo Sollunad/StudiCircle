@@ -1,10 +1,8 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
-var student = require('./Student/moduleInterface')
 var mySession = require('./Session/session');
 var sessionConstants = require('./Session/constants');
-
 var app = express();
 
 const port = 8080;

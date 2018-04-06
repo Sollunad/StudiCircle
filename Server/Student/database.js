@@ -3,6 +3,26 @@ const db = require('../Database/database.js');
 
 module.exports = {
 
+    checkStudentMail: async function(mail){
+        console.log("CHECK MAIL : " + mail);
+        try {
+            let domain = mail.split("@");
+            if (!domain || !domain[1]){
+                throw "error: no mail address";
+            }
+            return await db.UniMail.findAll({ where:{ 'domain': domain[1] }}).then(mail => {
+                if ( mail &&  mail[0] && mail[0].dataValues.domain)
+                    return  true;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
     deleteUser : async function (userId) {
         console.log("DELETE USER - UserId: " + userId);
         try {
