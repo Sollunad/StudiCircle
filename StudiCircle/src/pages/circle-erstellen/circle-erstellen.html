@@ -15,14 +15,14 @@
         Name*
       </ion-label>
       <ion-input type="text" placeholder="Mustercircle" name="circlename" [(ngModel)]="newName"></ion-input>
-      <button clear item-right (click)="showExtraInfoName()">?</button>
+      <button clear item-right (click)="showExtraInfoName()"><ion-icon style="font-size: 2em;" name="help-circle"></ion-icon></button>
     </ion-item>
     <ion-item id="circleErstellen-input2">
       <ion-label>
         Standort
       </ion-label>
       <ion-input type="text" placeholder="Musteradresse" name="address" [(ngModel)]="newAddress"></ion-input>
-      <button clear item-right (click)="showExtraInfoAdresse()">?</button>
+      <button clear item-right (click)="showExtraInfoAdresse()"><ion-icon style="font-size: 2em;" name="help-circle"></ion-icon></button>
     </ion-item>
     <ion-item id="circleErstellen-select1">
       <ion-label>
@@ -36,7 +36,7 @@
           privat
         </ion-option>
       </ion-select>
-      <button clear class="visibilityhint" item-right (click)="showExtraInfoSichtbarkeit()">?</button> // TODO Button nicht drückbar, liegt hinter ion-select!
+      <button clear class="visibilityhint" item-right (click)="showExtraInfoSichtbarkeit()"><ion-icon style="font-size: 2em;" name="help-circle"></ion-icon></button>
     </ion-item>
   </form>
   <div id="circleErstellen-markdown1" class="show-list-numbers-and-dots">

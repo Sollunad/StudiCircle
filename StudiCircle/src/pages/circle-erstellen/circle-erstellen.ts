@@ -67,7 +67,7 @@ export class CircleErstellenPage {
           console.log(this.vis, this.newName, this.loc);
           const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
             (success: boolean) => {
-              this.navCtrl.push(DashboardPage);
+              this.navCtrl.pop();
               if (success) {
                 console.log("[CREATE] : Circle created successful");
                 modification.unsubscribe();

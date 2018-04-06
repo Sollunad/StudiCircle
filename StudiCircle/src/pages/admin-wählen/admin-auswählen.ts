@@ -41,7 +41,7 @@ export class AdminAuswaehlenPage {
           text: 'Abbrechen',
           role: 'cancel',
           handler: () => {
-            console.log('Löschung abgebrochen');
+            console.log('Adminauswahl abgebrochen');
           }
         }
       ]
