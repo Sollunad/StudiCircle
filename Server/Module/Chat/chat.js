@@ -28,4 +28,27 @@ module.exports = function(app, server){
       io.to(socket.circleId).emit('message', {text: message.text, from: socket.userName, created: created});
     });
   });
+
+  // REST-Schnittstelle um die letzten 30 Nachrichten eines bestimmten Circles zu bekommen
+  app.route('/chat/getFirst30Messages').get(function(req, res){
+    var circleId = req.query.circleId;
+    var result = [];
+    db.ChatMessage.findAll({
+      where: {circleId: circleId},
+      limit: 30,
+      order: [['time', 'DESC']],
+      include: [db.User]
+    }).then(messages => {
+      messages.forEach(function(item, index){
+        result.push({
+          "text": item.body,
+          "from": item.User.name,
+          "created": item.time
+        })
+      })
+      res.send(result);
+    }).error(function(){
+      res.status(500).send("Error");
+    })
+  });
 }

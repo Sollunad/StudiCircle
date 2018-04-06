@@ -33,6 +33,7 @@ const allowedWildcards = ["/user/activate/",
                         ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
+// app.route('/chat/*').all(authorize);
 //TODO /socket/* protecten?
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
