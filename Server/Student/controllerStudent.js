@@ -76,7 +76,7 @@ module.exports = {
 
     //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : async function (req, res) {
-        let validationKey = req.params.validationKey;
+        let validationKey = req.body.validationKey;
         let newPassword = req.body.pwd;
 
         console.log(validationKey + " | " + newPassword);
@@ -88,15 +88,20 @@ module.exports = {
 
         try {
             if (await database.validationKeyExists(validationKey)) {
-                var userId = await database.getUserIdFromValidationKey(validationKey);
+                try {
+                    var userId = await database.getUserIdFromValidationKey(validationKey);
 
-                var userAuthData = passwordUtil.generateUserAuthData(newPassword);
-                var hash = userAuthData.hash;
-                var salt = userAuthData.salt;
+                    var userAuthData = passwordUtil.generateUserAuthData(newPassword);
+                    var hash = userAuthData.hash;
+                    var salt = userAuthData.salt;
 
-                await database.setPassword(userId, hash, salt);
+                    await database.setPassword(userId, hash, salt);
 
-                responder.sendResponse(res, 200, "Password successfully reset.");
+                    responder.sendResponse(res, 200, "Password successfully reset.");
+                } catch (err) {
+                    console.log(err);
+                    responder.sendResponse(res, 500);
+                }
             } else {
                 responder.sendResponse(res, 401, "Invalid validation key!");
             }
