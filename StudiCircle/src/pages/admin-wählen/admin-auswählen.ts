@@ -11,6 +11,7 @@ export class AdminAuswaehlenPage {
 
   public memberList: UserInfo[];
   circleId : number;
+  private uId : number;
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, public viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
@@ -23,6 +24,7 @@ export class AdminAuswaehlenPage {
   }
 
   openConfirmDialog(userId: number, userName: string) {
+    console.log("[Auswahl bestätigen]: "+userId, userName);
     let alert = this.alertCtrl.create({
       title: 'Adminauswahl bestätigen',
       message: userName+' wirklich zum Admin machen? Mit dieser Auswahl werden die Adminrechte an '+userName+' weitergegeben.',
@@ -51,5 +53,6 @@ export class AdminAuswaehlenPage {
 
   itemSelected(item: string) {
     console.log("Selected Item", item);
+
   }
 }

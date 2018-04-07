@@ -312,8 +312,9 @@ module.exports = {
 	},
 
     newAdmin : function(req, res){
-        const circleId = req.body.circleId
-        const newAdminId = req.body.userId
+        const circleId = req.body.circleId;
+        const newAdminId = req.body.userId;
+        console.log("[newAdminId]"+newAdminId);
 
         if(argumentMissing(res, circleId, newAdminId)) return;
 
