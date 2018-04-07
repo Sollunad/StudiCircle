@@ -19,7 +19,7 @@ import {constants} from "../../consts/constants";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.sknx.de/";
+  private _apiPath = "https://api.dev.sknx.de/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient, public consts: constants) {
