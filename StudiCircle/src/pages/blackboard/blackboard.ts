@@ -25,13 +25,26 @@ export class BlackboardPage {
   }
 
   ionViewDidLoad() {
+    // get the posts in this circle
     this.posts = this.dbProvider.getBlackboardPosts(this.circleId);
+
+    //get the first 3 comments of every post
+
     console.log(this.circleId);
   }
 
   private showPost(post: any){
     console.log(this.posts[post].userName);
     this.navCtrl.push(BlackboardPostPage, {post: this.posts[post]});
+  }
+
+  private deletePost(post: any){
+    if(this.dbProvider.deletePost(post) === 1){
+        this.posts.splice(post, 1);
+    }
+    else{
+      console.log("Fehler beim Löschen des Posts " + post);
+    }
   }
 
 }
