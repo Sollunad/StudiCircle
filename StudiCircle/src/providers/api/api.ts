@@ -120,7 +120,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
-        mail: mail
+        "mail": mail
       }
     ).subscribe(
       (res: ApiResponse) => {
