@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { BlackboardPage } from '../blackboard/blackboard';
 import { BlackboardPost } from '../../providers/declarations/BlackboardPost'
-
+import { ApiProvider } from '../../providers/api/api'
 /**
  * Generated class for the BlackboardPostPage page.
  *
@@ -22,21 +22,23 @@ export class BlackboardPostPage {
   private comments : BlackboardPost[];
   private post: BlackboardPost;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private api: ApiProvider) {
   }
 
   ionViewDidLoad() {
     this.post = this.navParams.get('post');
     this.postCreator = this.post.userName;
-    this.postDate = this.post.date;
     this.postText = this.post.text;
-    this.comments = [{postID: this.post.postID, userName: "Jonas", text: "Schlechter Beitrag", date: "20160215"},
-                    {postID: this.post.postID, userName: "Jesse", text: "Schnauze!!!", date: "20160215"}];
+    this.postDate = this.post.date;
+    this.comments = [{userName: "Jonas", text: "Schlechter Beitrag"},
+                    {userName: "Jesse", text: "Schnauze!!!"}];
   }
 
   private sendComment(){
-    console.log(this.input);
+    let tmpInput = this.input;
     this.input = "";
+    this.comments.push({userName: this.api.currentUser.username, text: tmpInput});
   }
+
 
 }
