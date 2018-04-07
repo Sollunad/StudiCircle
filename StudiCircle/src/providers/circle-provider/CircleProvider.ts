@@ -31,14 +31,14 @@ export class CircleProvider {
     return this.http.get<string[]>(this.consts.url+'circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
-  public openSocketConnection():Socket{
+  public openSocketConnection(circleId : number):Socket{
     console.log("[OPENSOCKETCONNECTION]");
     return io(
               'http://localhost:8080',
               {
                 query: {
                   sessionId:  this.apiProvider.currentUser.session,
-                  circleId:   2
+                  circleId:   circleId
                 },
                 path: '/socket/socket.io'
                 //transports: ['websocket']

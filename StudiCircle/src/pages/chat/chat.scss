@@ -2,13 +2,10 @@ chat {
   .user_name {
     color: #afafaf;
   }
-  .my_message {
-    color: #000 !important;
+  .mine {
+    background: #B0E0E6!important;
   }
-  .other_message {
-    background: #dcdcdc !important;
-    color: #000 !important;
-  }
+
   .time {
     color: #afafaf;
     float: right;
@@ -20,6 +17,7 @@ chat {
 
   .card {
     margin: 5px;
+    border-radius: 10px;
   }
 
   .message {

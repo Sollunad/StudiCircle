@@ -4,6 +4,8 @@ import Socket = SocketIOClient.Socket;
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {ApiProvider} from "../../providers/api/api";
+import {UserInfo} from "../../providers/declarations/UserInfo";
 
 @Component({
   selector: 'chat',
@@ -14,12 +16,20 @@ export class ChatPage {
   nickname = '';
   message = '';
   socket:Socket;
+  circleId : number;
+
 
   constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
-              private alerCtrl: AlertController, private circleProvider:CircleProvider) {
-    this.socket=circleProvider.openSocketConnection();
+              private alerCtrl: AlertController, private circleProvider:CircleProvider, private apiProvider: ApiProvider) {
+
+    this.circleId = navParams.get('circleId');
+
+    this.nickname = apiProvider.getCurrentUser().username;
+
+    this.socket=circleProvider.openSocketConnection(this.circleId);
 
     this.getMessages().subscribe(message => {
+      console.log(message);
       this.messages.push(message);
     });
 

@@ -9,6 +9,7 @@ import {HttpClient} from "@angular/common/http";
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
+import {ChatPage} from "../chat/chat";
 
 @Component({
   selector: 'page-dashboard',
@@ -37,7 +38,7 @@ export class DashboardPage {
   }
 
   goToStartPage(circleId: number, circleName: string) {
-    this.navCtrl.push(CircleStartseite, {circleId: circleId, circleName: circleName});
+    this.navCtrl.push(ChatPage, {circleId: circleId, circleName: circleName});
   }
 
   private goToSearch(params) {

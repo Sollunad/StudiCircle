@@ -36,7 +36,7 @@ export class LogInPage {
   }
   goToDashboard(params){
     if (!params) params = {};
-    this.navCtrl.push(ChatPage);
+    this.navCtrl.push(DashboardPage);
   }
   goToForgotPassword(params){
     if (!params) params = {};
