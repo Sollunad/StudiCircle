@@ -149,7 +149,7 @@ module.exports = {
             }
         } catch (err) {
             console.log(err);
-            this.sendResponse(res, 500);
+            responder.sendResponse(res, 500);
         }
     },
 

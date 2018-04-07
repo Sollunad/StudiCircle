@@ -38,9 +38,9 @@ module.exports = {
         return root + "/user/activate/" + activationToken;
     },
 
-    getPasswordChangeURL : function (activationToken) {
+    getPasswordChangeURL : function () {
         var root = this.getRootURL();
-        return root + "/user/resetPassword/" + activationToken;
+        return root + "/user/resetPassword";
     },
 
     getNewMailActivationURL : function (activationToken) {

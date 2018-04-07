@@ -275,20 +275,19 @@ module.exports = {
         }
     },
 
-    setValidationKeyByyUserId : async function (userId, validationKey1) {
+    createValidationKeyByyUserId : async function (userId, validationKey1) {
         console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
-                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
-                    return validationKey[0].updateAttributes({
-                        'validationKey' : validationKey1
-                    }).then(() =>{
-                        return true;
-                    });
-                }else{
-                    throw  false;
+            return db.ValidationKey.create({
+                validationKey: validationKey1,
+                UserId: userId
+            }).then(validationKey => {
+                if ( validationKey && validationKey.validationKey){
+                    return true;
                 }
+                throw false;
             }).error(err => {
+                console.log(err);
                 throw   "error";
             });
         } catch (err) {
