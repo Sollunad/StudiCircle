@@ -9,5 +9,6 @@ export interface BlackboardPost{
   userName: string;
   text: string;
   date: string;
+  comments?: Array<BlackboardPost>;
 
 }
