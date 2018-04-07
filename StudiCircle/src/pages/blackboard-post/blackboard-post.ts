@@ -34,4 +34,9 @@ export class BlackboardPostPage {
                     {postID: this.post.postID, userName: "Jesse", text: "Schnauze!!!", date: "20160215"}];
   }
 
+  private sendComment(){
+    console.log(this.input);
+    this.input = "";
+  }
+
 }

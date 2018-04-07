@@ -57,11 +57,6 @@ export class DbProvider {
     return this.http.get<Circle[]>(url);
   }
 
-  public setLocation(lat, lon) {
-    console.log('setLocation', lat, lon);
-  }
-
-
   public getLocationByAddress(address: string): Observable<GeoResponse> {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
