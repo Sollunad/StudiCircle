@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Mitglieder</ion-title>
+    <ion-title>Admin-Auswählen</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -8,8 +8,8 @@
 
   <ion-list>
     <ion-item *ngFor="let member of memberList" (click)="itemSelected(member)">
-      {{ member.username }}
-      <button ion-button color="danger" (click)="removeCircleMember(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
+      {{member.username }}
+      <button ion-button (click)="openConfirmDialog(member.uuid, member.username)" clear item-end><ion-icon style="font-size: 2em;" name="person"></ion-icon></button>
     </ion-item>
   </ion-list>
 </ion-content>

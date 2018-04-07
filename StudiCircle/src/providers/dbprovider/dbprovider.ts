@@ -1,13 +1,11 @@
 import {HttpClient} from '@angular/common/http';
 import {ApiProvider} from '../api/api';
 import {Injectable} from '@angular/core';
-import {Subscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {ApiResponse} from "../declarations/ApiResponse";
 import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Circle} from '../declarations/Circle';
+import {constants} from "../../consts/constants";
 
 /*
   Generated class for the DbProvider provider.
@@ -18,22 +16,24 @@ import {Circle} from '../declarations/Circle';
 @Injectable()
 export class DbProvider {
   private result: any;
-  private circles = new Array();
+  private circles: Circle[] = [];
 
-  constructor(public http: HttpClient, private api: ApiProvider) { }
+  constructor(public http: HttpClient, private api: ApiProvider, public consts: constants) { }
 
-  public getCircles() {
+  public getCircles(): Observable<Circle[]> {
+      return this.http.get<Circle[]>(this.consts.url+'circle/forUser?mySession=' + this.api.currentUser.session);
     /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
        this.res = res;
        console.log(res);
      });*/
-     return new Promise<Array<string>>((resolve, reject) => {
+     /*return new Promise<Array<string>>((resolve, reject) => {
        const successSubject: Subject<boolean> = new Subject<boolean>();
        const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser?id=1').subscribe(
+         'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
          (res: ApiResponse) => {
            subs.unsubscribe();
            successSubject.next(res.httpStatus === 200);
+           this.circles = [];
            for(let i of res["circles"]){
             this.circles.push(i["name"]);
            }
@@ -45,13 +45,13 @@ export class DbProvider {
            successSubject.next(false);
          }
        );
-     });
+     });*/
   }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
     console.log('getCirclesByLocation', lat, lon, distance);
 
-    const url = `http://localhost:8080/circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
+    const url = this.consts.url+`circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
     return this.http.get<Circle[]>(url);
   }
 

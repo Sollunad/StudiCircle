@@ -9,6 +9,7 @@ const mySession = require('../Session/session');
 const tests = require('./tests');
 const responder = require('./responseSender');
 
+
 module.exports = {
 
     //Called when a user wants to create an account

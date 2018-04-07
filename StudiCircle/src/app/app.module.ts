@@ -23,6 +23,8 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {constants} from "../consts/constants";
+import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    AdminAuswaehlenPage
   ],
 
   imports: [
@@ -67,7 +70,8 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     CircleStartseite,
     MitgliederÜbersicht,
     SearchPage,
-    CircleEinstellungenPage
+    CircleEinstellungenPage,
+    AdminAuswaehlenPage
   ],
   providers: [
     StatusBar,
@@ -78,7 +82,8 @@ import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-eins
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DbProvider,
     HttpModule,
-    HttpClientModule
+    HttpClientModule,
+    constants
   ]
 })
 export class AppModule {}

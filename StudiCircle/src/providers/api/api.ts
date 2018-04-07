@@ -8,6 +8,7 @@ import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {AccountTypes} from "../declarations/AccountTypeEnum";
 import {LoginResponse} from "../declarations/LoginResponse";
+import {constants} from "../../consts/constants";
 
 /*
   Generated class for the ApiProvider provider.
@@ -21,7 +22,7 @@ export class ApiProvider {
   private _apiPath = "https://api.sknx.de/";
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public consts: constants) {
 
   }
 
