@@ -1,3 +1,4 @@
+const circle = require('../Circle/controllerCircle');
 const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
@@ -203,9 +204,18 @@ module.exports = {
             var userAuthData = await database.getUserAuthData(userId);
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                await database.deleteUser(userId);
-                responder.sendResponse(res, 200, "Successfully deleted Account");
-                req.session.reset();
+
+                 circle.isAdminAnywhere(userId, async function(userIsAdmin) {
+
+                     if (userIsAdmin) {
+                         await database.deleteUser(userId);
+                         responder.sendResponse(res, 200, "Successfully deleted Account");
+                         req.session.reset();
+                     } else {
+                         responder.sendResponse(res, 412, "User still Admin in one or more circles");
+                     }
+                 });
+
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid password.");
             }
