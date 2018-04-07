@@ -207,7 +207,7 @@ module.exports = {
 
                  circle.isAdminAnywhere(userId, async function(userIsAdmin) {
 
-                     if (userIsAdmin) {
+                     if (!userIsAdmin) {
                          await database.deleteUser(userId);
                          responder.sendResponse(res, 200, "Successfully deleted Account");
                          req.session.reset();
