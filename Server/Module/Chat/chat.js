@@ -31,9 +31,9 @@ module.exports = function(app, server){
       });
     });
     //TODO testen!!!!!
-    socket.on('delete-message', (messageId) => {
-      db.ChatMessage.destroy({where: {id: messageId}}).then(() => {
-        io.to(socket.circleId).emit('message-deleted', {id: messageId});
+    socket.on('delete-message', (data) => {
+      db.ChatMessage.destroy({where: {id: data.messageId}}).then(() => {
+        io.to(socket.circleId).emit('message-deleted', {id: data.messageId});
       });
     });
   });

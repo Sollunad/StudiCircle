@@ -12,7 +12,7 @@
 
       <ion-col col-9 *ngIf="message.from !== nickname" class="message"
                [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
-        <ion-card (press)="doConfirm()">
+        <ion-card (press)="doConfirm(message.messageId)">
           <ion-item class="other">
             <span class="user_name">{{ message.from }}</span><br>
             <span>{{ message.text }}</span>
@@ -23,7 +23,7 @@
 
       <ion-col offset-3 col-9 *ngIf="message.from === nickname" class="message"
                [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
-        <ion-card (press)="doConfirm()">
+        <ion-card (press)="doConfirm(message.messageId)">
           <ion-item class="mine">
             <span class="user_name">Du</span><br>
             <span>{{ message.text }}</span>

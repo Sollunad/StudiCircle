@@ -44,6 +44,11 @@ export class ChatPage {
         this.showToast('User joined: ' + user);
       }
     });
+
+    this.getDeletedMessages().subscribe(data => {
+      console.log(data);
+      this.messages = this.messages.filter(message => message.messageId !== data.id);
+    })
   }
 
   switchEmojiPicker() {
@@ -85,12 +90,25 @@ export class ChatPage {
     this.onFocus();
   }
 
+  deleteMessage(messageId:number) {
+    this.socket.emit('delete-message', { messageId: messageId });
+  }
+
   getMessages() {
     let observable = new Observable(observer => {
       this.socket.on('message', (data) => {
         observer.next(data);
       });
     })
+    return observable;
+  }
+
+  getDeletedMessages() {
+    let observable = new Observable(observer => {
+      this.socket.on('message-deleted', (data) => {
+        observer.next(data);
+      });
+    });
     return observable;
   }
 
@@ -115,7 +133,7 @@ export class ChatPage {
     toast.present();
   }
 
-  doConfirm() {
+  doConfirm(messageId:number) {
     //TODO check whether user is allowed to remove messages
 
     let confirm = this.alerCtrl.create({
@@ -131,7 +149,8 @@ export class ChatPage {
         {
           text: 'Nachricht löschen',
           handler: () => {
-            console.log('Nachricht löschen');
+            this.deleteMessage(messageId);
+            console.log('Nachricht löschen'+messageId);
           }
         }
       ]
