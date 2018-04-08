@@ -10,7 +10,6 @@ import { ApiProvider } from '../../providers/api/api'
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-blackboard-post',
   templateUrl: 'blackboard-post.html'
@@ -19,25 +18,39 @@ export class BlackboardPostPage {
   private postCreator: String;
   private postDate: String;
   private postText: String;
-  private comments : BlackboardPost[];
+  private comments: BlackboardPost[];
   private post: BlackboardPost;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private api: ApiProvider) {
   }
 
   ionViewDidLoad() {
+    console.log('ionViewDidLoad');
+
     this.post = this.navParams.get('post');
     this.postCreator = this.post.userName;
     this.postText = this.post.text;
     this.postDate = this.post.date;
-    this.comments = [{userName: "Jonas", text: "Schlechter Beitrag"},
-                    {userName: "Jesse", text: "Schnauze!!!"}];
+    this.comments = [
+      {
+        postID: 1,
+        userName: 'Jonas',
+        text: 'Schlechter Beitrag',
+        date: new Date().toLocaleString()
+      },
+      {
+        postID: 2,
+        userName: 'Jesse',
+        text: 'Schnauze!!!',
+        date: new Date().toLocaleString()
+      }
+    ];
   }
 
-  private sendComment(){
-    let tmpInput = this.input;
-    this.input = "";
-    this.comments.push({userName: this.api.currentUser.username, text: tmpInput});
+  private sendComment() {
+    // let tmpInput = this.input;
+    // this.input = "";
+    // this.comments.push({ userName: this.api.currentUser.username, text: tmpInput });
   }
 
 
