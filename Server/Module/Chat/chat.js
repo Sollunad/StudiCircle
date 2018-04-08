@@ -30,6 +30,12 @@ module.exports = function(app, server){
                                                 messageId: createdMessage.id});
       });
     });
+    //TODO testen!!!!!
+    socket.on('delete-message', (messageId) => {
+      db.ChatMessage.destroy({where: {id: messageId}}).then(() => {
+        io.to(socket.circleId).emit('message-deleted', {id: messageId});
+      });
+    });
   });
 
   // REST-Schnittstelle um die letzten 30 Nachrichten eines bestimmten Circles zu bekommen
