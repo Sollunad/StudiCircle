@@ -8,13 +8,10 @@ module.exports = function(app, server){
     socket.sessionData = session.getSessionData(socket.request._query.sessionId);
     socket.circleId = Number(socket.request._query.circleId);
     if(socket.sessionData) socket.userId = socket.sessionData.userID;
-    console.log("[CHAT.JS]sessionData: " + socket.sessionData);
-    console.log("[CHAT.JS]circleId: " + socket.circleId);
-    console.log("[CHAT.JS]userId: " + socket.userId);
+
     socket.join(socket.circleId);
     db.User.findById(socket.userId).then(user => {
       socket.userName = user.name;
-      console.log("[CHAT.JS]userName:" + socket.userName);
       io.to(socket.circleId).emit('users-changed', {user: socket.userName, event: 'joined'});
     });
 
@@ -24,8 +21,14 @@ module.exports = function(app, server){
 
     socket.on('add-message', (message) => {
       var created = new Date();
-      db.ChatMessage.create({"body": message.text, "time": created, "CircleId": socket.circleId, "UserId": socket.userId});
-      io.to(socket.circleId).emit('message', {text: message.text, from: socket.userName, created: created});
+      db.ChatMessage.create({"body": message.text, "time": created, "CircleId": socket.circleId, "UserId": socket.userId})
+      .then(createdMessage => {
+        io.to(socket.circleId).emit('message', {text: message.text,
+                                                from: socket.userName,
+                                                created: created,
+                                                userId: socket.userId,
+                                                messageId: createdMessage.id});
+      });
     });
   });
 
@@ -43,7 +46,9 @@ module.exports = function(app, server){
         result.push({
           "text": item.body,
           "from": item.User.name,
-          "created": item.time
+          "created": item.time,
+          "userId": item.User.id,
+          "messageId": item.id
         })
       })
       res.send(result);
