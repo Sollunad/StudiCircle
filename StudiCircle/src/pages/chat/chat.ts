@@ -1,22 +1,25 @@
-import { Component } from '@angular/core';
-import {NavController, NavParams, ToastController, AlertController} from 'ionic-angular';
+import {Component, ViewChild, ElementRef} from '@angular/core';
+import {NavController, NavParams, ToastController, AlertController, Content} from 'ionic-angular';
 import Socket = SocketIOClient.Socket;
 import { Observable } from 'rxjs/Observable';
-import * as io from 'socket.io-client';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {ApiProvider} from "../../providers/api/api";
-import {UserInfo} from "../../providers/declarations/UserInfo";
 
 @Component({
   selector: 'chat',
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+
+  @ViewChild(Content) content: Content;
+  @ViewChild('chat_input') messageInput: ElementRef;
   messages = [];
   nickname = '';
   message = '';
   socket:Socket;
   circleId : number;
+  showEmojiPicker = false;
+
 
 
   constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
@@ -43,9 +46,43 @@ export class ChatPage {
     });
   }
 
+  switchEmojiPicker() {
+    this.showEmojiPicker = !this.showEmojiPicker;
+    if (!this.showEmojiPicker) {
+      this.focus();
+    }
+    this.content.resize();
+    this.scrollToBottom();
+  }
+
+  onFocus() {
+    this.showEmojiPicker = false;
+    this.content.resize();
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.content.scrollToBottom) {
+        this.content.scrollToBottom();
+      }
+    }, 400)
+  }
+
+  private focus() {
+    if (this.messageInput && this.messageInput.nativeElement) {
+      this.messageInput.nativeElement.focus();
+    }
+  }
+
+  handleSelection(event) {
+    this.message = this.message + " " + event.char;
+  }
+
   sendMessage() {
     this.socket.emit('add-message', { text: this.message });
     this.message = '';
+    this.onFocus();
   }
 
   getMessages() {
