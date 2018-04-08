@@ -20,19 +20,19 @@
     <ion-item >
       <ion-card>
         <ion-item>
-          <h2>{{post.userName}}</h2>
+          <h1>{{post.userName}}</h1>
           <p>{{post.date}}</p>
         </ion-item>
         <ion-card-content>{{post.text}}</ion-card-content>
 
         <ion-row>
           <ion-col>
-            <button ion-button icon-left small (click)="showPost(ind)">
+            <button ion-button icon-left small color="secondary" (click)="showPost(ind)">
               <ion-icon name="text"></ion-icon>
               <div>Comments</div>
             </button>
-            <button ion-button icon-right small (click)="deletePost(ind)">
-              <ion-icon name="delete"></ion-icon>
+            <button ion-button icon-left small color="danger" (click)="deletePost(ind)">
+              <ion-icon name="trash"></ion-icon>
               <div>Delete</div>
             </button>
           </ion-col>
@@ -51,5 +51,11 @@
     </ion-item>
   </ion-item-sliding>
   </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab color="secondary" large icon-only (click)="addPost()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 
 </ion-content>
