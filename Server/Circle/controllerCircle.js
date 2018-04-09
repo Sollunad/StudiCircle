@@ -169,7 +169,7 @@ module.exports = {
         res.send("Save changes failed.")
       });
 
-    }
+    },
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
@@ -382,7 +382,7 @@ module.exports = {
 
     leaveCircle : function(req, res){
         //TODO
-    }
+    },
 
     // keine geroutete function
     isAdminAnywhere : function(userId, callback){
