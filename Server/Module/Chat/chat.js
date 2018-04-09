@@ -41,27 +41,36 @@ module.exports = function(app, server){
   // REST-Schnittstelle um Nachrichten für einen bestimmten Circle zu bekommen
   // offset: die Anzahl an Nachrichten, die übersprungen werden sollen, also nicht geladen werden
   // limit: die Anzahl an Nachrichten, die geladen werden sollen
+  // liefert ein Array mit Nachrichten und eine Flag (moreMessagesExist), ob es darüber hinaus noch weitere Nachrichten gibt
   app.route('/chat/getMessages').get(function(req, res){
     var offset = Number(req.query.offset);
     var limit = Number(req.query.limit);
     var circleId = req.query.circleId;
-    var result = [];
+    var result = {};
+    result.messages = [];
+    var moreMessagesExist = false;
     db.ChatMessage.findAll({
       where: {circleId: circleId},
       offset: offset,
-      limit: limit,
+      limit: limit + 1,
       order: [['time', 'DESC']],
       include: [db.User]
     }).then(messages => {
       messages.forEach(function(item, index){
-        result.unshift({
-          "text": item.body,
-          "from": item.User.name,
-          "created": item.time,
-          "userId": item.User.id,
-          "messageId": item.id
-        })
+        if(index < limit){
+          result.messages.unshift({
+            "text": item.body,
+            "from": item.User.name,
+            "created": item.time,
+            "userId": item.User.id,
+            "messageId": item.id
+          })
+        }
+        else{
+          moreMessagesExist = true;
+        }
       })
+      result.moreMessagesExist = moreMessagesExist;
       res.send(result);
     }).error(function(){
       res.status(500).send("Error");
