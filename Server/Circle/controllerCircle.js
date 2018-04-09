@@ -119,8 +119,13 @@ module.exports = {
     editCircle : function (req,res) {
         const circleId = req.body.id;
         const visible = req.body.vis;
+        const calendar = req.body.calendar;
+        const bill = req.body.bill;
+        const bet = req.body.bet;
+        const file = req.body.file;
+        const market = req.body.market;
 
-        if (argumentMissing(res, circleId, visible)) return;
+        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
 
         const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
 
@@ -128,7 +133,12 @@ module.exports = {
         .then(circle => {
           circle.updateAttributes({
             //name: req.body.name,
-            "visible": visible
+            "visible": visible,
+            "calendar": calendar,
+            "bill": bill,
+            "bet": bet,
+            "filesharing": filesharing,
+            "market": market
           })
           res.send("OK");
         }).error(err => {
