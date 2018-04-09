@@ -95,4 +95,11 @@ export class DashboardPage {
     }).present();
   }
 
+  private showCircle(circle: Circle){
+    this.navCtrl.push(CircleStartseite, {
+      circleId: circle.id,
+      circleName: circle.name
+    });
+  }
+
 }

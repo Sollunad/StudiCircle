@@ -177,30 +177,53 @@ module.exports = {
 
     //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
-        const location = req.body.loc;
-        // const Distance = req.body.dist;
+      const lat1 = req.query.lat;
+      const lon1 = req.query.lon;
+      const distance = req.query.dist;
 
-        db.Circle.findAll().then(circles => {
-          // circles.forEach(circle => {
-          //   console.log(circle.getLocations());
-          // });
-          res.status(200).json(
-            circles
-          );
+      const deg2rad = (deg) => deg * (Math.PI/180);
+      const distanceBetweenCoords = (lat2, lon2) => {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distance in km
+      }
+      const circleFilter = (circle) => {
+        return circle.Locations.some(circleLocation => {
+            var coordDistance = distanceBetweenCoords(
+              circleLocation.latitude,
+              circleLocation.longitude
+            );
+            return coordDistance <= distance;
+          });
+      }
+
+      if (argumentMissing(res, lat1, lon1, distance)) return;
+
+      db.Circle.findAll({
+        include: [{
+          model: db.Location,
+      //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+         }]
+      }).then(circles => {
+
+        if(distance == -1) {
+          res.status(200).json(circles);
+          return;
+        }
+
+        var filteredCircles = circles.filter(circleFilter);
+        res.status(200).json(filteredCircles);
+      }).error(err => {
+        res.status(500).json({
+          'error': 'Server Error'
         });
-/*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-            var R = 6371; // Radius of the earth in km
-            var dLat = deg2rad(lat2-lat1);  // deg2rad below
-            var dLon = deg2rad(lon2-lon1);
-            var a =
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-            ;
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            var d = R * c; // Distance in km
-            return d;
-        }*/
+      });
     },
 
     members : function (req, res) {
@@ -282,7 +305,32 @@ module.exports = {
         res.status(500).send("Error");
         return;
       });
-    }
+    },
+
+	changeRole : function(request, response) {
+		let circleId = req.query.circle,
+			selectedUser = req.query.user,
+			newRole = req.query.role;
+		db.UserInCircle.findOne({
+			where: {
+				CircleId: circleId,
+				UserId: selectedUser
+			}
+		}).then((relation) => {
+			relation.update({
+				role: newRole
+			}).then(() => {
+				res.status(200)
+					.send("Changed Role for " + selectedUser.toString()
+						+ " to " + newRole
+						+ "in Circle " + circleId + ".");
+			}).error((error) => {
+				res.status(500).send("Update failed.");
+			});
+		}).error((error) => {
+			res.status(500).send("Could not find user in circle.");
+		});
+	}
 
 };
 
