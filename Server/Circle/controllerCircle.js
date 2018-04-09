@@ -119,7 +119,7 @@ module.exports = {
     editCircle : function (req,res) {
         const circleId = req.body.id;
         const visible = req.body.vis;
-        const calendar = req.body.calendar;
+        const calendar = req.body.cal;
         const bill = req.body.bill;
         const bet = req.body.bet;
         const file = req.body.file;
