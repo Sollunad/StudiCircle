@@ -25,8 +25,6 @@ export class BlackboardPostPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad');
-
     this.post = this.navParams.get('post');
     this.postCreator = this.post.userName;
     this.postText = this.post.text;

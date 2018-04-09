@@ -92,9 +92,9 @@ export class CircleProvider {
     return this.http.get<boolean>(this.consts.url+'circle/getVisibility?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
-  public addUserToCircle(userId: number, circleId: number) {
+  public addUserToCircle(circleId: number) {
     return this.http.post(this.consts.url+'circle/addUser', {
-      userId: userId,
+      userId: this.apiProvider.currentUser.uuid,
       circleId: circleId
     });
   }

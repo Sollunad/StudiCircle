@@ -30,7 +30,6 @@ export class SearchPage {
   private nonFilteredCircles = Array<Circle>();
   private lat: number;
   private lon: number;
-  private userId: number;
 
   constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider, private api: ApiProvider) {
     this.getUserData();
@@ -41,9 +40,6 @@ export class SearchPage {
     const coords = this.api.getLocation();
     this.lat = coords.lat;
     this.lon = coords.lon;
-
-    // TODO: get userId
-    this.userId = 1;
   }
 
   private setCircles(circles: Circle[]) {
@@ -93,7 +89,7 @@ export class SearchPage {
   private joinCircle(circle: Circle) {
     console.log('joinCircle', circle);
 
-    this.circleProvider.addUserToCircle(this.userId, circle.id).subscribe(
+    this.circleProvider.addUserToCircle(circle.id).subscribe(
       result => {
         console.log('joinCircle', result);
       });
