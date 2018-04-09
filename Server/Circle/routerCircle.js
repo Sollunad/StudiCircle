@@ -63,4 +63,12 @@ module.exports = function(app) {
 	// userId (Number): selected users id
 	app.route('/circle/newAdmin')
 		.post(circle.newAdmin);
+
+    // circleId (Number): current circle
+    app.route('/circle/getRole')
+        .get(circle.getRole);
+
+    // userId (Number): selected users id
+	app.route('/circle/leave')
+		.post(circle.leaveCircle);
 };

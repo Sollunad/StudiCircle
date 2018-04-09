@@ -322,17 +322,33 @@ module.exports = {
 
         isAdminInCircle(oldAdminId, circleId, result => {
             if(result){
-                changeRole({query: {
+                module.exports.changeRole({query: {
                     "circle": circleId,
                     "user": newAdminId,
                     "role": cons.CircleRole.ADMINISTRATOR,
-                }});
+                }},res);
             }else{
                 res.status(403);
                 res.send("Permission denied. User who made the request is not admin in the requested circle.");
             }
         });
     },
+
+    getRole : function(req, res){
+        const circleId = req.body.circleId;
+        if(argumentMissing(res, circleId)) return;
+        const userId = req.session.userId;
+
+        db.UserInCircles.findAll({
+            where: {UserId: userId, CircleId: circleId}
+        }).then(result => {
+            //TODO implementierung
+        });
+    },
+
+    leaveCircle : function(req, res){
+        //TODO
+    }
 
     // keine geroutete function
     isAdminAnywhere : function(userId, callback){
