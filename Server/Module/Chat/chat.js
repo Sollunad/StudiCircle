@@ -38,18 +38,23 @@ module.exports = function(app, server){
     });
   });
 
-  // REST-Schnittstelle um die letzten 30 Nachrichten eines bestimmten Circles zu bekommen
-  app.route('/chat/getFirst30Messages').get(function(req, res){
+  // REST-Schnittstelle um Nachrichten für einen bestimmten Circle zu bekommen
+  // offset: die Anzahl an Nachrichten, die übersprungen werden sollen, also nicht geladen werden
+  // limit: die Anzahl an Nachrichten, die geladen werden sollen
+  app.route('/chat/getMessages').get(function(req, res){
+    var offset = Number(req.query.offset);
+    var limit = Number(req.query.limit);
     var circleId = req.query.circleId;
     var result = [];
     db.ChatMessage.findAll({
       where: {circleId: circleId},
-      limit: 30,
+      offset: offset,
+      limit: limit,
       order: [['time', 'DESC']],
       include: [db.User]
     }).then(messages => {
       messages.forEach(function(item, index){
-        result.push({
+        result.unshift({
           "text": item.body,
           "from": item.User.name,
           "created": item.time,
