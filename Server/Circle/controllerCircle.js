@@ -169,7 +169,7 @@ module.exports = {
         res.send("Save changes failed.")
       });
 
-    }
+    },
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
