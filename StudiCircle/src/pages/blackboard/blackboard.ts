@@ -19,25 +19,20 @@ import { BlackboardPostPage } from "../blackboard-post/blackboard-post";
 export class BlackboardPage {
 
   private circleId = this.navParams.get('circleId');
-  private posts = new Array<BlackboardPost>();
+  private posts = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private dbProvider: DbProvider, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private dbProvider: DbProvider) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad');
-
-    // get the posts in this circle
-    this.posts = this.dbProvider.getBlackboardPosts(this.circleId);
-
-    //get the first 3 comments of every post
-
     console.log(this.circleId);
-  }
 
-  private showPost(post: any) {
-    console.log(this.posts[post].userName);
-    this.navCtrl.push(BlackboardPostPage, { post: this.posts[post] });
+    this.dbProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+      console.log('getBlackboardPosts', posts);
+      this.posts = posts;
+    });
+
+    // TODO: get the first 3 comments of every post
   }
 
   private addPost() {
@@ -50,7 +45,8 @@ export class BlackboardPage {
       buttons: [{
         text: 'OK',
         handler: data => {
-          var text = data.text;
+          const text = data.text.toString().trim();
+          if(text.length < 10) return;
 
           this.insertPost(text);
         }
@@ -59,23 +55,23 @@ export class BlackboardPage {
   }
 
   private insertPost(text: string) {
-    var post: BlackboardPost = {
-      postID: 0,
-      userName: this.api.currentUser.username,
-      text: text,
-      date: new Date().toString()
-    };
-
-    console.log('new post', post);
+    console.log('new post', text);
+    this.dbProvider.insertPost(this.circleId, text).subscribe(data => {
+      console.log('data', data);
+    });
   }
 
-  private deletePost(post: any) {
-    if (this.dbProvider.deletePost(post) === 1) {
-      this.posts.splice(post, 1);
-    }
-    else {
-      console.log("Fehler beim Löschen des Posts " + post);
-    }
+  private showPost(post: BlackboardPost) {
+    console.log('showPost', post);
+    this.navCtrl.push(
+      BlackboardPostPage, {
+        post: post
+      });
+  }
+
+  private deletePost(post: BlackboardPost) {
+    console.log('deletePost', post);
+    this.dbProvider.deletePost(post.postID);
   }
 
 }

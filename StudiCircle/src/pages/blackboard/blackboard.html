@@ -16,7 +16,7 @@
 <ion-content padding>
   <h1>Posts</h1>
   <ion-list id="posts">
-    <ion-item-sliding *ngFor="let post of posts; let ind = index">
+    <ion-item-sliding *ngFor="let post of posts">
     <ion-item >
       <ion-card>
         <ion-item>
@@ -27,11 +27,11 @@
 
         <ion-row>
           <ion-col>
-            <button ion-button icon-left small color="secondary" (click)="showPost(ind)">
+            <button ion-button icon-left small color="secondary" (click)="showPost(post)">
               <ion-icon name="text"></ion-icon>
               <div>Comments</div>
             </button>
-            <button ion-button icon-left small color="danger" (click)="deletePost(ind)">
+            <button ion-button icon-left small color="danger" (click)="deletePost(post)">
               <ion-icon name="trash"></ion-icon>
               <div>Delete</div>
             </button>
