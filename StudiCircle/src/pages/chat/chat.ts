@@ -20,6 +20,10 @@ export class ChatPage {
   circleId : number;
   showEmojiPicker = false;
 
+  fromMessageId :number;
+  page : number = 1;
+  totalPage : number = 50;
+
 
 
   constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
@@ -46,8 +50,9 @@ export class ChatPage {
     });
 
     this.getDeletedMessages().subscribe(data => {
+      let deletedMessage:any=data;
       console.log(data);
-      this.messages = this.messages.filter(message => message.messageId !== data.id);
+      this.messages = this.messages.filter(message => message.messageId !== deletedMessage.id);
     })
   }
 
@@ -156,5 +161,19 @@ export class ChatPage {
       ]
     });
     confirm.present()
+  }
+
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
+    this.page = this.page+1;
+
+    setTimeout(() => {
+      for (let i = 0; i < 30; i++) {
+        //this.items.push( this.items.length );
+      }
+
+      console.log('Async operation has ended');
+      infiniteScroll.complete();
+    }, 500);
   }
 }

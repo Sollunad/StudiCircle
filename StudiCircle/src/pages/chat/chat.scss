@@ -23,6 +23,17 @@ chat {
   .message {
     padding: 0;
   }
+
+  ion-infinite-scroll-content{
+    background-color: white;
+    opacity: 0.8;
+    border-radius: 50px;
+
+    .infinite-loading{
+      margin:0 !important;
+    }
+  }
+
 }
 
 .chat-background{
