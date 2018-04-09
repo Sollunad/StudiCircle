@@ -419,8 +419,47 @@ module.exports = {
                 if(callback) callback(false);
             }
         });
-    }
+    },
 
+    getPosts: function(req, res) {
+        const circleId = req.query.circleId;
+
+        // TODO: db implementation
+
+        res.status(200).json([
+            {
+                postID: 1,
+                userName: "TestUser",
+                text: "Toller Post",
+                date: "20170406",
+                comments: [{
+                    postID: 1, userName: "TestUserComment1", text: "Toller Post", date: "20170406"
+                }]
+            },
+            {
+                postID: 2,
+                userName: "TestUser2",
+                text: "Test",
+                date: "20170406",
+                comments: [{
+                    postID: 1, userName: "TestUserComment2", text: "Netter Post", date: "20170406"
+                }]
+            }
+        ]);
+    },
+
+    newPost: function(req, res) {
+        console.log('newPost');
+
+        // const circleId = req.body.circleId;
+        // const userId = req.body.userId;
+        // const text = req.body.text;
+        // const date = new Date();
+
+        res.status(200).json(
+          req.body
+        );
+    }
 
 };
 

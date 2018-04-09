@@ -16,38 +16,11 @@ import {constants} from "../../consts/constants";
 */
 @Injectable()
 export class DbProvider {
-  private result: any;
-  private circles: Circle[] = [];
-  private psot = new Array<BlackboardPost>();
 
   constructor(public http: HttpClient, private api: ApiProvider, public consts: constants) { }
 
   public getCircles(): Observable<Circle[]> {
       return this.http.get<Circle[]>(this.consts.url+'circle/forUser?mySession=' + this.api.currentUser.session);
-    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
-       this.res = res;
-       console.log(res);
-     });*/
-     /*return new Promise<Array<string>>((resolve, reject) => {
-       const successSubject: Subject<boolean> = new Subject<boolean>();
-       const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
-         (res: ApiResponse) => {
-           subs.unsubscribe();
-           successSubject.next(res.httpStatus === 200);
-           this.circles = [];
-           for(let i of res["circles"]){
-            this.circles.push(i["name"]);
-           }
-           resolve(this.circles);
-         },
-         (error: any) => {
-           console.log(error);
-           subs.unsubscribe();
-           successSubject.next(false);
-         }
-       );
-     });*/
   }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
@@ -62,16 +35,26 @@ export class DbProvider {
     return this.http.get<GeoResponse>(url);
   }
 
-  private count = 1; // WIEDER RAUSNEHMEN!!!!
-  public getBlackboardPosts(circleId: number){
-    //Code
-    if(this.count != 0){
-        this.psot.push({postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406", comments: [{postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406"}]},
-                       {postID: 2, userName: "TestUser2", text: "Test", date: "20170406", comments: [{postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406"}]});
-        this.count = this.count -1;
-    }
-    return this.psot;
-    //return posots;
+  public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
+    // console.log('getBlackboardPosts', circleId);
+
+    // const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
+    const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
+    return this.http.get<BlackboardPost[]>(url);
+  }
+
+  public insertPost(circleId: number, text: string): Observable<String> {
+    console.log('insertPost', circleId, text);
+
+    // TODO: what's going here???
+
+    // const url = this.consts.url+`circle/blackboard/posts/newPost`;
+    const url = 'http://localhost:8080/circle/blackboard/newPost';
+    return this.http.post<String>(url, {
+      circleId: circleId,
+      userId: this.api.currentUser.uuid,
+      text: text
+    });
   }
 
   public deletePost(postID: number){

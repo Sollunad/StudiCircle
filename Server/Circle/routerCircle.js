@@ -65,7 +65,7 @@ module.exports = function(app) {
     // circleId: circleId
     // return: visibility for circle
     app.route('/circle/getVisibility')
-        .get(circle.getVisibility)
+        .get(circle.getVisibility);
 
     // circleId (Number): current circle
 	// userId (Number): selected users id
@@ -79,4 +79,16 @@ module.exports = function(app) {
     // userId (Number): selected users id
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
+
+
+
+    // circleId (Number): current circle
+    app.route('/circle/blackboard/posts')
+        .get(circle.getPosts);
+
+    // circleId (Number): current circle
+    // userId (Number): current user
+    // text (String): text from post
+    app.route('/circle/blackboard/newPost')
+        .get(circle.newPost);
 };
