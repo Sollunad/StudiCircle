@@ -25,6 +25,14 @@ module.exports = function(app) {
     app.route('/circle/edit')
         .post(circle.editCircle);
 
+    // calendar: true/false
+    // bill = true/false
+    // bet = true/false
+    // file = true/false
+    // market = true/false
+    app.route('/circle/editModules')
+        .post(circle.editModules);
+
     // id: circleId
     app.route('/circle/remove')
         .post(circle.removeCircle);

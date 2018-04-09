@@ -119,11 +119,6 @@ module.exports = {
     editCircle : function (req,res) {
         const circleId = req.body.id;
         const visible = req.body.vis;
-        const calendar = req.body.cal;
-        const bill = req.body.bill;
-        const bet = req.body.bet;
-        const file = req.body.file;
-        const market = req.body.market;
 
         if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
 
@@ -132,7 +127,6 @@ module.exports = {
         db.Circle.findById(circleId)
         .then(circle => {
           circle.updateAttributes({
-            //name: req.body.name,
             "visible": visible,
             "calendar": calendar,
             "bill": bill,
@@ -146,6 +140,36 @@ module.exports = {
           res.send("Save changes failed.")
         });
     },
+
+    editModules : function (req,res) {
+      const circleId = req.body.id;
+
+      const calendar = req.body.calendar;
+      const bill = req.body.bill;
+      const bet = req.body.bet;
+      const file = req.body.file;
+      const market = req.body.market;
+
+      if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
+
+      const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+
+      db.Circle.findById(circleId)
+      .then(circle => {
+        circle.updateAttributes({
+          "calendar": calendar,
+          "bill": bill,
+          "bet": bet,
+          "filesharing": filesharing,
+          "market": market
+        })
+        res.send("OK");
+      }).error(err => {
+        res.status(500);
+        res.send("Save changes failed.")
+      });
+
+    }
 
     removeCircle : function (req, res) {
         const circleId = req.body.id;
