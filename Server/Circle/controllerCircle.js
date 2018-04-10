@@ -369,15 +369,23 @@ module.exports = {
     },
 
     getRole : function(req, res){
-        const circleId = req.body.circleId;
+        const circleId = req.query.circleId;
         if(argumentMissing(res, circleId)) return;
         const userId = req.session.userId;
 
-        db.UserInCircles.findAll({
+        db.UserInCircles.findOne({
             where: {UserId: userId, CircleId: circleId}
         }).then(result => {
-            //TODO implementierung
-        });
+            if(result){
+                res.send({"role": result.role});
+            }else{
+                res.status(400);
+                res.send("Bad request. User ist not in the circle.")
+            }
+        }).error(err => {
+            res.status(500);
+            res.send("Server error at database request.")
+        })
     },
 
     leaveCircle : function(req, res){
