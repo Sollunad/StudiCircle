@@ -134,7 +134,7 @@ module.exports = {
 
                 if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                     var returnObject = {};
-                    returnObject.status = 200;
+                    returnObject.httpStatus = 200;
                     returnObject.message = "Successfully Logged in";
                     returnObject.userData = (await database.getUserData(userId));
                     returnObject.session = mySession.generateSession(userId);
