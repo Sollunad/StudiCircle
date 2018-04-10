@@ -162,7 +162,7 @@ module.exports = {
           "bet": bet,
           "filesharing": filesharing,
           "market": market
-        })
+        });
         res.send("OK");
       }).error(err => {
         res.status(500);
@@ -199,7 +199,7 @@ module.exports = {
             }else{
                 res.status(404);
                 res.send("No circles for this user.");
-            };
+            }
         }).catch(err => {
             res.status(500);
             res.send("Getting data from database failed.")
@@ -417,7 +417,7 @@ function isAdminInCircle(userId, circleId, callback){
 function argumentMissing(res, ...args){
     if(!args.every(arg => {return arg != undefined;})){
         res.status(400);
-        res.send("Bad request. Argument(s) missing.")
+        res.send("Bad request. Argument(s) missing.");
         return true;
     }
     return false;

@@ -1,7 +1,7 @@
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var express = require('express');
-var student = require('./Student/moduleInterface')
+var student = require('./Student/moduleInterface');
 var mySession = require('./Session/session');
 var sessionConstants = require('./Session/constants');
 
@@ -44,11 +44,11 @@ console.log('todo list RESTful API server started on: ' + port );
 
 // timeout sessions
 setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
-console.error('[SESSION] Registerd Session Timer')
+console.error('[SESSION] Registerd Session Timer');
 
 
 function authorize(req, res, next){
-    var url = req.originalUrl
+    var url = req.originalUrl;
     var sessionID = req.body.mySession || req.query.mySession;
     req.session = {};
     req.session.sessionId = sessionID;

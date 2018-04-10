@@ -65,7 +65,7 @@ module.exports = function(app) {
     // circleId: circleId
     // return: visibility for circle
     app.route('/circle/getVisibility')
-        .get(circle.getVisibility)
+        .get(circle.getVisibility);
 
     // circleId (Number): current circle
 	// userId (Number): selected users id
