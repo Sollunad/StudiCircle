@@ -50,7 +50,7 @@ import {ChatProvider} from "../providers/chat/ChatProvider";
     SearchPage,
     CircleEinstellungenPage,
     RelativeTime,
-    AdminAuswaehlenPage
+    AdminAuswaehlenPage,
     EmojiPickerComponent,
     ChatPage
   ],
@@ -80,7 +80,7 @@ import {ChatProvider} from "../providers/chat/ChatProvider";
     MitgliederÜbersicht,
     SearchPage,
     CircleEinstellungenPage,
-    ChatPage
+    ChatPage,
     AdminAuswaehlenPage
   ],
   providers: [
