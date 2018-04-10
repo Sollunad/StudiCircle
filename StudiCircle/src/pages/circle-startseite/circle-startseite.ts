@@ -63,7 +63,16 @@ export class CircleStartseite {
     }
 
   openPage(module) {
-    this.navCtrl.push(module.component,{circleId: this.circleId});
+    if (module.mapName=="settings" && !this.checkRole){
+      let alert = this.alertCtrl.create({
+        title: 'Öffnen nicht möglich!',
+        subTitle: 'Öffnen der Circle Einstellungen nicht möglich! Zum Öffnen werden Adminrechte benötigt.',
+        buttons: ['OK']
+      });
+      alert.present();
+    } else{
+      this.navCtrl.push(module.component,{circleId: this.circleId});
+    }
   }
 
 
