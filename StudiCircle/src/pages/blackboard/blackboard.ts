@@ -19,15 +19,11 @@ export class BlackboardPage {
 
   private circleId = this.navParams.get('circleId');
   private posts = [];
-  private date = new Date();
-  private userName = 'Hans Solo';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider) {
   }
 
   ionViewDidLoad() {
-    console.log(this.circleId);
-
     this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
       console.log('getBlackboardPosts', posts);
       this.posts = posts;
