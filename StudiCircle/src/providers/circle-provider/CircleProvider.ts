@@ -31,6 +31,10 @@ export class CircleProvider {
     return this.http.get<string[]>(this.consts.url+'circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
+  public getUserRole(circleId:number): Observable<any>{
+    return this.http.get<any>(this.consts.url+'circle/getRole?circleId=' + circleId + '&mySession=' + this.apiProvider.currentUser.session);
+  }
+
   public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};

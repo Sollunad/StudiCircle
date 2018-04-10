@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import {ApiProvider} from "../../providers/api/api";
 import {ChatProvider} from "../../providers/chat/ChatProvider";
 import {Message} from "../../providers/declarations/Message";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 @Component({
   selector: 'chat',
@@ -20,13 +21,15 @@ export class ChatPage {
   socket:Socket;
   circleId : number;
   showEmojiPicker = false;
+  userRole :string;
 
   private loadedAllMessages: boolean = false;
 
 
 
   constructor(private navParams: NavParams, private toastCtrl: ToastController,
-              private alerCtrl: AlertController, private apiProvider: ApiProvider, private chatProvider:ChatProvider) {
+              private alerCtrl: AlertController, private apiProvider: ApiProvider, private chatProvider:ChatProvider,
+              private circleProvider:CircleProvider) {
 
     this.circleId = navParams.get('circleId');
 
@@ -59,6 +62,11 @@ export class ChatPage {
       let deletedMessage:any=data;
       console.log(data);
       this.messages = this.messages.filter(message => message.messageId !== deletedMessage.id);
+    });
+
+    this.circleProvider.getUserRole(this.circleId).subscribe(data => {
+      console.log(data);
+      this.userRole = data.role;
     });
   }
 
@@ -150,26 +158,28 @@ export class ChatPage {
   doConfirm(messageId:number) {
     //TODO check whether user is allowed to remove messages
 
-    let confirm = this.alerCtrl.create({
-      title: 'Nachricht löschen?',
-      message: 'Möchten Sie diese Nachricht wirklich löschen?',
-      buttons: [
-        {
-          text: 'Abbrechen',
-          handler: () => {
-            console.log('Abbrechen');
+    if(this.userRole==="admin"||this.userRole==="mod") {
+      let confirm = this.alerCtrl.create({
+        title: 'Nachricht löschen?',
+        message: 'Möchten Sie diese Nachricht wirklich löschen?',
+        buttons: [
+          {
+            text: 'Abbrechen',
+            handler: () => {
+              console.log('Abbrechen');
+            }
+          },
+          {
+            text: 'Nachricht löschen',
+            handler: () => {
+              this.deleteMessage(messageId);
+              console.log('Nachricht löschen' + messageId);
+            }
           }
-        },
-        {
-          text: 'Nachricht löschen',
-          handler: () => {
-            this.deleteMessage(messageId);
-            console.log('Nachricht löschen'+messageId);
-          }
-        }
-      ]
-    });
-    confirm.present()
+        ]
+      });
+      confirm.present()
+    }
   }
 
   doInfinite(infiniteScroll) {
