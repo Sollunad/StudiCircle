@@ -123,10 +123,10 @@ module.exports = {
             "calendar": calendar,
             "bill": bill,
             "bet": bet,
-            "filesharing": filesharing,
+            "filesharing": file,
             "market": market
           })
-          res.send("OK");
+          sendInfoResponse(res, "OK");
         }).error(err => {
           sendInfoResponse(res, 500, "Save changes failed.");
         });
