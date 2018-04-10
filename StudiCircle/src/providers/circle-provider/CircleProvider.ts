@@ -107,7 +107,7 @@ export class CircleProvider {
 
   public leaveCircle(circleId: number){
     let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session};
-    return this.http.post(this.consts.url+'circle/leaveCircle',body);
+    return this.http.post(this.consts.url+'circle/leave',body);
   }
 
 

@@ -120,21 +120,55 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible)) return;
+        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
 
         const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
 
         db.Circle.findById(circleId)
         .then(circle => {
           circle.updateAttributes({
-            //name: req.body.name,
-            "visible": visible
+            "visible": visible,
+            "calendar": calendar,
+            "bill": bill,
+            "bet": bet,
+            "filesharing": filesharing,
+            "market": market
           })
           res.send("OK");
         }).error(err => {
           res.status(500);
           res.send("Save changes failed.")
         });
+    },
+
+    editModules : function (req,res) {
+      const circleId = req.body.id;
+
+      const calendar = req.body.calendar;
+      const bill = req.body.bill;
+      const bet = req.body.bet;
+      const file = req.body.file;
+      const market = req.body.market;
+
+      if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
+
+      const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+
+      db.Circle.findById(circleId)
+      .then(circle => {
+        circle.updateAttributes({
+          "calendar": calendar,
+          "bill": bill,
+          "bet": bet,
+          "filesharing": filesharing,
+          "market": market
+        })
+        res.send("OK");
+      }).error(err => {
+        res.status(500);
+        res.send("Save changes failed.")
+      });
+
     },
 
     removeCircle : function (req, res) {
@@ -322,16 +356,32 @@ module.exports = {
 
         isAdminInCircle(oldAdminId, circleId, result => {
             if(result){
-                changeRole({query: {
+                module.exports.changeRole({query: {
                     "circle": circleId,
                     "user": newAdminId,
                     "role": cons.CircleRole.ADMINISTRATOR,
-                }});
+                }},res);
             }else{
                 res.status(403);
                 res.send("Permission denied. User who made the request is not admin in the requested circle.");
             }
         });
+    },
+
+    getRole : function(req, res){
+        const circleId = req.body.circleId;
+        if(argumentMissing(res, circleId)) return;
+        const userId = req.session.userId;
+
+        db.UserInCircles.findAll({
+            where: {UserId: userId, CircleId: circleId}
+        }).then(result => {
+            //TODO implementierung
+        });
+    },
+
+    leaveCircle : function(req, res){
+        //TODO
     },
 
     // keine geroutete function
