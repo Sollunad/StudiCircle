@@ -270,7 +270,7 @@ module.exports = {
     },
 
     getVisibility : function(req, res){
-      var circleId = req.query.circleId
+      var circleId = req.query.circleId;
       db.Circle.findById(circleId).then(circle => {
         if(circle == null){
           res.status(404).send("No circle with given id.");
@@ -282,6 +282,24 @@ module.exports = {
         res.status(500).send("Error");
         return;
       });
+    },
+
+    getBlackboardPosts : function(req, res){
+      var circleID = req.query.circleID;
+      var result = [];
+      db.Blackboard.Post.findAll({where: {CircleId: circleID}, include: [{model: db.User},
+                                                                         {model: db.Blackboard.Comment, include: [db.User]}]}).then(posts => {
+        if(posts.length === 0){
+          res.send({msg: 'Keine Posts vorhanden', status: 1});
+        }else{
+
+        res.send(posts);
+        return;
+       }
+     }).error(err => {
+       res.status(500).send('Error while reading posts');
+       return;
+     });
     }
 
 };

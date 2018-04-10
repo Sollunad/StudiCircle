@@ -63,16 +63,21 @@ export class DbProvider {
   }
 
   private count = 1; // WIEDER RAUSNEHMEN!!!!
-  public getBlackboardPosts(circleId: number){
+  public getBlackboardPosts(circleId: string){
     //Code
-    if(this.count != 0){
+    const url = this.consts.url+'circle/getbbPosts?mySession='+ this.api.currentUser.session+'&circleID='+circleId;
+  //  const localurl = 'http://localhost:8080/circle/getbbPosts?mySession=' + this.api.currentUser.session;
+
+    return this.http.get(url);
+
+    /*if(this.count != 0){
         this.psot.push({postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406", comments: [{postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406"}]},
                        {postID: 2, userName: "TestUser2", text: "Test", date: "20170406", comments: [{postID: 1, userName: "TestUser", text: "Toller Post", date: "20170406"}]});
         this.count = this.count -1;
     }
     return this.psot;
     //return posots;
-  }
+  }*/}
 
   public deletePost(postID: number){
     //const url = this.const.url+"circle/blackboard/deletePost"+postID;

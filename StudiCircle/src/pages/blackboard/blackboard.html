@@ -38,15 +38,22 @@
           </ion-col>
           <ion-col center text-center>
             <ion-note>
-              11h ago
+              {{post.date}}
             </ion-note>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-item *ngFor="let comment of post.comments">{{comment.text}}</ion-item>
-          </ion-col>
-        </ion-row>
+      <!--  <ion-row>
+          <ion-col> -->
+        <ion-list id="Posts">
+            <ion-item *ngFor="let comment of post.comments" text-wrap>
+              <ion-item-divider>
+                {{comment.userName}}
+              </ion-item-divider>
+              {{comment.text}}
+            </ion-item>
+          </ion-list>
+        <!--  </ion-col>
+        </ion-row>-->
       </ion-card>
     </ion-item>
   </ion-item-sliding>

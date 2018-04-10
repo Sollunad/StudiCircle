@@ -51,5 +51,10 @@ module.exports = function(app) {
     // circleId: circleId
     // return: visibility for circle
     app.route('/circle/getVisibility')
-        .get(circle.getVisibility)
+        .get(circle.getVisibility);
+
+    // circleID
+    // return: Posts of Blackboard
+    app.route('/circle/getbbPosts')
+        .get(circle.getBlackboardPosts);
 };
