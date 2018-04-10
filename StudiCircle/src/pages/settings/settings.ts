@@ -8,6 +8,7 @@ import {DashboardPage} from '../dashboard/dashboard';
 import {ChangeMailPage} from '../change-mail/change-mail';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
+import { debounce } from 'ionic-angular/util/util';
 
 @Component({
   selector: 'page-settings',
@@ -16,9 +17,14 @@ import {Subscription} from "rxjs/Subscription";
 export class SettingsPage {
 
   public pw_confirm: string;
+  public deleteButtonColor: string;
+  public enabled: boolean;
   private accountName : string;
+
   constructor(public navCtrl: NavController,
               private _api: ApiProvider) {
+    this.deleteButtonColor = "greyedout";
+    this.enabled = false;
     if(this._api.currentUser.username){
       this.accountName = this._api.currentUser.username;
     }
@@ -46,6 +52,23 @@ export class SettingsPage {
     this.navCtrl.push(SettingsPage);
   }
 
+  public goToFaqPlaceholder(): void{
+    console.log("gotofaq");
+  }
+  
+  public validateInput(input: string): void{
+    if(this.pw_confirm.length > 8){
+      this.changeDeleteButton(true);
+    }else{
+      this.changeDeleteButton(false);
+    }
+  }
+  
+  public changeDeleteButton(activate: boolean): void{
+    this.enabled = activate;
+    this.deleteButtonColor = this.enabled? "danger":"greyedout"; 
+  }
+
   public deleteAccount(): void {
     if(this.pw_confirm){
       const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
@@ -62,5 +85,6 @@ export class SettingsPage {
     }else{
       console.log("[SETTINGS] : No Password provided. Account not deleted");
     }
+    
   }
 }
