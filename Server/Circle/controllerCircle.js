@@ -429,36 +429,44 @@ module.exports = {
         res.status(200).json([
             {
                 postID: 1,
-                userName: "TestUser",
-                text: "Toller Post",
-                date: "20170406",
+                userName: 'TestUser',
+                title: 'First Title',
+                text: 'Toller Post',
+                date: '20170406',
                 comments: [{
-                    postID: 1, userName: "TestUserComment1", text: "Toller Post", date: "20170406"
-                }]
-            },
-            {
-                postID: 2,
-                userName: "TestUser2",
-                text: "Test",
-                date: "20170406",
-                comments: [{
-                    postID: 1, userName: "TestUserComment2", text: "Netter Post", date: "20170406"
+                    postID: 1, userName: 'TestUserComment1', text: 'Comment: Toller Post', date: '20170406'
                 }]
             }
+            // {
+            //     postID: 2,
+            //     userName: 'TestUser2',
+            //     title: 'Second Title',
+            //     text: 'Test',
+            //     date: '20170406',
+            //     comments: [{
+            //         postID: 1, userName: 'TestUserComment2', text: 'Comment: Test', date: '20170406'
+            //     }]
+            // }
         ]);
     },
 
     newPost: function(req, res) {
-        console.log('newPost');
+        const circleId = req.body.circleId;
+        const userId = req.body.userId;
+        const title = req.body.title;
+        const text = req.body.text;
+        const date = new Date();
 
-        // const circleId = req.body.circleId;
-        // const userId = req.body.userId;
-        // const text = req.body.text;
-        // const date = new Date();
+        // if(argumentMissing(res, circleId, userId, title, text)) return;
 
-        res.status(200).json(
-          req.body
-        );
+        res.status(200).json({
+            postID: 1,
+            userName: 'User' + userId,
+            title: title,
+            text: text,
+            date: date,
+            comments: []
+        });
     }
 
 };

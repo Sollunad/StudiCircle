@@ -88,7 +88,8 @@ module.exports = function(app) {
 
     // circleId (Number): current circle
     // userId (Number): current user
+    // title (String): title from post
     // text (String): text from post
     app.route('/circle/blackboard/newPost')
-        .get(circle.newPost);
+        .post(circle.newPost);
 };
