@@ -17,39 +17,94 @@
   <h1>Posts</h1>
   <ion-list id="posts">
     <ion-item-sliding *ngFor="let post of posts">
-    <ion-item >
+      <ion-item>
+        <ion-card>
+          <ion-item>
+            <h1>{{post.title}}</h1>
+            <p>{{post.date}} -
+              <ion-badge item-end>@{{post.userName}}</ion-badge>
+            </p>
+          </ion-item>
+          <ion-card-content>{{post.text}}</ion-card-content>
+
+          <ion-row>
+            <ion-col>
+              <button ion-button icon-left small color="secondary" (click)="showPost(post)">
+                <ion-icon name="text"></ion-icon>
+                {{post.comments.length}} Comments
+              </button>
+              <button ion-button icon-left small color="danger" (click)="deletePost(post)">
+                <ion-icon name="trash"></ion-icon>
+                Delete
+              </button>
+            </ion-col>
+            <ion-col center text-center>
+              <ion-note>
+                11h ago
+              </ion-note>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item *ngFor="let comment of post.comments">
+                <p>{{post.date}} -
+                  <ion-badge color="dark" item-end>@{{post.userName}}</ion-badge>
+                </p>
+                {{comment.text}}
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-item>
+    </ion-item-sliding>
+
+    <ion-item>
       <ion-card>
         <ion-item>
-          <h1>{{post.userName}}</h1>
-          <p>{{post.date}}</p>
+          <!--<ion-label>Username</ion-label>-->
+          <ion-input type="text" placeholder="title"></ion-input>
         </ion-item>
-        <ion-card-content>{{post.text}}</ion-card-content>
+        <ion-item>
+          <h1>post.title</h1>
+          <!--<ion-label>Username</ion-label>-->
+          <ion-input type="text" placeholder="title"></ion-input>
+          <!--<ion-list inset>-->
+            <!--<ion-item>-->
+              <!--<ion-label>Username</ion-label>-->
+              <!--<ion-input type="text"></ion-input>-->
+            <!--</ion-item>-->
+            <!--<ion-item>-->
+              <!--<ion-label>Password</ion-label>-->
+              <!--<ion-input type="password"></ion-input>-->
+            <!--</ion-item>-->
+          <!--</ion-list>-->
+          <p>
+            {{ date | date: 'dd.MM.yy HH:mm' }}
+            -
+            <ion-badge item-end>@{{userName}}</ion-badge>
+          </p>
+        </ion-item>
+        <ion-card-content>post.text</ion-card-content>
 
         <ion-row>
           <ion-col>
-            <button ion-button icon-left small color="secondary" (click)="showPost(post)">
-              <ion-icon name="text"></ion-icon>
-              <div>Comments</div>
+            <button ion-button icon-left small color="secondary">
+              <ion-icon name="send"></ion-icon>
+              Send
             </button>
-            <button ion-button icon-left small color="danger" (click)="deletePost(post)">
-              <ion-icon name="trash"></ion-icon>
-              <div>Delete</div>
+            <button ion-button icon-left small color="danger">
+              <ion-icon name="close"></ion-icon>
+              Clear
             </button>
-          </ion-col>
-          <ion-col center text-center>
-            <ion-note>
-              11h ago
-            </ion-note>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-item *ngFor="let comment of post.comments">{{comment.text}}</ion-item>
           </ion-col>
         </ion-row>
       </ion-card>
     </ion-item>
-  </ion-item-sliding>
+
   </ion-list>
 
   <ion-fab right bottom>
