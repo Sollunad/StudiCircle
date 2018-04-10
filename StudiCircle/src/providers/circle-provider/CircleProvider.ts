@@ -110,8 +110,8 @@ export class CircleProvider {
     return this.http.post(this.consts.url+'circle/leave',body);
   }
 
-  public checkIfAdmin(cid: number): Observable<boolean>{
-    return this.http.get<boolean>(this.consts.url+'circle/isAdmin?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
+  public checkIfAdmin(cid: number): Observable<any>{
+    return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
 }

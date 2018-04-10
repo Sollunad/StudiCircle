@@ -89,8 +89,8 @@ export class CircleEinstellungenPage {
   editVisibility(){
     console.log(this.visibility);
     const modification = this._circleService.edit(this.circleId, this.visibility).subscribe(
-    (success: boolean) => {
-          if(success){
+    (res) => {
+          if(res){
             console.log("[Visibility] : Visibility edit successful");
             modification.unsubscribe();
             return true;
