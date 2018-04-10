@@ -49,25 +49,24 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
-  public edit(id : number, visibility : string){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public edit(id : number, visibility : number){
+    const resSubject: Subject<any> = new Subject<any>();
     let body = {id : id, vis : visibility, mySession : this.apiProvider.currentUser.session};
-    console.log(body);
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
       this.consts.url+'circle/edit', body, header
     ).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        resSubject.next(res);
       },
       (error: any) => {
         console.log(error);
         editVisibility.unsubscribe();
-        successSubject.next(false);
+        resSubject.next(error);
       }
     );
-    return successSubject.asObservable();
+    return resSubject.asObservable();
   }
 
   public removeCircleByCircleId(uid: number): Observable<any>{

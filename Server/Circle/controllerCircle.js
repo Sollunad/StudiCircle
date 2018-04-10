@@ -120,7 +120,7 @@ module.exports = {
         .then(circle => {
           circle.updateAttributes({
             "visible": visible
-          })
+          });
           sendInfoResponse(res, "OK");
         }).error(err => {
           sendInfoResponse(res, 500, "Save changes failed.");

@@ -13,7 +13,7 @@ import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 export class CircleEinstellungenPage {
 
   circleId : number;
-  private visibility : string = "1";
+  private visibility : number = 1;
   private calendar: boolean = true;
   private bill: boolean = true;
   private bet: boolean = true;
@@ -29,9 +29,9 @@ export class CircleEinstellungenPage {
     console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
     {
       if(actualvisibility){
-        this.visibility = "1";
+        this.visibility = 1;
       } else {
-        this.visibility = "0";
+        this.visibility = 0;
       }
     }
     ));
@@ -166,20 +166,17 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  onChange(){
-    console.log(this.visibility);
-  }
-
   editVisibility(){
-    console.log(this.visibility);
+    console.log("[Visibility]: "+this.visibility);
     const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
     (res) => {
-          if(res){
+          if(res.info=="OK"){
             console.log("[Visibility] : Visibility edit successful");
             modification.unsubscribe();
             return true;
           }else{
-            console.log("[Visibility] : Visibility edit not successful");
+            console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
+            console.log(res);
             modification.unsubscribe();
             return false;
           }
@@ -195,7 +192,7 @@ export class CircleEinstellungenPage {
     this.calendar = false; this.bill = false; this.bet = false; this.filesharing = false; this.market = false;
 
     for (let module of modules){
-      console.log(module)
+      console.log(module);
       switch(module){
         case 'calendar': this.calendar = true; break;
         case 'bill': this.bill = true; break;
