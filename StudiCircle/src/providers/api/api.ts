@@ -53,7 +53,7 @@ export class ApiProvider {
     );
   }
 
-  public login(username: string, password: string): Observable<boolean>{
+  public login(username: string, password: string): Observable<number>{
     let userCredentials = {"mail": username, "pwd": password};
     const header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -63,12 +63,12 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.status !== 200) {
-            return false;
+          if(res.httpStatus !== 200) {
+            return res.httpStatus;
           } else {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
-            return true;
+            return res.httpStatus;
           }
         }
       )

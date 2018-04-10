@@ -20,7 +20,9 @@
     <button id="logIn-button4" ion-button color="dark" block style="font-weight:500;" on-click="login()">
       Log In
     </button>
-    <p *ngIf="loginError" class="danger" padding>Wrong Password or E - Mail Address</p>
+    <p *ngIf="loginError" class="danger">Wrong Password or E - Mail Address</p>
+    <p *ngIf="notActivated" class="danger">Your Account is not yet activated</p>
+    <p *ngIf="somethingWentWrong" class="danger">Something went wrong</p>
   </form>
   <button id="logIn-button3" ion-button color="balanced" block style="font-weight:300;" on-click="goToGetInvolved()">
     Register now!

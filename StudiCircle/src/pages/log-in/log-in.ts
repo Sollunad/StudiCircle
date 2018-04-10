@@ -16,7 +16,9 @@ export class LogInPage {
 
   public mail : '';
   public pw : '';
-  private loginError : boolean;
+  public loginError : boolean;
+  public notActivated : boolean;
+  public somethingWentWrong : boolean;
 
   constructor(public navCtrl: NavController, private _api : ApiProvider) {
 
@@ -44,20 +46,28 @@ export class LogInPage {
   }
 
   login(){
-    this.loginError = false;
     if(!this.mail && !this.pw) {
       console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
     }else{
       if(this.mail.match(getMailRegex()) && stringHasAppropiateLength(this.pw,8,64)) {
         console.log("[LOGIN] : Logging in");
         const loginSub: Subscription = this._api.login(this.mail, this.pw).subscribe(
-          (data: boolean) => {
-            if (data) {
+          (data: number) => {
+            if (data===200) {
+              console.log("[LOGIN] : Login successful");
               this.goToDashboard({});
               loginSub.unsubscribe();
             } else {
-              this.loginError = true;
-              console.log("[LOGIN] : Login failed | loginError: " + this.loginError);
+              if(data===400 || data===401){
+                this.loginError = true;
+              }else{
+                if(data===412){
+                  this.notActivated = true;
+                }else{
+                  this.somethingWentWrong = true;
+                }
+              }
+              console.log("[LOGIN] : Login failed");
               loginSub.unsubscribe();
             }
           }
