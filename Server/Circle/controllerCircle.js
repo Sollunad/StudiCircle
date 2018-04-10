@@ -123,7 +123,7 @@ module.exports = {
             "calendar": calendar,
             "bill": bill,
             "bet": bet,
-            "filesharing": file,
+            "filesharing": filesharing,
             "market": market
           })
           sendInfoResponse(res, "OK");
@@ -151,7 +151,7 @@ module.exports = {
           "calendar": calendar,
           "bill": bill,
           "bet": bet,
-          "filesharing": filesharing,
+          "filesharing": file,
           "market": market
         });
         sendInfoResponse(res, "OK");
