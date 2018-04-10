@@ -52,7 +52,21 @@ export class CircleStartseite {
     this.navCtrl.push(module.component,{circleId: this.circleId});
   }
 
-  openConfirmDialog(userId: number){
+  checkIfAdmin(){
+    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+      success => {
+        if (success) {
+          console.log("[isAdmin] : true");
+          return true;
+        } else {
+          console.log("[isAdmin] : false");
+          return false;
+        }
+      }
+    );
+  }
+
+  openConfirmDialog(){
     let alert = this.alertCtrl.create({
       title: 'Adminauswahl bestätigen',
       message: this.circleName+' wirklich verlassen?',
@@ -60,7 +74,7 @@ export class CircleStartseite {
         {
           text: 'Verlassen',
           handler: () => {
-            this.circleProvider.leaveCircle(userId, this.circleId).subscribe(
+            this.circleProvider.leaveCircle(this.circleId).subscribe(
               message => console.log(message)
             );
             this.navCtrl.pop();
