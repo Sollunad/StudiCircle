@@ -470,6 +470,7 @@ module.exports = {
           });
     },
 
+
     newPost: function(req, res) {
         const circleId = req.body.circleId;
         const userId = req.body.userId;

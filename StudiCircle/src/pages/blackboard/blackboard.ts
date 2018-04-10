@@ -5,6 +5,7 @@ import {ApiProvider} from "../../providers/api/api";
 import { BlackboardPost } from "../../providers/declarations/BlackboardPost";
 import { BlackboardPostPage } from "../blackboard-post/blackboard-post";
 import {Subscription} from "rxjs/Subscription";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 /**
  * Generated class for the BlackboardPage page.
@@ -21,9 +22,10 @@ export class BlackboardPage {
 
   private circleId = this.navParams.get('circleId');
   private posts = new Array<BlackboardPost>();
-  private test: any;
+  private date = new Date();
+  private userName = 'Hans Solo';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private dbProvider: DbProvider, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider) {
   }
 
   ionViewDidLoad() {
@@ -41,38 +43,46 @@ export class BlackboardPage {
     this.alertCtrl.create({
       title: 'Enter Text',
       inputs: [{
+        name: 'title',
+        placeholder: 'title'
+      }, {
         name: 'text',
         placeholder: 'Type here ...'
       }],
       buttons: [{
         text: 'OK',
         handler: data => {
-          var text = data.text;
+          const title = data.title.toString().trim();
+          if(title.length < 5) return;
 
-          this.insertPost(text);
+          const text = data.text.toString().trim();
+          if (text.length < 10) return;
+
+          this.insertPost(title, text);
         }
       }]
     }).present();
   }
 
-  private insertPost(text: string) {
-    var post: BlackboardPost = {
-      postID: 0,
-      userName: this.api.currentUser.username,
-      text: text,
-      date: new Date().toString()
-    };
-
-    console.log('new post', post);
+  private insertPost(title: string, text: string) {
+    console.log('new post', title, text);
+    this.circleProvider.insertPost(this.circleId, title, text).subscribe(post => {
+      console.log('post', post);
+      this.posts.push(post);
+    });
   }
 
-  private deletePost(post: any) {
-    if (this.dbProvider.deletePost(post) === 1) {
-      this.posts.splice(post, 1);
-    }
-    else {
-      console.log("Fehler beim Löschen des Posts " + post);
-    }
+  private showPost(post: BlackboardPost) {
+    console.log('showPost', post);
+    this.navCtrl.push(
+      BlackboardPostPage, {
+        post: post
+      });
+  }
+
+  private deletePost(post: BlackboardPost) {
+    console.log('deletePost', post);
+    this.circleProvider.deletePost(post.postID);
   }
 
   private getAllPostsOfBlackboard(){
