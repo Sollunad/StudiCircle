@@ -16,7 +16,7 @@ module.exports = {
         singleSession.start = new Date();
         singleSession.lastUpdated = new Date();
         sessionsObj.set(sessionID, singleSession);
-        console.log("[SESSION] Sessions Object: %j", sessionsObj);
+        //console.log("[SESSION] Sessions Object: %j", sessionsObj);
         return sessionID;
     },
 

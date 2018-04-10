@@ -101,4 +101,19 @@ export class CircleProvider {
     });
   }
 
+  public selectNewAdmin(userId: number, circleId: number){
+    let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    console.log(body);
+    return this.http.post(this.consts.url+'circle/newAdmin',body);
+  }
+
+  public leaveCircle(circleId: number){
+    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    return this.http.post(this.consts.url+'circle/leave',body);
+  }
+
+  public checkIfAdmin(cid: number): Observable<boolean>{
+    return this.http.get<boolean>(this.consts.url+'circle/isAdmin?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
+  }
+
 }
