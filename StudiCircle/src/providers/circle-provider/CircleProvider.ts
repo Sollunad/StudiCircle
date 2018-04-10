@@ -114,4 +114,25 @@ export class CircleProvider {
     return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
+  public editModules(cid: number, calendar: boolean, bill: boolean, bet: boolean, file: boolean, market:boolean){
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    let data = {id : cid, calendar : calendar, bill: bill, bet: bet, file: file, market: market, mySession : this.apiProvider.currentUser.session};
+    console.log(data);
+    let header = {"headers" : {"Content-Type": "application/json"}};
+    const editModules: Subscription = this.http.post(
+      this.consts.url+'circle/editModules',data, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editModules.unsubscribe();
+        successSubject.next(res.httpStatus === 200);
+      },
+      (error: any) => {
+        console.log(error);
+        editModules.unsubscribe();
+        successSubject.next(false);
+      }
+    );
+    return successSubject.asObservable();
+  }
+
 }
