@@ -6,14 +6,14 @@ module.exports = {
             res.send({
                 "httpStatus": 500,
                 "message": "Server Error",
-                "data": ""
+                "userData": ""
             });
             return;
         }
         res.send({
             "httpStatus": status,
             "message": text,
-            "data": ""
+            "userData": ""
         });
         return true;
     }
