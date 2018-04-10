@@ -27,6 +27,10 @@ export class ApiProvider {
 
   }
 
+  public getCurrentUser():UserInfo{
+    return this.currentUser;
+  }
+
   public changeMail(new_mail : string, pwd : string){
     let data = {
       "mySession" : this.currentUser.session,

@@ -10,8 +10,9 @@ var app = express();
 const port = 8080;
 
 var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    origin: 'http://localhost:8100',
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    credentials: true
 }
 
 app.use(cors(corsOptions));
@@ -32,6 +33,8 @@ const allowedWildcards = ["/user/activate/",
                         ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
+// app.route('/chat/*').all(authorize);
+//TODO /socket/* protecten?
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
@@ -39,7 +42,7 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-app.listen(port);
+var server = app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
 
 // timeout sessions
@@ -85,3 +88,6 @@ function responseWhenUnauthorized (req, res) {
     res.status(401);
     res.send("Unauthorized! Failed in Server.js");
 }
+
+//Sockets
+var chat = require('./Module/Chat/chat.js')(app, server);

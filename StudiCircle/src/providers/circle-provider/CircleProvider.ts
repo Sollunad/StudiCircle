@@ -13,6 +13,8 @@ import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
+import * as io from 'socket.io-client';
+import Socket = SocketIOClient.Socket;
 
 
 @Injectable()
@@ -27,6 +29,10 @@ export class CircleProvider {
 
   public getModuleListByCircleId(uid:number): Observable<string[]>{
     return this.http.get<string[]>(this.consts.url+'circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public getUserRole(circleId:number): Observable<any>{
+    return this.http.get<any>(this.consts.url+'circle/getRole?circleId=' + circleId + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public create(name : string, visibility : string, location: any){

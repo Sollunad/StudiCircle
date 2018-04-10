@@ -2,7 +2,7 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpModule} from '@angular/http';
-import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import {IonicApp, IonicErrorHandler, IonicModule, IonicPageModule} from 'ionic-angular';
 import {MyApp} from './app.component';
 import {GetInvolvedPage} from '../pages/get-involved/get-involved';
 import {LogInPage} from '../pages/log-in/log-in';
@@ -25,6 +25,11 @@ import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
 import {constants} from "../consts/constants";
 import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
+import {ChatPage} from "../pages/chat/chat";
+import {EmojiProvider} from "../providers/emoji-provider/emoji";
+import {RelativeTime} from "../pipes/relative-time";
+import {EmojiPickerComponent} from "../components/emoji-picker";
+import {ChatProvider} from "../providers/chat/ChatProvider";
 
 @NgModule({
   declarations: [
@@ -43,14 +48,18 @@ import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
     MitgliederÜbersicht,
     SearchPage,
     CircleEinstellungenPage,
-    AdminAuswaehlenPage
+    RelativeTime,
+    AdminAuswaehlenPage,
+    EmojiPickerComponent,
+    ChatPage
   ],
 
   imports: [
     HttpModule,
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicPageModule.forChild(EmojiPickerComponent)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -69,6 +78,7 @@ import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
     MitgliederÜbersicht,
     SearchPage,
     CircleEinstellungenPage,
+    ChatPage,
     AdminAuswaehlenPage
   ],
   providers: [
@@ -81,7 +91,9 @@ import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
     DbProvider,
     HttpModule,
     HttpClientModule,
-    constants
+    constants,
+    EmojiProvider,
+    ChatProvider
   ]
 })
 export class AppModule {}
