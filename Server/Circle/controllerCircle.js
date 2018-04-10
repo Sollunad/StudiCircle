@@ -318,9 +318,9 @@ module.exports = {
     },
 
 	changeRole : function(req, res) {
-		let circleId = req.query.circle,
-			selectedUser = req.query.user,
-			newRole = req.query.role;
+		const circleId = req.body.circle,
+			selectedUser = req.body.user,
+			newRole = req.body.role;
 
         if(argumentMissing(res, circleId, selectedUser, newRole)) return;
 
@@ -348,19 +348,43 @@ module.exports = {
     newAdmin : function(req, res){
         const circleId = req.body.circleId;
         const newAdminId = req.body.userId;
-        console.log("[newAdminId]"+newAdminId);
 
         if(argumentMissing(res, circleId, newAdminId)) return;
 
         const oldAdminId = req.session.userId;
+        // const dummyRes = {status : function(){}, send : function(){}};
 
         isAdminInCircle(oldAdminId, circleId, result => {
             if(result){
-                module.exports.changeRole({query: {
-                    "circle": circleId,
-                    "user": newAdminId,
-                    "role": cons.CircleRole.ADMINISTRATOR,
-                }},res);
+                // module.exports.changeRole({query: {
+                //     "circle": circleId,
+                //     "user": newAdminId,
+                //     "role": cons.CircleRole.ADMINISTRATOR,
+                // }},dummyRes);
+                // module.exports.changeRole({query: {
+                //     "circle": circleId,
+                //     "user": oldAdminId,
+                //     "role": cons.CircleRole.MEMBER,
+                // }},res);
+                db.UserInCircles.findOne({where: { "CircleId": circleId, "UserId": newAdminId}}).then(result1 => {
+                    // change a user to admin
+        			result1.update({"role": cons.CircleRole.ADMINISTRATOR}).then(() => {
+                        db.UserInCircles.findOne({where: { "CircleId": circleId, "UserId": oldAdminId}}).then(result2 => {
+                            // change old admin to member
+                            result2.update({"role": cons.CircleRole.MEMBER}).then(() => {
+                                res.send("Admin changed.");
+                			}).error((error) => {
+                				res.status(500).send("Update of new Admin failed.");
+                			});
+                		}).error((error) => {
+                			res.status(500).send("Could not find new admin user in circle.");
+                		});
+        			}).error((error) => {
+        				res.status(500).send("Update of old admin failed.");
+        			});
+        		}).error((error) => {
+        			res.status(500).send("Could not find old admin user in circle.");
+        		});
             }else{
                 res.status(403);
                 res.send("Permission denied. User who made the request is not admin in the requested circle.");
