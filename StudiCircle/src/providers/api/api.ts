@@ -63,13 +63,11 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.httpStatus !== 200) {
-            return res.httpStatus;
-          } else {
+          if(res.status === 200) {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
-            return res.httpStatus;
           }
+          return res.status;
         }
       )
     );

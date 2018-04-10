@@ -53,6 +53,7 @@ export class LogInPage {
         console.log("[LOGIN] : Logging in");
         const loginSub: Subscription = this._api.login(this.mail, this.pw).subscribe(
           (data: number) => {
+            console.log(data);
             if (data===200) {
               console.log("[LOGIN] : Login successful");
               this.goToDashboard({});
@@ -60,12 +61,10 @@ export class LogInPage {
             } else {
               if(data===400 || data===401){
                 this.loginError = true;
-              }else{
-                if(data===412){
-                  this.notActivated = true;
-                }else{
-                  this.somethingWentWrong = true;
-                }
+              } else if (data===412) {
+                this.notActivated = true;
+              } else {
+                this.somethingWentWrong = true;
               }
               console.log("[LOGIN] : Login failed");
               loginSub.unsubscribe();
