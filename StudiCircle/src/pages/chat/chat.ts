@@ -2,8 +2,9 @@ import {Component, ViewChild, ElementRef} from '@angular/core';
 import {NavController, NavParams, ToastController, AlertController, Content} from 'ionic-angular';
 import Socket = SocketIOClient.Socket;
 import { Observable } from 'rxjs/Observable';
-import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {ApiProvider} from "../../providers/api/api";
+import {ChatProvider} from "../../providers/chat/ChatProvider";
+import {Message} from "../../providers/declarations/Message";
 
 @Component({
   selector: 'chat',
@@ -13,31 +14,36 @@ export class ChatPage {
 
   @ViewChild(Content) content: Content;
   @ViewChild('chat_input') messageInput: ElementRef;
-  messages = [];
+  messages : Message[] = [];
   nickname = '';
   message = '';
   socket:Socket;
   circleId : number;
   showEmojiPicker = false;
 
-  fromMessageId :number;
-  page : number = 1;
-  totalPage : number = 50;
+  private loadedAllMessages: boolean = false;
 
 
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController,
-              private alerCtrl: AlertController, private circleProvider:CircleProvider, private apiProvider: ApiProvider) {
+  constructor(private navParams: NavParams, private toastCtrl: ToastController,
+              private alerCtrl: AlertController, private apiProvider: ApiProvider, private chatProvider:ChatProvider) {
 
     this.circleId = navParams.get('circleId');
 
     this.nickname = apiProvider.getCurrentUser().username;
 
-    this.socket=circleProvider.openSocketConnection(this.circleId);
+    this.socket=chatProvider.openSocketConnection(this.circleId);
 
-    this.getMessages().subscribe(message => {
-      console.log(message);
-      this.messages.push(message);
+    this.getMessages().subscribe(data => {
+      let message:any=data;
+      const messageObject = {} as Message;
+      messageObject.created = message.created;
+      messageObject.from = message.from;
+      messageObject.messageId = message.messageId;
+      messageObject.text = message.text;
+      messageObject.userId = message.userId;
+      this.messages.push(messageObject);
+      console.log(this.messages);
     });
 
     this.getUsers().subscribe(data => {
@@ -53,7 +59,7 @@ export class ChatPage {
       let deletedMessage:any=data;
       console.log(data);
       this.messages = this.messages.filter(message => message.messageId !== deletedMessage.id);
-    })
+    });
   }
 
   switchEmojiPicker() {
@@ -68,13 +74,13 @@ export class ChatPage {
   onFocus() {
     this.showEmojiPicker = false;
     this.content.resize();
-    this.scrollToBottom();
+    //this.scrollToBottom();
   }
 
   scrollToBottom() {
     setTimeout(() => {
       if (this.content.scrollToBottom) {
-        this.content.scrollToBottom();
+        this.content.scrollToBottom(0);
       }
     }, 400)
   }
@@ -93,6 +99,7 @@ export class ChatPage {
     this.socket.emit('add-message', { text: this.message });
     this.message = '';
     this.onFocus();
+    this.scrollToBottom()
   }
 
   deleteMessage(messageId:number) {
@@ -100,34 +107,36 @@ export class ChatPage {
   }
 
   getMessages() {
-    let observable = new Observable(observer => {
+    return new Observable(observer => {
       this.socket.on('message', (data) => {
         observer.next(data);
       });
-    })
-    return observable;
+    });
   }
 
   getDeletedMessages() {
-    let observable = new Observable(observer => {
+    return new Observable(observer => {
       this.socket.on('message-deleted', (data) => {
         observer.next(data);
       });
     });
-    return observable;
   }
 
   getUsers() {
-    let observable = new Observable(observer => {
+    return new Observable(observer => {
       this.socket.on('users-changed', (data) => {
         observer.next(data);
       });
     });
-    return observable;
   }
 
   ionViewWillLeave() {
     this.socket.disconnect();
+  }
+
+  ionViewDidLoad(){
+    this.loadMessages();
+    this.scrollToBottom();
   }
 
   showToast(msg) {
@@ -165,15 +174,19 @@ export class ChatPage {
 
   doInfinite(infiniteScroll) {
     console.log('Begin async operation');
-    this.page = this.page+1;
 
     setTimeout(() => {
-      for (let i = 0; i < 30; i++) {
-        //this.items.push( this.items.length );
-      }
-
+      this.loadMessages();
       console.log('Async operation has ended');
       infiniteScroll.complete();
-    }, 500);
+    }, 1000);
+  }
+
+  private loadMessages() {
+    this.chatProvider.loadMessagesFromTo(this.circleId,this.messages.length,30).subscribe(data => {
+      this.messages = data.messages.concat(this.messages);
+      this.content.scrollTo(0,100,0);
+      this.loadedAllMessages = data.moreMessagesExist;
+    });
   }
 }

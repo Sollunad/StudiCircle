@@ -11,8 +11,8 @@
   <ion-grid>
 
     <ion-row>
-      <ion-col offset-4 col-4 >
-        <ion-infinite-scroll (ionInfinite)="doInfinite($event)" position="top" *ngIf="page < totalPage">
+      <ion-col offset-2 col-8 offset-sm-4 col-sm-4>
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)" position="top" *ngIf="loadedAllMessages">
           <ion-infinite-scroll-content
             loadingSpinner="bubbles"
             loadingText="Loading more data...">
@@ -26,7 +26,7 @@
       <ion-col col-9 *ngIf="message.from !== nickname" class="message"
                [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
         <ion-card (press)="doConfirm(message.messageId)">
-          <ion-item class="other">
+          <ion-item class="other" text-wrap>
             <span class="user_name">{{ message.from }}</span><br>
             <span>{{ message.text }}</span>
             <div class="time">{{message.created | relativeTime}}</div>
@@ -37,7 +37,7 @@
       <ion-col offset-3 col-9 *ngIf="message.from === nickname" class="message"
                [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
         <ion-card (press)="doConfirm(message.messageId)">
-          <ion-item class="mine">
+          <ion-item class="mine" text-wrap>
             <span class="user_name">Du</span><br>
             <span>{{ message.text }}</span>
             <div class="time">{{message.created | relativeTime}}</div>

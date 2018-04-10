@@ -31,21 +31,6 @@ export class CircleProvider {
     return this.http.get<string[]>(this.consts.url+'circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
-  public openSocketConnection(circleId : number):Socket{
-    console.log("[OPENSOCKETCONNECTION]");
-    return io(
-              'http://localhost:8080',
-              {
-                query: {
-                  sessionId:  this.apiProvider.currentUser.session,
-                  circleId:   circleId
-                },
-                path: '/socket/socket.io'
-                //transports: ['websocket']
-              }
-            );
-  }
-
   public create(name : string, visibility : string, location: any){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};
