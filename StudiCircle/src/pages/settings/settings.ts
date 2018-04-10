@@ -70,21 +70,16 @@ export class SettingsPage {
   }
 
   public deleteAccount(): void {
-    if(this.pw_confirm){
-      const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
-        (success: boolean) => {
-          deleteAccountSub.unsubscribe();
-          if(success) {
-            console.log("[SETTINGS] : Account deletion successful");
-            this.goToLogIn({});
-          } else {
-            console.log("[SETTINGS] : Account deletion failed");
-          }
+    const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
+      (success: boolean) => {
+        deleteAccountSub.unsubscribe();
+        if(success) {
+          console.log("[SETTINGS] : Account deletion successful");
+          this.goToLogIn({});
+        } else {
+          console.log("[SETTINGS] : Account deletion failed");
         }
-      );
-    }else{
-      console.log("[SETTINGS] : No Password provided. Account not deleted");
-    }
-    
+      }
+    );
   }
 }
