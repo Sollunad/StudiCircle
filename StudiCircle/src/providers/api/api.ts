@@ -22,7 +22,7 @@ export class ApiProvider {
   private _apiPath = "https://api.dev.sknx.de/";
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient, public consts: constants) {
+  constructor(private http: HttpClient) {
 
   }
 
@@ -63,11 +63,11 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.status === 200) {
+          if(res.httpStatus === 200) {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
           }
-          return res.status;
+          return res.httpStatus;
         }
       )
     );

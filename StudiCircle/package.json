@@ -1,8 +1,8 @@
 {
   "name": "StudiCircle",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "version": "0.1",
+  "author": "TINF16AIBI",
+  "homepage": "http://dhbw-mannheim.de/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -39,7 +39,7 @@
     "@ionic/app-scripts": "3.1.8",
     "typescript": "~2.6.2"
   },
-  "description": "An Ionic project",
+  "description": "A cross platform application to connect studentical groups and other related instances",
   "cordova": {
     "plugins": {
       "cordova-plugin-geolocation": {
