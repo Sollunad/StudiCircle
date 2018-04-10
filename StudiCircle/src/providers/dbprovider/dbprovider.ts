@@ -30,7 +30,6 @@ export class DbProvider {
   //  const localurl = 'http://localhost:8080/circle/getbbPosts?mySession=' + this.api.currentUser.session;
 
     return this.http.get(url);
-
   }
 
   public deletePost(postID: number){

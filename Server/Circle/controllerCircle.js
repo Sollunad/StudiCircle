@@ -461,6 +461,7 @@ module.exports = {
                 return;
               }
               else{
+                console.log(result);
                 res.status(200).send(result);
                 return;
               }

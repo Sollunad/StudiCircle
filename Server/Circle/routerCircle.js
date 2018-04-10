@@ -67,7 +67,6 @@ module.exports = function(app) {
     app.route('/circle/getVisibility')
         .get(circle.getVisibility);
 
-=======
   // circleID
   // return: Posts of Blackboard
   app.route('/circle/getbbPosts')

@@ -25,7 +25,7 @@ export class BlackboardPage {
   private date = new Date();
   private userName = 'Hans Solo';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider, private dbProvider: DbProvider) {
   }
 
   ionViewDidLoad() {
@@ -34,10 +34,10 @@ export class BlackboardPage {
 
     //get the first 3 comments of every post
 
-  private showPost(post: any) {
+  /*private showPost(post: any) {
     console.log(this.posts[post].userName);
     this.navCtrl.push(BlackboardPostPage, { post: this.posts[post] });
-  }
+  }*/
 
   private addPost() {
     this.alertCtrl.create({
@@ -90,17 +90,18 @@ export class BlackboardPage {
     let comments = new Array<BlackboardPost>();
       // get the posts in this circle
     const subs: Subscription = this.dbProvider.getBlackboardPosts(this.circleId).subscribe((data:any[]) => {
+    console.log(data);
       //iterate over all posts
       subs.unsubscribe();
         for(let post of data){
         // push 3 comments in comments-object
           for(let comment of post.Comments){
             if(comment.PostId === post.id){
-                comments.push({postID: comment.id, userName: comment.User.name, text: comment.body, date: comment.createdAt});
+                comments.push({postID: comment.id, userName: comment.User.name, title: 'Titel', text: comment.body, date: comment.createdAt});
             }
             if(comments.length === 3){break;}
           }
-          this.posts.push({postID: post.id, userName: post.User.name, text: post.body, date: post.createdAt, comments: comments});
+          this.posts.push({postID: post.id, userName: post.User.name, title: 'Titel', text: post.body, date: post.createdAt, comments: comments});
           comments = [];
         }
       }, (err: any) => {
