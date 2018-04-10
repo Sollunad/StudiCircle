@@ -20,7 +20,7 @@ export class CircleStartseite {
   circleId : number;
 
   circleName : string;
-  private checkRole : boolean;
+  public checkRole : boolean;
 
   staticModules = [
   { title: 'Rechnungen', mapName:'bill', component: '', imageName: 'rechnungen.jpg'},
@@ -47,70 +47,68 @@ export class CircleStartseite {
       this.moduleList.push({ title: 'Mitglieder', mapName:'member', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'});
       this.moduleList.push({ title: 'Einstellungen', mapName:'settings', component:CircleEinstellungenPage,imageName: 'einstellungen.jpg'});
       });
+  }
 
+  openPage(module) {
     this.circleProvider.checkIfAdmin(this.circleId).subscribe(
       role => {
-        if (role.role=="admin") {
+        if (module.mapName=="settings" && !(role.role=="admin")) {
           console.log("[ROLE] : "+role.role);
-          this.checkRole=true;
+          let alert = this.alertCtrl.create({
+            title: 'Öffnen nicht möglich!',
+            subTitle: 'Öffnen der Circle Einstellungen nicht möglich! Zum Öffnen werden Adminrechte benötigt.',
+            buttons: ['OK']
+          });
+          alert.present();
         } else {
           console.log("[ROLE] : "+role.role);
-          console.log(role);
-          this.checkRole=false;
+          this.navCtrl.push(module.component,{circleId: this.circleId});
         }
       }
     );
-    }
-
-  openPage(module) {
-    if (module.mapName=="settings" && !this.checkRole){
-      let alert = this.alertCtrl.create({
-        title: 'Öffnen nicht möglich!',
-        subTitle: 'Öffnen der Circle Einstellungen nicht möglich! Zum Öffnen werden Adminrechte benötigt.',
-        buttons: ['OK']
-      });
-      alert.present();
-    } else{
-      this.navCtrl.push(module.component,{circleId: this.circleId});
-    }
   }
 
 
 
   openConfirmDialog(){
-    if (this.checkRole){
-      let alert = this.alertCtrl.create({
-        title: 'Verlassen nicht möglich!',
-        subTitle: 'Verlassen von '+this.circleName+' nicht möglich! Vor dem Verlassen müssen die Adminrechte weitergegeben werden.',
-        buttons: ['OK']
-      });
-      alert.present();
-    } else {
-      console.log("async");
-      let alert = this.alertCtrl.create({
-        title: 'Verlassen bestätigen',
-        message: this.circleName+' wirklich verlassen?',
-        buttons: [
-          {
-            text: 'Verlassen',
-            handler: () => {
-              this.circleProvider.leaveCircle(this.circleId).subscribe(
-                message => console.log(message)
-              );
-              this.navCtrl.pop();
-            }
-          },
-          {
-            text: 'Abbrechen',
-            role: 'cancel',
-            handler: () => {
-              console.log('Verlassen abgebrochen');
-            }
-          }
-        ]
-      });
-      alert.present();
-    }
+    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+      role => {
+        if (role.role=="admin") {
+          console.log("[ROLE] : "+role.role);
+          let alert = this.alertCtrl.create({
+            title: 'Verlassen nicht möglich!',
+            subTitle: 'Verlassen von '+this.circleName+' nicht möglich! Vor dem Verlassen müssen die Adminrechte weitergegeben werden.',
+            buttons: ['OK']
+          });
+          alert.present();
+        } else {
+          console.log("[ROLE] : "+role.role);
+          let alert = this.alertCtrl.create({
+            title: 'Verlassen bestätigen',
+            message: this.circleName+' wirklich verlassen?',
+            buttons: [
+              {
+                text: 'Verlassen',
+                handler: () => {
+                  this.circleProvider.leaveCircle(this.circleId).subscribe(
+                    message => console.log(message)
+                  );
+                  this.navCtrl.pop();
+                }
+              },
+              {
+                text: 'Abbrechen',
+                role: 'cancel',
+                handler: () => {
+                  console.log('Verlassen abgebrochen');
+                }
+              }
+            ]
+          });
+          alert.present();
+        }
+      }
+    );
   }
 
 }
