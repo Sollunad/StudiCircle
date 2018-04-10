@@ -22,7 +22,8 @@ export class DashboardPage {
   private circles : Circle[]=[];
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbProvider: DbProvider, private circleProvider: CircleProvider, private alertCtrl: AlertController, private http: HttpClient, private api: ApiProvider) {
-    this.api.setLocation(49.489591, 8.467236);
+    this.getCurrentPosition();
+    // this.api.setLocation(49.489591, 8.467236);
   }
 
   private getCurrentPosition() {
@@ -56,7 +57,10 @@ export class DashboardPage {
   }
 
   ionViewWillEnter() {
-    this.circleProvider.getCircles().subscribe(data => {this.circles = data; this.showCircle(data[0]);});
+    this.circleProvider.getCircles().subscribe(data => {
+      this.circles = data;
+      // this.showCircle(data[0]);
+    });
   }
 
   public showLocationPrompt() {

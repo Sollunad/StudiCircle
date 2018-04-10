@@ -425,6 +425,14 @@ module.exports = {
         const circleId = req.query.circleId;
 
         // TODO: db implementation
+        // db.Circle.findAll({
+        //     include: [{
+        //         model: db.Blackboard,
+        //         //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+        //     }]
+        // }).then(circles => {
+        //     res.status(200).json(circles);
+        // });
 
         res.status(200).json([
             {
@@ -433,20 +441,24 @@ module.exports = {
                 title: 'First Title',
                 text: 'Toller Post',
                 date: '20170406',
+                comments: [
+                    {postID: 11, userName: 'TestUserComment11', text: 'Comment: 11', date: '20170406'},
+                    {postID: 12, userName: 'TestUserComment12', text: 'Comment: 12', date: '20170406'},
+                    {postID: 13, userName: 'TestUserComment13', text: 'Comment: 13', date: '20170406'},
+                    {postID: 14, userName: 'TestUserComment14', text: 'Comment: 14', date: '20170406'},
+                    {postID: 15, userName: 'TestUserComment15', text: 'Comment: 15', date: '20170406'}
+                ]
+            },
+            {
+                postID: 2,
+                userName: 'TestUser2',
+                title: 'Second Title',
+                text: 'Test',
+                date: '20170406',
                 comments: [{
-                    postID: 1, userName: 'TestUserComment1', text: 'Comment: Toller Post', date: '20170406'
+                    postID: 21, userName: 'TestUserComment21', text: 'Comment: Test', date: '20170406'
                 }]
             }
-            // {
-            //     postID: 2,
-            //     userName: 'TestUser2',
-            //     title: 'Second Title',
-            //     text: 'Test',
-            //     date: '20170406',
-            //     comments: [{
-            //         postID: 1, userName: 'TestUserComment2', text: 'Comment: Test', date: '20170406'
-            //     }]
-            // }
         ]);
     },
 
@@ -478,6 +490,8 @@ module.exports = {
         const title = req.body.title;
         const text = req.body.text;
         const date = new Date();
+
+        // TODO: db implementation
 
         // if(argumentMissing(res, circleId, userId, title, text)) return;
 
