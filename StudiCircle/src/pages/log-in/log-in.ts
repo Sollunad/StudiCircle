@@ -7,6 +7,7 @@ import {Subscription} from "rxjs/Subscription";
 import {ApiProvider} from "../../providers/api/api";
 import {ForgotPasswordPage} from "../forgot-password/forgot-password";
 import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
+import {ChatPage} from "../chat/chat";
 
 @Component({
   selector: 'page-log-in',

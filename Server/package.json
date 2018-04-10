@@ -17,6 +17,7 @@
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.3",
     "npm": "^5.8.0",
-    "sequelize": "^4.37.4"
+    "sequelize": "^4.37.4",
+    "socket.io": "^2.1.0"
   }
 }
