@@ -4,16 +4,16 @@ module.exports = {
         res.status(status);
         if (status === 500) {
             res.send({
-                "httpStatus": 500,
+                "status": 500,
                 "message": "Server Error",
-                "data": ""
+                "userData": ""
             });
             return;
         }
         res.send({
-            "httpStatus": status,
+            "status": status,
             "message": text,
-            "data": ""
+            "userData": ""
         });
         return true;
     }
