@@ -112,19 +112,14 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, visible)) return;
 
         const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
 
         db.Circle.findById(circleId)
         .then(circle => {
           circle.updateAttributes({
-            "visible": visible,
-            "calendar": calendar,
-            "bill": bill,
-            "bet": bet,
-            "filesharing": filesharing,
-            "market": market
+            "visible": visible
           })
           sendInfoResponse(res, "OK");
         }).error(err => {
