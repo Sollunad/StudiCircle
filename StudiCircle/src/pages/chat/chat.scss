@@ -1,0 +1,43 @@
+chat {
+  .user_name {
+    color: #afafaf;
+  }
+  .mine {
+    background: #CCFFE5!important;
+  }
+
+  .time {
+    color: #afafaf;
+    float: right;
+    font-size: small;
+  }
+  .message_row {
+    background-color: #fff;
+  }
+
+  .card {
+    margin: 5px;
+    border-radius: 10px;
+  }
+
+  .message {
+    padding: 0;
+  }
+
+  ion-infinite-scroll-content{
+    background-color: white;
+    opacity: 0.8;
+    border-radius: 50px;
+
+    .infinite-loading{
+      margin:0 !important;
+    }
+  }
+
+}
+
+.chat-background{
+  background: url("../../assets/img/chat_background.jpg") no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
