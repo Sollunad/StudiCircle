@@ -13,6 +13,8 @@ import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
+import * as io from 'socket.io-client';
+import Socket = SocketIOClient.Socket;
 
 
 @Injectable()
