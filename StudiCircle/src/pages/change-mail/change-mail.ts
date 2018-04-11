@@ -9,6 +9,7 @@ import {DashboardPage} from '../dashboard/dashboard';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
 import {ToastyProvider} from "../../providers/toasty/toasty";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'page-change-mail',
@@ -51,17 +52,18 @@ export class ChangeMailPage {
       if(this.oldMail != this.newMail){
         if(this.newMail == this.chkNewMail) {
           const requestMailChange: Subscription = this._api.changeMail( this.newMail , this.pwd).subscribe(
-            (data: boolean) => {
-              if (data) {
+            (data: number) => {
+              if (data === 200) {
                 console.log("[MAIL CHANGE] : Mail Change was successful");
                 this.toasty.toast("Mail Change was successful");
                 requestMailChange.unsubscribe();
                 this.goToSettings({});
-              } else {
-                console.log("[MAIL CHANGE] : Mail Change not successful");
-                this.toasty.toast("Mail Change was not successful");
-                requestMailChange.unsubscribe();
               }
+            },
+          (data : HttpErrorResponse) => {
+              console.log("[MAIL CHANGE] : Mail Change not successful");
+              this.toasty.toast("Mail Change was not successful");
+              requestMailChange.unsubscribe();
             }
           );
         }else{

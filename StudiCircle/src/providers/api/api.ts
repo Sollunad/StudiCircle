@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserInfo} from '../../providers/declarations/UserInfo';
@@ -45,12 +45,10 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: ApiResponse) => {
-          if(res.httpStatus !== 200) {
-            return false;
-          } else {
+          if (res.httpStatus === 200) {
             this.currentUser.mail = new_mail;
-            return true;
           }
+          return res.httpStatus;
         }
       )
     );
@@ -173,13 +171,11 @@ export class ApiProvider {
         successSubject.next(res.httpStatus === 200);
         requestSub.unsubscribe();
       },
-      () => {
-        //TODO investigate on what exactly is causing the error
+      (res : HttpErrorResponse) => {
         successSubject.next(false);
         requestSub.unsubscribe();
       }
     );
-
     return successSubject.asObservable();
   }
 
