@@ -10,9 +10,9 @@ var app = express();
 const port = 8080;
 
 var corsOptions = {
-    origin: 'http://localhost:8100',
+    origin: '*',
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-    credentials: true
+    credentials : true
 }
 
 app.use(cors(corsOptions));
@@ -25,6 +25,7 @@ const allowedUrls = ["/user/login",
                         "/user/trigger",
                         "/user/logout",
                         "/user/forgotPassword",
+                        "/user/resetPassword",
                         "/user/register",
                     ];
 const allowedWildcards = ["/user/activate/",
@@ -33,8 +34,6 @@ const allowedWildcards = ["/user/activate/",
                         ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
-// app.route('/chat/*').all(authorize);
-//TODO /socket/* protecten?
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route

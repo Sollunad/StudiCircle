@@ -1,5 +1,5 @@
-import { Component, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import {Component, forwardRef} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {EmojiProvider} from "../providers/emoji-provider/emoji";
 
 export const EMOJI_PICKER_VALUE_ACCESSOR: any = {

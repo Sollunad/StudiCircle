@@ -11,9 +11,11 @@ module.exports = function(app) {
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
-    app.route('/user/resetPassword/:validationKey')
-        .get(user.passwordResetPage)
+    app.route('/user/resetPassword')
         .post(user.resetPassword);
+
+    app.route('/user/resetPassword/:validationKey')
+        .get(user.passwordResetPage);
 
     app.route('/user/login')
         .post(user.login);

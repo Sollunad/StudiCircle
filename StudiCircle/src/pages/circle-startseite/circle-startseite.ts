@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams} from 'ionic-angular';
-import {SettingsPage} from "../settings/settings";
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
