@@ -30,6 +30,7 @@ import {EmojiProvider} from "../providers/emoji-provider/emoji";
 import {RelativeTime} from "../pipes/relative-time";
 import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
+import {ToastyProvider} from "../providers/toasty/toasty";
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import {ChatProvider} from "../providers/chat/ChatProvider";
     HttpClientModule,
     constants,
     EmojiProvider,
-    ChatProvider
+    ChatProvider,
+    ToastyProvider
   ]
 })
 export class AppModule {}
