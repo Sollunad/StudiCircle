@@ -20,7 +20,7 @@ export class CircleEinstellungenPage {
   }
 
   ionViewDidLoad() {
-    console.log(this._circleService.getCircleVisibility(1).subscribe(actualvisibility =>
+    console.log(this._circleService.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
     {
       if(actualvisibility){
         this.visibility = "1";
@@ -89,8 +89,8 @@ export class CircleEinstellungenPage {
   }
 
   editVisibility(){
-    console.log(this.vis);
-    const modification = this._circleService.edit(1, this.vis).subscribe(
+    console.log(this.visibility);
+    const modification = this._circleService.edit(this.circleId, this.visibility).subscribe(
     (success: boolean) => {
           if(success){
             console.log("[Visibility] : Visibility edit successful");

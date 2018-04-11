@@ -4,6 +4,8 @@ import { DbProvider } from "../../providers/dbprovider/dbprovider";
 import {ApiProvider} from "../../providers/api/api";
 import { BlackboardPost } from "../../providers/declarations/BlackboardPost";
 import { BlackboardPostPage } from "../blackboard-post/blackboard-post";
+import {Subscription} from "rxjs/Subscription";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 /**
  * Generated class for the BlackboardPage page.
@@ -20,62 +22,91 @@ export class BlackboardPage {
 
   private circleId = this.navParams.get('circleId');
   private posts = new Array<BlackboardPost>();
+  private date = new Date();
+  private userName = 'Hans Solo';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private dbProvider: DbProvider, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider, private dbProvider: DbProvider) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad');
-
-    // get the posts in this circle
-    this.posts = this.dbProvider.getBlackboardPosts(this.circleId);
+    this.getAllPostsOfBlackboard();
+  }
 
     //get the first 3 comments of every post
 
-    console.log(this.circleId);
-  }
-
-  private showPost(post: any) {
+  /*private showPost(post: any) {
     console.log(this.posts[post].userName);
     this.navCtrl.push(BlackboardPostPage, { post: this.posts[post] });
-  }
+  }*/
 
   private addPost() {
     this.alertCtrl.create({
       title: 'Enter Text',
       inputs: [{
+        name: 'title',
+        placeholder: 'title'
+      }, {
         name: 'text',
         placeholder: 'Type here ...'
       }],
       buttons: [{
         text: 'OK',
         handler: data => {
-          var text = data.text;
+          const title = data.title.toString().trim();
+          if(title.length < 5) return;
 
-          this.insertPost(text);
+          const text = data.text.toString().trim();
+          if (text.length < 10) return;
+
+          this.insertPost(title, text);
         }
       }]
     }).present();
   }
 
-  private insertPost(text: string) {
-    var post: BlackboardPost = {
-      postID: 0,
-      userName: this.api.currentUser.username,
-      text: text,
-      date: new Date().toString()
-    };
-
-    console.log('new post', post);
+  private insertPost(title: string, text: string) {
+    console.log('new post', title, text);
+    this.circleProvider.insertPost(this.circleId, title, text).subscribe(post => {
+      console.log('post', post);
+      this.posts.push(post);
+    });
   }
 
-  private deletePost(post: any) {
-    if (this.dbProvider.deletePost(post) === 1) {
-      this.posts.splice(post, 1);
-    }
-    else {
-      console.log("Fehler beim Löschen des Posts " + post);
-    }
+  private showPost(post: BlackboardPost) {
+    console.log('showPost', post);
+    this.navCtrl.push(
+      BlackboardPostPage, {
+        post: post
+      });
   }
 
+  private deletePost(post: BlackboardPost) {
+    console.log('deletePost', post);
+    this.circleProvider.deletePost(post.postID);
+  }
+
+  private getAllPostsOfBlackboard(){
+    //array to store comments temporarily
+    let comments = new Array<BlackboardPost>();
+      // get the posts in this circle
+    const subs: Subscription = this.dbProvider.getBlackboardPosts(this.circleId).subscribe((data:any[]) => {
+    console.log(data);
+      //iterate over all posts
+      subs.unsubscribe();
+        for(let post of data){
+        // push 3 comments in comments-object
+          for(let comment of post.Comments){
+            if(comment.PostId === post.id){
+                comments.push({postID: comment.id, userName: comment.User.name, title: 'Titel', text: comment.body, date: comment.createdAt});
+            }
+            if(comments.length === 3){break;}
+          }
+          this.posts.push({postID: post.id, userName: post.User.name, title: 'Titel', text: post.body, date: post.createdAt, comments: comments});
+          comments = [];
+        }
+      }, (err: any) => {
+        // Error-Handling
+        console.log(err);
+      });
+    }
 }

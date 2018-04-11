@@ -90,7 +90,7 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.create({"name":name,"visible":visible}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
@@ -121,21 +121,55 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible)) return;
+        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
 
         const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
 
         db.Circle.findById(circleId)
         .then(circle => {
           circle.updateAttributes({
-            //name: req.body.name,
-            "visible": visible
+            "visible": visible,
+            "calendar": calendar,
+            "bill": bill,
+            "bet": bet,
+            "filesharing": filesharing,
+            "market": market
           })
           res.send("OK");
         }).error(err => {
           res.status(500);
           res.send("Save changes failed.")
         });
+    },
+
+    editModules : function (req,res) {
+      const circleId = req.body.id;
+
+      const calendar = req.body.calendar;
+      const bill = req.body.bill;
+      const bet = req.body.bet;
+      const file = req.body.file;
+      const market = req.body.market;
+
+      if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
+
+      const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+
+      db.Circle.findById(circleId)
+      .then(circle => {
+        circle.updateAttributes({
+          "calendar": calendar,
+          "bill": bill,
+          "bet": bet,
+          "filesharing": filesharing,
+          "market": market
+        })
+        res.send("OK");
+      }).error(err => {
+        res.status(500);
+        res.send("Save changes failed.")
+      });
+
     },
 
     removeCircle : function (req, res) {
@@ -177,30 +211,53 @@ module.exports = {
 
     //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
-        const location = req.body.loc;
-        // const Distance = req.body.dist;
+      const lat1 = req.query.lat;
+      const lon1 = req.query.lon;
+      const distance = req.query.dist;
 
-        db.Circle.findAll().then(circles => {
-          // circles.forEach(circle => {
-          //   console.log(circle.getLocations());
-          // });
-          res.status(200).json(
-            circles
-          );
+      const deg2rad = (deg) => deg * (Math.PI/180);
+      const distanceBetweenCoords = (lat2, lon2) => {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distance in km
+      }
+      const circleFilter = (circle) => {
+        return circle.Locations.some(circleLocation => {
+            var coordDistance = distanceBetweenCoords(
+              circleLocation.latitude,
+              circleLocation.longitude
+            );
+            return coordDistance <= distance;
+          });
+      }
+
+      if (argumentMissing(res, lat1, lon1, distance)) return;
+
+      db.Circle.findAll({
+        include: [{
+          model: db.Location,
+      //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+         }]
+      }).then(circles => {
+
+        if(distance == -1) {
+          res.status(200).json(circles);
+          return;
+        }
+
+        var filteredCircles = circles.filter(circleFilter);
+        res.status(200).json(filteredCircles);
+      }).error(err => {
+        res.status(500).json({
+          'error': 'Server Error'
         });
-/*        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-            var R = 6371; // Radius of the earth in km
-            var dLat = deg2rad(lat2-lat1);  // deg2rad below
-            var dLon = deg2rad(lon2-lon1);
-            var a =
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-            ;
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            var d = R * c; // Distance in km
-            return d;
-        }*/
+      });
     },
 
     members : function (req, res) {
@@ -270,7 +327,7 @@ module.exports = {
     },
 
     getVisibility : function(req, res){
-      var circleId = req.query.circleId
+      var circleId = req.query.circleId;
       db.Circle.findById(circleId).then(circle => {
         if(circle == null){
           res.status(404).send("No circle with given id.");
@@ -284,12 +341,189 @@ module.exports = {
       });
     },
 
+	changeRole : function(req, res) {
+		let circleId = req.query.circle,
+			selectedUser = req.query.user,
+			newRole = req.query.role;
+
+        if(argumentMissing(res, circleId, selectedUser, newRole)) return;
+
+		db.UserInCircles.findOne({
+			where: {
+				CircleId: circleId,
+				UserId: selectedUser
+			}
+		}).then((relation) => {
+			relation.update({
+				role: newRole
+			}).then(() => {
+				res.status(200)
+					.send("Changed Role for " + selectedUser.toString()
+						+ " to " + newRole
+						+ "in Circle " + circleId + ".");
+			}).error((error) => {
+				res.status(500).send("Update failed.");
+			});
+		}).error((error) => {
+			res.status(500).send("Could not find user in circle.");
+		});
+	},
+
+    newAdmin : function(req, res){
+        const circleId = req.body.circleId;
+        const newAdminId = req.body.userId;
+        console.log("[newAdminId]"+newAdminId);
+
+        if(argumentMissing(res, circleId, newAdminId)) return;
+
+        const oldAdminId = req.session.userId;
+
+        isAdminInCircle(oldAdminId, circleId, result => {
+            if(result){
+                module.exports.changeRole({query: {
+                    "circle": circleId,
+                    "user": newAdminId,
+                    "role": cons.CircleRole.ADMINISTRATOR,
+                }},res);
+            }else{
+                res.status(403);
+                res.send("Permission denied. User who made the request is not admin in the requested circle.");
+            }
+        });
+    },
+
+    getRole : function(req, res){
+        const circleId = req.body.circleId;
+        if(argumentMissing(res, circleId)) return;
+        const userId = req.session.userId;
+
+        db.UserInCircles.findAll({
+            where: {UserId: userId, CircleId: circleId}
+        }).then(result => {
+            //TODO implementierung
+        });
+    },
+
+    leaveCircle : function(req, res){
+        //TODO
+    },
+
+    // keine geroutete function
+    isAdminAnywhere : function(userId, callback){
+        db.UserInCircles.findAll({
+            where: {UserId: userId, role: cons.CircleRole.ADMINISTRATOR}
+        }).then(result => {
+            if(result.length > 0){
+                if(callback) callback(true);
+            }else{
+                if(callback) callback(false);
+            }
+        });
+    },
+
+    getPosts: function(req, res) {
+        const circleId = req.query.circleId;
+
+        // TODO: db implementation
+        // db.Circle.findAll({
+        //     include: [{
+        //         model: db.Blackboard,
+        //         //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+        //     }]
+        // }).then(circles => {
+        //     res.status(200).json(circles);
+        // });
+
+        res.status(200).json([
+            {
+                postID: 1,
+                userName: 'TestUser',
+                title: 'First Title',
+                text: 'Toller Post',
+                date: '20170406',
+                comments: [
+                    {postID: 11, userName: 'TestUserComment11', text: 'Comment: 11', date: '20170406'},
+                    {postID: 12, userName: 'TestUserComment12', text: 'Comment: 12', date: '20170406'},
+                    {postID: 13, userName: 'TestUserComment13', text: 'Comment: 13', date: '20170406'},
+                    {postID: 14, userName: 'TestUserComment14', text: 'Comment: 14', date: '20170406'},
+                    {postID: 15, userName: 'TestUserComment15', text: 'Comment: 15', date: '20170406'}
+                ]
+            },
+            {
+                postID: 2,
+                userName: 'TestUser2',
+                title: 'Second Title',
+                text: 'Test',
+                date: '20170406',
+                comments: [{
+                    postID: 21, userName: 'TestUserComment21', text: 'Comment: Test', date: '20170406'
+                }]
+            }
+        ]);
+    },
+
+    getBlackboardPosts: function(req, res){
+      const circleId = req.query.circleID;
+
+      db.Blackboard.Post.findAll({where: {CircleId: circleId}, include: [{model: db.User},
+                                                                        {model: db.Blackboard.Comment, include: [db.User]},
+                                                                        ]}).then(result => {
+              if(result.length === 0){
+                res.send({msg: 'No Circles'});
+                return;
+              }
+              else{
+                console.log(result);
+                res.status(200).send(result);
+                return;
+              }
+          }).error(err => {
+            res.status(500).send("Error while reading posts");
+            return;
+          });
+    },
+
+
+    newPost: function(req, res) {
+        const circleId = req.body.circleId;
+        const userId = req.body.userId;
+        const title = req.body.title;
+        const text = req.body.text;
+        const date = new Date();
+
+        // TODO: db implementation
+
+        // if(argumentMissing(res, circleId, userId, title, text)) return;
+
+        res.status(200).json({
+            postID: 1,
+            userName: 'User' + userId,
+            title: title,
+            text: text,
+            date: date,
+            comments: []
+        });
+    },
+
     postComment : function(req, res){
-      const
-      db.Blackboard.Comment.
+
     }
 
 };
+
+// locale Funktionen
+
+function isAdminInCircle(userId, circleId, callback){
+    db.UserInCircles.findOne({
+        where: {CircleId: circleId, UserId: userId}
+    }).then(result => {
+        if(result && result.role == cons.CircleRole.ADMINISTRATOR){
+            if(callback) callback(true);
+        }else{
+            if(callback) callback(false);
+        }
+    });
+}
 
 function argumentMissing(res, ...args){
     if(!args.every(arg => {return arg != undefined;})){

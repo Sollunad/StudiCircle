@@ -34,12 +34,14 @@ export class BlackboardPostPage {
       {
         postID: 1,
         userName: 'Jonas',
+        title: 'Stimme dir voll zu!',
         text: 'Schlechter Beitrag',
         date: new Date().toLocaleString('de-DE', option)
       },
       {
         postID: 2,
         userName: 'Jesse',
+        title: 'Sehe ich anders ...',
         text: 'Schnauze!!!',
         date: new Date().toLocaleString('de-DE', option)
       }
