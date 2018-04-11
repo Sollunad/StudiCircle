@@ -137,8 +137,8 @@ export class ApiProvider {
     return successSubject.asObservable();
   }
 
-  public deleteUser(password: string): Observable<boolean> {
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public deleteUser(password: string): Observable<number> {
+    const successSubject: Subject<number> = new Subject<number>();
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/deleteUser",
       {
@@ -147,11 +147,11 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
-        successSubject.next(res.httpStatus === 200);
+        successSubject.next(res.httpStatus);
         requestSub.unsubscribe();
       },
       () => {
-        successSubject.next(false);
+        successSubject.next(undefined);
         requestSub.unsubscribe();
       }
     );
@@ -184,8 +184,6 @@ export class ApiProvider {
   }
 
   public setLocation(lat, lon) {
-    //console.log('CurrentUser:', this.currentUser);
-    //console.log('setLocation', lat, lon);
     this.currentUser.coords = {lat: lat, lon: lon};
     console.log('storedLocation:', this.currentUser);
   }
