@@ -44,7 +44,9 @@ module.exports = function(app) {
 
     app.route('/user/*')
         .get(user.unknownpage);
-
-    app.route('/*')
-        .get(user.unknownpage);
+    // weil die Sockets erst später definiert werden, ist das hier scheiße... wenn überhaupt sollte so eine Regel in einer
+    // extra Datei ganz am Ende sein und nicht in routerStudent
+  
+    // app.route('/*')
+    //     .get(user.unknownpage);
 };

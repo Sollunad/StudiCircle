@@ -8,7 +8,6 @@ import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {AccountTypes} from "../declarations/AccountTypeEnum";
 import {LoginResponse} from "../declarations/LoginResponse";
-import {constants} from "../../consts/constants";
 
 /*
   Generated class for the ApiProvider provider.
@@ -24,6 +23,10 @@ export class ApiProvider {
 
   constructor(private http: HttpClient) {
 
+  }
+
+  public getCurrentUser():UserInfo{
+    return this.currentUser;
   }
 
   public changeMail(new_mail : string, pwd : string){

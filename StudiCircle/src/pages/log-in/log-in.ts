@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
-import {ToastController} from 'ionic-angular';
-import {NavController} from 'ionic-angular';
+import {NavController, ToastController} from 'ionic-angular';
 import {GetInvolvedPage} from '../get-involved/get-involved';
 import {VerifyNowPage} from '../verify-now/verify-now';
 import {DashboardPage} from '../dashboard/dashboard';
@@ -8,7 +7,7 @@ import {Subscription} from "rxjs/Subscription";
 import {ApiProvider} from "../../providers/api/api";
 import {ForgotPasswordPage} from "../forgot-password/forgot-password";
 import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
-import { HttpErrorResponse } from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'page-log-in',
@@ -56,7 +55,7 @@ export class LogInPage {
             this.goToDashboard({});
             loginSub.unsubscribe();
           },
-          (data: HttpErrorResponse) => {            
+          (data: HttpErrorResponse) => {
             if(data.status === 400 || data.status === 401){
               this.createToast("Wrong password or e-mail address!");
             } else if (data.status === 412) {
@@ -82,7 +81,7 @@ export class LogInPage {
       showCloseButton: true,
       closeButtonText: "dismiss"
     });
-  
+
     toast.present();
   }
 }
