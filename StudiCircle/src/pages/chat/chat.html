@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Chat
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="chat-background">
+
+  <ion-grid>
+
+    <ion-row>
+      <ion-col offset-2 col-8 offset-sm-4 col-sm-4>
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)" position="top" *ngIf="loadedAllMessages">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let message of messages">
+
+      <ion-col col-9 *ngIf="message.from !== nickname" class="message"
+               [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
+        <ion-card (press)="doConfirm(message.messageId)">
+          <ion-item class="other" text-wrap>
+            <span class="user_name">{{ message.from }}</span><br>
+            <span>{{ message.text }}</span>
+            <div class="time">{{message.created | relativeTime}}</div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <ion-col offset-3 col-9 *ngIf="message.from === nickname" class="message"
+               [ngClass]="{'my_message': message.from === nickname, 'other_message': message.from !== nickname}">
+        <ion-card (press)="doConfirm(message.messageId)">
+          <ion-item class="mine" text-wrap>
+            <span class="user_name">Du</span><br>
+            <span>{{ message.text }}</span>
+            <div class="time">{{message.created | relativeTime}}</div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer no-border [style.height]="showEmojiPicker ? '255px' : '55px'">
+  <ion-toolbar>
+    <ion-item>
+      <button ion-button clear icon-only item-left (click)="switchEmojiPicker()">
+        <ion-icon name="md-happy"></ion-icon>
+      </button>
+      <ion-input #chat_input type="text" placeholder="Message" [(ngModel)]="message" (keyup.enter)="sendMessage()"
+        (focusin)="onFocus()">
+      </ion-input>
+
+
+      <button ion-button item-right icon-only clear (click)="sendMessage()" [disabled]="message === ''">
+        <ion-icon name='send'></ion-icon>
+      </button>
+    </ion-item>
+    <emoji-picker [(ngModel)]="message"></emoji-picker>
+
+  </ion-toolbar>
+</ion-footer>

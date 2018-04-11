@@ -8,7 +8,6 @@ import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {AccountTypes} from "../declarations/AccountTypeEnum";
 import {LoginResponse} from "../declarations/LoginResponse";
-import {constants} from "../../consts/constants";
 
 /*
   Generated class for the ApiProvider provider.
@@ -19,18 +18,24 @@ import {constants} from "../../consts/constants";
 @Injectable()
 export class ApiProvider {
 
-  // private _apiPath = "https://api.dev.sknx.de/";
-  private _apiPath = this.consts.url;
+  private _apiPath = "https://api.dev.sknx.de/";
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient, public consts: constants) {
+  constructor(private http: HttpClient) {
 
+  }
+
+  public getCurrentUser():UserInfo{
+    return this.currentUser;
   }
 
   public changeMail(new_mail : string, pwd : string){
     let data = {
       "mySession" : this.currentUser.session,
-      "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
+      "oldMail" : this.currentUser.mail,
+      "newMail" : new_mail,
+      "pwd" : pwd
+    };
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -43,7 +48,7 @@ export class ApiProvider {
           if(res.httpStatus !== 200) {
             return false;
           } else {
-            this.currentUser.username = new_mail;
+            this.currentUser.mail = new_mail;
             return true;
           }
         }
@@ -51,7 +56,7 @@ export class ApiProvider {
     );
   }
 
-  public login(username: string, password: string): Observable<boolean>{
+  public login(username: string, password: string): Observable<number>{
     let userCredentials = {"mail": username, "pwd": password};
     const header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -61,13 +66,11 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.status !== 200) {
-            return false;
-          } else {
+          if(res.httpStatus === 200) {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
-            return true;
           }
+          return res.httpStatus;
         }
       )
     );
@@ -118,7 +121,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
-        mail: mail
+        "mail": mail
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -171,6 +174,7 @@ export class ApiProvider {
         requestSub.unsubscribe();
       },
       () => {
+        //TODO investigate on what exactly is causing the error
         successSubject.next(false);
         requestSub.unsubscribe();
       }

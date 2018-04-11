@@ -25,9 +25,23 @@ module.exports = function(app) {
     app.route('/circle/edit')
         .post(circle.editCircle);
 
+    // calendar: true/false
+    // bill = true/false
+    // bet = true/false
+    // file = true/false
+    // market = true/false
+    app.route('/circle/editModules')
+        .post(circle.editModules);
+
     // id: circleId
     app.route('/circle/remove')
         .post(circle.removeCircle);
+
+	// id (Number): current circle
+	// user (Number): selected users id
+	// role (String): admin | member | mod for selected user
+	app.route('/circle/changeRole')
+		.post(circle.changeRole);
 
     // return: List circles
     app.route('/circle/forUser')
@@ -51,5 +65,18 @@ module.exports = function(app) {
     // circleId: circleId
     // return: visibility for circle
     app.route('/circle/getVisibility')
-        .get(circle.getVisibility)
+        .get(circle.getVisibility);
+
+    // circleId (Number): current circle
+	// userId (Number): selected users id
+	app.route('/circle/newAdmin')
+		.post(circle.newAdmin);
+
+    // circleId (Number): current circle
+    app.route('/circle/getRole')
+        .get(circle.getRole);
+
+    // userId (Number): selected users id
+	app.route('/circle/leave')
+		.post(circle.leaveCircle);
 };

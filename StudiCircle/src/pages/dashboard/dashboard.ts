@@ -5,7 +5,6 @@ import {SearchPage} from '../search/search';
 import {Geolocation} from '@ionic-native/geolocation'
 import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
-import {HttpClient} from "@angular/common/http";
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
@@ -20,7 +19,7 @@ export class DashboardPage {
   private res: any;
   private circles : Circle[]=[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider) {
     this.getCurrentPosition();
   }
 
@@ -40,17 +39,17 @@ export class DashboardPage {
     this.navCtrl.push(CircleStartseite, {circleId: circleId, circleName: circleName});
   }
 
-  private goToSearch(params) {
+  goToSearch(params) {
     if (!params) params = {};
     this.navCtrl.push(SearchPage);
   }
 
-  private goToSettings(params) {
+  goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
   }
 
-  private onNewCircle() {
+  onNewCircle() {
     this.navCtrl.push(CircleErstellenPage);
   }
 
