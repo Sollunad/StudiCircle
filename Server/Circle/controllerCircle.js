@@ -505,9 +505,27 @@ module.exports = {
         });
     },
 
-    postComment : function(req, res){
+    newComment : function(req, res){
 
-    }
+    },
+
+    getComments: function(req, res){
+      const postID = req.query.postID
+      db.Blackboard.Comment.findAll({where: {Postid: postID}, include: [{model: db.User},
+                                                                        ]}).then(result => {
+          if(result.length === 0){
+            res.send({msg: 'No Comments'});
+            return;
+          }else{
+            console.log(result);
+            res.status(200).send(result);
+            return;
+          }
+      }).error(err => {
+        res.status(500).send("Error while reading comments");
+        return;
+      });
+  }
 
 };
 

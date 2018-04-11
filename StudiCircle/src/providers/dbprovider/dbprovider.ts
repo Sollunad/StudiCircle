@@ -39,7 +39,12 @@ export class DbProvider {
   }
 
   public postComment(Comment: BlackboardPost){
-    const url = this.const.url + "circle/postComment?mySession=" + this.api.currentUser.session;
+    const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
     return this.http.post(url, {com: Comment});
+  }
+
+  public getComments(postID: number){
+    const url = this.consts.url + "circle/blackboard/getComments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
+    return this.http.get(url);
   }
 }
