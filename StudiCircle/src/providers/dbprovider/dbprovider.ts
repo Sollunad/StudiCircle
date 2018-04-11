@@ -79,4 +79,9 @@ export class DbProvider {
     //return this.http.post(url, {postID: postID});
     return 1;
   }
+
+  public postComment(Comment: BlackboardPost){
+    const url = this.const.url + "circle/postComment?mySession=" + this.api.currentUser.session;
+    return this.http.post(url, {com: Comment});
+  }
 }

@@ -52,4 +52,7 @@ module.exports = function(app) {
     // return: visibility for circle
     app.route('/circle/getVisibility')
         .get(circle.getVisibility)
+
+    app.route('/circle/postComment')
+        .post(circle.postComment);
 };

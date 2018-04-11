@@ -25,9 +25,8 @@ export class BlackboardPostPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad');
-
     this.post = this.navParams.get('post');
+    let option = {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'};
     this.postCreator = this.post.userName;
     this.postText = this.post.text;
     this.postDate = this.post.date;
@@ -36,21 +35,26 @@ export class BlackboardPostPage {
         postID: 1,
         userName: 'Jonas',
         text: 'Schlechter Beitrag',
-        date: new Date().toLocaleString()
+        date: new Date().toLocaleString('de-DE', option)
       },
       {
         postID: 2,
         userName: 'Jesse',
         text: 'Schnauze!!!',
-        date: new Date().toLocaleString()
+        date: new Date().toLocaleString('de-DE', option)
       }
     ];
   }
 
   private sendComment() {
-    // let tmpInput = this.input;
-    // this.input = "";
-    // this.comments.push({ userName: this.api.currentUser.username, text: tmpInput });
+    let tmpInput = this.input;
+    this.input = "";
+    let comment = {};
+    comment.postID = this.post.postID;
+    comment.text = tmpInput;
+    comment.userID = this.api.currentUser.uuid;
+    comment.date = new Date().toDateString;
+    console.log(comment);
   }
 
 

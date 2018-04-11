@@ -31,7 +31,7 @@
   <div  style="margin-left: 5%;" *ngFor="let comment of comments">
     <ion-card color="light">
       <ion-card-header>
-        {{comment.userName}}:
+        {{comment.userName}} ({{comment.date}}):
       </ion-card-header>
       <ion-card-content>
         {{comment.text}}

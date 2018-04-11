@@ -282,6 +282,11 @@ module.exports = {
         res.status(500).send("Error");
         return;
       });
+    },
+
+    postComment : function(req, res){
+      const
+      db.Blackboard.Comment.
     }
 
 };
