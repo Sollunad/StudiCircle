@@ -465,9 +465,9 @@ module.exports = {
     getBlackboardPosts: function(req, res){
       const circleId = req.query.circleID;
 
-      db.Blackboard.Post.findAll({where: {CircleId: circleId}, include: [{model: db.User},
-                                                                        {model: db.Blackboard.Comment, include: [db.User]},
-                                                                        ]}).then(result => {
+      db.Blackboard.Post.findAll({where: {CircleId: circleId}, include: [{model: db.User, attributes: ['id', 'name'] },
+                                                                        {model: db.Blackboard.Comment, include: [db.User], limit: 3},
+                                                                      ], order: [['createdAt', 'DESC']]}).then(result => {
               if(result.length === 0){
                 res.send({msg: 'No Circles'});
                 return;
@@ -511,8 +511,8 @@ module.exports = {
 
     getComments: function(req, res){
       const postID = req.query.postID
-      db.Blackboard.Comment.findAll({where: {Postid: postID}, include: [{model: db.User},
-                                                                        ]}).then(result => {
+      db.Blackboard.Comment.findAll({where: {Postid: postID}, include: [{model: db.User, attributes: ['id', 'name']},
+      ], order:[['createdAt', 'ASC']]}).then(result => {
           if(result.length === 0){
             res.send({msg: 'No Comments'});
             return;

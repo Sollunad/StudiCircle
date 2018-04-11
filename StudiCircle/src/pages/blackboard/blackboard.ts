@@ -97,7 +97,6 @@ export class BlackboardPage {
             if(comment.PostId === post.id){
                 comments.push({postID: comment.id, userName: comment.User.name, title: 'Titel', text: comment.body, date: comment.createdAt});
             }
-            if(comments.length === 3){break;}
           }
           this.posts.push({postID: post.id, userName: post.User.name, title: 'Titel', text: post.body, date: post.createdAt, comments: comments});
           comments = [];
