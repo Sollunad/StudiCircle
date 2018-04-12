@@ -392,7 +392,20 @@ module.exports = {
     },
 
     leaveCircle : function(req, res){
-        //TODO
+        const circleId = req.body.circleId
+        if (argumentMissing(res, circleId)) return;
+        const userId = req.session.userId;
+
+        db.UserInCircles.findOne({where: {"UserId": userId, "CircleId": circleId}}).then(result => {
+            if(result && result.role != cons.CircleRole.ADMINISTRATOR){
+                result.destroy();
+                sendInfoResponse(res, "User left circle.");
+            }else{
+                sendInfoResponse(res, 400, "User not in circle or user is admin.");
+            }
+        }).error(err => {
+            sendInfoResponse(res, 500, "Database error.");
+        });
     },
 
     // keine geroutete function
