@@ -1,11 +1,11 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {NavController, NavParams, ToastController, AlertController, Content} from 'ionic-angular';
-import Socket = SocketIOClient.Socket;
-import { Observable } from 'rxjs/Observable';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {AlertController, Content, NavParams, ToastController} from 'ionic-angular';
+import {Observable} from 'rxjs/Observable';
 import {ApiProvider} from "../../providers/api/api";
 import {ChatProvider} from "../../providers/chat/ChatProvider";
 import {Message} from "../../providers/declarations/Message";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import Socket = SocketIOClient.Socket;
 
 @Component({
   selector: 'chat',

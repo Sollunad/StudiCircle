@@ -6,16 +6,10 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {UserInfo} from "../declarations/UserInfo";
-import {Circle} from "../declarations/Circle";
-import {ApiResponse} from "../declarations/ApiResponse";
-import {Subscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
 import * as io from 'socket.io-client';
 import Socket = SocketIOClient.Socket;
-import {Message} from "../declarations/Message";
 
 
 @Injectable()

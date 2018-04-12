@@ -31,7 +31,7 @@ import {RelativeTime} from "../pipes/relative-time";
 import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {PopoverPage} from "../pages/circle-startseite/circle-startseite";
-
+import {ToastyProvider} from "../providers/toasty/toasty";
 
 @NgModule({
   declarations: [
@@ -97,7 +97,8 @@ import {PopoverPage} from "../pages/circle-startseite/circle-startseite";
     HttpClientModule,
     constants,
     EmojiProvider,
-    ChatProvider
+    ChatProvider,
+    ToastyProvider
   ]
 })
 export class AppModule {}

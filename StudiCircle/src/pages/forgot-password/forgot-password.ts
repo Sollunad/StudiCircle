@@ -5,6 +5,8 @@ import {GetInvolvedPage} from '../get-involved/get-involved';
 import {VerifyNowPage} from '../verify-now/verify-now';
 import {DashboardPage} from '../dashboard/dashboard';
 import {ApiProvider} from "../../providers/api/api";
+import {getMailRegex} from "../../util/stringUtils";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'page-forgot-password',
@@ -31,6 +33,26 @@ export class ForgotPasswordPage {
   }
 
   public forgotPassword(): void {
-    this._api.forgotPassword(this.email_input);
+    if(this.email_input){
+      if(this.email_input.match(getMailRegex())){
+        console.log("[FORGOTPW] : Valid E - Mail provided");
+        const forgotPw : Subscription = this._api.forgotPassword(this.email_input).subscribe(
+          (success: boolean) => {
+            if (success) {
+              console.log("[FORGOTPW] : Password reset successful");
+              this.goToLogIn({});
+            } else {
+              console.log("[FORGOTPW] : Password reset failed");
+            }
+            forgotPw.unsubscribe();
+            return success;
+          }
+        );
+      }else{
+        console.log("[FORGOTPW] : Invalid E - Mail provided");
+      }
+    }else{
+      console.log("[FORGOTPW] : No E - Mail provided");
+    }
   }
 }
