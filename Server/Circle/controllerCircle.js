@@ -227,16 +227,16 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
+        db.Circle.build({"id" : circleId}).getUsers().then(users => {
             var data = [];
             var userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name});
+                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
                 res.send(data);
-            }else{
+            } else {
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not in the requested circle.");
             }
         }).error(err => {

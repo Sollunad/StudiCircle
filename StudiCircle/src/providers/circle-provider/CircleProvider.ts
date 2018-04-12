@@ -119,6 +119,14 @@ export class CircleProvider {
     return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
+  public changeRole(userId: number, circleId: number, role: string) {
+    return this.http.post(this.consts.url+'circle/changerole', {
+      userId: userId,
+      circleId: circleId,
+      role: role
+    })
+  }
+
   public editModules(cid: number, calendar: boolean, bill: boolean, bet: boolean, file: boolean, market:boolean){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let data = {id : cid, calendar : calendar, bill: bill, bet: bet, file: file, market: market, mySession : this.apiProvider.currentUser.session};
