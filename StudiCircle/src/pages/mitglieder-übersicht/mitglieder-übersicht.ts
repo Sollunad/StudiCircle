@@ -12,9 +12,11 @@ export class MitgliederÜbersicht {
   public memberList: UserInfo[];
 
   private circleId : number;
+  private isAdmin : boolean;
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navParams: NavParams) {
     this.circleId = navParams.get('circleId');
+    this.isAdmin = navParams.get('isAdmin');
   }
 
   ionViewDidLoad(){
@@ -27,6 +29,16 @@ export class MitgliederÜbersicht {
     this.circleProvider.removeCircleMember(userId, circleId).subscribe();
     window.location.reload();
     }
+
+  promoteToModerator(userId: number, circleId: number){
+    this.circleProvider.changeRole(userId, circleId, "moderator").subscribe();
+    window.location.reload();
+  }
+
+  demoteModerator(userId: number, circleId: number){
+    this.circleProvider.changeRole(userId, circleId, "member").subscribe();
+    window.location.reload();
+  }
 
   itemSelected(item: string) {
     console.log("Selected Item", item);
