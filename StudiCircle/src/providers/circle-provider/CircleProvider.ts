@@ -13,9 +13,6 @@ import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
-import * as io from 'socket.io-client';
-import Socket = SocketIOClient.Socket;
-
 
 @Injectable()
 export class CircleProvider {
@@ -117,6 +114,14 @@ export class CircleProvider {
 
   public checkIfAdmin(cid: number): Observable<any>{
     return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public changeRole(userId: number, circleId: number, role: string) {
+    return this.http.post(this.consts.url+'circle/changerole', {
+      userId: userId,
+      circleId: circleId,
+      role: role
+    })
   }
 
   public editModules(cid: number, calendar: boolean, bill: boolean, bet: boolean, file: boolean, market:boolean){

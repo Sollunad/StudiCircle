@@ -227,16 +227,16 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
+        db.Circle.build({"id" : circleId}).getUsers().then(users => {
             var data = [];
             var userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name});
+                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
                 res.send(data);
-            }else{
+            } else {
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not in the requested circle.");
             }
         }).error(err => {
@@ -336,6 +336,11 @@ module.exports = {
         const oldAdminId = req.session.userId;
         // const dummyRes = {status : function(){}, send : function(){}};
 
+        if(newAdminId == oldAdminId){
+            sendInfoResponse(res, 400, "New and old admin are the same.");
+            return;
+        }
+
         isAdminInCircle(oldAdminId, circleId, result => {
             if(result){
                 // module.exports.changeRole({query: {
@@ -392,7 +397,20 @@ module.exports = {
     },
 
     leaveCircle : function(req, res){
-        //TODO
+        const circleId = req.body.circleId
+        if (argumentMissing(res, circleId)) return;
+        const userId = req.session.userId;
+
+        db.UserInCircles.findOne({where: {"UserId": userId, "CircleId": circleId}}).then(result => {
+            if(result && result.role != cons.CircleRole.ADMINISTRATOR){
+                result.destroy();
+                sendInfoResponse(res, "User left circle.");
+            }else{
+                sendInfoResponse(res, 400, "User not in circle or user is admin.");
+            }
+        }).error(err => {
+            sendInfoResponse(res, 500, "Database error.");
+        });
     },
 
     // keine geroutete function

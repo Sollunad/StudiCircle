@@ -30,6 +30,7 @@ import {EmojiProvider} from "../providers/emoji-provider/emoji";
 import {RelativeTime} from "../pipes/relative-time";
 import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
+import {PopoverPage} from "../pages/circle-startseite/circle-startseite";
 import {ToastyProvider} from "../providers/toasty/toasty";
 
 @NgModule({
@@ -52,7 +53,8 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     RelativeTime,
     AdminAuswaehlenPage,
     EmojiPickerComponent,
-    ChatPage
+    ChatPage,
+    PopoverPage
   ],
 
   imports: [
@@ -80,6 +82,7 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     SearchPage,
     CircleEinstellungenPage,
     ChatPage,
+    PopoverPage,
     AdminAuswaehlenPage
   ],
   providers: [
