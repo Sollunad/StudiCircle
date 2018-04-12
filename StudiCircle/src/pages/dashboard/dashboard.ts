@@ -19,9 +19,13 @@ export class DashboardPage {
   settings: SettingsPage;
   private res: any;
   private circles : Circle[]=[];
+  private accountName : string;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
+    if(this.api.currentUser.username){
+      this.accountName = this.api.currentUser.username.split(' ')[0];
+    }
   }
 
   private getCurrentPosition() {
