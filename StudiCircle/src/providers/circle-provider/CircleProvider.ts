@@ -145,4 +145,24 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
+  public invite(id : number, mail : string){
+    const resSubject: Subject<any> = new Subject<any>();
+    let body = {id : id, vis : mail, mySession : this.apiProvider.currentUser.session};
+    let header = {"headers" : {"Content-Type": "application/json"}};
+    const editVisibility: Subscription = this.http.post(
+      this.consts.url+'circle/invite', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editVisibility.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        editVisibility.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
+  }
+
 }

@@ -59,8 +59,9 @@ export class MitgliederÜbersicht {
       buttons: [
         {
           text: 'Einladung senden',
-          handler: () => {
+          handler: data => {
             console.log('Einladung gesendet!');
+            this.invitation(data);
           }
         },
         {
@@ -74,4 +75,23 @@ export class MitgliederÜbersicht {
     });
     alert.present();
   }
+
+  invitation(data: string){
+    console.log("[E-Mail]: "+data);
+    const modification = this.circleProvider.invite(this.circleId, data).subscribe(
+      (res) => {
+        if(res.info=="OK"){
+          console.log("[Invitation] : Invitation sent successful");
+          modification.unsubscribe();
+          return true;
+        }else{
+          console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
+          console.log(res);
+          modification.unsubscribe();
+          return false;
+        }
+      }
+    )
+  }
+
 }
