@@ -18,7 +18,7 @@ import {LoginResponse} from "../declarations/LoginResponse";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.dev.sknx.de/";
+  private _apiPath = "https://api.sknx.de/";
   public currentUser: UserInfo;
 
   constructor(private http: HttpClient) {
