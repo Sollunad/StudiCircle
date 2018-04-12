@@ -155,7 +155,6 @@ export class CircleStartseite {
 
     openPage(module) {
       this.navCtrl.push(module.component, {circleId: this.circleId});
-      this.navCtrl.push(module.component,{circleId: this.circleId});
     }
 
 }
