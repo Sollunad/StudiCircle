@@ -14,4 +14,11 @@
       <button ion-button color="danger" (click)="removeCircleMember(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
     </ion-item>
   </ion-list>
+
+  <ion-fab  center bottom>
+    <button ion-fab (click)="openInviteDialog()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
 </ion-content>
