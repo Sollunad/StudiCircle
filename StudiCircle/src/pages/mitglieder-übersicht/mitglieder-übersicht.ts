@@ -61,7 +61,7 @@ export class MitgliederÜbersicht {
           text: 'Einladung senden',
           handler: data => {
             console.log('Einladung gesendet!');
-            this.invitation(data);
+            this.invitation(data.mail);
           }
         },
         {
