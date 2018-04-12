@@ -9,6 +9,7 @@ import {ChangeMailPage} from '../change-mail/change-mail';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
 import {ToastyProvider} from "../../providers/toasty/toasty";
+import {FAQPage} from "../faq/faq";
 
 @Component({
   selector: 'page-settings',
@@ -52,10 +53,9 @@ export class SettingsPage {
   }goToSettings(params){
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
-  }
-
-  public goToFaqPlaceholder(): void{
-    console.log("gotofaq");
+  }goToFAQ(params): void{
+    if (!params) params = {};
+    this.navCtrl.push(FAQPage);
   }
 
   public validateInput(input: string): void{

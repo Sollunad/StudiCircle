@@ -33,6 +33,7 @@ import {RelativeTime} from "../pipes/relative-time";
 import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {ToastyProvider} from "../providers/toasty/toasty";
+import {FAQPage} from "../pages/faq/faq";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     ChatPage,
     PopoverPage,
     BlackboardPage,
-    BlackboardPostPage
+    BlackboardPostPage,
+    FAQPage
   ],
 
   imports: [
@@ -88,7 +90,8 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     PopoverPage,
     AdminAuswaehlenPage,
     BlackboardPage,
-    BlackboardPostPage
+    BlackboardPostPage,
+    FAQPage
   ],
   providers: [
     StatusBar,
