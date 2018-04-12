@@ -5,7 +5,7 @@
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>Event Details</ion-title>
+    <ion-title>Termin hinzufügen</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -16,22 +16,22 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Start</ion-label>
+      <ion-label>Beginn</ion-label>
       <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item>
-      <ion-label>End</ion-label>
+      <ion-label>Ende</ion-label>
       <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item>
-      <ion-label>All Day?</ion-label>
+      <ion-label>Ganztägig</ion-label>
       <ion-checkbox [(ngModel)]="event.allDay"></ion-checkbox>
     </ion-item>
   </ion-list>
 
   <button ion-button full icon-left (click)="save()">
-    <ion-icon name="checkmark"></ion-icon> Add Event
+    <ion-icon name="checkmark"></ion-icon>Termin hinzufügen
   </button>
 </ion-content>

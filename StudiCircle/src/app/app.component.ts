@@ -4,13 +4,14 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {LogInPage} from "../pages/log-in/log-in";
 import {CalendarPage} from "../pages/calendar/calendar";
+import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
 
-  rootPage: any = CalendarPage;
+  rootPage: any = CalendarTabPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {

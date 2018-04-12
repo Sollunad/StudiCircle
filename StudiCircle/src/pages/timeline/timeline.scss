@@ -1,0 +1,20 @@
+page-timeline {
+  .social-cards ion-col {
+    padding: 0;
+  }
+
+  ion-card-content {
+    padding-bottom: 0 !important;
+  }
+
+  .votes {
+    color: #c5c5c5;
+    text-transform: none;
+    margin: 0 !important;
+    padding-left: 16px !important;
+  }
+
+  .buttons {
+    margin-top: 5px !important;
+  }
+}

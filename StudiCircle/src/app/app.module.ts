@@ -35,6 +35,8 @@ import {ToastyProvider} from "../providers/toasty/toasty";
 import {NgCalendarModule} from "ionic2-calendar";
 import {CalendarPage} from "../pages/calendar/calendar";
 import {EventModalPage} from "../pages/event-modal/event-modal";
+import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
+import {TimelinePage} from "../pages/timeline/timeline";
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import {EventModalPage} from "../pages/event-modal/event-modal";
     ChatPage,
     PopoverPage,
     CalendarPage,
-    EventModalPage
+    EventModalPage,
+    CalendarTabPage,
+    TimelinePage
   ],
 
   imports: [
@@ -91,7 +95,9 @@ import {EventModalPage} from "../pages/event-modal/event-modal";
     PopoverPage,
     AdminAuswaehlenPage,
     CalendarPage,
-    EventModalPage
+    EventModalPage,
+    CalendarTabPage,
+    TimelinePage
   ],
   providers: [
     StatusBar,
