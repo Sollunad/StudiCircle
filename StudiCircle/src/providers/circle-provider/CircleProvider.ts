@@ -145,9 +145,9 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
-  public invite(id : number, mail : string){
+  public invite(id : number, mail){
     const resSubject: Subject<any> = new Subject<any>();
-    let body = {id : id, mail : mail, mySession : this.apiProvider.currentUser.session};
+    let body = {id : id, mail, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
       this.consts.url+'circle/invite', body, header
