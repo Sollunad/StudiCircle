@@ -20,7 +20,7 @@ export class DashboardPage {
   private res: any;
   private circles : Circle[]=[];
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
   }
 
@@ -74,7 +74,7 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.dbProvider.getLocationByAddress(address).subscribe(geoResponses => {
+          this.dbprovider.getLocationByAddress(address).subscribe(geoResponses => {
             let json = geoResponses[0];
 
             if (json === undefined) {

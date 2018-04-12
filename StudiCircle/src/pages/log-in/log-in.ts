@@ -23,13 +23,6 @@ export class LogInPage {
 
   }
 
-  ionViewDidEnter() {
-    this.mail = 'test@student.example.com';
-    this.pw = '12345678';
-
-    this.login();
-  }
-
   goToGetInvolved(params){
     if (!params) params = {};
     this.navCtrl.push(GetInvolvedPage);
