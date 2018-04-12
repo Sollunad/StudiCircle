@@ -9,6 +9,7 @@ import {ChangeMailPage} from '../change-mail/change-mail';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
 import { debounce } from 'ionic-angular/util/util';
+import {ToastyProvider} from "../../providers/toasty/toasty";
 
 @Component({
   selector: 'page-settings',
@@ -22,7 +23,8 @@ export class SettingsPage {
   private accountName : string;
 
   constructor(public navCtrl: NavController,
-              private _api: ApiProvider) {
+              private _api: ApiProvider,
+              private toasty : ToastyProvider) {
     this.deleteButtonColor = "greyedout";
     this.enabled = false;
     if(this._api.currentUser.username){
@@ -55,7 +57,7 @@ export class SettingsPage {
   public goToFaqPlaceholder(): void{
     console.log("gotofaq");
   }
-  
+
   public validateInput(input: string): void{
     if(this.pw_confirm.length > 8){
       this.changeDeleteButton(true);
@@ -63,22 +65,28 @@ export class SettingsPage {
       this.changeDeleteButton(false);
     }
   }
-  
+
   public changeDeleteButton(activate: boolean): void{
     this.enabled = activate;
-    this.deleteButtonColor = this.enabled? "danger":"greyedout"; 
+    this.deleteButtonColor = this.enabled? "danger":"greyedout";
   }
 
   public deleteAccount(): void {
     const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
-      (success: boolean) => {
+      (status: number) => {
         deleteAccountSub.unsubscribe();
-        if(success) {
+        if(status===200) {
           console.log("[SETTINGS] : Account deletion successful");
+          this.toasty.toast("Account deletion successful");
           this.goToLogIn({});
-        } else {
-          console.log("[SETTINGS] : Account deletion failed");
+        } else if(status===412){
+          this.toasty.toast("User still Admin in one or more circles")
+        } else if(status===400) {
+          console.log("[SETTINGS] : Session or Password missing");
+        } else if(status===401) {
+          console.log("[SETTINGS] : Session or Password invalid");
         }
+        this.toasty.toast("Account deletion failed");
       }
     );
   }
