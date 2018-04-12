@@ -1,12 +1,12 @@
 import {Component, ViewChild, ElementRef } from '@angular/core';
 import {AlertController, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
-import {SettingsPage} from "../settings/settings";
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
+import {DashboardPage} from "../dashboard/dashboard";
 
 @Component({
   template: `
@@ -52,12 +52,15 @@ export class PopoverPage {
               {
                 text: 'Verlassen',
                 handler: () => {
-                  this.viewCtrl.dismiss();
-                  this.navCtrl.pop();
-                  this.circleProvider.leaveCircle(this.circleId).subscribe(
-                    message => console.log(message)
-                  );
 
+
+                  this.circleProvider.leaveCircle(this.circleId).subscribe(
+                    message => {
+                      console.log(message);
+                      this.viewCtrl.dismiss();
+                      this.navCtrl.push(DashboardPage, {'flag':1});
+                    }
+                  );
               }
               },
               {
@@ -105,7 +108,7 @@ export class CircleStartseite {
   ];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: HttpClient,
-              public circleProvider: CircleProvider, public alertCtrl: AlertController, private popoverCtrl: PopoverController,  private viewCtrl: ViewController) {
+              public circleProvider: CircleProvider, private popoverCtrl: PopoverController) {
     this.circleId = navParams.get('circleId');
     this.circleName = navParams.get('circleName');
   }
@@ -148,11 +151,6 @@ export class CircleStartseite {
       popover.present({
         ev: ev
       });
-    }
-
-    test(){
-    console.log("erfolg");
-    this.navCtrl.pop();
     }
 
     openPage(module) {
