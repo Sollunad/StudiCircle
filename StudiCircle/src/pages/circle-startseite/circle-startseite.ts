@@ -1,5 +1,5 @@
 import {Component, ViewChild, ElementRef } from '@angular/core';
-import {AlertController, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {AlertController, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
 import {SettingsPage} from "../settings/settings";
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
@@ -26,7 +26,7 @@ export class PopoverPage {
   circleId;
   circleName;
 
-  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController) {
+  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController, private popoverCtrl: PopoverController) {
 
   }
 
@@ -52,17 +52,20 @@ export class PopoverPage {
               {
                 text: 'Verlassen',
                 handler: () => {
+                  this.viewCtrl.dismiss();
+                  this.navCtrl.pop();
                   this.circleProvider.leaveCircle(this.circleId).subscribe(
                     message => console.log(message)
                   );
-                  this.navCtrl.pop();
-                }
+
+              }
               },
               {
                 text: 'Abbrechen',
                 role: 'cancel',
                 handler: () => {
                   console.log('Verlassen abgebrochen');
+                  this.viewCtrl.dismiss();
                 }
               }
             ]
@@ -80,75 +83,81 @@ export class PopoverPage {
 })
 export class CircleStartseite {
 
-  @ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
-  @ViewChild('popoverText', { read: ElementRef }) text: ElementRef;
+  @ViewChild('popoverContent', {read: ElementRef}) content: ElementRef;
+  @ViewChild('popoverText', {read: ElementRef}) text: ElementRef;
 
-  moduleList: Array<{title: string, mapName:string, component: any, imageName: string}> = [
-    { title: 'Blackboard', mapName:'blackboard', component: SearchPage , imageName: 'blackboard.jpg'},
-    { title: 'Chat', mapName:'chat', component: ChatPage , imageName: 'chat.jpg'}
+  moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
+    {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+    {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
   ];
 
-  circleId : number;
+  circleId: number;
 
-  circleName : string;
-  public checkRole : boolean;
+  circleName: string;
+  public checkRole: boolean;
 
   staticModules = [
-  { title: 'Rechnungen', mapName:'bill', component: '', imageName: 'rechnungen.jpg'},
-  { title: 'Kalender', mapName:'calendar', component: '' ,imageName: 'kalender.jpg'},
-  { title: 'Wetten', mapName:'bet', component:'',imageName: 'wetten.jpg'},
-  { title: 'File-Sharing', mapName:'filesharing', component:'',imageName: 'file-sharing.jpg'},
-  { title: 'Flohmarkt', mapName:'market', component:'',imageName: 'flohmarkt.jpg'}
-];
+    {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
+    {title: 'Kalender', mapName: 'calendar', component: '', imageName: 'kalender.jpg'},
+    {title: 'Wetten', mapName: 'bet', component: '', imageName: 'wetten.jpg'},
+    {title: 'File-Sharing', mapName: 'filesharing', component: '', imageName: 'file-sharing.jpg'},
+    {title: 'Flohmarkt', mapName: 'market', component: '', imageName: 'flohmarkt.jpg'}
+  ];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: HttpClient,
-              public circleProvider:CircleProvider, public alertCtrl: AlertController, private popoverCtrl: PopoverController) {
+              public circleProvider: CircleProvider, public alertCtrl: AlertController, private popoverCtrl: PopoverController,  private viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
     this.circleName = navParams.get('circleName');
   }
 
-  ionViewDidLoad(){
+  ionViewDidLoad() {
     this.circleProvider.getModuleListByCircleId(this.circleId).subscribe(moduleList => {
       console.log(moduleList);
-      this.staticModules.forEach(module =>{
-        for(let entry of moduleList) {
+      this.staticModules.forEach(module => {
+        for (let entry of moduleList) {
           if (module.mapName == entry)
             this.moduleList.push(module)
-        }});
-      this.moduleList.push({ title: 'Mitglieder', mapName:'member', component: MitgliederÜbersicht ,imageName: 'mitglieder.jpg'});
-      this.moduleList.push({ title: 'Einstellungen', mapName:'settings', component:CircleEinstellungenPage,imageName: 'einstellungen.jpg'});
-      });
-  }
-
-  presentPopover(ev) {
-
-    let popover = this.popoverCtrl.create(PopoverPage, {
-      circleId: this.circleId,
-      circleName: this.circleName
-    });
-
-    popover.present({
-      ev: ev
-    });
-  }
-
-  openPage(module) {
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
-      role => {
-        if (module.mapName=="settings" && !(role.role=="admin")) {
-          console.log("[ROLE] : "+role.role);
-          let alert = this.alertCtrl.create({
-            title: 'Öffnen nicht möglich!',
-            subTitle: 'Öffnen der Circle Einstellungen nicht möglich! Zum Öffnen werden Adminrechte benötigt.',
-            buttons: ['OK']
-          });
-          alert.present();
-        } else {
-          console.log("[ROLE] : "+role.role);
-          this.navCtrl.push(module.component,{circleId: this.circleId});
         }
-      }
-    );
+      });
+      this.moduleList.push({
+        title: 'Mitglieder',
+        mapName: 'member',
+        component: MitgliederÜbersicht,
+        imageName: 'mitglieder.jpg'
+      });
+      this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+        role => {
+          if (role.role == "admin") {
+            console.log("[ROLE] : " + role.role);
+            this.moduleList.push({
+              title: 'Einstellungen',
+              mapName: 'settings',
+              component: CircleEinstellungenPage,
+              imageName: 'einstellungen.jpg'
+            });
+          }
+        });
+    });
   }
+
+    presentPopover(ev) {
+      let popover = this.popoverCtrl.create(PopoverPage, {
+        circleId: this.circleId,
+        circleName: this.circleName
+      });
+      popover.present({
+        ev: ev
+      });
+    }
+
+    test(){
+    console.log("erfolg");
+    this.navCtrl.pop();
+    }
+
+    openPage(module) {
+      this.navCtrl.push(module.component, {circleId: this.circleId});
+      this.navCtrl.push(module.component,{circleId: this.circleId});
+    }
 
 }
