@@ -7,6 +7,7 @@ const Location = require('./location.js');
 const ValidationKey = require('./validationKey');
 const UniMail = require('./uniMail');
 const ChatMessage = require('./chat.js');
+const Blackboard = require('./blackboard.js');
 
 /**
  * n:m - CIRCLES AND LOCATIONS
@@ -58,8 +59,32 @@ Module.belongsTo(Circle);*/
 /**
  * 0/1:1 - USER AND VALIDATIONKEY
  **/
-//User.belongsTo(ValidationKey);
+//User.has(ValidationKey);
 ValidationKey.belongsTo(User);
+
+
+
+/**
+ * Blackboard
+ * 1:n - POST AND USER
+ * 1:n - POST AND CIRCLE
+ **/
+User.hasMany(Blackboard.Post);
+Blackboard.Post.belongsTo(User);
+
+Circle.hasMany(Blackboard.Post);
+Blackboard.Post.belongsTo(Circle);
+
+/**
+ * Blackboard
+ * 1:n - COMMENT AND USER
+ * 1:n - COMMENT AND POST
+ **/
+User.hasMany(Blackboard.Comment);
+Blackboard.Comment.belongsTo(User);
+
+Blackboard.Post.hasMany(Blackboard.Comment);
+Blackboard.Comment.belongsTo(Blackboard.Post);
 
 
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
@@ -73,6 +98,7 @@ function init() {
 				Location.sync({force:true}).then(() => {
 					CircleLocation.sync({force:true});
 					UserInCircles.sync({force:true});
+					Blackboard.init();
                     console.log("Database done");
 				});
 			});
@@ -85,6 +111,7 @@ module.exports = {
 	Circle: Circle,
 	Location: Location,
 	User: User,
+	Blackboard: Blackboard,
 	ValidationKey: ValidationKey,
 	UniMail:UniMail,
 	ChatMessage: ChatMessage,

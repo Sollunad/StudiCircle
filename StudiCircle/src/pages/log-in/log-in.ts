@@ -16,11 +16,18 @@ import {ToastyProvider} from "../../providers/toasty/toasty";
 })
 export class LogInPage {
 
-  public mail : '';
-  public pw : '';
+  public mail : string = '';
+  public pw : string = '';
 
   constructor(public navCtrl: NavController, private _api : ApiProvider, private toasty : ToastyProvider) {
 
+  }
+
+  ionViewDidEnter() {
+    this.mail = 'test@student.example.com';
+    this.pw = '12345678';
+
+    this.login();
   }
 
   goToGetInvolved(params){
