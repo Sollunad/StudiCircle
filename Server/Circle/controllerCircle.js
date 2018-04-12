@@ -336,6 +336,11 @@ module.exports = {
         const oldAdminId = req.session.userId;
         // const dummyRes = {status : function(){}, send : function(){}};
 
+        if(newAdminId == oldAdminId){
+            sendInfoResponse(res, 400, "New and old admin are the same.");
+            return;
+        }
+
         isAdminInCircle(oldAdminId, circleId, result => {
             if(result){
                 // module.exports.changeRole({query: {
