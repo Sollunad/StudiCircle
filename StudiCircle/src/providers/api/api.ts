@@ -182,6 +182,11 @@ export class ApiProvider {
 
   public setLocation(lat, lon) {
     this.currentUser.coords = {lat: lat, lon: lon};
-    console.log('storedLocation:', this.currentUser);
+    //console.log('storedLocation:', this.currentUser);
   }
+
+  public getLocation() {
+    return this.currentUser.coords;
+  }
+
 }

@@ -23,6 +23,8 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {BlackboardPage} from "../pages/blackboard/blackboard";
+import {BlackboardPostPage} from '../pages/blackboard-post/blackboard-post';
 import {constants} from "../consts/constants";
 import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
 import {ChatPage} from "../pages/chat/chat";
@@ -54,7 +56,9 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     AdminAuswaehlenPage,
     EmojiPickerComponent,
     ChatPage,
-    PopoverPage
+    PopoverPage,
+    BlackboardPage,
+    BlackboardPostPage
   ],
 
   imports: [
@@ -83,7 +87,9 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     CircleEinstellungenPage,
     ChatPage,
     PopoverPage,
-    AdminAuswaehlenPage
+    AdminAuswaehlenPage,
+    BlackboardPage,
+    BlackboardPostPage
   ],
   providers: [
     StatusBar,

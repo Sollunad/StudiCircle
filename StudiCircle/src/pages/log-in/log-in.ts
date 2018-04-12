@@ -16,8 +16,8 @@ import {ToastyProvider} from "../../providers/toasty/toasty";
 })
 export class LogInPage {
 
-  public mail : '';
-  public pw : '';
+  public mail : string = '';
+  public pw : string = '';
 
   constructor(public navCtrl: NavController, private _api : ApiProvider, private toasty : ToastyProvider) {
 
