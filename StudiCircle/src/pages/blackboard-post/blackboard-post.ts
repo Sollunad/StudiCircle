@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { BlackboardPage } from '../blackboard/blackboard';
-import { BlackboardPost } from '../../providers/declarations/BlackboardPost';
-import { ApiProvider } from '../../providers/api/api';
-import { DbProvider } from '../../providers/dbprovider/dbprovider';
-import { Subscription } from "rxjs/Subscription";
+import {Component} from '@angular/core';
+import {NavController, NavParams} from 'ionic-angular';
+import {BlackboardPost} from '../../providers/declarations/BlackboardPost';
+import {ApiProvider} from '../../providers/api/api';
+import {DbProvider} from '../../providers/dbprovider/dbprovider';
+import {Subscription} from "rxjs/Subscription";
+
 /**
  * Generated class for the BlackboardPostPage page.
  *

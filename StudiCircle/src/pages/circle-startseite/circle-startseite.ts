@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AlertController, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";

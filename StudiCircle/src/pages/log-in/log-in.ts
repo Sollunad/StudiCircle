@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, ToastController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {GetInvolvedPage} from '../get-involved/get-involved';
 import {VerifyNowPage} from '../verify-now/verify-now';
 import {DashboardPage} from '../dashboard/dashboard';

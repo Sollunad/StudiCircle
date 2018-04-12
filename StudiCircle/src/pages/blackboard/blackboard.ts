@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { DbProvider } from "../../providers/dbprovider/dbprovider";
-import {ApiProvider} from "../../providers/api/api";
-import { BlackboardPost } from "../../providers/declarations/BlackboardPost";
-import { BlackboardPostPage } from "../blackboard-post/blackboard-post";
+import {Component} from '@angular/core';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {DbProvider} from "../../providers/dbprovider/dbprovider";
+import {BlackboardPost} from "../../providers/declarations/BlackboardPost";
+import {BlackboardPostPage} from "../blackboard-post/blackboard-post";
 import {Subscription} from "rxjs/Subscription";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 

@@ -8,7 +8,6 @@ import {DashboardPage} from '../dashboard/dashboard';
 import {ChangeMailPage} from '../change-mail/change-mail';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
-import { debounce } from 'ionic-angular/util/util';
 import {ToastyProvider} from "../../providers/toasty/toasty";
 
 @Component({
