@@ -231,7 +231,7 @@ module.exports = {
             var data = [];
             var userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name, role: role});
+                data.push({uuid: element.id, username: element.name, role: element.role});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
