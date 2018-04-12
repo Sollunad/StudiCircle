@@ -32,6 +32,9 @@ import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {PopoverPage} from "../pages/circle-startseite/circle-startseite";
 import {ToastyProvider} from "../providers/toasty/toasty";
+import {NgCalendarModule} from "ionic2-calendar";
+import {CalendarPage} from "../pages/calendar/calendar";
+import {EventModalPage} from "../pages/event-modal/event-modal";
 
 @NgModule({
   declarations: [
@@ -54,10 +57,13 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     AdminAuswaehlenPage,
     EmojiPickerComponent,
     ChatPage,
-    PopoverPage
+    PopoverPage,
+    CalendarPage,
+    EventModalPage
   ],
 
   imports: [
+    NgCalendarModule,
     HttpModule,
     BrowserModule,
     HttpClientModule,
@@ -83,7 +89,9 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     CircleEinstellungenPage,
     ChatPage,
     PopoverPage,
-    AdminAuswaehlenPage
+    AdminAuswaehlenPage,
+    CalendarPage,
+    EventModalPage
   ],
   providers: [
     StatusBar,
