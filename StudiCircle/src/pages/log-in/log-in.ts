@@ -8,6 +8,7 @@ import {ApiProvider} from "../../providers/api/api";
 import {ForgotPasswordPage} from "../forgot-password/forgot-password";
 import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 import {HttpErrorResponse} from '@angular/common/http';
+import {ToastyProvider} from "../../providers/toasty/toasty";
 
 @Component({
   selector: 'page-log-in',
@@ -18,7 +19,7 @@ export class LogInPage {
   public mail : '';
   public pw : '';
 
-  constructor(public navCtrl: NavController, private _api : ApiProvider, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, private _api : ApiProvider, private toasty : ToastyProvider) {
 
   }
 
@@ -57,11 +58,11 @@ export class LogInPage {
           },
           (data: HttpErrorResponse) => {
             if(data.status === 400 || data.status === 401){
-              this.createToast("Wrong password or e-mail address!");
+              this.toasty.toast("Wrong password or e-mail address!");
             } else if (data.status === 412) {
-              this.createToast("Your Account is not yet activated!");
+              this.toasty.toast("Your Account is not yet activated!");
             } else {
-              this.createToast("Something went wrong!");
+              this.toasty.toast("Something went wrong!");
             }
             console.log("[LOGIN] : Login failed");
             loginSub.unsubscribe();
@@ -71,17 +72,5 @@ export class LogInPage {
         console.log("[LOGIN] : Non-compliant E-Mail or Password")
       }
     }
-  }
-
-  createToast(toastMessage: string) {
-    let toast = this.toastCtrl.create({
-      message: toastMessage,
-      duration: 2000,
-      position: 'bottom',
-      showCloseButton: true,
-      closeButtonText: "dismiss"
-    });
-
-    toast.present();
   }
 }

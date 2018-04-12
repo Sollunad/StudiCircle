@@ -6,6 +6,7 @@ import {VerifyNowPage} from '../verify-now/verify-now';
 import {DashboardPage} from '../dashboard/dashboard';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
+import {ToastyProvider} from "../../providers/toasty/toasty";
 
 @Component({
   selector: 'page-pass-man',
@@ -13,12 +14,13 @@ import {Subscription} from "rxjs/Subscription";
 })
 export class PassManPage {
 
-  pw_old : '';
-  pw_new : '';
-  pw_new_confirm : '';
+  pw_old : string = '';
+  pw_new : string =  '';
+  pw_new_confirm : string = '';
 
   constructor(public navCtrl: NavController,
-              private _api: ApiProvider) {
+              private _api: ApiProvider,
+              private toasty : ToastyProvider) {
   }
   goToLogIn(params){
     if (!params) params = {};
@@ -36,25 +38,32 @@ export class PassManPage {
 
   public managePassword(): void {
     if(this.pw_old && this.pw_new && this.pw_new_confirm){
-      console.log("[PassMan]: Fields not empty");
-      if(this.pw_new === this.pw_new_confirm && this.pw_old !== this.pw_new){
-        console.log("[PassMan]: Old Password differs from new one. Success!");
-        const setPasswordSub: Subscription = this._api.setPassword(this.pw_old, this.pw_new).subscribe(
-          (success: boolean) => {
-            setPasswordSub.unsubscribe();
-            if(success) {
-              console.log("[PassMan]: Password changed successfully");
-              this.goToLogIn({});
-            } else {
-              console.log("[PassMan]: Password change FAILED!");
+      if(this.pw_new === this.pw_new_confirm){
+        if(this.pw_old !== this.pw_new){
+          const setPasswordSub: Subscription = this._api.setPassword(this.pw_old, this.pw_new).subscribe(
+            (success: boolean) => {
+              setPasswordSub.unsubscribe();
+              if(success) {
+                console.log("[PassMan]: Password changed successfully");
+                this.toasty.toast("Password changed successfully");
+                this.goToLogIn({});
+              } else {
+                console.log("[PassMan]: Password change FAILED!");
+                this.toasty.toast("Password change failed");
+              }
             }
-          }
-        );
+          );
+        } else {
+          console.log("[PassMan]: Old and new Password same");
+          this.toasty.toast("Old and new Password same");
+        }
       } else {
-        console.log("[PassMan]: Old and new Password same");
+        console.log("[PassMan]: Password confirmation failed");
+        this.toasty.toast("Password confirmation failed");
       }
     } else {
       console.log("[PassMan]: All fields have to be filled");
+      this.toasty.toast("All fields have to be filled");
     }
   }
 }
