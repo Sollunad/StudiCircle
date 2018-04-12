@@ -66,19 +66,19 @@ export class CircleErstellenPage {
           }
           console.log(this.vis, this.newName, this.loc);
           const modification = this._circleService.create(this.newName, this.vis, this.loc).subscribe(
-            (success: boolean) => {
-              this.navCtrl.pop();
-              if (success) {
-                console.log("[CREATE] : Circle created successful");
-                modification.unsubscribe();
-                return true;
-              } else {
-                console.log("[CREATE] : Circle created not successful");
-                modification.unsubscribe();
-                return false;
-              }
-
-            });
+            res => {
+                this.navCtrl.pop();
+                if(res.info=="Circle created and User added."){
+                  console.log("[Circle] : Create new Circle successful");
+                  modification.unsubscribe();
+                  return true;
+                }else {
+                  console.log("[Circle] : Create new Circle not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                  return false;
+                }
+              });
       }
     )
 
