@@ -227,11 +227,11 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name","role"]}).then(users => {
+        db.Circle.build({"id" : circleId}).getUsers({attributes: ["id","name"]}).then(users => {
             var data = [];
             var userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name, role: element.role});
+                data.push({uuid: element.id, username: element.name});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
