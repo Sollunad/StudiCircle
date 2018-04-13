@@ -506,18 +506,24 @@ module.exports = {
     },
 
     newComment : function(req, res){
-
+        const comment = req.body.com;
+        console.log("\n\nComment", comment);
+        db.Blackboard.Comment.create({"body": comment.body, "PostId":comment.postID, "UserId":req.session.userId,}).then(result => {
+          console.log(result);
+        }).error(err =>{
+          res.status(500).send("Error while posting comment");
+        });
     },
 
     getComments: function(req, res){
       const postID = req.query.postID
       db.Blackboard.Comment.findAll({where: {Postid: postID}, include: [{model: db.User},
                                                                         ]}).then(result => {
+          console.log(result);
           if(result.length === 0){
-            res.send({msg: 'No Comments'});
+            res.send(result);
             return;
           }else{
-            console.log(result);
             res.status(200).send(result);
             return;
           }

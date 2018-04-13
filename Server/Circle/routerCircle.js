@@ -97,8 +97,7 @@ module.exports = function(app) {
     app.route('/circle/blackboard/newPost')
         .post(circle.newPost);
 
-    //postID (Number)
-    //userID (number)
+    //Comment (BlackboardPost)
     app.route('/circle/blackboard/newComment')
         .post(circle.newComment);
 

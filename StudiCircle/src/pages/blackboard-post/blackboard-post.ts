@@ -23,6 +23,8 @@ export class BlackboardPostPage {
   private db: any;
   private comments = new Array<BlackboardPost>();
   private post: BlackboardPost;
+  private comment: any;
+  private input: String;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private api: ApiProvider, private dbprovider: DbProvider) {
   }
@@ -33,21 +35,24 @@ export class BlackboardPostPage {
     this.postText = this.post.text;
     this.postDate = this.post.date;
     const subs: Subscription = this.dbprovider.getComments(this.post.postID).subscribe((data:any[]) => {
+      console.log(data);
+      if( data == []){
+        this.comments = []
+      }
       this.comments = data;
       subs.unsubscribe();
     });
   }
 
-  /*private sendComment() {
+  private sendComment() {
     let tmpInput = this.input;
     this.input = "";
-    let comment: BlackboardPost;
-    comment.postID = this.post.postID;
-    comment.text = tmpInput;
-    comment.userID = this.api.currentUser.uuid;
-    comment.date = new Date().toDateString;
-    console.log(comment);
-  }*/
+    this.comment = {postID: this.post.postID, body: tmpInput};
+    const subs: Subscription = this.dbprovider.postComment(this.comment).subscribe((data:any[]) => {
+      console.log(data);
+      subs.unsubscribe();
+    });
+  }
 
 
 }
