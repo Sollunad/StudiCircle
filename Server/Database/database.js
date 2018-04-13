@@ -108,7 +108,7 @@ function init() {
 }
 
 function simpleInit() {
-	console.log("Database init, no force.")
+	console.log("Database init, no force.");
 	saveInit({});
 }
 
@@ -132,6 +132,7 @@ function saveInit(forceObject) {
 
 module.exports = {
 	init: init,
+	initSimple: simpleInit,
 	Circle: Circle,
 	Location: Location,
 	User: User,

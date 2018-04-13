@@ -439,10 +439,11 @@ module.exports = {
 
         db.User.findOne({where: {"email": mail}}).then(user => {
             if(user){
-                db.Invitation.create({"UserId": user.id, "CircleId": circleId});
-                sendInfoResponse(res, "Invitation sent.");
+                db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
+                    if(result) sendInfoResponse(res, "Invitation sent.");
+                });
             }else{
-                sendInfoResponse(res, 404, "No user with given mail.");
+                sendInfoResponse(res, 400, "No user with given mail.");
             }
         }).catch(err => {
             sendInfoResponse(res, 500, "Database fail.");
