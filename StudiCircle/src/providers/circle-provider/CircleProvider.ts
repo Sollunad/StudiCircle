@@ -169,11 +169,13 @@ export class CircleProvider {
     });
   }
 
-  public deletePost(post){
+  public deletePost(post: BlackboardPost){
     // return this.http.delete(this.consts.url + 'circle/blackboard/deletePost?id=${post}');
     // let body = {"id": post.postID, mySession : this.apiProvider.currentUser.session};
     // const url = 'http://localhost:8080/circle/blackboard/posts/?id' + postID;
-    return this.http.delete(this.consts.url +'circle/blackboard/deletePost/'+post.postID);
+    return this.http.post(this.consts.url +'circle/blackboard/deletePost/', {
+      postID: post.postID
+    });
   }
 
 }

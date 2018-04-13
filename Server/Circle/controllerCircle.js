@@ -577,8 +577,10 @@ module.exports = {
       });
   },
     deletePost : function(req, res){
-        const postID = req.query.postID;
-        const userId = req.session.userId
+        const postID = req.body.postID;
+        const userId = req.session.userId;
+
+        console.log('controller: deletePost', postID);
         db.Blackboard.Post.destroy({
             where:{
                 PostId: postID
@@ -586,8 +588,7 @@ module.exports = {
             }
         }).error(err =>{
             res.send("No Posts found or you are not allowed");
-        })
-        console.log('good');
+        });
     },
 
 };

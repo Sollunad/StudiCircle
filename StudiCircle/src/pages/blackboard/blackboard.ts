@@ -79,7 +79,7 @@ export class BlackboardPage {
 
   private deletePost(post: BlackboardPost) {
     console.log('deletePost', post);
-    this.circleProvider.deletePost(post.postID);
+    this.circleProvider.deletePost(post).subscribe(console.log);
   }
 
   private getAllPostsOfBlackboard(){
