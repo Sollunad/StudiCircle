@@ -301,8 +301,8 @@ module.exports = {
     },
 
 	changeRole : function(req, res) {
-		const circleId = req.body.circle,
-			selectedUser = req.body.user,
+		const circleId = req.body.circleId,
+			selectedUser = req.body.userId,
 			newRole = req.body.role;
 
         if(argumentMissing(res, circleId, selectedUser, newRole)) return;

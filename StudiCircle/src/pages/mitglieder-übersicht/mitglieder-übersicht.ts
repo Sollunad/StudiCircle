@@ -46,10 +46,7 @@ export class MitgliederÜbersicht {
             this.circleProvider.removeCircleMember(userId, circleId).subscribe(
               message => {
                 console.log(message);
-                this.memberList =[];
-                this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
-                  memberList => this.memberList = memberList
-                );
+                this.reloadMemberList();
               }
             );
           }
@@ -68,17 +65,26 @@ export class MitgliederÜbersicht {
 
 
   promoteToModerator(userId: number, circleId: number){
-    this.circleProvider.changeRole(userId, circleId, "moderator").subscribe();
-    window.location.reload();
+    this.circleProvider.changeRole(userId, circleId, "mod").subscribe(res => {
+        this.reloadMemberList();
+    });
   }
 
   demoteModerator(userId: number, circleId: number){
-    this.circleProvider.changeRole(userId, circleId, "member").subscribe();
-    window.location.reload();
+    this.circleProvider.changeRole(userId, circleId, "member").subscribe(res => {
+        this.reloadMemberList();
+    });
   }
 
   itemSelected(item: string) {
     console.log("Selected Item", item);
+  }
+
+  reloadMemberList(){
+      this.memberList =[];
+      this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
+        memberList => this.memberList = memberList
+      );
   }
 
   openInviteDialog(){

@@ -120,7 +120,8 @@ export class CircleProvider {
     return this.http.post(this.consts.url+'circle/changerole', {
       userId: userId,
       circleId: circleId,
-      role: role
+      role: role,
+      mySession : this.apiProvider.currentUser.session
     })
   }
 
