@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {DashboardPage} from "../dashboard/dashboard";
@@ -21,7 +21,7 @@ export class CircleEinstellungenPage {
   private market: boolean = true;
 
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, public viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
   }
 
@@ -51,7 +51,8 @@ export class CircleEinstellungenPage {
             this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
-            this.navCtrl.push(DashboardPage);
+            this.navCtrl.remove(this.viewCtrl.index-1);
+            this.navCtrl.pop();
           }
         },
         {
