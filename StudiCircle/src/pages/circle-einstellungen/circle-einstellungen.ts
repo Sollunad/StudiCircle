@@ -19,6 +19,8 @@ export class CircleEinstellungenPage {
   private bet: boolean = true;
   private filesharing: boolean = true;
   private market: boolean = true;
+  private pub:boolean;
+  private pri:boolean;
 
 
   constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, public viewCtrl: ViewController) {
@@ -29,9 +31,11 @@ export class CircleEinstellungenPage {
     console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
     {
       if(actualvisibility){
-        this.visibility = 1;
+        this.pub=true;
+        this.pri=false;
       } else {
-        this.visibility = 0;
+        this.pub=false;
+        this.pri=true;
       }
     }
     ));
@@ -143,6 +147,61 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
+  openVisibilitySelect() {
+    let alert = this.alertCtrl.create({
+      title: 'Sichtbarkeit',
+      message: 'Wählen sie die Sichtbarkeit des Circles',
+      inputs: [
+        {
+          id: 'public',
+          type: 'radio',
+          label: 'öffentlich',
+          value: '1',
+          checked: this.pub
+        },
+        {
+          id: 'private',
+          type: 'radio',
+          label: 'privat',
+          value: '0',
+          checked: this.pri
+        }
+      ],
+      buttons: [
+        {
+          text: 'Speichern',
+          handler: vis => {
+            console.log(vis);
+            this.visibility=vis;
+            console.log("[Visibility]: "+this.visibility);
+            const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
+              (res) => {
+                if(res.info=="OK"){
+                  console.log("[Visibility] : Visibility edit successful");
+                  modification.unsubscribe();
+                  return true;
+                }else{
+                  console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                  return false;
+                }
+              }
+            );
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Moduländerung abgebrochen');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   openConfirmDialog2() {
     let alert = this.alertCtrl.create({
       title: 'Änderung bestätigen',
@@ -152,7 +211,7 @@ export class CircleEinstellungenPage {
           text: 'Speichern',
           handler: () => {
             console.log('gespeichert');
-            this.editVisibility();
+
           }
         },
         {
