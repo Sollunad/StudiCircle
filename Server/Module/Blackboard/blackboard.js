@@ -50,7 +50,17 @@ module.exports = function (app) {
     });
 
     app.route('/blackboard/newComment').post(function (req, res) {
-
+        const comment = req.body.com;
+        console.log("\n\nComment", comment);
+        db.Blackboard.Comment.create({
+            "body": comment.body,
+            "PostId": comment.postID,
+            "UserId": req.session.userId,
+        }).then(result => {
+            console.log(result);
+        }).error(err => {
+            res.status(500).send("Error while posting comment");
+        });
     });
 
     app.route('/blackboard/comments').get(function (req, res) {
