@@ -454,19 +454,6 @@ module.exports = {
         });
     },
 
-    // keine geroutete function
-    isAdminAnywhere : function(userId, callback){
-        db.UserInCircles.findAll({
-            where: {UserId: userId, role: cons.CircleRole.ADMINISTRATOR}
-        }).then(result => {
-            if(result.length > 0){
-            if(callback) callback(true);
-        }else{
-            if(callback) callback(false);
-        }
-    });
-    },
-
     getPosts: function(req, res) {
         const circleId = req.query.circleId;
 
