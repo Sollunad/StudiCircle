@@ -8,6 +8,7 @@ const ValidationKey = require('./validationKey');
 const UniMail = require('./uniMail');
 const ChatMessage = require('./chat.js');
 const Blackboard = require('./blackboard.js');
+const Invitation = require('./invitation.js');
 
 /**
  * n:m - CIRCLES AND LOCATIONS
@@ -86,32 +87,57 @@ Blackboard.Comment.belongsTo(User);
 Blackboard.Post.hasMany(Blackboard.Comment);
 Blackboard.Comment.belongsTo(Blackboard.Post);
 
+/**
+ * Invitation
+ * 1:n - INVITATION AND USER
+ * 1:n - INVITATION AND CIRCLE
+ * (INVITING USER TO CIRCLE)
+ **/
+User.hasMany(Invitation);
+Invitation.belongsTo(User);
+
+Circle.hasMany(Invitation);
+Invitation.belongsTo(Circle);
+
+
 
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
 function init() {
-	console.log("Database init");
-	User.sync({force:true}).then(() => {
-		ValidationKey.sync({force:true});
-        UniMail.sync({force:true});
-		Circle.sync({force:true}).then(() => {
-			ChatMessage.sync({force:true}).then(() => {
-				Location.sync({force:true}).then(() => {
-					CircleLocation.sync({force:true});
-					UserInCircles.sync({force:true});
-					Blackboard.init();
-                    console.log("Database done");
-				});
-			});
-		});
-	});
+	console.log("Database init, with max. force.");
+	saveInit({ force:true });
+}
+
+function simpleInit() {
+	console.log("Database init, no force.");
+	saveInit({});
+}
+
+function saveInit(forceObject) {
+    User.sync(forceObject).then(() => {
+        ValidationKey.sync(forceObject);
+        UniMail.sync(forceObject);
+        Circle.sync(forceObject).then(() => {
+            ChatMessage.sync(forceObject).then(() => {
+                Location.sync(forceObject).then(() => {
+                    CircleLocation.sync(forceObject);
+                    UserInCircles.sync(forceObject);
+                    Blackboard.init();
+                    Invitation.sync(forceObject);
+                    console.log("Database initialization: Done!");
+                });
+            });
+        });
+    });
 }
 
 module.exports = {
 	init: init,
+	initSimple: simpleInit,
 	Circle: Circle,
 	Location: Location,
 	User: User,
 	Blackboard: Blackboard,
+	Invitation: Invitation,
 	ValidationKey: ValidationKey,
 	UniMail:UniMail,
 	ChatMessage: ChatMessage,
