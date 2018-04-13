@@ -23,7 +23,7 @@
                  placeholder="Firstname Lastname" 
                  name="user_name" 
                  [(ngModel)]="profile.name" 
-                 pattern='([a-zA-Z\-]+ (([a-zA-Z]+\-{0,1}[a-zA-Z]+)+))$'></ion-input>
+                 pattern='([a-zA-ZäöüÄÖÜ\-]+ (([a-zA-ZäöüÄÖÜ]+\-{0,1}[a-zA-ZäöüÄÖÜ]+)+))$'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input3">
       <ion-input type="password" 
@@ -44,18 +44,18 @@
                  maxlength = "64"></ion-input>
     </ion-item>
     <div class="spacer" style="width:300px;height:36px;" id="getInvolved-spacer4"></div>
-    <ion-item name="studentProfile" id="getInvolved-checkbox1">
-      <ion-label>
-        Student
-      </ion-label>
-      <ion-checkbox name="student" [(ngModel)]="student"></ion-checkbox>
-    </ion-item>
-    <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
-      <ion-label>
-        Business / Club
-      </ion-label>
-      <ion-checkbox name="business" [(ngModel)]="business"></ion-checkbox>
-    </ion-item>
+
+    <ion-list name="radioListAccType" radio-group [(ngModel)]="accountType">
+      <ion-item name="studentProfile" id="getInvolved-checkbox1">
+        <ion-label>Student</ion-label>
+        <ion-radio name="student" checked></ion-radio>
+      </ion-item>
+      <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
+        <ion-label>Business / Club</ion-label>
+        <ion-radio name="business"></ion-radio>
+      </ion-item>
+    </ion-list>
+
   </form>
   <button id="getInvolved-button1" ion-button color="balanced" block on-click="logProfile()">
     Register now!

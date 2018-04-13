@@ -5,10 +5,10 @@ import {SearchPage} from '../search/search';
 import {Geolocation} from '@ionic-native/geolocation'
 import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
-import {HttpClient} from "@angular/common/http";
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 @Component({
   selector: 'page-dashboard',
@@ -19,9 +19,13 @@ export class DashboardPage {
   settings: SettingsPage;
   private res: any;
   private circles : Circle[]=[];
+  private accountName : string;
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private http: HttpClient, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
+    if(this.api.currentUser.username){
+      this.accountName = this.api.currentUser.username.split(' ')[0];
+    }
   }
 
   private getCurrentPosition() {
@@ -54,17 +58,11 @@ export class DashboardPage {
     this.navCtrl.push(CircleErstellenPage);
   }
 
-  // Calculation the distance between two points
-  private calculateDistance(lat1: number, lat2: number, long1: number, long2: number) {
-    let p = 0.017453292519943295;    // Math.PI / 180
-    let c = Math.cos;
-    let a = 0.5 - c((lat1 - lat2) * p) / 2 + c(lat2 * p) * c((lat1) * p) * (1 - c(((long1 - long2) * p))) / 2;
-    let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
-    return dis;
-  }
-
   ionViewWillEnter() {
-    this.dbprovider.getCircles().subscribe(data => this.circles = data);
+    this.circleProvider.getCircles().subscribe(data => {
+      this.circles = data;
+      // this.showCircle(data[0]);
+    });
   }
 
   public showLocationPrompt() {
@@ -92,6 +90,13 @@ export class DashboardPage {
         }
       }]
     }).present();
+  }
+
+  private showCircle(circle: Circle){
+    this.navCtrl.push(CircleStartseite, {
+      circleId: circle.id,
+      circleName: circle.name
+    });
   }
 
 }

@@ -11,9 +11,11 @@ module.exports = function(app) {
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
-    app.route('/user/resetPassword/:validationKey')
-        .get(user.passwordResetPage)
+    app.route('/user/resetPassword')
         .post(user.resetPassword);
+
+    app.route('/user/resetPassword/:validationKey')
+        .get(user.passwordResetPage);
 
     app.route('/user/login')
         .post(user.login);
@@ -42,7 +44,9 @@ module.exports = function(app) {
 
     app.route('/user/*')
         .get(user.unknownpage);
-
-    app.route('/*')
-        .get(user.unknownpage);
+    // weil die Sockets erst später definiert werden, ist das hier scheiße... wenn überhaupt sollte so eine Regel in einer
+    // extra Datei ganz am Ende sein und nicht in routerStudent
+  
+    // app.route('/*')
+    //     .get(user.unknownpage);
 };
