@@ -11,7 +11,7 @@
       {{ member.username }}
       <button ion-button *ngIf="isAdmin && member.role=='member'" color="secondary" (click)="promoteToModerator(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="jet"></ion-icon></button>
       <button ion-button *ngIf="isAdmin && member.role=='moderator'" color="secondary" (click)="demoteModerator(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="aperture"></ion-icon></button>
-      <button ion-button color="danger" (click)="removeCircleMember(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
+      <button ion-button *ngIf="isAdmin && member.uuid != currentUserId" color="danger" (click)="removeCircleMember(member.uuid, circleId)" clear item-end><ion-icon style="font-size: 2em;" name="trash"></ion-icon></button>
     </ion-item>
   </ion-list>
 

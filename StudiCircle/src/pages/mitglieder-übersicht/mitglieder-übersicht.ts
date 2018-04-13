@@ -2,8 +2,9 @@ import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {AlertController, NavParams} from "ionic-angular";
+import {AlertController, NavController, NavParams, ViewController} from "ionic-angular";
 import {DashboardPage} from "../dashboard/dashboard";
+import {ApiProvider} from "../../providers/api/api";
 
 @Component({
   templateUrl: 'mitglieder-übersicht.html'
@@ -13,23 +14,56 @@ export class MitgliederÜbersicht {
   public memberList: UserInfo[];
 
   private circleId : number;
-  private isAdmin : boolean;
+  private isAdmin : boolean = false;
+  private currentUserId : number;
 
-  constructor(public circleProvider: CircleProvider, public alertCtrl: AlertController, public http: HttpClient, public navParams: NavParams) {
+
+  constructor(public circleProvider: CircleProvider, private viewCtrl: ViewController, public navCtrl: NavController, public alertCtrl: AlertController, public apiProvider: ApiProvider, public http: HttpClient, public navParams: NavParams) {
     this.circleId = navParams.get('circleId');
-    this.isAdmin = navParams.get('isAdmin');
+    this.currentUserId = Number(this.apiProvider.getCurrentUser().id);
   }
 
   ionViewDidLoad(){
     this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
+    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+      role => {
+        if (role.role == "admin") {
+          this.isAdmin = true;
+        }
+      });
   }
 
   removeCircleMember(userId: number, circleId: number){
-    this.circleProvider.removeCircleMember(userId, circleId).subscribe();
-    window.location.reload();
-    }
+    let alert = this.alertCtrl.create({
+      title: 'Benutzer wirklich löschen?',
+      message: 'Möchten Sie den Benutzer wirklich aus dem Circle entfernen?',
+      buttons: [
+        {
+          text: 'Entfernen',
+          handler: () => {
+            this.circleProvider.removeCircleMember(userId, circleId).subscribe(
+              message => {
+                console.log(message);
+                this.navCtrl.pop();
+                this.navCtrl.push(MitgliederÜbersicht, {'circleId':this.circleId});
+              }
+            );
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Benutzer löschen abgebrochen');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
 
   promoteToModerator(userId: number, circleId: number){
     this.circleProvider.changeRole(userId, circleId, "moderator").subscribe();
