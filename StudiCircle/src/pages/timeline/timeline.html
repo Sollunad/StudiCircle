@@ -6,15 +6,17 @@
 
 <ion-content class="cards-bg social-cards">
 
-  <ion-card>
+  <ion-card *ngFor="let appointment of appointments">
     <ion-item>
       <ion-row>
         <ion-col col-10>
-          <h2>Marty McFly</h2>
-          <p>November 5, 1955</p>
+          <h2>{{appointment.title}}</h2>
+          <p><ion-icon name="calendar"></ion-icon>&nbsp;&nbsp;{{appointment.startDate | date: 'dd. MMMM yyyy, HH:mm'}} Uhr</p>
+          <p><ion-icon name="time"></ion-icon>&nbsp;&nbsp;{{appointment.endDate | strictTime:appointment.startDate}}</p>
+          <p> <ion-icon name="pin"></ion-icon>&nbsp;&nbsp;{{appointment.location}}</p>
         </ion-col>
         <ion-col col-2>
-          <ion-item>
+          <ion-item *ngIf="userRole=='admin' || userRole=='mod'">
             <button ion-button icon-only item-right clear (click)="presentPopover($event)">
               <ion-icon class="settings-icon" name="more"></ion-icon>
             </button>
@@ -25,12 +27,12 @@
 
 
     <ion-card-content>
-      <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
+      <p>{{appointment.description}}</p>
     </ion-card-content>
     <ion-row>
       <ion-col>
         <button ion-button clear small class="votes">
-          54 Stimmen
+          {{appointment.countCommits+appointment.countRejections+appointment.countInterested}} Stimmen
         </button>
       </ion-col>
     </ion-row>
@@ -38,69 +40,23 @@
       <ion-col>
         <button ion-button color="primary" clear small icon-start>
           <ion-icon name='thumbs-up'></ion-icon>
-          46 Zusagen
+          {{appointment.countCommits}} Zusagen
         </button>
       </ion-col>
       <ion-col>
         <button ion-button color="primary" clear small icon-start>
           <ion-icon name='thumbs-down'></ion-icon>
-          66 Absagen
+          {{appointment.countRejections}} Absagen
         </button>
       </ion-col>
       <ion-col>
         <ion-col>
           <button ion-button color="primary" clear small icon-start>
             <ion-icon name='notifications'></ion-icon>
-            66 Interessiert
+            {{appointment.countInterested}} Interessiert
           </button>
         </ion-col>
       </ion-col>
     </ion-row>
-
   </ion-card>
-
-
-  <ion-card>
-    <ion-item>
-      <h2>Dr. Ian Malcolm</h2>
-      <p>June 28, 1990</p>
-    </ion-item>
-
-    <ion-card-content>
-      <p>Your scientists were so preoccupied with whether or not they could, that they didn't stop to think if they should.</p>
-    </ion-card-content>
-    <ion-row>
-
-    </ion-row>
-    <ion-col align-self-center text-center>
-      <button ion-button clear small class="votes">
-        54 Stimmen
-      </button>
-    </ion-col>
-    <ion-row class="buttons">
-      <ion-col>
-        <button ion-button color="primary" clear small icon-start>
-          <ion-icon name='thumbs-up'></ion-icon>
-          46 Zusagen
-        </button>
-      </ion-col>
-      <ion-col>
-        <button ion-button color="primary" clear small icon-start>
-          <ion-icon name='thumbs-down'></ion-icon>
-          66 Absagen
-        </button>
-      </ion-col>
-      <ion-col>
-        <ion-col>
-          <button ion-button color="primary" clear small icon-start>
-            <ion-icon name='notifications'></ion-icon>
-            66 Interessiert
-          </button>
-        </ion-col>
-      </ion-col>
-    </ion-row>
-
-  </ion-card>
-
-
 </ion-content>

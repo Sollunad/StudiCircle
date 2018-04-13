@@ -156,7 +156,6 @@ export class ChatPage {
   }
 
   doConfirm(messageId:number) {
-    //TODO check whether user is allowed to remove messages
 
     if(this.userRole==="admin"||this.userRole==="mod") {
       let confirm = this.alerCtrl.create({

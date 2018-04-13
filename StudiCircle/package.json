@@ -31,6 +31,7 @@
     "intl": "^1.2.5",
     "ionic-angular": "3.9.2",
     "ionic2-calendar": "^0.4.3",
+    "ionic2-date-picker": "^1.1.2",
     "ionicons": "3.0.0",
     "moment": "^2.22.0",
     "mysql2": "^1.5.3",

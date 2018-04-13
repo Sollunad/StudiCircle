@@ -1,8 +1,12 @@
 
 import {Component} from "@angular/core";
-import {NavController, ModalController, AlertController} from "ionic-angular";
+import {NavController, ModalController, AlertController, NavParams} from "ionic-angular";
 import * as moment from 'moment';
 import {EventModalPage} from "../event-modal/event-modal";
+import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+registerLocaleData(localeDe);
 
 @Component({
   selector: 'page-calendar',
@@ -13,18 +17,29 @@ export class CalendarPage {
   eventSource = [];
   viewTitle: string;
   selectedDay = new Date();
+  circleId:number;
+  userRole:string;
+
+
 
   calendar = {
     mode: 'month',
-    currentDate: new Date()
+    currentDate: new Date(),
+    locale: 'de-DE'
   };
 
-  constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController,
+              navParams: NavParams, circleProvider:CircleProvider) {
 
+    this.circleId = navParams.get('circleId');
+
+    /*circleProvider.getUserRole(this.circleId).subscribe(data => {
+      this.userRole = data.role;
+    });*/
   }
 
   addEvent() {
-    let modal = this.modalCtrl.create(EventModalPage, {selectedDay: this.selectedDay});
+    let modal = this.modalCtrl.create(EventModalPage);
     modal.present();
     modal.onDidDismiss(data => {
       if (data) {

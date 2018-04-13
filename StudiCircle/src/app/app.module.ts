@@ -1,4 +1,4 @@
-import {ErrorHandler, NgModule} from '@angular/core';
+import {ErrorHandler, NgModule, LOCALE_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpModule} from '@angular/http';
@@ -38,6 +38,8 @@ import {EventModalPage} from "../pages/event-modal/event-modal";
 import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
 import {TimelinePage} from "../pages/timeline/timeline";
 import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
+import {DatePickerModule} from "ionic2-date-picker";
+import {StrictRelativeTime} from "../pipes/strict-relative-time";
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
     EventModalPage,
     CalendarTabPage,
     TimelinePage,
-    PopoverTimelinePage
+    PopoverTimelinePage,
+    StrictRelativeTime
   ],
 
   imports: [
@@ -74,7 +77,8 @@ import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp),
-    IonicPageModule.forChild(EmojiPickerComponent)
+    IonicPageModule.forChild(EmojiPickerComponent),
+    DatePickerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -109,6 +113,7 @@ import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
     CircleProvider,
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: LOCALE_ID, useValue: 'de-DE' },
     DbProvider,
     HttpModule,
     HttpClientModule,

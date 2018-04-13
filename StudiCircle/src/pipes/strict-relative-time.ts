@@ -1,14 +1,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import * as localDe from 'date-fns/locale/de'
 
 @Pipe({
-  name: 'relativeTime',
+  name: 'strictTime',
 })
-export class RelativeTime implements PipeTransform {
+export class StrictRelativeTime implements PipeTransform {
   /**
    * Takes a value and makes it lowercase.
    */
   transform(value: string, ...args) {
-    return distanceInWordsToNow(new Date(value), { addSuffix: true });
+    return distanceInWordsStrict(args[0], value, {locale: localDe})
   }
 }

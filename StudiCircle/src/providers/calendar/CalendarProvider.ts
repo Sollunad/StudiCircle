@@ -13,7 +13,7 @@ import Socket = SocketIOClient.Socket;
 
 
 @Injectable()
-export class ChatProvider {
+export class CalendarProvider {
 
   private _apiPath = this.consts.url;
 

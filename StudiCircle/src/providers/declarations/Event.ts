@@ -1,3 +1,12 @@
-/**
- * Created by MartinThissen on 13.04.2018.
- */
+export interface Appointment {
+  id: number
+  title: string
+  description?: string
+  location: string
+  startDate: string
+  endDate?: string
+  allDay?:boolean
+  countCommits: number
+  countRejections: number
+  countInterested: number
+}

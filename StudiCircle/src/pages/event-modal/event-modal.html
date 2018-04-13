@@ -16,13 +16,21 @@
     </ion-item>
 
     <ion-item>
+      <ion-input type="text" placeholder="Beschreibung" [(ngModel)]="event.description"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="text" placeholder="Ort" [(ngModel)]="event.place"></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-label>Beginn</ion-label>
-      <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
+      <ion-datetime displayFormat="DD.MM.YYYY HH:mm" pickerFormat="D MMM YYYY : HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label>Ende</ion-label>
-      <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
+      <ion-datetime displayFormat="DD.MM.YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item>
