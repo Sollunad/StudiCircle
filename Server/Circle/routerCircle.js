@@ -40,7 +40,7 @@ module.exports = function(app) {
 	// id (Number): current circle
 	// user (Number): selected users id
 	// role (String): admin | member | mod for selected user
-	app.route('/circle/rolechange')
+	app.route('/circle/changeRole')
 		.post(circle.changeRole);
 
     // return: List circles
@@ -67,10 +67,6 @@ module.exports = function(app) {
     app.route('/circle/getVisibility')
         .get(circle.getVisibility);
 
-  // circleID
-  // return: Posts of Blackboard
-  app.route('/circle/getbbPosts')
-    .get(circle.getBlackboardPosts);
     // circleId (Number): current circle
 	// userId (Number): selected users id
 	app.route('/circle/newAdmin')
@@ -84,7 +80,14 @@ module.exports = function(app) {
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
 
+    // circleID
+    // return: Posts of Blackboard
+    app.route('/circle/getbbPosts')
+        .get(circle.getBlackboardPosts);
 
+    // userId (Number): selected users id
+    app.route('/circle/leave')
+        .post(circle.leaveCircle);
 
     // circleId (Number): current circle
     app.route('/circle/blackboard/posts')
@@ -97,7 +100,14 @@ module.exports = function(app) {
     app.route('/circle/blackboard/newPost')
         .post(circle.newPost);
 
+
     //Comment (BlackboardPost)
+    app.route('/circle/blackboard/deletePost')
+        .post(circle.deletePost);
+
+    //postID (Number)
+    //userID (number)
+
     app.route('/circle/blackboard/newComment')
         .post(circle.newComment);
 

@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { DbProvider } from "../../providers/dbprovider/dbprovider";
-import {ApiProvider} from "../../providers/api/api";
-import { BlackboardPost } from "../../providers/declarations/BlackboardPost";
-import { BlackboardPostPage } from "../blackboard-post/blackboard-post";
+import {Component} from '@angular/core';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {DbProvider} from "../../providers/dbprovider/dbprovider";
+import {BlackboardPost} from "../../providers/declarations/BlackboardPost";
+import {BlackboardPostPage} from "../blackboard-post/blackboard-post";
 import {Subscription} from "rxjs/Subscription";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
@@ -72,15 +71,16 @@ export class BlackboardPage {
     });
   }
 
-  private showPost(post: number) {
+  private showPost(post: BlackboardPost) {
+    console.log(post);
     this.navCtrl.push(BlackboardPostPage, {
-        post: this.posts[post]
+        post: post
       });
   }
 
   private deletePost(post: BlackboardPost) {
     console.log('deletePost', post);
-    this.circleProvider.deletePost(post.postID);
+    this.circleProvider.deletePost(post).subscribe(console.log);
   }
 
   private getAllPostsOfBlackboard(){
@@ -97,7 +97,6 @@ export class BlackboardPage {
             if(comment.PostId === post.id){
                 comments.push({postID: comment.id, userName: comment.User.name, title: 'Titel', text: comment.body, date: comment.createdAt});
             }
-            if(comments.length === 3){break;}
           }
           this.posts.push({postID: post.id, userName: post.User.name, title: 'Titel', text: post.body, date: post.createdAt, comments: comments});
           comments = [];

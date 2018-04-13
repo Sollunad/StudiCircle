@@ -4,7 +4,6 @@ import {Injectable} from '@angular/core';
 import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
-import {Circle} from '../declarations/Circle';
 import {BlackboardPost} from "../declarations/BlackboardPost";
 import {constants} from "../../consts/constants";
 

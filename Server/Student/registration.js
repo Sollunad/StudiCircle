@@ -1,14 +1,13 @@
 const constant = require('./constants');
 var db = require('../Database/database');
+var database = require('../Student/database');
 var mailer = require('./mailer');
 const passwordUtil = require('./passwordCheck');
 
 module.exports = {
 
-
     registerBusiness: function (mail, password, userName, businessDescription, res) {
 
-        let result = "";
         let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
         html = '<html lang="de-DE">\n' +
                 '<head>\n' +
@@ -31,7 +30,7 @@ module.exports = {
 
 
         try {
-                db.User.create({
+                return db.User.create({
                     name: userName,
                     email: mail,
                     pwdHash: hash,
@@ -43,7 +42,7 @@ module.exports = {
                         validationKey: randomString
                     }).then( validationKey => {
                         validationKey.setUser(user);
-                        mailer.sendMail('studicircle@web.de', html, subject)
+                        return mailer.sendMail('studicircle@web.de', html, subject)
                             .then(resp => {
                                 console.log(resp);
                                 if (res){
@@ -92,7 +91,7 @@ module.exports = {
 
     },
 
-    register: function (mail, password, accountType, userName, res, businessDescription) {
+    register: async function (mail, password, accountType, userName, res, businessDescription) {
 
         if (!mail || !password || !accountType || !userName) {
             if (res) {
@@ -154,6 +153,20 @@ module.exports = {
             return this.registerBusiness(mail, password, userName, businessDescription, res);
         }
 
+        try{
+            await database.checkStudentMail(mail);
+        } catch (err) {
+            console.log(err);
+            if (res) {
+                res.status(412);
+                res.send({
+                    httpStatus: 412,
+                    message: mail + " in not a known valid mail address."
+                });
+            }
+            return false;
+        }
+
         let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
         html = '<html lang="de-DE">\n' +
             '<head>\n' +
@@ -171,19 +184,19 @@ module.exports = {
 
 
         try {
-            db.User.create({
+            return db.User.create({
                 name: userName,
                 email: mail,
                 pwdHash: hash,
                 salt: salt,
-                type: constant.AccountType.BUSINESS,
+                type: constant.AccountType.STUDENT,
                 state: constant.AccountState.PENDING
             }).then((user) => {
                 db.ValidationKey.create({
                     validationKey: randomString
                 }).then(validationKey => {
                     validationKey.setUser(user);
-                    mailer.sendMail(mail, html, subject)
+                    return mailer.sendMail(mail, html, subject)
                         .then(resp => {
                             console.log(resp);
                             if (res) {
