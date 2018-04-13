@@ -89,7 +89,7 @@ export class CircleProvider {
     }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    const url = this.consts.url+`circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
+    const url = this.consts.url+`circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}&mySession=${this.apiProvider.currentUser.session}`;
     return this.http.get<Circle[]>(url);
   }
 
@@ -165,7 +165,8 @@ export class CircleProvider {
       circleId: circleId,
       userId: this.apiProvider.currentUser.uuid,
       title: title,
-      text: text
+      text: text,
+      mySession: this.apiProvider.currentUser.session
     });
   }
 
@@ -174,7 +175,8 @@ export class CircleProvider {
     // let body = {"id": post.postID, mySession : this.apiProvider.currentUser.session};
     // const url = 'http://localhost:8080/circle/blackboard/posts/?id' + postID;
     return this.http.post(this.consts.url +'circle/blackboard/deletePost/', {
-      postID: post.postID
+      postID: post.postID,
+      mySession: this.apiProvider.currentUser.session
     });
   }
 
