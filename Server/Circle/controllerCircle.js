@@ -22,13 +22,13 @@ module.exports = {
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result2 => {
                     result2.destroy();
                     sendInfoResponse(res, "User from circle removed.");
-                }).error(err => {
+                }).catch(err => {
                     sendInfoResponse(res, 404, "User not found in circle.");
                 });
             }else{
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not Admin in the requested circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "User not found in circle.");
         });
         // res.send("User from circle removed.");
@@ -55,10 +55,10 @@ module.exports = {
                         sendInfoResponse(res, "User already in circle.");
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "No user with given id.");
             });
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "No circle with given id.");
         });
     },
@@ -92,10 +92,10 @@ module.exports = {
                         sendInfoResponse(res, "User already in circle.");
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "User from session not found.");
             });
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error. Creating circle failed.");
         });
     },
@@ -116,7 +116,7 @@ module.exports = {
                         "visible": visible
                     });
                     sendInfoResponse(res, "OK");
-                }).error(err => {
+                }).catch(err => {
                     sendInfoResponse(res, 500, "Save changes failed.");
                 });
             }else{
@@ -149,7 +149,7 @@ module.exports = {
           "market": market
         });
         sendInfoResponse(res, "OK");
-      }).error(err => {
+      }).catch(err => {
         sendInfoResponse(res, 500, "Save changes failed.");
       });
 
@@ -235,7 +235,7 @@ module.exports = {
 
         var filteredCircles = circles.filter(circleFilter);
         res.status(200).json(filteredCircles);
-      }).error(err => {
+      }).catch(err => {
         res.status(500).json({
           'error': 'Server Error'
         });
@@ -261,7 +261,7 @@ module.exports = {
             } else {
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not in the requested circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             res.status(500);
             sendInfoResponse(res, 500, "Server Error");
         });
@@ -300,7 +300,7 @@ module.exports = {
             result.push("market");
           }
           res.send(result);
-      }).error(err => {
+      }).catch(err => {
           sendInfoResponse(res, 500, "Error.");
       });
     },
@@ -313,7 +313,7 @@ module.exports = {
           return;
         }
         res.send(circle.visible);
-      }).error(err => {
+      }).catch(err => {
         sendInfoResponse(res, 500, "Error");
       });
     },
@@ -337,10 +337,10 @@ module.exports = {
 				sendInfoResponse(res, "Changed Role for " + selectedUser.toString()
 						+ " to " + newRole
 						+ "in Circle " + circleId + ".");
-			}).error((error) => {
+			}).catch((error) => {
                 sendInfoResponse(res, 500, "Update failed.");
 			});
-		}).error((error) => {
+		}).catch((error) => {
             sendInfoResponse(res, 500, "Could not find user in circle.");
 		});
 	},
@@ -378,16 +378,16 @@ module.exports = {
                             // change old admin to member
                             result2.update({"role": cons.CircleRole.MEMBER}).then(() => {
                                 sendInfoResponse(res, "Admin changed.");
-                			}).error((error) => {
+                			}).catch((error) => {
                                 sendInfoResponse(res, 500,"Update of new Admin failed.");
                 			});
-                		}).error((error) => {
+                		}).catch((error) => {
                             sendInfoResponse(res, 500, "Could not find new admin user in circle.");
                 		});
-        			}).error((error) => {
+        			}).catch((error) => {
                         sendInfoResponse(res, 500, "Update of old admin failed.");
         			});
-        		}).error((error) => {
+        		}).catch((error) => {
                     sendInfoResponse(res, 500, "Could not find old admin user in circle.");
         		});
             }else{
@@ -409,13 +409,13 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "Bad request. User ist not in the circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error at database request.");
         })
     },
 
     leaveCircle : function(req, res){
-        const circleId = req.body.circleId
+        const circleId = req.body.circleId;
         if (argumentMissing(res, circleId)) return;
         const userId = req.session.userId;
 
@@ -426,8 +426,26 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "User not in circle or user is admin.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Database error.");
+        });
+    },
+
+    inviteToCircle : function(req, res){
+        const mail = req.body.mail;
+        const circleId = req.body.circleId;
+
+        if (argumentMissing(res, mail, circleId)) return;
+
+        db.User.findOne({where: {"email": mail}}).then(user => {
+            if(user){
+                db.Invitation.create({"UserId": user.id, "CircleId": circleId});
+                sendInfoResponse(res, "Invitation sent.");
+            }else{
+                sendInfoResponse(res, 404, "No user with given mail.");
+            }
+        }).catch(err => {
+            sendInfoResponse(res, 500, "Database fail.");
         });
     },
 
@@ -500,7 +518,7 @@ module.exports = {
             res.status(200).send(result);
             return;
         }
-    }).error(err => {
+    }).catch(err => {
             res.status(500).send("Error while reading posts");
         return;
     });
@@ -544,7 +562,7 @@ module.exports = {
             res.status(200).send(result);
             return;
         }
-    }).error(err => {
+    }).catch(err => {
             res.status(500).send("Error while reading comments");
         return;
     });
