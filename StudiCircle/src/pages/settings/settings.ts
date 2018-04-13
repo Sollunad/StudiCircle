@@ -59,7 +59,7 @@ export class SettingsPage {
   }
 
   public validateInput(input: string): void{
-    if(this.pw_confirm.length > 8){
+    if(this.pw_confirm.length >= 8){
       this.changeDeleteButton(true);
     }else{
       this.changeDeleteButton(false);
