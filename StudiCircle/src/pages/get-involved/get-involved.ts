@@ -27,9 +27,9 @@ export class GetInvolvedPage {
   public mailValidation = getMailRegex();
 
   passwdChk = '';
-  accountType: string = "rb-6-0";
+  accountType: string = "student";
   selectedAccountType: AccountTypes;
-
+  
   constructor(public navCtrl: NavController, private _apiService : ApiProvider, private toasty : ToastyProvider) {
   }
 
@@ -107,7 +107,11 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    this.selectedAccountType = this.accountType === "rb-6-0"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
+    if(this.accountType == undefined){
+      this.toasty.toast("No account Type selected");
+      return;
+    }
+    this.selectedAccountType = this.accountType === "student"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.selectedAccountType === AccountTypes.STUDENT){
         console.log("[REGISTER] : Student Profile");
