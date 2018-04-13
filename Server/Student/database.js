@@ -3,6 +3,26 @@ const db = require('../Database/database.js');
 
 module.exports = {
 
+    checkStudentMail: async function(mail){
+        console.log("CHECK MAIL : " + mail);
+        try {
+            let domain = mail.split("@");
+            if (!domain || !domain[1]){
+                throw "error: no mail address";
+            }
+            return await db.UniMail.findAll({ where:{ 'domain': domain[1] }}).then(mail => {
+                if ( mail &&  mail[0] && mail[0].dataValues.domain)
+                    return  true;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
     deleteUser : async function (userId) {
         console.log("DELETE USER - UserId: " + userId);
         try {
@@ -150,9 +170,38 @@ module.exports = {
         //console.log("INSERT USER - Mail: " + mail + " | Hash: " + password + " | Salt: " + salt + " | Account Type: " + accountType + " | Token: " + randomString);
     },
 
-    setChangeMailKey : function (oldMail, newMail, validationKey) {
+    setChangeMailKey : async function (oldMail, newMail, validationKey) {
         console.log("SET CHANGE MAIL KEY - Token: " + validationKey + " | OldMail: " + oldMail + " | NewMail: " + newMail);
-        return true;
+        try {
+            let userId= await this.getUserIdFromMail(oldMail);
+            return await db.User.findById( userId ).then( user => {
+                if ( user &&  user && user.dataValues.id) {
+                    return user.updateAttributes({
+                        'state': constant.AccountState.PENDING
+                        }).then(() => {
+                            return db.ValidationKey.create({
+                                validationKey: validationKey,
+                                newMail: newMail,
+                                UserId: userId
+                            }).then(() => {
+                                return true;
+                            }).error( (err) => {
+                                console.log(err);
+                                throw  "database error";
+                            });
+                    }).error(() => {
+                        throw false;
+                    });
+                }
+                throw  "database error";
+            }).error( (err) => {
+                console.log(err);
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
     },
 
     setPassword : async function (userId, hash, salt) {
@@ -226,20 +275,19 @@ module.exports = {
         }
     },
 
-    setValidationKeyByyUserId : async function (userId, validationKey1) {
+    createValidationKeyByyUserId : async function (userId, validationKey1) {
         console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
-                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
-                    return validationKey[0].updateAttributes({
-                        'validationKey' : validationKey1
-                    }).then(() =>{
-                        return true;
-                    });
-                }else{
-                    throw  false;
+            return db.ValidationKey.create({
+                validationKey: validationKey1,
+                UserId: userId
+            }).then(validationKey => {
+                if ( validationKey && validationKey.validationKey){
+                    return true;
                 }
+                throw false;
             }).error(err => {
+                console.log(err);
                 throw   "error";
             });
         } catch (err) {
@@ -254,9 +302,12 @@ module.exports = {
             return await db.User.findById(userId).then(user => {
                 if ( user && user.dataValues.id){
                     return user.updateAttributes({
-                        'email' : mail
-                    }).then(() =>{
+                        'email' : newMail,
+                        'state': constant.AccountState.ACTIVE
+                    }).then(() => {
                         return true;
+                    }).error(() => {
+                        throw "error";
                     });
                 }else{
                     throw  false;

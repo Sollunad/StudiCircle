@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
 import {AlertController, NavController, NavParams, ViewController} from "ionic-angular";
 
+
 @Component({
   templateUrl: 'admin-auswählen.html'
 })

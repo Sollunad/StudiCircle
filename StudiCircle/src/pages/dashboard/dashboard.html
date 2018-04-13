@@ -20,58 +20,16 @@
   <button ion-button (click)="onNewCircle()" style="float: right; margin: 0;"><ion-icon name="add"></ion-icon> Circle</button>
   </ion-buttons>
   <h1 id="dashboard-heading3" style="color:#000000; float: left; margin: 0;">
-    Hello Student!
+    Hello {{accountName}}!
   </h1>
   <form id="dashboard-form12">
     <ion-searchbar placeholder="" name="search" id="dashboard-search2"></ion-searchbar>
   </form>
   <ion-list id="dashboard-list4">
-  <!--  <ion-item color="none" id="dashboard-list-item19">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Feed
-      </h2>
-    </ion-item>
-  <!-- </ion-list>
-  <ion-list id="dashboard-list5">
-    <ion-item color="none" id="dashboard-list-item20">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Feed
-      </h2>
-    </ion-item>
-  <!-- </ion-list>
-  <ion-list id="dashboard-list6">
-    <ion-item color="none" id="dashboard-list-item21">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Feed
-      </h2>
-    </ion-item>
-  <!-- </ion-list>
-  <ion-list id="dashboard-list7">
-    <ion-item color="none" id="dashboard-list-item22">
-      <ion-thumbnail item-left>
-        <img />
-      </ion-thumbnail>
-      <h2>
-        Feed
-      </h2>
-    </ion-item>-->
     <h1>
       Your Circles
     </h1>
     <ion-item *ngFor="let circle of circles" (click)="goToStartPage(circle.id, circle.name)">{{circle.name}}</ion-item>
-    <h1>
-      Circles Close To You
-    </h1>
-    <ion-item *ngFor="let circle of clist">{{circle.name}}</ion-item>
 
   </ion-list>
 </ion-content>
