@@ -4,6 +4,8 @@ module.exports = function (app) {
     app.route('/blackboard/posts').get(function (req, res) {
         const circleId = req.query.circleId;
 
+        if (argumentMissing(res, circleId)) return;
+
         db.Blackboard.Post.findAll({
             where: {CircleId: circleId}, include: [{model: db.User, attributes: ['id', 'name']},
                 {model: db.Blackboard.Comment, include: [db.User], limit: 3},
@@ -29,19 +31,21 @@ module.exports = function (app) {
         const userId = req.body.userId;
         const title = req.body.title;
         const text = req.body.text;
-        const date = new Date();
 
-        // TODO: db implementation
+        if (argumentMissing(res, circleId, userId, title, text)) return;
 
-        // if(argumentMissing(res, circleId, userId, title, text)) return;
-
-        res.status(200).json({
-            postID: 1,
-            userName: 'User' + userId,
+        db.Blackboard.create({
+            userId: userId,
+            circleId: circleId,
             title: title,
-            text: text,
-            date: date,
-            comments: []
+            body: text,
+        }).then(post => {
+            res.status(200).json(post);
+        }).error(err => {
+            res.status(500).json({
+                message: 'Post not created',
+                error: err
+            })
         });
     });
 

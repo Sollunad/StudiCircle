@@ -149,9 +149,9 @@ export class CircleProvider {
   }
 
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
-    // console.log('getBlackboardPosts', circleId);
+    console.log('getBlackboardPosts', circleId);
 
-    const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
+    const url = this.consts.url+`circle/blackboard/posts/${circleId}&mySession=${this.apiProvider.currentUser.session}`;
     // const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
     return this.http.get<BlackboardPost[]>(url);
   }

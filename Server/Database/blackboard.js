@@ -17,6 +17,7 @@ const Sequelize = require('sequelize'),
 	sequelize = require('./connection.js');
 
 const Post = sequelize.define('Post', {
+	title: Sequelize.STRING,
 	body: Sequelize.TEXT
 }, {
 	timestamps: true
