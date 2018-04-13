@@ -46,8 +46,10 @@ export class MitgliederÜbersicht {
             this.circleProvider.removeCircleMember(userId, circleId).subscribe(
               message => {
                 console.log(message);
-                this.navCtrl.pop();
-                this.navCtrl.push(MitgliederÜbersicht, {'circleId':this.circleId});
+                this.memberList =[];
+                this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
+                  memberList => this.memberList = memberList
+                );
               }
             );
           }
