@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {DbProvider} from "../../providers/dbprovider/dbprovider"
-import {DashboardPage} from "../dashboard/dashboard";
 
 @Component({
   selector: 'page-circle-erstellen',
