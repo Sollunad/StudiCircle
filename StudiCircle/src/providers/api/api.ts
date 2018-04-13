@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserInfo} from '../../providers/declarations/UserInfo';
@@ -19,18 +19,24 @@ import {constants} from "../../consts/constants";
 @Injectable()
 export class ApiProvider {
 
-  // private _apiPath = "https://api.dev.sknx.de/";
   private _apiPath = this.consts.url;
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient, public consts: constants) {
+  constructor(private http: HttpClient, private consts : constants) {
 
+  }
+
+  public getCurrentUser():UserInfo{
+    return this.currentUser;
   }
 
   public changeMail(new_mail : string, pwd : string){
     let data = {
       "mySession" : this.currentUser.session,
-      "oldMail" : this.currentUser.username, "newMail" : new_mail, "pass" : pwd};
+      "oldMail" : this.currentUser.mail,
+      "newMail" : new_mail,
+      "pwd" : pwd
+    };
     console.log(data);
     let header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -40,18 +46,16 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: ApiResponse) => {
-          if(res.httpStatus !== 200) {
-            return false;
-          } else {
-            this.currentUser.username = new_mail;
-            return true;
+          if (res.httpStatus === 200) {
+            this.currentUser.mail = new_mail;
           }
+          return res.httpStatus;
         }
       )
     );
   }
 
-  public login(username: string, password: string): Observable<boolean>{
+  public login(username: string, password: string): Observable<number>{
     let userCredentials = {"mail": username, "pwd": password};
     const header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -61,13 +65,11 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.status !== 200) {
-            return false;
-          } else {
+          if(res.httpStatus === 200) {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
-            return true;
           }
+          return res.httpStatus;
         }
       )
     );
@@ -118,7 +120,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
-        mail: mail
+        "mail": mail
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -134,8 +136,8 @@ export class ApiProvider {
     return successSubject.asObservable();
   }
 
-  public deleteUser(password: string): Observable<boolean> {
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public deleteUser(password: string): Observable<number> {
+    const successSubject: Subject<number> = new Subject<number>();
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/deleteUser",
       {
@@ -144,11 +146,11 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
-        successSubject.next(res.httpStatus === 200);
+        successSubject.next(res.httpStatus);
         requestSub.unsubscribe();
       },
       () => {
-        successSubject.next(false);
+        successSubject.next(undefined);
         requestSub.unsubscribe();
       }
     );
@@ -170,12 +172,11 @@ export class ApiProvider {
         successSubject.next(res.httpStatus === 200);
         requestSub.unsubscribe();
       },
-      () => {
+      (res : HttpErrorResponse) => {
         successSubject.next(false);
         requestSub.unsubscribe();
       }
     );
-
     return successSubject.asObservable();
   }
 

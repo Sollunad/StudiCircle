@@ -3,6 +3,11 @@
     <ion-title>
       Settings
     </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="goToFAQ()">
+        <ion-icon name="help"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page6">
@@ -12,7 +17,7 @@
         <img />
       </ion-avatar>
       <h2>
-        Student
+        {{accountName}}
       </h2>
     </ion-item>
     <ion-item color="none" id="settings-list-item31">
@@ -25,11 +30,13 @@
       Change Password
     </ion-item>
   </ion-list>
+  <div class="spacer" style="height:50px;" id="faq-spacer1"></div>
+  <h3>DELETE ACCOUNT</h3>
   <ion-item id="settings-list-item666">
     <ion-label></ion-label>
-    <ion-input type="password" placeholder="Confirm Password" [(ngModel)]="pw_confirm"></ion-input>
+    <ion-input clearInput clearOnEdit="false" type="password" placeholder="Confirm Password" [(ngModel)]="pw_confirm" (ionChange)="validateInput(pw_confirm)"></ion-input>
   </ion-item>
-  <button id="settings-button8" ion-button color="danger" block on-click="deleteAccount()">
+  <button id="settings-button8" ion-button [color]="deleteButtonColor" block on-click="deleteAccount()" [disabled]="!enabled">
     Delete Account
   </button>
 </ion-content>

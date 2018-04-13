@@ -15,7 +15,6 @@ import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
 import {BlackboardPost} from "../declarations/BlackboardPost";
 
-
 @Injectable()
 export class CircleProvider {
 
@@ -32,6 +31,10 @@ export class CircleProvider {
 
   public getModuleListByCircleId(uid:number): Observable<string[]>{
     return this.http.get<string[]>(this.consts.url+'circle/modules?circleId=' + uid + '&mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public getUserRole(circleId:number): Observable<any>{
+    return this.http.get<any>(this.consts.url+'circle/getRole?circleId=' + circleId + '&mySession=' + this.apiProvider.currentUser.session);
   }
 
   public create(name : string, visibility : string, location: any){
@@ -54,25 +57,24 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
-  public edit(id : number, visibility : string){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public edit(id : number, visibility : number){
+    const resSubject: Subject<any> = new Subject<any>();
     let body = {id : id, vis : visibility, mySession : this.apiProvider.currentUser.session};
-    console.log(body);
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
       this.consts.url+'circle/edit', body, header
     ).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        resSubject.next(res);
       },
       (error: any) => {
         console.log(error);
         editVisibility.unsubscribe();
-        successSubject.next(false);
+        resSubject.next(error);
       }
     );
-    return successSubject.asObservable();
+    return resSubject.asObservable();
   }
 
   public removeCircleByCircleId(uid: number): Observable<any>{
@@ -100,6 +102,50 @@ export class CircleProvider {
       userId: this.apiProvider.currentUser.uuid,
       circleId: circleId
     });
+  }
+
+  public selectNewAdmin(userId: number, circleId: number){
+    let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    console.log(body);
+    return this.http.post(this.consts.url+'circle/newAdmin',body);
+  }
+
+  public leaveCircle(circleId: number){
+    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session};
+    return this.http.post(this.consts.url+'circle/leave',body);
+  }
+
+  public checkIfAdmin(cid: number): Observable<any>{
+    return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public changeRole(userId: number, circleId: number, role: string) {
+    return this.http.post(this.consts.url+'circle/changerole', {
+      userId: userId,
+      circleId: circleId,
+      role: role
+    })
+  }
+
+  public editModules(cid: number, calendar: boolean, bill: boolean, bet: boolean, file: boolean, market:boolean){
+    const successSubject: Subject<boolean> = new Subject<boolean>();
+    let data = {id : cid, calendar : calendar, bill: bill, bet: bet, file: file, market: market, mySession : this.apiProvider.currentUser.session};
+    console.log(data);
+    let header = {"headers" : {"Content-Type": "application/json"}};
+    const editModules: Subscription = this.http.post(
+      this.consts.url+'circle/editModules',data, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editModules.unsubscribe();
+        successSubject.next(res.httpStatus === 200);
+      },
+      (error: any) => {
+        console.log(error);
+        editModules.unsubscribe();
+        successSubject.next(false);
+      }
+    );
+    return successSubject.asObservable();
   }
 
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{

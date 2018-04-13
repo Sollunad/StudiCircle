@@ -4,12 +4,12 @@
       Dashboard
     </ion-title>
     <ion-buttons end>
-      <button ion-button on-click="goToSearch()">
+      <button ion-button (click)="goToSearch()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button on-click="goToSettings()">
+      <button ion-button (click)="goToSettings()">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
@@ -20,7 +20,7 @@
   <button ion-button (click)="onNewCircle()" style="float: right; margin: 0;"><ion-icon name="add"></ion-icon> Circle</button>
   </ion-buttons>
   <h1 id="dashboard-heading3" style="color:#000000; float: left; margin: 0;">
-    Hello Student!
+    Hello {{accountName}}!
   </h1>
   <form id="dashboard-form12">
     <ion-searchbar placeholder="" name="search" id="dashboard-search2"></ion-searchbar>

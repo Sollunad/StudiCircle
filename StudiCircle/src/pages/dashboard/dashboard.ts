@@ -5,7 +5,6 @@ import {SearchPage} from '../search/search';
 import {Geolocation} from '@ionic-native/geolocation'
 import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
-import {HttpClient} from "@angular/common/http";
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
@@ -13,19 +12,25 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 
 @Component({
   selector: 'page-dashboard',
-  templateUrl: 'dashboard.html',
-  //providers: [CircleListProvider]
+  templateUrl: 'dashboard.html'
 })
 export class DashboardPage {
 
   settings: SettingsPage;
+  private res: any;
   private circles : Circle[]=[];
+  private accountName : string;
 
-  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbProvider: DbProvider, private circleProvider: CircleProvider, private alertCtrl: AlertController, private http: HttpClient, private api: ApiProvider) {
+  constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
     this.getUserData();
     this.getCirclesByLocation();
      // this.api.setLocation(49.489591, 8.467236);
+
+    if(this.api.currentUser.username){
+      this.accountName = this.api.currentUser.username.split(' ')[0];
+    }
+
   }
 
   private getCurrentPosition() {
@@ -78,7 +83,7 @@ export class DashboardPage {
         text: 'OK',
         handler: data => {
           let address = data.location;
-          this.dbProvider.getLocationByAddress(address).subscribe(geoResponses => {
+          this.dbprovider.getLocationByAddress(address).subscribe(geoResponses => {
             let json = geoResponses[0];
 
             if (json === undefined) {
