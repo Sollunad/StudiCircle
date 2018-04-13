@@ -114,17 +114,24 @@ module.exports = {
 
         if (argumentMissing(res, circleId, visible)) return;
 
-        const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId;
 
-        db.Circle.findById(circleId)
-        .then(circle => {
-          circle.updateAttributes({
-            "visible": visible
-          });
-          sendInfoResponse(res, "OK");
-        }).error(err => {
-          sendInfoResponse(res, 500, "Save changes failed.");
+        isAdminInCircle(userId, circleId, result => {
+            if(result){
+                db.Circle.findById(circleId)
+                .then(circle => {
+                    circle.updateAttributes({
+                        "visible": visible
+                    });
+                    sendInfoResponse(res, "OK");
+                }).error(err => {
+                    sendInfoResponse(res, 500, "Save changes failed.");
+                });
+            }else{
+                sendInfoResponse(res, 400, "User is no admin in circle.");
+            }
         });
+
     },
 
     editModules : function (req,res) {
