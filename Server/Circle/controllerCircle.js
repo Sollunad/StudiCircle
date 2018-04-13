@@ -104,7 +104,7 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, visible)) return;
 
         const userId = req.session.userId;
 
