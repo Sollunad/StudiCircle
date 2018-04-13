@@ -74,7 +74,7 @@ export class GetInvolvedPage {
 
   usernameCheck(){
     if(this.profile.name){
-      if(this.profile.name.match('([a-zA-Z\-]+ (([a-zA-Z]+\-{0,1}[a-zA-Z]+)+))$')){
+      if(this.profile.name.match('([a-zA-ZäöüÄÖÜ\\-]+ (([a-zA-ZäöüÄÖÜ]+\\-{0,1}[a-zA-ZäöüÄÖÜ]+)+))$')){
         console.log("[REGISTER] : User Name is valid");
         return true;
       }else{

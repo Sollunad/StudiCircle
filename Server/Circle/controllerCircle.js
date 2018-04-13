@@ -452,7 +452,7 @@ module.exports = {
                 if(callback) callback(false);
             }
         });
-    }
+    },
 
     // keine geroutete function
     isAdminAnywhere : function(userId, callback){
