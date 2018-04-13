@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
-import {DashboardPage} from "../dashboard/dashboard";
 import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 
 @Component({
@@ -28,9 +27,9 @@ export class CircleEinstellungenPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
+    console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualVisibility =>
     {
-      if(actualvisibility){
+      if(actualVisibility){
         this.pub=true;
         this.pri=false;
       } else {
@@ -173,6 +172,13 @@ export class CircleEinstellungenPage {
           handler: vis => {
             console.log(vis);
             this.visibility=vis;
+            if(this.visibility==1){
+              this.pub=true;
+              this.pri=false;
+            } else {
+              this.pub=false;
+              this.pri=true;
+            }
             console.log("[Visibility]: "+this.visibility);
             const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
               (res) => {
@@ -200,48 +206,6 @@ export class CircleEinstellungenPage {
       ]
     });
     alert.present();
-  }
-
-  openConfirmDialog2() {
-    let alert = this.alertCtrl.create({
-      title: 'Änderung bestätigen',
-      message: 'Sichtbarkeit wirklich ändern?',
-      buttons: [
-        {
-          text: 'Speichern',
-          handler: () => {
-            console.log('gespeichert');
-
-          }
-        },
-        {
-          text: 'Abbrechen',
-          role: 'cancel',
-          handler: () => {
-            console.log('canceled');
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
-  editVisibility(){
-    console.log("[Visibility]: "+this.visibility);
-    const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
-    (res) => {
-          if(res.info=="OK"){
-            console.log("[Visibility] : Visibility edit successful");
-            modification.unsubscribe();
-            return true;
-          }else{
-            console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
-            console.log(res);
-            modification.unsubscribe();
-            return false;
-          }
-      }
-    )
   }
 
   openAdminSelect(){
