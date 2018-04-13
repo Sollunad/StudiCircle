@@ -71,9 +71,10 @@ export class BlackboardPage {
     });
   }
 
-  private showPost(post: number) {
+  private showPost(post: BlackboardPost) {
+    console.log(post);
     this.navCtrl.push(BlackboardPostPage, {
-        post: this.posts[post]
+        post: post
       });
   }
 

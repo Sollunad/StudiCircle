@@ -469,7 +469,133 @@ module.exports = {
             if(callback) callback(false);
         }
     });
-    }
+    },
+
+    getPosts: function(req, res) {
+        const circleId = req.query.circleId;
+
+        // TODO: db implementation
+        // db.Circle.findAll({
+        //     include: [{
+        //         model: db.Blackboard,
+        //         //  required: false     --> LEFT OUTER JOIN (auch Circles ohne Location)
+        //     }]
+        // }).then(circles => {
+        //     res.status(200).json(circles);
+        // });
+
+        res.status(200).json([
+            {
+                postID: 1,
+                userName: 'TestUser',
+                title: 'First Title',
+                text: 'Toller Post',
+                date: '20170406',
+                comments: [
+                    {postID: 11, userName: 'TestUserComment11', text: 'Comment: 11', date: '20170406'},
+                    {postID: 12, userName: 'TestUserComment12', text: 'Comment: 12', date: '20170406'},
+                    {postID: 13, userName: 'TestUserComment13', text: 'Comment: 13', date: '20170406'},
+                    {postID: 14, userName: 'TestUserComment14', text: 'Comment: 14', date: '20170406'},
+                    {postID: 15, userName: 'TestUserComment15', text: 'Comment: 15', date: '20170406'}
+                ]
+            },
+            {
+                postID: 2,
+                userName: 'TestUser2',
+                title: 'Second Title',
+                text: 'Test',
+                date: '20170406',
+                comments: [{
+                    postID: 21, userName: 'TestUserComment21', text: 'Comment: Test', date: '20170406'
+                }]
+            }
+        ]);
+    },
+
+    getBlackboardPosts: function(req, res){
+        const circleId = req.query.circleID;
+
+        db.Blackboard.Post.findAll({where: {CircleId: circleId}, include: [{model: db.User, attributes: ['id', 'name'] },
+                {model: db.Blackboard.Comment, include: [db.User], limit: 3},
+            ], order: [['createdAt', 'DESC']]}).then(result => {
+            if(result.length === 0){
+            res.send({msg: 'No Circles'});
+            return;
+        }
+    else{
+            console.log(result);
+            res.status(200).send(result);
+            return;
+        }
+    }).error(err => {
+            res.status(500).send("Error while reading posts");
+        return;
+    });
+    },
+
+
+    newPost: function(req, res) {
+        const circleId = req.body.circleId;
+        const userId = req.body.userId;
+        const title = req.body.title;
+        const text = req.body.text;
+        const date = new Date();
+
+        // TODO: db implementation
+
+        // if(argumentMissing(res, circleId, userId, title, text)) return;
+
+        res.status(200).json({
+            postID: 1,
+            userName: 'User' + userId,
+            title: title,
+            text: text,
+            date: date,
+            comments: []
+        });
+    },
+
+    newComment : function(req, res){
+        const comment = req.body.com;
+        console.log("\n\nComment", comment);
+        db.Blackboard.Comment.create({"body": comment.body, "PostId":comment.postID, "UserId":req.session.userId,}).then(result => {
+          console.log(result);
+        }).error(err =>{
+          res.status(500).send("Error while posting comment");
+        });
+    },
+
+    getComments: function(req, res){
+        const postID = req.query.postID
+        db.Blackboard.Comment.findAll({where: {Postid: postID}, include: [{model: db.User, attributes: ['id', 'name']},
+            ], order:[['createdAt', 'ASC']]}).then(result => {
+        console.log(result);
+        if(result.length === 0){
+          res.send(result);
+          return;
+        }else{
+          res.status(200).send(result);
+          return;
+        }
+    }).error(err => {
+            res.status(500).send("Error while reading comments");
+        return;
+      });
+  },
+    deletePost : function(req, res){
+        const postID = req.body.postID;
+        const userId = req.session.userId;
+
+        console.log('controller: deletePost', postID);
+        db.Blackboard.Post.destroy({
+            where:{
+                PostId: postID
+                // UserId: userId
+            }
+        }).error(err =>{
+            res.send("No Posts found or you are not allowed");
+        });
+    },
 
 };
 
