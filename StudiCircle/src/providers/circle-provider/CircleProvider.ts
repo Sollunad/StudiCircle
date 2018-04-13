@@ -151,18 +151,16 @@ export class CircleProvider {
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
     // console.log('getBlackboardPosts', circleId);
 
-    // TODO: url
-    // const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
-    const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
+    const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
+    // const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
     return this.http.get<BlackboardPost[]>(url);
   }
 
   public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
     console.log('insertPost', circleId, title, text);
 
-    // TODO: url
-    // const url = this.consts.url+`circle/blackboard/posts/newPost`;
-    const url = 'http://localhost:8080/circle/blackboard/newPost';
+    const url = this.consts.url+`circle/blackboard/posts/newPost`;
+    // const url = 'http://localhost:8080/circle/blackboard/newPost';
     return this.http.post<BlackboardPost>(url, {
       circleId: circleId,
       userId: this.apiProvider.currentUser.uuid,

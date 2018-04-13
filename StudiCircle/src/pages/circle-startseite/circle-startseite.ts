@@ -7,6 +7,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
+import {BlackboardPage} from "../blackboard/blackboard";
 
 @Component({
   template: `
@@ -90,7 +91,7 @@ export class CircleStartseite {
   @ViewChild('popoverText', {read: ElementRef}) text: ElementRef;
 
   moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
-    {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+    {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
     {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
   ];
 
