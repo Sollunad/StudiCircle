@@ -80,11 +80,6 @@ module.exports = function(app) {
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
 
-    // circleID
-    // return: Posts of Blackboard
-    app.route('/circle/getbbPosts')
-        .get(circle.getBlackboardPosts);
-
     // userId (Number): selected users id
     app.route('/circle/leave')
         .post(circle.leaveCircle);
