@@ -96,13 +96,14 @@ export class SettingsPage {
                   this.goToLogIn({});
                   return;
                 } else if(status===412){
-                  return this.toasty.toast("User still Admin in one or more circles");
+                  this.toasty.toast("User still Admin in one or more circles");
                 } else if(status===400) {
-                  return console.log("[SETTINGS] : Session or Password missing");
+                  console.log("[SETTINGS] : Session or Password missing");
                 } else if(status===401) {
-                  return console.log("[SETTINGS] : Session or Password invalid");
+                  console.log("[SETTINGS] : Session or Password invalid");
                 }
-                return this.toasty.toast("Account deletion failed");
+                console.log(status);
+                this.toasty.toast("Account deletion failed");
               }
             );
           }
