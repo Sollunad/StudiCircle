@@ -100,6 +100,9 @@ module.exports = function(app) {
     app.route('/circle/blackboard/newPost')
         .post(circle.newPost);
 
+    app.route('/circle/blackboard/deletePost')
+        .post(circle.deletePost);
+
     //postID (Number)
     //userID (number)
     app.route('/circle/blackboard/newComment')

@@ -1,3 +1,5 @@
+
+
 const db = require('../Database/database.js');
 const cons = require('./constants.js');
 
@@ -172,6 +174,8 @@ module.exports = {
 
         sendInfoResponse(res, "Circle removed.");
     },
+
+
 
     //return all circles the user is following
     circlesForUserId : function (req, res) {
@@ -570,8 +574,21 @@ module.exports = {
     }).error(err => {
             res.status(500).send("Error while reading comments");
         return;
-    });
-    }
+      });
+  },
+    deletePost : function(req, res){
+        const postID = req.query.postID;
+        const userId = req.session.userId
+        db.Blackboard.Post.destroy({
+            where:{
+                PostId: postID
+                // UserId: userId
+            }
+        }).error(err =>{
+            res.send("No Posts found or you are not allowed");
+        })
+        console.log('good');
+    },
 
 };
 

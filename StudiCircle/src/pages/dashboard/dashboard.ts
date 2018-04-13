@@ -23,8 +23,8 @@ export class DashboardPage {
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
-    this.getUserData();
-    this.getCirclesByLocation();
+    // this.getUserData();
+    // this.getCirclesByLocation();
      // this.api.setLocation(49.489591, 8.467236);
 
     if(this.api.currentUser.username){
@@ -108,53 +108,53 @@ export class DashboardPage {
 
 
 
-
-  private nonFilteredCircles = Array<Circle>();
-  private lat: number;
-  private lon: number;
-
-
-  private getUserData() {
-    const coords = this.api.getLocation();
-    this.lat = coords.lat;
-    this.lon = coords.lon;
-  }
-
-  private setCircles(circles: Circle[]) {
-
-    this.circles = circles;
-  }
-
-  private getCirclesByLocation() {
-    const dist = 10;
-    this.circleProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
-      circles => {
-        // console.log('getCirclesByLocation', circles);
-        this.nonFilteredCircles = circles;
-        this.setCircles(circles);
-      });
-  }
-
-
+  //
+  // private nonFilteredCircles = Array<Circle>();
+  // private lat: number;
+  // private lon: number;
+  //
+  //
+  // private getUserData() {
+  //   const coords = this.api.getLocation();
+  //   this.lat = coords.lat;
+  //   this.lon = coords.lon;
+  // }
+  //
+  // private setCircles(circles: Circle[]) {
+  //
+  //   this.circles = circles;
+  // }
+  //
+  // private getCirclesByLocation() {
+  //   const dist = 10;
+  //   this.circleProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
+  //     circles => {
+  //       // console.log('getCirclesByLocation', circles);
+  //       this.nonFilteredCircles = circles;
+  //       this.setCircles(circles);
+  //     });
+  // }
 
 
-  private circleClicked(circle: Circle) {
-    console.log(circle);
 
-    this.navCtrl.push(CircleStartseite, {
-      circleId: circle.id,
-      circleName: circle.name
-    });
-  }
 
-  private joinCircle(circle: Circle) {
-    console.log('joinCircle', circle);
-
-    this.circleProvider.addUserToCircle(circle.id).subscribe(
-      result => {
-        console.log('joinCircle', result);
-      });
-  }
+  // private circleClicked(circle: Circle) {
+  //   console.log(circle);
+  //
+  //   this.navCtrl.push(CircleStartseite, {
+  //     circleId: circle.id,
+  //     circleName: circle.name
+  //   });
+  // }
+  //
+  // private joinCircle(circle: Circle) {
+  //   console.log('joinCircle', circle);
+  //
+  //   this.circleProvider.addUserToCircle(circle.id).subscribe(
+  //     result => {
+  //       console.log('joinCircle', result);
+  //     });
+  // }
 
 
 
