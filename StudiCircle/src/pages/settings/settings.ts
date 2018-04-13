@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {AlertController, NavController} from 'ionic-angular';
 import {PassManPage} from '../pass-man/pass-man';
 import {LogInPage} from '../log-in/log-in';
 import {GetInvolvedPage} from '../get-involved/get-involved';
@@ -8,8 +8,8 @@ import {DashboardPage} from '../dashboard/dashboard';
 import {ChangeMailPage} from '../change-mail/change-mail';
 import {ApiProvider} from "../../providers/api/api";
 import {Subscription} from "rxjs/Subscription";
-import { debounce } from 'ionic-angular/util/util';
 import {ToastyProvider} from "../../providers/toasty/toasty";
+import {FAQPage} from "../faq/faq";
 
 @Component({
   selector: 'page-settings',
@@ -24,6 +24,7 @@ export class SettingsPage {
 
   constructor(public navCtrl: NavController,
               private _api: ApiProvider,
+              private alertCtrl : AlertController,
               private toasty : ToastyProvider) {
     this.deleteButtonColor = "greyedout";
     this.enabled = false;
@@ -52,10 +53,9 @@ export class SettingsPage {
   }goToSettings(params){
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
-  }
-
-  public goToFaqPlaceholder(): void{
-    console.log("gotofaq");
+  }goToFAQ(params): void{
+    if (!params) params = {};
+    this.navCtrl.push(FAQPage);
   }
 
   public validateInput(input: string): void{
@@ -72,6 +72,32 @@ export class SettingsPage {
   }
 
   public deleteAccount(): void {
+    let confirmation : boolean;
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Deletion',
+      subTitle: 'Are you sure you want to delete the Account?',
+      buttons: [
+        {
+          text : 'Ah Nevermind',
+          role : 'cancel',
+          handler : () => {
+            console.log("[DELETEACC] : Account deletion aborted");
+          }
+        },
+        {
+          text:'Go Ahead',
+          handler : () => {
+            this.apiDelete();
+          }
+        }
+        ]
+    });
+
+    alert.present();
+  }
+
+  public apiDelete(){
+    console.log("[DELETEACC] : Account deletion continued");
     const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
       (status: number) => {
         deleteAccountSub.unsubscribe();
@@ -79,6 +105,7 @@ export class SettingsPage {
           console.log("[SETTINGS] : Account deletion successful");
           this.toasty.toast("Account deletion successful");
           this.goToLogIn({});
+          return;
         } else if(status===412){
           this.toasty.toast("User still Admin in one or more circles")
         } else if(status===400) {

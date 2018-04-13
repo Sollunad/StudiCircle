@@ -3,6 +3,11 @@
     <ion-title>
       Settings
     </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="goToFAQ()">
+        <ion-icon name="help"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page6">
@@ -24,10 +29,9 @@
     <ion-item color="none" on-click="goToPassMan()" id="settings-list-item30">
       Change Password
     </ion-item>
-    <ion-item color="none" on-click="goToFaqPlaceholder()" id="settings-list-item32">
-      FAQ
-    </ion-item>
   </ion-list>
+  <div class="spacer" style="height:50px;" id="faq-spacer1"></div>
+  <h3>DELETE ACCOUNT</h3>
   <ion-item id="settings-list-item666">
     <ion-label></ion-label>
     <ion-input clearInput clearOnEdit="false" type="password" placeholder="Confirm Password" [(ngModel)]="pw_confirm" (ionChange)="validateInput(pw_confirm)"></ion-input>
