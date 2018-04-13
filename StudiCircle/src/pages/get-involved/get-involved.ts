@@ -108,10 +108,8 @@ export class GetInvolvedPage {
 
   logProfile(){
     this.selectedAccountType = this.accountType === "rb-6-0"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
-    console.log(this.selectedAccountType);
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.selectedAccountType === AccountTypes.STUDENT){
-        console.log("student");
         console.log("[REGISTER] : Student Profile");
         if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match(getMailRegex())){
           console.log("[REGISTER] : Valid Student Mail");
@@ -127,13 +125,11 @@ export class GetInvolvedPage {
         }
       }else{
         if(this.selectedAccountType === AccountTypes.BUSINESS){
-          console.log("Business");
           console.log("[REGISTER] : Business User detected");
           if(this.profile.mail.match(getMailRegex())){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
               if(this.usernameCheck()){
-                console.log("regsiter")
                 this.registerNow();
               }
             }
