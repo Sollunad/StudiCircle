@@ -8,8 +8,19 @@
 
   <ion-card>
     <ion-item>
-      <h2>Marty McFly</h2>
-      <p>November 5, 1955</p>
+      <ion-row>
+        <ion-col col-10>
+          <h2>Marty McFly</h2>
+          <p>November 5, 1955</p>
+        </ion-col>
+        <ion-col col-2>
+          <ion-item>
+            <button ion-button icon-only item-right clear (click)="presentPopover($event)">
+              <ion-icon class="settings-icon" name="more"></ion-icon>
+            </button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
     </ion-item>
 
 
@@ -17,13 +28,12 @@
       <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
     </ion-card-content>
     <ion-row>
-
+      <ion-col>
+        <button ion-button clear small class="votes">
+          54 Stimmen
+        </button>
+      </ion-col>
     </ion-row>
-    <ion-col align-self-center text-center>
-      <button ion-button clear small class="votes">
-        54 Stimmen
-      </button>
-    </ion-col>
     <ion-row class="buttons">
       <ion-col>
         <button ion-button color="primary" clear small icon-start>

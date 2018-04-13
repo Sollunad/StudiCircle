@@ -37,6 +37,7 @@ import {CalendarPage} from "../pages/calendar/calendar";
 import {EventModalPage} from "../pages/event-modal/event-modal";
 import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
 import {TimelinePage} from "../pages/timeline/timeline";
+import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import {TimelinePage} from "../pages/timeline/timeline";
     CalendarPage,
     EventModalPage,
     CalendarTabPage,
-    TimelinePage
+    TimelinePage,
+    PopoverTimelinePage
   ],
 
   imports: [
@@ -97,7 +99,8 @@ import {TimelinePage} from "../pages/timeline/timeline";
     CalendarPage,
     EventModalPage,
     CalendarTabPage,
-    TimelinePage
+    TimelinePage,
+    PopoverTimelinePage
   ],
   providers: [
     StatusBar,
