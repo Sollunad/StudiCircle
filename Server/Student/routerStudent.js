@@ -8,6 +8,9 @@ module.exports = function(app) {
     app.route('/user/activate/:validationKey')
         .get(user.activate);
 
+    app.route('/user/disable/:validationKey')
+        .get(user.disableInvitation);
+
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 

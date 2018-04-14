@@ -46,6 +46,29 @@ module.exports = {
         }
     },
 
+
+    //Called when user clicks the link in the validation Mail.
+    disableInvitation : async function (req, res) {
+        var validationKey = req.params.validationKey;
+
+        if (!validationKey) {
+            responder.sendResponse(res, 400, "Bad request. No uuid.");
+            return;
+        }
+        try {
+            if ( await database.validationKeyExists(validationKey)) {
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.DISABLED)){
+                    responder.sendResponse(res, 201, "Successfully disabled new user account invitation.");
+                }
+            } else {
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
+            }
+        } catch (err) {
+            responder.sendResponse(res, 500);
+        }
+    },
+
     //Called when user requests a Mail to reset her/his password
     forgotPassword: async function (req, res) {
         var mail = req.body.mail;

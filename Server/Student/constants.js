@@ -38,6 +38,11 @@ module.exports = {
         return root + "/user/activate/" + activationToken;
     },
 
+    getDeactivationURL : function (activationToken) {
+        var root = this.getRootURL();
+        return root + "/user/disable/" + activationToken;
+    },
+
     getPasswordChangeURL : function () {
         var root = this.getRootURL();
         return root + "/user/resetPassword";
