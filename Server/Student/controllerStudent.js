@@ -73,7 +73,7 @@ module.exports = {
             responder.sendResponse(res, 500);
         }
     },
-    
+
     informAboutRegistration : async function (validationKey, message){
         let userId = await database.getNewMailFromValidationKey(validationKey);
         let userData = await database.getUserData(userId);

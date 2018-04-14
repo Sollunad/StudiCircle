@@ -1,5 +1,6 @@
 const db = require('../Database/database.js');
 const cons = require('./constants.js');
+const studentInterface = require('../Student/moduleInterface.js');
 
 module.exports = {
     helloworld : function (req, res) {
@@ -437,13 +438,16 @@ module.exports = {
 
         if (argumentMissing(res, mail, circleId)) return;
 
+        const userId = req.session.userId;
+
         db.User.findOne({where: {"email": mail}}).then(user => {
             if(user){
                 db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
                     if(result) sendInfoResponse(res, "Invitation sent.");
                 });
             }else{
-                sendInfoResponse(res, 400, "No user with given mail.");
+                studentInterface.sendInvitation(userId,mail,circleId);
+                sendInfoResponse(res, "Invitation sent to not registered user.");
             }
         }).catch(err => {
             sendInfoResponse(res, 500, "Database fail.");
