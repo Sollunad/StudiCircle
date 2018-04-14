@@ -35,19 +35,19 @@ module.exports = {
         }
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                console.log("validation key exists");
+                //console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
-                    await this.informAboutRegistration( validationKey, "Your account registration is activated successfully.");
+                    await registration.registrationInform( validationKey, "Your account registration is activated successfully.");
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
+            console.log(err);
             responder.sendResponse(res, 500);
         }
     },
-
 
     //Called when user clicks the link in the validation Mail.
     disableInvitation : async function (req, res) {
@@ -61,32 +61,18 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.DISABLED)){
-                    await this.informAboutRegistration( validationKey, "Your account registration is rejected.");
+                    await registration.registrationInform( validationKey, "Your account registration is rejected.");
                     responder.sendResponse(res, 201, "Successfully disabled new user account invitation.");
                 }
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
+            console.log(err);
             responder.sendResponse(res, 500);
         }
     },
 
-    informAboutRegistration: async function(validationKey, message){
-        let userId = await database.getNewMailFromValidationKey(validationKey);
-        let userData = await database.getUserData(userId);
-        let html = '<html lang="de-DE">\n' +
-            '<head>\n' +
-            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
-            '</head>\n' +
-            '<body>\n' +
-            '<h1>Validation of your new business account "' + userData.username + '"</h1>'+
-            '<p>' + message + '</p> '+
-            '</body>\n' +
-            '</html>';
-        let subject = 'StudiCircle: Validation of your new business account';
-        await mailer.sendMail(userData.mail, html, subject);
-    },
 
     //Called when user requests a Mail to reset her/his password
     forgotPassword: async function (req, res) {
