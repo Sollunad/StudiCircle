@@ -22,18 +22,14 @@ module.exports = {
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result2 => {
                     result2.destroy();
                     sendInfoResponse(res, "User from circle removed.");
-                    return;
-                }).error(err => {
+                }).catch(err => {
                     sendInfoResponse(res, 404, "User not found in circle.");
-                    return;
                 });
             }else{
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not Admin in the requested circle.");
-                return;
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "User not found in circle.");
-            return;
         });
         // res.send("User from circle removed.");
     },
@@ -55,19 +51,15 @@ module.exports = {
                     if(result[0]){
                         result[0][0].update({"role" : cons.CircleRole.MEMBER});
                         sendInfoResponse(res, "User added to circle.");
-                        return;
                     }else{
                         sendInfoResponse(res, "User already in circle.");
-                        return;
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "No user with given id.");
-                return;
             });
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "No circle with given id.");
-            return;
         });
     },
 
@@ -100,10 +92,10 @@ module.exports = {
                         sendInfoResponse(res, "User already in circle.");
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "User from session not found.");
-            });;
-        }).error(err => {
+            });
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error. Creating circle failed.");
         });
     },
@@ -112,24 +104,26 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, visible)) return;
 
-        const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId;
 
-        db.Circle.findById(circleId)
-        .then(circle => {
-          circle.updateAttributes({
-            "visible": visible,
-            "calendar": calendar,
-            "bill": bill,
-            "bet": bet,
-            "filesharing": filesharing,
-            "market": market
-          })
-          res.send("OK");
-        }).error(err => {
-          sendInfoResponse(res, 500, "Save changes failed.");
+        isAdminInCircle(userId, circleId, result => {
+            if(result){
+                db.Circle.findById(circleId)
+                .then(circle => {
+                    circle.updateAttributes({
+                        "visible": visible
+                    });
+                    sendInfoResponse(res, "OK");
+                }).catch(err => {
+                    sendInfoResponse(res, 500, "Save changes failed.");
+                });
+            }else{
+                sendInfoResponse(res, 400, "User is no admin in circle.");
+            }
         });
+
     },
 
     editModules : function (req,res) {
@@ -155,7 +149,7 @@ module.exports = {
           "market": market
         });
         sendInfoResponse(res, "OK");
-      }).error(err => {
+      }).catch(err => {
         sendInfoResponse(res, 500, "Save changes failed.");
       });
 
@@ -241,7 +235,7 @@ module.exports = {
 
         var filteredCircles = circles.filter(circleFilter);
         res.status(200).json(filteredCircles);
-      }).error(err => {
+      }).catch(err => {
         res.status(500).json({
           'error': 'Server Error'
         });
@@ -256,8 +250,8 @@ module.exports = {
         const userId = req.session.userId;
 
         db.Circle.build({"id" : circleId}).getUsers().then(users => {
-            var data = [];
-            var userInCircle = false;
+            const data = [];
+            let userInCircle = false;
             users.forEach(element => {
                 data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role});
                 if(!userInCircle && element.id == userId) userInCircle = true;
@@ -267,7 +261,7 @@ module.exports = {
             } else {
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not in the requested circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             res.status(500);
             sendInfoResponse(res, 500, "Server Error");
         });
@@ -283,7 +277,7 @@ module.exports = {
             sendInfoResponse(res, 404, "No circle with given id.");
             return;
           }
-          var result = [];
+          const result = [];
           if(circle.blackboard){
             result.push("blackboard");
           }
@@ -306,25 +300,21 @@ module.exports = {
             result.push("market");
           }
           res.send(result);
-          return;
-      }).error(err => {
+      }).catch(err => {
           sendInfoResponse(res, 500, "Error.");
-          return;
       });
     },
 
     getVisibility : function(req, res){
-      var circleId = req.query.circleId;
-      db.Circle.findById(circleId).then(circle => {
+        const circleId = req.query.circleId;
+        db.Circle.findById(circleId).then(circle => {
         if(circle == null){
           sendInfoResponse(res, 404, "No circle with given id.");
           return;
         }
         res.send(circle.visible);
-        return;
-      }).error(err => {
+      }).catch(err => {
         sendInfoResponse(res, 500, "Error");
-        return;
       });
     },
 
@@ -347,10 +337,10 @@ module.exports = {
 				sendInfoResponse(res, "Changed Role for " + selectedUser.toString()
 						+ " to " + newRole
 						+ "in Circle " + circleId + ".");
-			}).error((error) => {
+			}).catch((error) => {
                 sendInfoResponse(res, 500, "Update failed.");
 			});
-		}).error((error) => {
+		}).catch((error) => {
             sendInfoResponse(res, 500, "Could not find user in circle.");
 		});
 	},
@@ -388,16 +378,16 @@ module.exports = {
                             // change old admin to member
                             result2.update({"role": cons.CircleRole.MEMBER}).then(() => {
                                 sendInfoResponse(res, "Admin changed.");
-                			}).error((error) => {
+                			}).catch((error) => {
                                 sendInfoResponse(res, 500,"Update of new Admin failed.");
                 			});
-                		}).error((error) => {
+                		}).catch((error) => {
                             sendInfoResponse(res, 500, "Could not find new admin user in circle.");
                 		});
-        			}).error((error) => {
+        			}).catch((error) => {
                         sendInfoResponse(res, 500, "Update of old admin failed.");
         			});
-        		}).error((error) => {
+        		}).catch((error) => {
                     sendInfoResponse(res, 500, "Could not find old admin user in circle.");
         		});
             }else{
@@ -419,13 +409,13 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "Bad request. User ist not in the circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error at database request.");
         })
     },
 
     leaveCircle : function(req, res){
-        const circleId = req.body.circleId
+        const circleId = req.body.circleId;
         if (argumentMissing(res, circleId)) return;
         const userId = req.session.userId;
 
@@ -436,11 +426,30 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "User not in circle or user is admin.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Database error.");
         });
     },
 
+    inviteToCircle : function(req, res){
+        const mail = req.body.mail;
+        const circleId = req.body.circleId;
+
+        if (argumentMissing(res, mail, circleId)) return;
+
+        db.User.findOne({where: {"email": mail}}).then(user => {
+            if(user){
+                db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
+                    if(result) sendInfoResponse(res, "Invitation sent.");
+                });
+            }else{
+                sendInfoResponse(res, 400, "No user with given mail.");
+            }
+        }).catch(err => {
+            sendInfoResponse(res, 500, "Database fail.");
+        });
+    },
+    
     // keine geroutete function
     isAdminAnywhere : function(userId, callback){
         db.UserInCircles.findAll({
@@ -510,7 +519,7 @@ module.exports = {
             res.status(200).send(result);
             return;
         }
-    }).error(err => {
+    }).catch(err => {
             res.status(500).send("Error while reading posts");
         return;
     });
@@ -554,7 +563,7 @@ module.exports = {
             res.status(200).send(result);
             return;
         }
-    }).error(err => {
+    }).catch(err => {
             res.status(500).send("Error while reading comments");
         return;
     });

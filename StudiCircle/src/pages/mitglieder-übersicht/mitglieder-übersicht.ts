@@ -2,8 +2,7 @@ import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {AlertController, NavController, NavParams, ViewController} from "ionic-angular";
-import {DashboardPage} from "../dashboard/dashboard";
+import {AlertController, NavController, NavParams} from "ionic-angular";
 import {ApiProvider} from "../../providers/api/api";
 
 @Component({
@@ -18,7 +17,7 @@ export class MitgliederÜbersicht {
   private currentUserId : number;
 
 
-  constructor(public circleProvider: CircleProvider, private viewCtrl: ViewController, public navCtrl: NavController, public alertCtrl: AlertController, public apiProvider: ApiProvider, public http: HttpClient, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public navCtrl: NavController, public alertCtrl: AlertController, public apiProvider: ApiProvider, public http: HttpClient, public navParams: NavParams) {
     this.circleId = navParams.get('circleId');
     this.currentUserId = Number(this.apiProvider.getCurrentUser().id);
   }
@@ -76,7 +75,7 @@ export class MitgliederÜbersicht {
     });
   }
 
-  itemSelected(item: string) {
+  static itemSelected(item: string) {
     console.log("Selected Item", item);
   }
 
