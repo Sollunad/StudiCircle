@@ -20,6 +20,7 @@ module.exports = {
                 '<p>' + businessDescription + '</p>'+
                 '<p>The mail address is: ' + mail + '</p>'+
                 '<p>Please click on following link to activate this account on StudiCircle: <a href="' + constant.getActivationURL(randomString) + '">Validate new account</a></p>' +
+                '<p>Please click on following link to cancel the activitation / invitation of this account on StudiCircle: <a href="' + constant.getDeactivationURL(randomString) + '">Disable new account</a></p>' +
                 '</body>\n' +
                 '</html>';
         subject = 'StudiCircle: Validate new business account';
