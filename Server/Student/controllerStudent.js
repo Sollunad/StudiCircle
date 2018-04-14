@@ -36,11 +36,9 @@ module.exports = {
         }
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                console.log("validation key exists");
+                //console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
-                    console.log("Patrick wants to print something here");
-                    await this.informAboutRegistration( validationKey, "Your account registration is activated successfully.");
-                    console.log("Patrick wants to print something here");
+                    await registration.registrationInform( validationKey, "Your account registration is activated successfully.");
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {
@@ -51,7 +49,6 @@ module.exports = {
             responder.sendResponse(res, 500);
         }
     },
-
 
     //Called when user clicks the link in the validation Mail.
     disableInvitation : async function (req, res) {
@@ -65,17 +62,18 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.DISABLED)){
-                    await this.informAboutRegistration( validationKey, "Your account registration is rejected.");
+                    await registration.registrationInform( validationKey, "Your account registration is rejected.");
                     responder.sendResponse(res, 201, "Successfully disabled new user account invitation.");
                 }
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
+            console.log(err);
             responder.sendResponse(res, 500);
         }
     },
-
+    
     informAboutRegistration : async function (validationKey, message){
         let userId = await database.getNewMailFromValidationKey(validationKey);
         let userData = await database.getUserData(userId);
