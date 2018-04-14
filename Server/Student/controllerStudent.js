@@ -2,6 +2,7 @@ const circle = require('../Circle/controllerCircle');
 const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
+const mailer = require('./mailer');
 const passwordResetForm = require('./passwordResetForm');
 const passwordUtil = require('./passwordCheck');
 const registration = require('./registration');
@@ -36,6 +37,7 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    await this.informAboutRegistration( validationKey, "Your account registration is activated successfully.");
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {
@@ -59,6 +61,7 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.DISABLED)){
+                    await this.informAboutRegistration( validationKey, "Your account registration is rejected.");
                     responder.sendResponse(res, 201, "Successfully disabled new user account invitation.");
                 }
             } else {
@@ -67,6 +70,22 @@ module.exports = {
         } catch (err) {
             responder.sendResponse(res, 500);
         }
+    },
+
+    informAboutRegistration: async function(validationKey, message){
+        let userId = await database.getNewMailFromValidationKey(validationKey);
+        let userData = await database.getUserData(userId);
+        let html = '<html lang="de-DE">\n' +
+            '<head>\n' +
+            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
+            '</head>\n' +
+            '<body>\n' +
+            '<h1>Validation of your new business account "' + userData.username + '"</h1>'+
+            '<p>' + message + '</p> '+
+            '</body>\n' +
+            '</html>';
+        let subject = 'StudiCircle: Validation of your new business account';
+        await mailer.sendMail(userData.mail, html, subject);
     },
 
     //Called when user requests a Mail to reset her/his password
