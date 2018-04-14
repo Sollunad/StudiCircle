@@ -152,7 +152,6 @@ export class CircleProvider {
     console.log('getBlackboardPosts', circleId);
 
     const url = this.consts.url+`circle/blackboard/posts/${circleId}&mySession=${this.apiProvider.currentUser.session}`;
-    // const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
     return this.http.get<BlackboardPost[]>(url);
   }
 
@@ -160,7 +159,6 @@ export class CircleProvider {
     console.log('insertPost', circleId, title, text);
 
     const url = this.consts.url+`circle/blackboard/posts/newPost`;
-    // const url = 'http://localhost:8080/circle/blackboard/newPost';
     return this.http.post<BlackboardPost>(url, {
       circleId: circleId,
       userId: this.apiProvider.currentUser.uuid,

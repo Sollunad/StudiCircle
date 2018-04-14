@@ -30,19 +30,19 @@
       Your Circles
     </h1>
     <ion-item *ngFor="let circle of circles" (click)="goToStartPage(circle.id, circle.name)">{{circle.name}}</ion-item>
-<h1>Circles Close to you</h1>
-    <ion-list>
-      <ion-item color="none" id="search-list-item19" *ngFor="let circle of circles">
-        <ion-thumbnail item-left>
-          <img />
-        </ion-thumbnail>
-        <button ion-button color="secondary" (click)="circleClicked(circle)">
-          {{ circle.name }}
-        </button>
-        <button ion-button color="light" (click)="joinCircle(circle)">
-          Join
-        </button>
-      </ion-item>
-    </ion-list>
+<!--<h1>Circles Close to you</h1>-->
+    <!--<ion-list>-->
+      <!--<ion-item color="none" id="search-list-item19" *ngFor="let circle of circles">-->
+        <!--<ion-thumbnail item-left>-->
+          <!--<img />-->
+        <!--</ion-thumbnail>-->
+        <!--<button ion-button color="secondary" (click)="circleClicked(circle)">-->
+          <!--{{ circle.name }}-->
+        <!--</button>-->
+        <!--<button ion-button color="light" (click)="joinCircle(circle)">-->
+          <!--Join-->
+        <!--</button>-->
+      <!--</ion-item>-->
+    <!--</ion-list>-->
   </ion-list>
 </ion-content>
