@@ -245,4 +245,87 @@ module.exports = {
         }
     },
 
+    registrationInform : async function ( validationKey, message){
+        console.log("test1");
+        try {
+            console.log("test1");
+            let userId = await database.getUserIdFromValidationKey( validationKey);
+            console.log("inform3");
+            let userData = await database.getUserData(userId);
+            console.log("inform");
+            console.log(userData.username);
+            let html = '<html lang="de-DE">\n' +
+                '<head>\n' +
+                '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
+                '</head>\n' +
+                '<body>\n' +
+                '<h1>Validation of your new business account "' + userData.username + '"</h1>' +
+                '<p>' + message + '</p> ' +
+                '</body>\n' +
+                '</html>';
+            let subject = 'StudiCircle: Validation of your new business account';
+            await mailer.sendMail(userData.mail, html, subject);
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    },
+
+    externInvitation : async function (mail, invitingUserId, circle){
+        try {
+            let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
+            return db.User.create({
+                email: mail,
+                type:constant.AccountType.GUEST,
+                state:constant.AccountState.PENDING
+            }).then( (user)=> {
+                db.Invitation.create({"UserId": user.id, "CircleId": circle}).then( result =>{
+                    if(result) {
+                        db.ValidationKey.create({
+                            validationKey: randomString
+                        }).then( validationKey => {
+                            validationKey.setUser(user);
+
+                            let invitingUserData = database.getUserData(invitingUserId);
+                            let html = '<html lang="de-DE">\n' +
+                                '<head>\n' +
+                                '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
+                                '</head>\n' +
+                                '<body>\n' +
+                                '<h1>You\' re invited from ' + invitingUserData.username + ' to join circle "' + database.getCircleNameById(circle) + '"</h1>'+
+                                '<p>Please click on following link to join this circle on StudiCircle: <a href="' + constant.getCreateGuestUserURL(randomString) + '">Join circle</a></p>' +
+                                '</body>\n' +
+                                '</html>';
+                            let subject = 'StudiCircle: Invitation in Circle ' + database.getCircleNameById(circle);
+
+                            return mailer.sendMail(mail, html, subject)
+                                .then(resp => {
+                                    console.log(resp);
+                                    return true;
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    return false;
+                                });
+                        }).error( err =>{
+                            console.log(err);
+                            return false;
+                        });
+                    }
+                    return false;
+                }).error(err => {
+                    console.log(err);
+                    return err;
+                });
+            }).error(err => {
+                console.log(err);
+                return err;
+            });
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+
+    }
 };

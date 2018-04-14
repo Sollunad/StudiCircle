@@ -27,11 +27,13 @@ const allowedUrls = ["/user/login",
                         "/user/forgotPassword",
                         "/user/resetPassword",
                         "/user/register",
+                        "/user/guest/activate",
                     ];
 const allowedWildcards = ["/user/activate/",
                             "/user/disable/",
                             "/user/resetPassword/",
                             "/user/changeMail/",
+                            "/user/guest/register/",
                         ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
