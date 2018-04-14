@@ -138,7 +138,15 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+    },
+
+    getCircleNameById : function (circleId) {
+        try{
+            return 0;
+        }catch (error) {
+            console.log(err);
+            throw false;
+        }
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
