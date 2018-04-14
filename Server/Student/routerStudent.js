@@ -39,6 +39,12 @@ module.exports = function(app) {
     app.route('/user/changeMail/:validationKey')
         .get(user.confirmNewMail);
 
+    app.route('/user/guest/register/:validationKey')
+        .get(user.registerGuest);
+
+    app.route('/user/guest/activate')
+        .post(user.activateGuest);
+
     app.route('/user/test')
         .get(user.test);
 

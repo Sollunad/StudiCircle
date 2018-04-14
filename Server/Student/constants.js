@@ -53,6 +53,16 @@ module.exports = {
         return root + "/user/changeMail/" + activationToken;
     },
 
+    getCreateGuestUserURL : function (invitationToken) {
+        var root = this.getRootURL();
+        return root + "/user/guest/register/" + invitationToken;
+    },
+
+    getGuestUserActivationURL : function () {
+        var root = this.getRootURL();
+        return root + "/user/guest/activate";
+    },
+
     getRootURL : function () {
         var root;
         if (!process.env.StudicircleTest) {

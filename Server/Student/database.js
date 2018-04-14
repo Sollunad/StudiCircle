@@ -228,6 +228,30 @@ module.exports = {
             throw "database error";
         }
     },
+
+    setUsername : async function (userId, userName) {
+        console.log("SET USERID - userId: " + userId + " | Username: " + userName);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'name': userName
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw false;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
     
     setState : async function (validationKey, newState) {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);

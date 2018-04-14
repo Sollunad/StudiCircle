@@ -5,6 +5,7 @@ const database = require('./database');
 const mailer = require('./mailer');
 const passwordResetForm = require('./passwordResetForm');
 const passwordUtil = require('./passwordCheck');
+const registerGuestForm = require('./registerForm');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
 const mySession = require('../Session/session');
@@ -37,13 +38,16 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    console.log("Patrick wants to print something here");
                     await this.informAboutRegistration( validationKey, "Your account registration is activated successfully.");
+                    console.log("Patrick wants to print something here");
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
+            console.log(err);
             responder.sendResponse(res, 500);
         }
     },
@@ -72,7 +76,7 @@ module.exports = {
         }
     },
 
-    informAboutRegistration: async function(validationKey, message){
+    informAboutRegistration : async function (validationKey, message){
         let userId = await database.getNewMailFromValidationKey(validationKey);
         let userData = await database.getUserData(userId);
         let html = '<html lang="de-DE">\n' +
@@ -122,8 +126,6 @@ module.exports = {
     resetPassword : async function (req, res) {
         let validationKey = req.body.validationKey;
         let newPassword = req.body.pwd;
-
-        console.log(validationKey + " | " + newPassword);
 
         if (!validationKey || !newPassword) {
             responder.sendResponse(res, 400, "Bad request. No validation key or password.");
@@ -325,6 +327,45 @@ module.exports = {
                 await database.updateMail(userId, newMail);
 
                 responder.sendResponse(res, 200, "Successfully updated mail address");
+            } else {
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
+            }
+        } catch (err) {
+            console.log(err);
+            responder.sendResponse(res, 500);
+        }
+    },
+
+    registerGuest : function (req, res) {
+        let invitationKey = req.params.validationKey;
+        console.log(invitationKey)
+        if (!invitationKey) {
+            responder.sendResponse(res, 400, "Bad request. No invitation key.");
+        } else {
+            res.status(200);
+            res.send(registerGuestForm.getForm(invitationKey));
+        }
+    },
+
+    activateGuest : async function (req, res) {
+        let invitationKey = req.body.invitationKey;
+        let userName = req.body.userName;
+        let password = req.body.pwd;
+
+        if (!invitationKey || !password || !userName || !passwordUtil.passwordIsCompliant(password)) {
+            responder.sendResponse(res, 400, "Bad request. No invitation key, userId, password or password not comliant to guidelibnes.");
+            return;
+        }
+
+        try {
+            if ( await database.validationKeyExists(invitationKey) ) {
+                var userId = await database.getUserIdFromValidationKey(invitationKey);
+                console.log("validation key exists");
+                await database.setState(invitationKey, constants.AccountState.ACTIVE);
+                var newUserAuthData = passwordUtil.generateUserAuthData(password);
+                await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
+                await database.setUsername(userId, userName);
+                responder.sendResponse(res, 200, "Successfully registerd new User");
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
