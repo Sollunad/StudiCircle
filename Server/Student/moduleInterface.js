@@ -19,4 +19,8 @@ module.exports = {
             throw "Database Error";
         }
     },
+
+    sendInvitation : function (invitingUserId, mail, circle) {
+      //TODO
+    },
 }
