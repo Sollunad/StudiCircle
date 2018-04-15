@@ -23,7 +23,7 @@ module.exports = {
         }
       }
 
-      db.Calendar.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"allDay":allDay||null,"circleId":circleId}).then(calendar => {
+      db.Calendar.Appointment.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"allDay":allDay||null,"countCommits":0,"countRejections":0,"countInterested":0,"circleId":circleId}).then(calendar => {
         sendInfoResponse(res, "Appointment Created");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Creating appointment failed.");
@@ -41,7 +41,7 @@ module.exports = {
     const allDay = req.body.allDay;
 
 
-    if (argumentMissing(res, title, location)) return;
+    if (argumentMissing(res, title, location, appID)) return;
     if (allDay == null || !allDay){
         if (argumentMissing(res,startDate,endDate)) return;
     }
@@ -52,7 +52,7 @@ module.exports = {
       }
     }
 
-    db.Calendar.findById(appID)
+    db.Calendar.Appointment.findById(appID)
     .then(calendar => {
       calendar.updateAttributes({
         "title": title,
@@ -76,19 +76,19 @@ module.exports = {
     if(argumentMissing(res, voting)) return;
 
     if(voting == cons.Votings.COMMIT){
-      db.Calendar.increment('countCommits', { where: { id: appID }}).then(calendar => {
+      db.Calendar.Appointment.increment('countCommits', { where: { id: appID }}).then(calendar => {
         sendInfoResponse(res, "Vote sent");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Voting failed.");
       });
     }else if(voting == cons.Votings.REJECT){
-      db.Calendar.increment('countRejections', { where: { id: appID }}).then(calendar => {
+      db.Calendar.Appointment.increment('countRejections', { where: { id: appID }}).then(calendar => {
         sendInfoResponse(res, "Vote sent");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Voting failed.");
       });
     }else if(voting == cons.Votings.INTERESTED){
-      db.Calendar.increment('countInterested', { where: { id: appID }}).then(calendar => {
+      db.Calendar.Appointment.increment('countInterested', { where: { id: appID }}).then(calendar => {
         sendInfoResponse(res, "Vote sent");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Voting failed.");
@@ -104,23 +104,30 @@ module.exports = {
 
     if(argumentMissing(res,appID)) return;
 
-    db.Calendar.findById(appID).then(calendar => {
+    db.Calendar.Appointment.findById(appID).then(calendar => {
       if(calendar == null){
         sendInfoResponse(res, 404, "No appointment with given id.");
         return;
       }
-      const result = [];
-      if(calendar.countCommits){
-        result.push("countCommits");
+
+
+      const resultjson = {"commits":0,"rejections":0,"interested":0};
+
+      console.log(calendar);
+      console.log(calendar.dataValues.countCommits);
+
+      if(calendar.dataValues.countCommits){
+        resultjson.commits=calendar.dataValues.countCommits;
       }
-      if(circle.countRejections){
-        result.push("countRejections");
+      if(circle.dataValues.countRejections){
+        resultjson.rejections=calendar.dataValues.countRejections;
       }
-      if(calendar.countInterested){
-        result.push("countInterested");
+      if(calendar.dataValues.countInterested){
+        resultjson.interested=calendar.dataValues.countInterested;
       }
 
-      const resultjson = {"commits":result[0],"rejections":result[1],"interested":result[2]}
+      console.log(resultjson);
+
       res.send(resultjson);
     }).catch(err => {
         sendInfoResponse(res, 500, "Error getting votes.");
