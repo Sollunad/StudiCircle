@@ -46,6 +46,7 @@ export class LogInPage {
 
   login(){
     if(!this.mail && !this.pw) {
+      this.toasty.toast("Email and Password field cannot be empty!");
       console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
     }else{
       if(this.mail.match(getMailRegex()) && stringHasAppropiateLength(this.pw,8,64)) {
@@ -67,6 +68,11 @@ export class LogInPage {
           }
         )
       }else{
+        if(this.mail.length === 0){
+          this.toasty.toast("The email field cannot be empty!");
+        }else if(this.pw.length === 0){
+          this.toasty.toast("The password field cannot be empty!");
+        }
         console.log("[LOGIN] : Non-compliant E-Mail or Password")
       }
     }
