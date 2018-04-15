@@ -57,12 +57,10 @@ export class LogInPage {
             loginSub.unsubscribe();
           },
           (data: HttpErrorResponse) => {
-            if(data.status === 400 || data.status === 401){
-              this.toasty.toast("Wrong password or e-mail address!");
-            } else if (data.status === 412) {
+            if(data.status === 412){
               this.toasty.toast("Your Account is not yet activated!");
             } else {
-              this.toasty.toast("Something went wrong!");
+              this.toasty.toast("Wrong password or e-mail address!");
             }
             console.log("[LOGIN] : Login failed");
             loginSub.unsubscribe();
