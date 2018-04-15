@@ -48,6 +48,7 @@ export class ChangeMailPage {
   }
 
   mailChange(){
+    this.oldMail = this._api.currentUser.mail;
     if(this.oldMail && this.newMail && this.chkNewMail && this.pwd){
       if(this.oldMail != this.newMail){
         if(this.newMail == this.chkNewMail) {
@@ -75,10 +76,6 @@ export class ChangeMailPage {
         this.toasty.toast("Old Mail and new Mail must be different");
       }
     }else{
-      if(!this.oldMail){
-        console.log("[MAIL CHANGE] : Old Mail is required");
-        this.toasty.toast("Old Mail is required");
-      }
       if(!this.newMail){
         console.log("[MAIL CHANGE] : New Mail is required");
         this.toasty.toast("New Mail is required");
