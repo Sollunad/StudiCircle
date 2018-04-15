@@ -8,6 +8,7 @@ const ValidationKey = require('./validationKey');
 const UniMail = require('./uniMail');
 const ChatMessage = require('./chat.js');
 const Blackboard = require('./blackboard.js');
+const Calendar = require('./calendar.js');
 const Invitation = require('./invitation.js');
 
 /**
@@ -99,6 +100,15 @@ Invitation.belongsTo(User);
 Circle.hasMany(Invitation);
 Invitation.belongsTo(Circle);
 
+/**
+ * Calendar-Entry = Appointment
+ * 1:n - CIRCLE AND APPOINTMENT
+ **/
+Circle.hasMany(Calendar.Appointment);
+Calendar.Appointment.belongsTo(Circle);
+
+
+
 
 
 /** in der Node-Konsole aufrufen um die Tabellen zu erzeugen/upzudaten (das gehört in den Duden) */
@@ -122,6 +132,7 @@ function saveInit(forceObject) {
                     CircleLocation.sync(forceObject);
                     UserInCircles.sync(forceObject);
                     Blackboard.init();
+                    Calendar.init();
                     Invitation.sync(forceObject);
                     console.log("Database initialization: Done!");
                 });
@@ -137,6 +148,7 @@ module.exports = {
 	Location: Location,
 	User: User,
 	Blackboard: Blackboard,
+	Calendar: Calendar,
 	Invitation: Invitation,
 	ValidationKey: ValidationKey,
 	UniMail:UniMail,

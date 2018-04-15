@@ -26,7 +26,7 @@ export class PopoverPage {
   circleId;
   circleName;
 
-  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController, private popoverCtrl: PopoverController) {
+  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController) {
 
   }
 
@@ -97,7 +97,6 @@ export class CircleStartseite {
   circleId: number;
 
   circleName: string;
-  public checkRole: boolean;
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
@@ -137,7 +136,7 @@ export class CircleStartseite {
         {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
-      
+
       this.circleProvider.getModuleListByCircleId(this.circleId).subscribe(moduleList => {
         console.log(moduleList);
         this.staticModules.forEach(module => {
