@@ -23,14 +23,9 @@ module.exports = {
 
     sendInvitation : async function (invitingUserId, mail, circle) {
         try {
-            if (await database.userMailExists(mail)){
-                //normal invitation
-                return false;
-            }else{ //extern user invitation
-                return await registration.externInvitation(mail,invitingUserId, circle);
-            }
+            return await registration.externInvitation(mail,invitingUserId, circle);
         } catch (error) {
-
+            console.log(error);
         }
     },
 }

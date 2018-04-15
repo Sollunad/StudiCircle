@@ -140,9 +140,15 @@ module.exports = {
         }
     },
 
-    getCircleNameById : function (circleId) {
+    getCircleNameById : async function (circleId) {
         try{
-            return 0;
+            return await db.Circle.findById( circleId ).then( circle => {
+                if ( circle &&  circle && circle.dataValues.id)
+                    return  circle.dataValues.name;
+                throw  "database error";
+            }).error(err => {
+                throw   "error";
+            });
         }catch (error) {
             console.log(err);
             throw false;
