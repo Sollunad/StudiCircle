@@ -22,7 +22,7 @@ module.exports = {
         let password = req.body.pwd;
         let accountType = req.body.type;
         let userName = req.body.username;
-        let businessDescription = req.body.businessdescription;
+        let businessDescription = req.body.businessDescription;
         registration.register(mailAddress, password, accountType, userName, res, businessDescription);
     },
 

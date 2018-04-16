@@ -75,7 +75,7 @@ export class ApiProvider {
     );
   }
 
-  public register(mail : string, name : string, passwd : string, type : string){
+  public register(mail : string, name : string, passwd : string, type : string, business_desc: string){
     const successSubject: Subject<boolean> = new Subject<boolean>();
     let typeAsInt : number;
     if(type == 'student'){
@@ -92,7 +92,8 @@ export class ApiProvider {
       "mail": mail,
       "username" : name,
       "pwd": passwd,
-      "type": typeAsInt
+      "type": typeAsInt,
+      "businessDescription": business_desc
     });
 
     const header = { "headers": {"Content-Type": "application/json"} };

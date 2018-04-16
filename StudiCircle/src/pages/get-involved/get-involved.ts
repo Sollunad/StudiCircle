@@ -26,10 +26,11 @@ export class GetInvolvedPage {
 
   public mailValidation = getMailRegex();
 
+  public business_desc = "";
   passwdChk = '';
   accountType: string = "student";
   selectedAccountType: AccountTypes;
-  
+
   constructor(public navCtrl: NavController, private _apiService : ApiProvider, private toasty : ToastyProvider) {
   }
 
@@ -57,7 +58,8 @@ export class GetInvolvedPage {
     const registration = this._apiService.register(this.profile.mail,
                                                    this.profile.name,
                                                    this.profile.password,
-                                                   this.profile.profileType).subscribe(
+                                                   this.profile.profileType,
+                                                    this.business_desc).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[REGISTER] : Registration successful");
