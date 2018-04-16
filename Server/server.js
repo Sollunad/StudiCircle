@@ -27,6 +27,7 @@ const allowedUrls = ["/user/login",
                         "/user/forgotPassword",
                         "/user/resetPassword",
                         "/user/register",
+                        "/user/trigger",
                         "/user/guest/activate",
                     ];
 const allowedWildcards = ["/user/activate/",
