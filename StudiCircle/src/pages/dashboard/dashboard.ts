@@ -17,7 +17,6 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 export class DashboardPage {
 
   settings: SettingsPage;
-  private res: any;
   private circles : Circle[]=[];
   private accountName : string;
 
@@ -34,7 +33,7 @@ export class DashboardPage {
       let coords = position.coords;
       this.api.setLocation(coords.latitude, coords.longitude);
     }, (err) => {
-      // console.log('error', err);
+      console.log('error', err);
 
       this.showLocationPrompt();
     });
@@ -44,17 +43,17 @@ export class DashboardPage {
     this.navCtrl.push(CircleStartseite, {circleId: circleId, circleName: circleName});
   }
 
-  private goToSearch(params) {
+  goToSearch(params) {
     if (!params) params = {};
     this.navCtrl.push(SearchPage);
   }
 
-  private goToSettings(params) {
+  goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
   }
 
-  private onNewCircle() {
+  onNewCircle() {
     this.navCtrl.push(CircleErstellenPage);
   }
 
@@ -90,13 +89,6 @@ export class DashboardPage {
         }
       }]
     }).present();
-  }
-
-  private showCircle(circle: Circle){
-    this.navCtrl.push(CircleStartseite, {
-      circleId: circle.id,
-      circleName: circle.name
-    });
   }
 
 }

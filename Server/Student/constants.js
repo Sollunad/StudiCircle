@@ -38,6 +38,11 @@ module.exports = {
         return root + "/user/activate/" + activationToken;
     },
 
+    getDeactivationURL : function (activationToken) {
+        var root = this.getRootURL();
+        return root + "/user/disable/" + activationToken;
+    },
+
     getPasswordChangeURL : function () {
         var root = this.getRootURL();
         return root + "/user/resetPassword";
@@ -46,6 +51,16 @@ module.exports = {
     getNewMailActivationURL : function (activationToken) {
         var root = this.getRootURL();
         return root + "/user/changeMail/" + activationToken;
+    },
+
+    getCreateGuestUserURL : function (invitationToken) {
+        var root = this.getRootURL();
+        return root + "/user/guest/register/" + invitationToken;
+    },
+
+    getGuestUserActivationURL : function () {
+        var root = this.getRootURL();
+        return root + "/user/guest/activate";
     },
 
     getRootURL : function () {

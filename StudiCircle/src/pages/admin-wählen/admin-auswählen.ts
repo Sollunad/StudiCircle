@@ -52,7 +52,7 @@ export class AdminAuswaehlenPage {
     alert.present();
   }
 
-  itemSelected(item: string) {
+  static itemSelected(item: string) {
     console.log("Selected Item", item);
 
   }

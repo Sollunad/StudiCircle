@@ -138,7 +138,15 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+    },
+
+    getCircleNameById : function (circleId) {
+        try{
+            return 0;
+        }catch (error) {
+            console.log(err);
+            throw false;
+        }
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
@@ -212,6 +220,30 @@ module.exports = {
                     return user.updateAttributes({
                         'pwdHash': hash,
                         'salt': salt
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw false;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    setUsername : async function (userId, userName) {
+        console.log("SET USERID - userId: " + userId + " | Username: " + userName);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'name': userName
                     }).then(() => {
                         return true;
                     }).error(() => {

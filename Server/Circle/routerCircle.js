@@ -89,6 +89,12 @@ module.exports = function(app) {
     app.route('/circle/leave')
         .post(circle.leaveCircle);
 
+    app.route('/circle/invite')
+        .post(circle.inviteToCircle);
+
+
+
+
     // circleId (Number): current circle
     app.route('/circle/blackboard/posts')
         .get(circle.getPosts);
