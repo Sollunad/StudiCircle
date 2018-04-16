@@ -363,6 +363,25 @@ module.exports = {
                 var newUserAuthData = passwordUtil.generateUserAuthData(password);
                 await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
                 await database.setUsername(userId, userName);
+
+                let invitations = await database.getCircleInvitationsFromUserId(userId);
+                console.log(invitations);
+                if (invitations.length = 1) {
+                    let circleId = invitations[0].CircleId;
+                    await database.addUserToCircle(userId, circleId);
+                    await database.removeInvitation(invitations[0].id);
+                } else {
+                    let timestamp = database.getTimestampFromValidationKey(invitationKey);
+                    let diffs = [];
+                    for (var i=0; i < invitations.length; i = i+1) {
+                        diffs[i] = Math.abs(invitations.updatedAt - timestamp);
+                    }
+                    let min = Math.min.apply(null, diffs);
+                    let index = diffs.findIndex(singleDiff => singleDiff === min);
+                    let circleId = invitations[index].CircleId;
+                    await database.addUserToCircle(userId, circleId);
+                    await database.removeInvitation(invitations[0].id);
+                }
                 responder.sendResponse(res, 200, "Successfully registerd new User");
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
