@@ -12,11 +12,12 @@ module.exports = {
             "        <p>\n" +
             "            To reset your password please fill in the form below:\n" +
             "        </p>\n" +
-            "        <form method='POST' action='api.dev.sknx/user/resetPassword'>\n" +
+            "        <form method='POST' action='" + constants.getPasswordChangeURL() + "'>\n" +
             "            <label for='pw1'>Password:</label>\n" +
             "            <input type='password' name='pwd' id='pw1' onkeyup='checkPass()'/><br>\n" +
             "            <label for='pw2'>Repeat Password:</label>\n" +
             "            <input type='password' name='rpwd' id='pw2' onkeyup='checkPass()'/><br>\n" +
+            "            <input type='hidden' name='validationKey' id='validationKey' value='" +  validationKey +"'/><br>\n" +
             "            <input type='submit' value='submit' id='btn' disabled/>\n" +
             "        </form>\n" +
             "        <p id='outputCompare'></p>\n" +

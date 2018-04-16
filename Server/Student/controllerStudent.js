@@ -1,13 +1,17 @@
+const circle = require('../Circle/controllerCircle');
 const changeMail = require('./changeMailMail');
 const constants = require('./constants');
 const database = require('./database');
+const mailer = require('./mailer');
 const passwordResetForm = require('./passwordResetForm');
 const passwordUtil = require('./passwordCheck');
+const registerGuestForm = require('./registerForm');
 const registration = require('./registration');
 const resetPwd = require('./passwordResetMail');
 const mySession = require('../Session/session');
 const tests = require('./tests');
 const responder = require('./responseSender');
+
 
 module.exports = {
 
@@ -32,16 +36,58 @@ module.exports = {
         }
         try {
             if ( await database.validationKeyExists(validationKey)) {
-                console.log("validation key exists");
+                //console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
+                    await registration.registrationInform( validationKey, "Your account registration is activated successfully.");
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }
         } catch (err) {
+            console.log(err);
             responder.sendResponse(res, 500);
         }
+    },
+
+    //Called when user clicks the link in the validation Mail.
+    disableInvitation : async function (req, res) {
+        var validationKey = req.params.validationKey;
+
+        if (!validationKey) {
+            responder.sendResponse(res, 400, "Bad request. No uuid.");
+            return;
+        }
+        try {
+            if ( await database.validationKeyExists(validationKey)) {
+                console.log("validation key exists");
+                if (await database.setState(validationKey, constants.AccountState.DISABLED)){
+                    await registration.registrationInform( validationKey, "Your account registration is rejected.");
+                    responder.sendResponse(res, 201, "Successfully disabled new user account invitation.");
+                }
+            } else {
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
+            }
+        } catch (err) {
+            console.log(err);
+            responder.sendResponse(res, 500);
+        }
+    },
+
+    informAboutRegistration : async function (validationKey, message){
+        let userId = await database.getNewMailFromValidationKey(validationKey);
+        let userData = await database.getUserData(userId);
+        let html = '<html lang="de-DE">\n' +
+            '<head>\n' +
+            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n' +
+            '</head>\n' +
+            '<body>\n' +
+            '<h1>Validation of your new business account "' + userData.username + '"</h1>'+
+            '<p>' + message + '</p> '+
+            '</body>\n' +
+            '</html>';
+        let subject = 'StudiCircle: Validation of your new business account';
+        await mailer.sendMail(userData.mail, html, subject);
     },
 
     //Called when user requests a Mail to reset her/his password
@@ -76,10 +122,8 @@ module.exports = {
 
     //Called when user sends a new Password after requesting a password reset mail using the client
     resetPassword : async function (req, res) {
-        let validationKey = req.params.validationKey;
+        let validationKey = req.body.validationKey;
         let newPassword = req.body.pwd;
-
-        console.log(validationKey + " | " + newPassword);
 
         if (!validationKey || !newPassword) {
             responder.sendResponse(res, 400, "Bad request. No validation key or password.");
@@ -88,15 +132,20 @@ module.exports = {
 
         try {
             if (await database.validationKeyExists(validationKey)) {
-                var userId = await database.getUserIdFromValidationKey(validationKey);
+                try {
+                    var userId = await database.getUserIdFromValidationKey(validationKey);
 
-                var userAuthData = passwordUtil.generateUserAuthData(newPassword);
-                var hash = userAuthData.hash;
-                var salt = userAuthData.salt;
+                    var userAuthData = passwordUtil.generateUserAuthData(newPassword);
+                    var hash = userAuthData.hash;
+                    var salt = userAuthData.salt;
 
-                await database.setPassword(userId, hash, salt);
+                    await database.setPassword(userId, hash, salt);
 
-                responder.sendResponse(res, 200, "Password successfully reset.");
+                    responder.sendResponse(res, 200, "Password successfully reset.");
+                } catch (err) {
+                    console.log(err);
+                    responder.sendResponse(res, 500);
+                }
             } else {
                 responder.sendResponse(res, 401, "Invalid validation key!");
             }
@@ -127,7 +176,7 @@ module.exports = {
 
                 if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
                     var returnObject = {};
-                    returnObject.status = 200;
+                    returnObject.httpStatus = 200;
                     returnObject.message = "Successfully Logged in";
                     returnObject.userData = (await database.getUserData(userId));
                     returnObject.session = mySession.generateSession(userId);
@@ -142,7 +191,7 @@ module.exports = {
             }
         } catch (err) {
             console.log(err);
-            this.sendResponse(res, 500);
+            responder.sendResponse(res, 500);
         }
     },
 
@@ -197,9 +246,18 @@ module.exports = {
             var userAuthData = await database.getUserAuthData(userId);
 
             if (passwordUtil.passwordCorrect(pass, userAuthData.salt, userAuthData.hash)) {
-                await database.deleteUser(userId);
-                responder.sendResponse(res, 200, "Successfully deleted Account");
-                req.session.reset();
+
+                 circle.isAdminAnywhere(userId, async function(userIsAdmin) {
+
+                     if (!userIsAdmin) {
+                         await database.deleteUser(userId);
+                         responder.sendResponse(res, 200, "Successfully deleted Account");
+                         req.session.reset();
+                     } else {
+                         responder.sendResponse(res, 412, "User still Admin in one or more circles");
+                     }
+                 });
+
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid password.");
             }
@@ -267,6 +325,45 @@ module.exports = {
                 await database.updateMail(userId, newMail);
 
                 responder.sendResponse(res, 200, "Successfully updated mail address");
+            } else {
+                responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
+            }
+        } catch (err) {
+            console.log(err);
+            responder.sendResponse(res, 500);
+        }
+    },
+
+    registerGuest : function (req, res) {
+        let invitationKey = req.params.validationKey;
+        console.log(invitationKey)
+        if (!invitationKey) {
+            responder.sendResponse(res, 400, "Bad request. No invitation key.");
+        } else {
+            res.status(200);
+            res.send(registerGuestForm.getForm(invitationKey));
+        }
+    },
+
+    activateGuest : async function (req, res) {
+        let invitationKey = req.body.invitationKey;
+        let userName = req.body.userName;
+        let password = req.body.pwd;
+
+        if (!invitationKey || !password || !userName || !passwordUtil.passwordIsCompliant(password)) {
+            responder.sendResponse(res, 400, "Bad request. No invitation key, userId, password or password not comliant to guidelibnes.");
+            return;
+        }
+
+        try {
+            if ( await database.validationKeyExists(invitationKey) ) {
+                var userId = await database.getUserIdFromValidationKey(invitationKey);
+                console.log("validation key exists");
+                await database.setState(invitationKey, constants.AccountState.ACTIVE);
+                var newUserAuthData = passwordUtil.generateUserAuthData(password);
+                await database.setPassword(userId, newUserAuthData.hash, newUserAuthData.salt);
+                await database.setUsername(userId, userName);
+                responder.sendResponse(res, 200, "Successfully registerd new User");
             } else {
                 responder.sendResponse(res, 401, "Unauthorized. Invalid validation key.");
             }

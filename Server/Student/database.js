@@ -3,6 +3,26 @@ const db = require('../Database/database.js');
 
 module.exports = {
 
+    checkStudentMail: async function(mail){
+        console.log("CHECK MAIL : " + mail);
+        try {
+            let domain = mail.split("@");
+            if (!domain || !domain[1]){
+                throw "error: no mail address";
+            }
+            return await db.UniMail.findAll({ where:{ 'domain': domain[1] }}).then(mail => {
+                if ( mail &&  mail[0] && mail[0].dataValues.domain)
+                    return  true;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
     deleteUser : async function (userId) {
         console.log("DELETE USER - UserId: " + userId);
         try {
@@ -118,7 +138,21 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+    },
+
+    getCircleNameById : async function (circleId) {
+        try{
+            return await db.Circle.findById( circleId ).then( circle => {
+                if ( circle &&  circle && circle.dataValues.id)
+                    return  circle.dataValues.name;
+                throw  "database error";
+            }).error(err => {
+                throw   "error";
+            });
+        }catch (error) {
+            console.log(err);
+            throw false;
+        }
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
@@ -208,6 +242,30 @@ module.exports = {
             throw "database error";
         }
     },
+
+    setUsername : async function (userId, userName) {
+        console.log("SET USERID - userId: " + userId + " | Username: " + userName);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'name': userName
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw false;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
     
     setState : async function (validationKey, newState) {
         console.log("SET STATE - Token: " + validationKey + " | New State: " + newState);
@@ -255,20 +313,19 @@ module.exports = {
         }
     },
 
-    setValidationKeyByyUserId : async function (userId, validationKey1) {
+    createValidationKeyByyUserId : async function (userId, validationKey1) {
         console.log("SET VALIDATION KEY - Token: " + validationKey1 + " | UserId: " + userId);
         try {
-            return await db.ValidationKey.findAll({ where:{ 'userId': userId }}).then(validationKey => {
-                if ( validationKey && validationKey[0] && validationKey[0].dataValues.validationKey){
-                    return validationKey[0].updateAttributes({
-                        'validationKey' : validationKey1
-                    }).then(() =>{
-                        return true;
-                    });
-                }else{
-                    throw  false;
+            return db.ValidationKey.create({
+                validationKey: validationKey1,
+                UserId: userId
+            }).then(validationKey => {
+                if ( validationKey && validationKey.validationKey){
+                    return true;
                 }
+                throw false;
             }).error(err => {
+                console.log(err);
                 throw   "error";
             });
         } catch (err) {

@@ -8,12 +8,17 @@ module.exports = function(app) {
     app.route('/user/activate/:validationKey')
         .get(user.activate);
 
+    app.route('/user/disable/:validationKey')
+        .get(user.disableInvitation);
+
     app.route('/user/forgotPassword')
         .post(user.forgotPassword);
 
-    app.route('/user/resetPassword/:validationKey')
-        .get(user.passwordResetPage)
+    app.route('/user/resetPassword')
         .post(user.resetPassword);
+
+    app.route('/user/resetPassword/:validationKey')
+        .get(user.passwordResetPage);
 
     app.route('/user/login')
         .post(user.login);
@@ -34,6 +39,12 @@ module.exports = function(app) {
     app.route('/user/changeMail/:validationKey')
         .get(user.confirmNewMail);
 
+    app.route('/user/guest/register/:validationKey')
+        .get(user.registerGuest);
+
+    app.route('/user/guest/activate')
+        .post(user.activateGuest);
+
     app.route('/user/test')
         .get(user.test);
 
@@ -42,7 +53,9 @@ module.exports = function(app) {
 
     app.route('/user/*')
         .get(user.unknownpage);
-
-    app.route('/*')
-        .get(user.unknownpage);
+    // weil die Sockets erst später definiert werden, ist das hier scheiße... wenn überhaupt sollte so eine Regel in einer
+    // extra Datei ganz am Ende sein und nicht in routerStudent
+  
+    // app.route('/*')
+    //     .get(user.unknownpage);
 };

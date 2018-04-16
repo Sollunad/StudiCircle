@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserInfo} from '../../providers/declarations/UserInfo';
@@ -8,6 +8,7 @@ import {Subject} from "rxjs/Subject";
 import {ApiResponse} from "../declarations/ApiResponse";
 import {AccountTypes} from "../declarations/AccountTypeEnum";
 import {LoginResponse} from "../declarations/LoginResponse";
+import {constants} from "../../consts/constants";
 
 /*
   Generated class for the ApiProvider provider.
@@ -18,11 +19,15 @@ import {LoginResponse} from "../declarations/LoginResponse";
 @Injectable()
 export class ApiProvider {
 
-  private _apiPath = "https://api.sknx.de/";
+  private _apiPath = this.consts.url;
   public currentUser: UserInfo;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private consts : constants) {
 
+  }
+
+  public getCurrentUser():UserInfo{
+    return this.currentUser;
   }
 
   public changeMail(new_mail : string, pwd : string){
@@ -41,18 +46,16 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: ApiResponse) => {
-          if(res.httpStatus !== 200) {
-            return false;
-          } else {
+          if (res.httpStatus === 200) {
             this.currentUser.mail = new_mail;
-            return true;
           }
+          return res.httpStatus;
         }
       )
     );
   }
 
-  public login(username: string, password: string): Observable<boolean>{
+  public login(username: string, password: string): Observable<number>{
     let userCredentials = {"mail": username, "pwd": password};
     const header = { "headers": {"Content-Type": "application/json"} };
     return this.http.post(
@@ -62,13 +65,11 @@ export class ApiProvider {
     ).pipe(
       map(
         (res: LoginResponse) => {
-          if(res.status !== 200) {
-            return false;
-          } else {
+          if(res.httpStatus === 200) {
             this.currentUser = res.userData;
             this.currentUser.session = res.session;
-            return true;
           }
+          return res.httpStatus;
         }
       )
     );
@@ -119,7 +120,7 @@ export class ApiProvider {
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/forgotPassword",
       {
-        mail: mail
+        "mail": mail
       }
     ).subscribe(
       (res: ApiResponse) => {
@@ -135,8 +136,8 @@ export class ApiProvider {
     return successSubject.asObservable();
   }
 
-  public deleteUser(password: string): Observable<boolean> {
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public deleteUser(password: string): Observable<number> {
+    const successSubject: Subject<number> = new Subject<number>();
     const requestSub: Subscription = this.http.post(
       this._apiPath + "user/deleteUser",
       {
@@ -145,11 +146,11 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
-        successSubject.next(res.httpStatus === 200);
+        successSubject.next(res.httpStatus);
         requestSub.unsubscribe();
       },
       () => {
-        successSubject.next(false);
+        successSubject.next(undefined);
         requestSub.unsubscribe();
       }
     );
@@ -171,20 +172,21 @@ export class ApiProvider {
         successSubject.next(res.httpStatus === 200);
         requestSub.unsubscribe();
       },
-      () => {
-        //TODO investigate on what exactly is causing the error
+      (res : HttpErrorResponse) => {
         successSubject.next(false);
         requestSub.unsubscribe();
       }
     );
-
     return successSubject.asObservable();
   }
 
   public setLocation(lat, lon) {
-    //console.log('CurrentUser:', this.currentUser);
-    //console.log('setLocation', lat, lon);
     this.currentUser.coords = {lat: lat, lon: lon};
-    console.log('storedLocation:', this.currentUser);
+    //console.log('storedLocation:', this.currentUser);
   }
+
+  public getLocation() {
+    return this.currentUser.coords;
+  }
+
 }

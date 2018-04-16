@@ -59,3 +59,4 @@ typings/
 .env
 
 *.orig
+StudiCircle/package-lock.json

@@ -1,13 +1,11 @@
 import {HttpClient} from '@angular/common/http';
 import {ApiProvider} from '../api/api';
 import {Injectable} from '@angular/core';
-import {Subscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {ApiResponse} from "../declarations/ApiResponse";
 import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
-import {Circle} from '../declarations/Circle';
+import {BlackboardPost} from "../declarations/BlackboardPost";
+import {constants} from "../../consts/constants";
 
 /*
   Generated class for the DbProvider provider.
@@ -17,51 +15,35 @@ import {Circle} from '../declarations/Circle';
 */
 @Injectable()
 export class DbProvider {
-  private result: any;
-  private circles = new Array();
 
-  constructor(public http: HttpClient, private api: ApiProvider) { }
-
-  public getCircles() {
-    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
-       this.res = res;
-       console.log(res);
-     });*/
-     return new Promise<Array<string>>((resolve, reject) => {
-       const successSubject: Subject<boolean> = new Subject<boolean>();
-       const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser?id=1').subscribe(
-         (res: ApiResponse) => {
-           subs.unsubscribe();
-           successSubject.next(res.httpStatus === 200);
-           for(let i of res["circles"]){
-            this.circles.push(i["name"]);
-           }
-           resolve(this.circles);
-         },
-         (error: any) => {
-           console.log(error);
-           subs.unsubscribe();
-           successSubject.next(false);
-         }
-       );
-     });
-  }
-
-  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    console.log('getCirclesByLocation', lat, lon, distance);
-
-    const url = `http://localhost:8080/circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
-    return this.http.get<Circle[]>(url);
-  }
-
-  public setLocation(lat, lon) {
-    console.log('setLocation', lat, lon);
-  }
-
+  constructor(public http: HttpClient, private api: ApiProvider, public consts: constants) { }
 
   public getLocationByAddress(address: string): Observable<GeoResponse> {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
+  }
+
+  public getBlackboardPosts(circleId: string){
+    //Code
+    const url = this.consts.url+'circle/getbbPosts?mySession='+ this.api.currentUser.session+'&circleID='+circleId;
+  //  const localurl = 'http://localhost:8080/circle/getbbPosts?mySession=' + this.api.currentUser.session;
+
+    return this.http.get(url);
+  }
+
+  public deletePost(postID: number){
+    //const url = this.const.url+"circle/blackboard/deletePost"+postID;
+    //return this.http.post(url, {postID: postID});
+    return 1;
+  }
+
+  public postComment(Comment: BlackboardPost){
+    const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
+    return this.http.post(url, {com: Comment});
+  }
+
+  public getComments(postID: number){
+    const url = this.consts.url + "circle/blackboard/getComments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
+    return this.http.get(url);
   }
 }

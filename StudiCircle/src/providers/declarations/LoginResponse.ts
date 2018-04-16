@@ -1,7 +1,7 @@
 import {UserInfo} from "./UserInfo";
 
 export interface LoginResponse {
-  status : number,
+  httpStatus : number,
   userData : UserInfo,
   session : string;
 }

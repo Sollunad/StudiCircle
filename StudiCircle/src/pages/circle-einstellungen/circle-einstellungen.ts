@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
-
+import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 
 @Component({
   selector: 'page-circle-einstellungen',
@@ -11,23 +11,35 @@ import {HttpClient} from "@angular/common/http";
 
 export class CircleEinstellungenPage {
 
-  private circleId : number;
-  private visibility : string = "1";
+  circleId : number;
+  private visibility : number = 1;
+  private calendar: boolean = true;
+  private bill: boolean = true;
+  private bet: boolean = true;
+  private filesharing: boolean = true;
+  private market: boolean = true;
+  private pub:boolean;
+  private pri:boolean;
 
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, private _circleService : CircleProvider) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, public viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
   }
 
   ionViewDidLoad() {
-    console.log(this._circleService.getCircleVisibility(1).subscribe(actualvisibility =>
+    console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualVisibility =>
     {
-      if(actualvisibility){
-        this.visibility = "1";
+      if(actualVisibility){
+        this.pub=true;
+        this.pri=false;
       } else {
-        this.visibility = "0";
+        this.pub=false;
+        this.pri=true;
       }
     }
+    ));
+    console.log("Aktivierte Module:" + this.circleProvider.getModuleListByCircleId(this.circleId).subscribe(modules =>
+      this.mapModulesFromArraytoBool(modules)
     ));
   }
 
@@ -39,9 +51,11 @@ export class CircleEinstellungenPage {
         {
           text: 'Löschen',
           handler: () => {
-            this.circleProvider.removeCircleByCircleId(1).subscribe( //TO-DO: circleId übergeben!
+            this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
+            this.navCtrl.remove(this.viewCtrl.index-1);
+            this.navCtrl.pop();
           }
         },
         {
@@ -56,23 +70,75 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  openConfirmDialog2() {
+  openModuleSelect() {
     let alert = this.alertCtrl.create({
-      title: 'Änderung bestätigen',
-      message: 'Sichtbarkeit wirklich ändern?',
+      title: 'Module',
+      message: 'Wählen sie alle im Circle nutzbaren Module!',
+      inputs: [
+        {
+          id: 'calendar',
+          type: 'checkbox',
+          label: 'Kalender',
+          value: 'calendar',
+          checked: this.calendar
+        },
+        {
+          id: 'bill',
+          type: 'checkbox',
+          label: 'Rechnungen',
+          value: 'bill',
+          checked: this.bill
+        },
+        {
+          id: 'bet',
+          type: 'checkbox',
+          label: 'Wetten',
+          value: 'bet',
+          checked: this.bet,
+
+        },
+        {
+          id: 'file',
+          type: 'checkbox',
+          label: 'Filesharing',
+          value: 'filesharing',
+          checked: this.filesharing
+        },
+        {
+          id: 'market',
+          type: 'checkbox',
+          label: 'Flohmarkt',
+          value: 'market',
+          checked: this.market,
+        }
+      ],
       buttons: [
         {
           text: 'Speichern',
-          handler: () => {
-            console.log('gespeichert');
-            this.editVisibility();
+          handler: modules => {
+
+            this.mapModulesFromArraytoBool(modules);
+
+            const modification = this.circleProvider.editModules(this.circleId,this.calendar,this.bill,this.bet,this.filesharing,this.market).subscribe(
+              (success: boolean) => {
+                if(success){
+                  console.log("[Modules] : Modules edit successful");
+                  modification.unsubscribe();
+                  return true;
+                }else{
+                  console.log("[Modules] : Modules edit not successful");
+                  modification.unsubscribe();
+                  return false;
+                }
+              }
+            );
           }
         },
         {
           text: 'Abbrechen',
           role: 'cancel',
           handler: () => {
-            console.log('canceled');
+            console.log('Moduländerung abgebrochen');
           }
         }
       ]
@@ -80,28 +146,89 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  id=this.circleId;
-  vis='';
-
-  onChange(){
-    console.log(this.visibility);
-    this.vis = this.visibility;
+  openVisibilitySelect() {
+    let alert = this.alertCtrl.create({
+      title: 'Sichtbarkeit',
+      message: 'Wählen sie die Sichtbarkeit des Circles',
+      inputs: [
+        {
+          id: 'public',
+          type: 'radio',
+          label: 'öffentlich',
+          value: '1',
+          checked: this.pub
+        },
+        {
+          id: 'private',
+          type: 'radio',
+          label: 'privat',
+          value: '0',
+          checked: this.pri
+        }
+      ],
+      buttons: [
+        {
+          text: 'Speichern',
+          handler: vis => {
+            console.log(vis);
+            this.visibility=vis;
+            if(this.visibility==1){
+              this.pub=true;
+              this.pri=false;
+            } else {
+              this.pub=false;
+              this.pri=true;
+            }
+            console.log("[Visibility]: "+this.visibility);
+            const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
+              (res) => {
+                if(res.info=="OK"){
+                  console.log("[Visibility] : Visibility edit successful");
+                  modification.unsubscribe();
+                  return true;
+                }else{
+                  console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                  return false;
+                }
+              }
+            );
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Moduländerung abgebrochen');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
-  editVisibility(){
-    console.log(this.vis);
-    const modification = this._circleService.edit(1, this.vis).subscribe(
-    (success: boolean) => {
-          if(success){
-            console.log("[Visibility] : Visibility edit successful");
-            modification.unsubscribe();
-            return true;
-          }else{
-            console.log("[Visibility] : Visibility edit not successful");
-            modification.unsubscribe();
-            return false;
-          }
+  openAdminSelect(){
+    this.navCtrl.push(AdminAuswaehlenPage,{circleId: this.circleId});
+  }
+
+  mapModulesFromArraytoBool(modules: any){
+    this.calendar = false; this.bill = false; this.bet = false; this.filesharing = false; this.market = false;
+
+    for (let module of modules){
+      console.log(module);
+      switch(module){
+        case 'calendar': this.calendar = true; break;
+        case 'bill': this.bill = true; break;
+        case 'bet': this.bet = true; break;
+        case 'filesharing': this.filesharing = true; break;
+        case 'market': this.market = true; break;
+        case 'blackboard': break;
+        case 'chat': break;
+        default: console.log("No matching module found!"); break;
       }
-    )
+    }
+
+    console.log(this.calendar,this.bill,this.bet,this.filesharing,this.market);
   }
 }
