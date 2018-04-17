@@ -3,6 +3,7 @@ var db = require('../Database/database');
 var database = require('../Student/database');
 var mailer = require('./mailer');
 const passwordUtil = require('./passwordCheck');
+const responder = require('./responseSender');
 
 module.exports = {
 
@@ -150,6 +151,14 @@ module.exports = {
             return "wrong username";
         }
 
+        try {
+            let userId = await database.getUserIdFromMail(mail);
+            console.log(err);
+            responder.sendResponse(res, 451, "Mail already exists");
+        } catch (err) {
+            console.log("Register a new mail address");
+        }
+
         if (accountType == constant.AccountType.BUSINESS) {
             return this.registerBusiness(mail, password, userName, businessDescription, res);
         }
@@ -159,11 +168,7 @@ module.exports = {
         } catch (err) {
             console.log(err);
             if (res) {
-                res.status(412);
-                res.send({
-                    httpStatus: 412,
-                    message: mail + " in not a known valid mail address."
-                });
+                responder.sendResponse(res, 403, mail + " in not a known valid mail address.");
             }
             return false;
         }
@@ -201,10 +206,7 @@ module.exports = {
                         .then(resp => {
                             console.log(resp);
                             if (res) {
-                                res.send({
-                                    httpStatus: 200,
-                                    message: "Activation link sent"
-                                });
+                                responder.sendResponse(res, 200, "Activation link sent");
                             }
                             return true;
                         })
@@ -212,35 +214,23 @@ module.exports = {
                             console.log(err);
                             if (res) {
                                 res.status(412);
-                                res.send({
-                                    httpStatus: 412,
-                                    message: "Error at sending activation link."
-                                });
+                                responder.sendResponse(res, 412, "Error at sending activation link." );
                             }
                             return false;
                         });
                 }).error(err => {
                     res.status(409);
-                    res.send({
-                        httpStatus: 409,
-                        message: "Database error"
-                    });
+                    responder.sendResponse(res, 409, "Database error" );
                     return err;
                 });
             }).error(err => {
                 res.status(409);
-                res.send({
-                    httpStatus: 409,
-                    message: "Database error"
-                });
+                responder.sendResponse(res, 409, "Database error" );
                 return err;
             });
         } catch (err) {
             res.status(409);
-            res.send({
-                httpStatus: 409,
-                message: "Database error"
-            });
+            responder.sendResponse(res, 409, "Database error" );
             return err;
         }
     },
