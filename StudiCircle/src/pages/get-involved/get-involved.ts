@@ -27,6 +27,7 @@ export class GetInvolvedPage {
   public mailValidation = getMailRegex();
 
   public business_desc = "";
+  public business_name = "";
   passwdChk = '';
   accountType: string = "student";
   selectedAccountType: AccountTypes;
@@ -59,7 +60,7 @@ export class GetInvolvedPage {
                                                    this.profile.name,
                                                    this.profile.password,
                                                    this.profile.profileType,
-                                                    this.business_desc).subscribe(
+                                                    this.business_name + ' :\n' +this.business_desc).subscribe(
       (success: boolean) => {
         if(success){
           console.log("[REGISTER] : Registration successful");
