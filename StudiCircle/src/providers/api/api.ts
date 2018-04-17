@@ -76,7 +76,7 @@ export class ApiProvider {
   }
 
   public register(mail : string, name : string, passwd : string, type : string, business_desc: string){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const successSubject: Subject<number> = new Subject<number>();
     let typeAsInt : number;
     if(type == 'student'){
       typeAsInt = AccountTypes.STUDENT;
@@ -105,12 +105,11 @@ export class ApiProvider {
     ).subscribe(
       (res: ApiResponse) => {
         registerNewUser.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        successSubject.next(res.httpStatus);
       },
-      (error: any) => {
-        console.log(error);
+      (error: HttpErrorResponse) => {
         registerNewUser.unsubscribe();
-        successSubject.next(false);
+        successSubject.next(error.status);
       }
     );
     return successSubject.asObservable();

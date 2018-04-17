@@ -61,17 +61,22 @@ export class GetInvolvedPage {
                                                    this.profile.password,
                                                    this.profile.profileType,
                                                     this.business_name + ' :\n' +this.business_desc).subscribe(
-      (success: boolean) => {
-        if(success){
+      (status: number) => {
+        registration.unsubscribe();
+        if(status===200) {
           console.log("[REGISTER] : Registration successful");
           this.toasty.toast("Registration successful");
           this.goToVerifyNow({});
-        }else{
+          return true;
+        } else if(status===451) {
+          this.toasty.toast("Mail is already in use");
+        } else if(status===403) {
+          this.toasty.toast("This is a really invalid student mail");
+        } else{
           console.log("[REGISTER] : Registration not successful");
           this.toasty.toast("Registration was not successful");
         }
-        registration.unsubscribe();
-        return success;
+        return false;
       }
     )
   }
