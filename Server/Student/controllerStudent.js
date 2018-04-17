@@ -164,8 +164,14 @@ module.exports = {
             responder.sendResponse(res, 400, "Bad request. Either no username or no password.");
             return;
         }
+        let userId = 0;
         try {
-            let userId = await database.getUserIdFromMail(mail);
+            userId = await database.getUserIdFromMail(mail);
+        } catch (err) {
+            console.log(err);
+            responder.sendResponse(res, 451, "Mail doesn't exists");
+        }
+        try {
             console.log("User ID" + userId);
 
             let userData = await database.getUserData(userId);
