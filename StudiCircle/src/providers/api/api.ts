@@ -147,11 +147,12 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
+        console.log(res);
         successSubject.next(res.httpStatus);
         requestSub.unsubscribe();
       },
-      () => {
-        successSubject.next(undefined);
+      (error : HttpErrorResponse) => {
+        successSubject.next(error.status);
         requestSub.unsubscribe();
       }
     );

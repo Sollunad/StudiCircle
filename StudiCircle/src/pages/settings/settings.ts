@@ -87,25 +87,25 @@ export class SettingsPage {
         {
           text:'Go Ahead',
           handler : () => {
-            const deleteAccountSub : Subscription = this.apiDelete().subscribe(
+            const deleteAccountSub: Subscription = this._api.deleteUser(this.pw_confirm).subscribe(
               (status: number) => {
                 deleteAccountSub.unsubscribe();
                 if(status===200) {
                   console.log("[SETTINGS] : Account deletion successful");
                   this.toasty.toast("Account deletion successful");
                   this.goToLogIn({});
-                  return;
                 } else if(status===412){
-                  this.toasty.toast("User still Admin in one or more circles");
+                  this.toasty.toast("User still Admin in one or more circles")
                 } else if(status===400) {
                   console.log("[SETTINGS] : Session or Password missing");
                 } else if(status===401) {
                   console.log("[SETTINGS] : Session or Password invalid");
+                  this.toasty.toast("Wrong Password");
                 }
-                console.log(status);
                 this.toasty.toast("Account deletion failed");
               }
             );
+            return true;
           }
         }
         ]
@@ -114,8 +114,4 @@ export class SettingsPage {
     alert.present();
   }
 
-  public apiDelete(){
-    console.log("[DELETEACC] : Account deletion continued");
-    return this._api.deleteUser(this.pw_confirm);
-  }
 }
