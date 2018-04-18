@@ -154,7 +154,8 @@ module.exports = {
         try {
             let userId = await database.getUserIdFromMail(mail);
             console.log(err);
-            responder.sendResponse(res, 451, "Mail already exists");
+            responder.sendResponse(res, 204, "Mail already exists");
+            return false;
         } catch (err) {
             console.log("Register a new mail address");
         }
