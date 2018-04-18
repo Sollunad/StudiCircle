@@ -22,9 +22,22 @@
   <h1 id="dashboard-heading3" style="color:#000000; float: left; margin: 0;">
     Hello {{accountName}}!
   </h1>
+  <div class="spacer" style="width:300px;height:40px;" id="spacerdashboard2"></div>
   <form id="dashboard-form12">
     <ion-searchbar placeholder="" name="search" id="dashboard-search2"></ion-searchbar>
   </form>
+  <div class="spacer" style="width:300px;height:40px;" id="spacerdashboard"></div>
+  <ion-list id="dashboard-list5">
+    <h1>
+      Your Invitations
+    </h1>
+    <ion-item *ngFor="let invite of invitList">
+      {{invite.cName}}
+      <button ion-button item-end clear round large color="secondary" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,true)"><ion-icon style="font-size: 2em;" name="checkmark-circle" ></ion-icon></button>
+      <button ion-button item-end clear round large color="danger" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,false)"><ion-icon style="font-size: 2em;" name="close-circle" ></ion-icon></button>
+    </ion-item>
+
+  </ion-list>
   <ion-list id="dashboard-list4">
     <h1>
       Your Circles

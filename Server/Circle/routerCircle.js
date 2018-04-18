@@ -92,6 +92,11 @@ module.exports = function(app) {
     app.route('/circle/invite')
         .post(circle.inviteToCircle);
 
+    app.route('/circle/getInvit')
+        .get(circle.allInvitationsPerUser);
+
+    app.route('/circle/answerInvit')
+        .post(circle.reactToInvitation);
 
 
 
