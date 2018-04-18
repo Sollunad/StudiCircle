@@ -111,19 +111,23 @@ module.exports = {
       }
 
 
-      const resultjson = {"commits":0,"rejections":0,"interested":0};
+      const resultjson = {};
 
-      console.log(calendar);
-      console.log(calendar.dataValues.countCommits);
 
       if(calendar.dataValues.countCommits){
         resultjson.commits=calendar.dataValues.countCommits;
+      }else {
+        resultjson.commits=0;
       }
       if(circle.dataValues.countRejections){
         resultjson.rejections=calendar.dataValues.countRejections;
+      }else {
+        resultjson.commits=0;
       }
       if(calendar.dataValues.countInterested){
         resultjson.interested=calendar.dataValues.countInterested;
+      }else {
+        resultjson.commits=0;
       }
 
       console.log(resultjson);
