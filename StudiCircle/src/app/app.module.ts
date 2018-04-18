@@ -14,7 +14,7 @@ import {PassManPage} from '../pages/pass-man/pass-man';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {ApiProvider} from '../providers/api/api';
-import {CircleStartseite} from "../pages/circle-startseite/circle-startseite";
+import {CircleStartseite, PopoverPage} from "../pages/circle-startseite/circle-startseite";
 import {MitgliederÜbersicht} from "../pages/mitglieder-übersicht/mitglieder-übersicht";
 import {CircleProvider} from "../providers/circle-provider/CircleProvider";
 import {Geolocation} from '@ionic-native/geolocation';
@@ -23,6 +23,8 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {BlackboardPage} from "../pages/blackboard/blackboard";
+import {BlackboardPostPage} from '../pages/blackboard-post/blackboard-post';
 import {constants} from "../consts/constants";
 import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
 import {ChatPage} from "../pages/chat/chat";
@@ -31,6 +33,7 @@ import {RelativeTime} from "../pipes/relative-time";
 import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {ToastyProvider} from "../providers/toasty/toasty";
+import {FAQPage} from "../pages/faq/faq";
 
 @NgModule({
   declarations: [
@@ -52,7 +55,11 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     RelativeTime,
     AdminAuswaehlenPage,
     EmojiPickerComponent,
-    ChatPage
+    ChatPage,
+    PopoverPage,
+    BlackboardPage,
+    BlackboardPostPage,
+    FAQPage
   ],
 
   imports: [
@@ -80,7 +87,11 @@ import {ToastyProvider} from "../providers/toasty/toasty";
     SearchPage,
     CircleEinstellungenPage,
     ChatPage,
-    AdminAuswaehlenPage
+    PopoverPage,
+    AdminAuswaehlenPage,
+    BlackboardPage,
+    BlackboardPostPage,
+    FAQPage
   ],
   providers: [
     StatusBar,

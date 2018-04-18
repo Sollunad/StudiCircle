@@ -1,3 +1,4 @@
+import { AccountTypes } from './../../providers/declarations/AccountTypeEnum';
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {VerifyNowPage} from '../verify-now/verify-now';
@@ -26,8 +27,8 @@ export class GetInvolvedPage {
   public mailValidation = getMailRegex();
 
   passwdChk = '';
-  business : boolean;
-  student : boolean;
+  accountType: string = "rb-6-0";
+  selectedAccountType: AccountTypes;
 
   constructor(public navCtrl: NavController, private _apiService : ApiProvider, private toasty : ToastyProvider) {
   }
@@ -74,7 +75,7 @@ export class GetInvolvedPage {
 
   usernameCheck(){
     if(this.profile.name){
-      if(this.profile.name.match('([a-zA-Z\-]+ (([a-zA-Z]+\-{0,1}[a-zA-Z]+)+))$')){
+      if(this.profile.name.match('([a-zA-ZäöüÄÖÜ\\-]+ (([a-zA-ZäöüÄÖÜ]+\\-{0,1}[a-zA-ZäöüÄÖÜ]+)+))$')){
         console.log("[REGISTER] : User Name is valid");
         return true;
       }else{
@@ -106,8 +107,11 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
+    this.selectedAccountType = this.accountType === "rb-6-0"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
+    console.log(this.selectedAccountType);
     if(this.profile.mail && this.profile.password && this.passwdChk){
-      if(this.student && !this.business){
+      if(this.selectedAccountType === AccountTypes.STUDENT){
+        console.log("student");
         console.log("[REGISTER] : Student Profile");
         if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match(getMailRegex())){
           console.log("[REGISTER] : Valid Student Mail");
@@ -122,12 +126,14 @@ export class GetInvolvedPage {
           this.toasty.toast("Invalid Student Mail | only supports domains of educational authorities");
         }
       }else{
-        if(this.business && !this.student){
+        if(this.selectedAccountType === AccountTypes.BUSINESS){
+          console.log("Business");
           console.log("[REGISTER] : Business User detected");
           if(this.profile.mail.match(getMailRegex())){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
               if(this.usernameCheck()){
+                console.log("regsiter")
                 this.registerNow();
               }
             }
