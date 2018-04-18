@@ -88,6 +88,7 @@ module.exports = {
 
   //voting: wert des Enums wie abgestimmt wurde
   //appId : id des termins für den abgestimmt wurde
+  //Methode zum abstimmen für einen Termin
   vote : function (req,res){
     const voting = req.body.voting;
     const appID = req.body.appID;
@@ -119,6 +120,7 @@ module.exports = {
   },
 
   //appID: id des Termins für den man die Abstimmung möchte
+  //methode zum abrufen der Abstimmung zu einem Termin
   getVoting : function (req,res){
     const appID = req.query.appID;
 
