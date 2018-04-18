@@ -3,6 +3,15 @@ const cons = require('./constants.js');
 
 
 module.exports = {
+
+  //title: name für den Termin
+  //descriotion: beschreibung für den Termin
+  //location: Ort des Termins
+  //startDate: Anfang des Termins
+  //endDate: Ende des Termins
+  //allday: flag ob termin den ganzen TAg dauert
+  //circleId: Id des Circles für den der Termin erstellt wird
+  //Methode legt termin mit den entsprechenden Attributen an.
   createAppointment : function (req, res) {
       const title = req.body.title;
       const description = req.body.description;
@@ -30,6 +39,14 @@ module.exports = {
       });
   },
 
+  //appID: Id des Termins
+  //title: name für den Termin
+  //descriotion: beschreibung für den Termin
+  //location: Ort des Termins
+  //startDate: Anfang des Termins
+  //endDate: Ende des Termins
+  //allday: flag ob termin den ganzen TAg dauert
+  //Methode bearbeitet die Attribute entsprechend.
   editAppointment : function(req,res){
 
     const appID = req.body.appID;
@@ -69,6 +86,8 @@ module.exports = {
 
   },
 
+  //voting: wert des Enums wie abgestimmt wurde
+  //appId : id des termins für den abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
     const appID = req.body.appID;
@@ -99,6 +118,7 @@ module.exports = {
 
   },
 
+  //appID: id des Termins für den man die Abstimmung möchte
   getVoting : function (req,res){
     const appID = req.query.appID;
 
