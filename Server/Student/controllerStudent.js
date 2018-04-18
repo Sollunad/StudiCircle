@@ -170,6 +170,7 @@ module.exports = {
         } catch (err) {
             console.log(err);
             responder.sendResponse(res, 451, "Mail doesn't exists");
+            return;
         }
         try {
             console.log("User ID" + userId);
