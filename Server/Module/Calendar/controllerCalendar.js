@@ -88,34 +88,29 @@ module.exports = {
 
   //voting: wert des Enums wie abgestimmt wurde
   //appId : id des termins für den abgestimmt wurde
-  //Methode zum abstimmen für einen Termin
+  //Methode zum abstimmen für einen Termin ändert getätigte abstimmung falls bereits abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
     const appID = req.body.appID;
+    const userId = req.session.userId;
 
-    if(argumentMissing(res, voting)) return;
 
-    if(voting == cons.Votings.COMMIT){
-      db.Calendar.Appointment.increment('countCommits', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else if(voting == cons.Votings.REJECT){
-      db.Calendar.Appointment.increment('countRejections', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else if(voting == cons.Votings.INTERESTED){
-      db.Calendar.Appointment.increment('countInterested', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else {
-      sendInfoResponse(res, 500, "Server error. No Valid Vote.")
-    }
+    if(argumentMissing(res, voting, appID, userId)) return;
+
+    db.Calendar.Vote.findOne({where: {"user" : userId, "appId":appID}}).then(vote => {
+      vote.updateAttributes({'vote': voting});
+      sendInfoResponse(res, "Vote updated");
+      return;
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      return;
+    });
+
+    db.Calender.Vote.create({'appID': appID, 'user': userId, 'vote':voting}).then(vote =>{
+      sendInfoResponse(res, "Vote sent");
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+    });
 
   },
 
