@@ -10,8 +10,6 @@ import {Circle} from "../../providers/declarations/Circle";
 import {Invitation} from "../../providers/declarations/Invitation";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
-import {UserInfo} from "../../providers/declarations/UserInfo";
-
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html'
@@ -22,25 +20,6 @@ export class DashboardPage {
   private circles : Circle[]=[];
   public invitList: Invitation[];
   private accountName : string;
-  invites = [
-    'Pokémon Yellow',
-    'Super Metroid',
-    'Mega Man X',
-    'The Legend of Zelda',
-    'Pac-Man',
-    'Super Mario World',
-    'Street Fighter II',
-    'Half Life',
-    'Final Fantasy VII',
-    'Star Fox',
-    'Tetris',
-    'Donkey Kong III',
-    'GoldenEye 007',
-    'Doom',
-    'Fallout',
-    'GTA',
-    'Halo'
-  ];
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
     this.getCurrentPosition();
