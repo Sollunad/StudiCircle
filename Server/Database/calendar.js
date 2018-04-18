@@ -10,10 +10,7 @@ const Appointment = sequelize.define('Appointment', {
     location: Sequelize.STRING, // opt. connect to Location entity
     startDate: Sequelize.DATE,
     endDate: Sequelize.DATE,
-    allDay: Sequelize.BOOLEAN,
-    countCommits: Sequelize.INTEGER,
-    countRejections: Sequelize.INTEGER,
-    countInterested: Sequelize.INTEGER
+    allDay: Sequelize.BOOLEAN
 }, {
     timestamps: true
 });
