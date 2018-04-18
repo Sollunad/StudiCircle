@@ -7,6 +7,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
+import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
   template: `
@@ -95,7 +96,12 @@ export class CircleStartseite {
   ];
 
   circleId: number;
-
+  public invitStatusList: InvitationStatus[] = [
+    //true->accepted, false->denied, null->open
+    {cId : 1, invitId : 1, cName: "Martin", status: true},
+    {cId : 2, invitId : 2, cName: "ist", status: false},
+    {cId : 3, invitId : 3, cName: "1 Kek", status: null}
+  ];
   circleName: string;
 
   staticModules = [
@@ -114,6 +120,10 @@ export class CircleStartseite {
 
   ionViewWillEnter(){
     this.loadModules();
+    this.circleProvider.getAllInvitsForCircle(this.circleId).subscribe(invitStatusList => {
+      this.invitStatusList = invitStatusList;
+      console.log(this.invitStatusList);
+    });
   }
 
     presentPopover(ev) {

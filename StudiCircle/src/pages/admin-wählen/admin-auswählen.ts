@@ -33,9 +33,20 @@ export class AdminAuswaehlenPage {
         {
           text: 'Akzeptieren',
           handler: () => {
-            this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
-              message => console.log(message)
-            );
+            this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(data => {
+                console.log(data);
+              if(data.status!=200){
+                console.log("[Response]:"+data.statusText);
+                let alert = this.alertCtrl.create({
+                  title: 'Fehler',
+                  subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }else{
+                console.log("[Response]:"+data.statusText);
+              }
+              });
             this.navCtrl.remove(this.viewCtrl.index-1);
             this.navCtrl.pop();
           }
@@ -52,7 +63,7 @@ export class AdminAuswaehlenPage {
     alert.present();
   }
 
-  static itemSelected(item: string) {
+  itemSelected(item: string) {
     console.log("Selected Item", item);
 
   }

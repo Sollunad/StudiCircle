@@ -15,6 +15,7 @@ import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
 import {BlackboardPost} from "../declarations/BlackboardPost";
 import {Invitation} from "../declarations/Invitation";
+import {InvitationStatus} from "../declarations/InvitationStatus";
 
 @Injectable()
 export class CircleProvider {
@@ -106,9 +107,22 @@ export class CircleProvider {
   }
 
   public selectNewAdmin(userId: number, circleId: number){
+    const resSubject: Subject<any> = new Subject<any>();
     let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
-    console.log(body);
-    return this.http.post(this.consts.url+'circle/newAdmin',body);
+    let header = {"headers": {"Content-Type": "application/json"}};
+    const selectNewAdmin: Subscription = this.http.post(this.consts.url + 'circle/newAdmin', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        selectNewAdmin.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        selectNewAdmin.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
   }
 
   public leaveCircle(circleId: number){
@@ -170,16 +184,16 @@ export class CircleProvider {
     const resSubject: Subject<any> = new Subject<any>();
     let body = {circleId: cId, invitId: iId, status, mySession: this.apiProvider.currentUser.session};
     let header = {"headers": {"Content-Type": "application/json"}};
-    const editVisibility: Subscription = this.http.post(
+    const answerInvite: Subscription = this.http.post(
       this.consts.url + 'circle/answerInvit', body, header
     ).subscribe(
       (res: ApiResponse) => {
-        editVisibility.unsubscribe();
+        answerInvite.unsubscribe();
         resSubject.next(res);
       },
       (error: any) => {
         console.log(error);
-        editVisibility.unsubscribe();
+        answerInvite.unsubscribe();
         resSubject.next(error);
       }
     );
@@ -187,7 +201,11 @@ export class CircleProvider {
   }
 
   public getAllInvitsForUser(): Observable<Invitation[]>{
-    return this.http.get<Invitation[]>(this.consts.url+this.consts.url+'circle/getInvit?mySession=' + this.apiProvider.currentUser.session);
+    return this.http.get<Invitation[]>(this.consts.url+'circle/getInvit?mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public getAllInvitsForCircle(cId: number): Observable<InvitationStatus[]> {
+    return this.http.get<InvitationStatus[]>(this.consts.url + 'circle/getInvitForCircle?circleId='+cId+'mySession=' + this.apiProvider.currentUser.session);
   }
 
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{

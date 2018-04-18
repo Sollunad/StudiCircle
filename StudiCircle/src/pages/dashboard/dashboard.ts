@@ -18,11 +18,7 @@ export class DashboardPage {
 
   settings: SettingsPage;
   private circles : Circle[]=[];
-  public invitList: Invitation[] = [
-    {cId : 1, invitId : 1, cName: "Martin"},
-    {cId : 2, invitId : 2, cName: "ist"},
-    {cId : 3, invitId : 3, cName: "1 Kek"}
-  ];
+  public invitList: Invitation[];
   private accountName : string;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
@@ -30,6 +26,17 @@ export class DashboardPage {
     if(this.api.currentUser.username){
       this.accountName = this.api.currentUser.username.split(' ')[0];
     }
+  }
+
+  ionViewWillEnter() {
+    this.circleProvider.getCircles().subscribe(data => {
+      this.circles = data;
+      // this.showCircle(data[0]);
+    });
+    this.circleProvider.getAllInvitsForUser().subscribe(invitList => {
+      this.invitList = invitList;
+      console.log(this.invitList);
+    });
   }
 
   private getCurrentPosition() {
@@ -62,22 +69,23 @@ export class DashboardPage {
     this.navCtrl.push(CircleErstellenPage);
   }
 
-  answerInvitation(iID: number, cID: number, answer: boolean){
-    console.log("Answered on inviteID: " + iID + " for circleID: " + cID + " accepted invite: " + answer);
-    /*this.circleProvider.answerInvite(iID, cID, answer).subscribe(data => console.log(data));*/
-  }
-  ionViewWillEnter() {
-    this.circleProvider.getCircles().subscribe(data => {
-      this.circles = data;
-      // this.showCircle(data[0]);
-    });
-    /*this.circleProvider.getAllInvitsForUser().subscribe(
-      invitList => this.invitList = invitList
-    );*/
-  }
-
-  reactToInvit(circleId: number, invitId: number, status: boolean){
-    this.circleProvider.answerInvite(circleId, invitId, status);
+  // Function to accept or deny Invitations
+  answerInvitation(iId: number, cId: number, answer: boolean){
+    console.log("Answered on inviteID: " + iId + " for circleID: " + cId + " accepted invite: " + answer);
+    this.circleProvider.answerInvite(cId, iId, answer).subscribe(data => {
+        if(data.status!=200){
+          console.log("[Response]:"+data.statusText);
+          let alert = this.alertCtrl.create({
+            title: 'Fehler',
+            subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
+            buttons: ['OK']
+          });
+          alert.present();
+        }else{
+          console.log("[Response]:"+data.statusText);
+        }
+      }
+    );
   }
 
   public showLocationPrompt() {

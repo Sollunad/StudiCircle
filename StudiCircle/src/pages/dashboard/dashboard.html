@@ -33,8 +33,8 @@
     </h1>
     <ion-item *ngFor="let invite of invitList">
       {{invite.cName}}
-      <button ion-button item-end clear round large color="secondary" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,true)"><ion-icon style="font-size: 2em;" name="checkmark-circle" ></ion-icon></button>
-      <button ion-button item-end clear round large color="danger" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,false)"><ion-icon style="font-size: 2em;" name="close-circle" ></ion-icon></button>
+      <button ion-button item-end clear round large *ngIf="invite.invitId!=null && invite.cId!=null && invite.cName!='No invitations found.'" color="secondary" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,true)"><ion-icon style="font-size: 2em;" name="checkmark-circle" ></ion-icon></button>
+      <button ion-button item-end clear round large *ngIf="invite.invitId!=null && invite.cId!=null && invite.cName!='No invitations found.'" color="danger" style="margin: 0 0 0 0; padding: 0 10px 0 10px;" (click) = "answerInvitation(invite.invitId,invite.cId,false)"><ion-icon style="font-size: 2em;" name="close-circle" ></ion-icon></button>
     </ion-item>
 
   </ion-list>

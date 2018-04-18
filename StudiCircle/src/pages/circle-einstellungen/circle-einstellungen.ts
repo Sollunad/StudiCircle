@@ -184,6 +184,7 @@ export class CircleEinstellungenPage {
               (res) => {
                 if(res.info=="OK"){
                   console.log("[Visibility] : Visibility edit successful");
+                  console.log(res);
                   modification.unsubscribe();
                   return true;
                 }else{

@@ -98,6 +98,10 @@ module.exports = function(app) {
     app.route('/circle/answerInvit')
         .post(circle.reactToInvitation);
 
+    // TODO überprüfen und allInvitationsForCircle implementieren
+    app.route('/circle/getInvitForCircle')
+        .get(circle.allInvitationsForCircle);
+
 
 
     // circleId (Number): current circle

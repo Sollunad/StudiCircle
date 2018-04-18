@@ -135,4 +135,9 @@ export class MitgliederÜbersicht {
     )
   }
 
+  itemSelected(item: string) {
+    console.log("Selected Item", item);
+
+  }
+
 }

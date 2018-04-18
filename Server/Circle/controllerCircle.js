@@ -116,7 +116,7 @@ module.exports = {
                     circle.updateAttributes({
                         "visible": visible
                     });
-                    sendInfoResponse(res, "OK");
+                    sendInfoResponse(res,  "OK");
                 }).catch(err => {
                     sendInfoResponse(res, 500, "Save changes failed.");
                 });
@@ -461,7 +461,7 @@ module.exports = {
     allInvitationsPerUser : function(req, res){
         const userId = req.session.userId;
 
-        db.Invitation.findAll({where: {"UserId": userId}, include: [db.Circle]}).then(result => {
+        db.Invitation.findAll({where: {"UserId": userId}, include: [db.Circle]}).then(result => { // TODO join scheint nicht zu klappen, bekomme keinen Namen übergeben
             if(result && result.length > 0){
                 let resultData = [];
                 result.forEach(invit => {
@@ -469,7 +469,12 @@ module.exports = {
                 });
                 res.send(resultData);
             }else{
-                sendInfoResponse(res, "No invitations found.");
+                //sendInfoResponse(res, "No invitations found.");
+                // TODO andere Variante???
+                let resultData = [];
+                resultData.push({"invitId": null, "cId": null, "cName": "No invitations found."});
+                console.log(resultData);
+                res.send(resultData);
             }
         }).catch(err => {
             sendInfoResponse(500, "Database error.");
