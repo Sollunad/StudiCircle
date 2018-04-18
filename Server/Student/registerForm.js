@@ -3,28 +3,45 @@ const constants = require('./constants');
 module.exports = {
     getForm : function (inviationKey) {
         console.log(inviationKey);
-        var html = "<html>\n" +
-            "    <head>\n" +
-            "        <meta charset=\"UTF-8\">\n" +
-            "        <title>Register for StudiCircle</title>\n" +
-            "    </head>\n" +
-            "    <body>\n" +
-            "        <h1>Register for StudiCircle</h1>\n" +
-            "        <p>\n" +
-            "            To register please fill in the form below:\n" +
-            "        </p>\n" +
-            "        <form method='POST' action='" + constants.getGuestUserActivationURL() + "'>\n" +
-            "            <label for='userName'>User Name:</label>\n" +
-            "            <input type='text' name='userName' id='userName' /><br>\n" +
-            "            <label for='pw1'>Password:</label>\n" +
-            "            <input type='password' name='pwd' id='pw1' onkeyup='checkPass()'/><br>\n" +
-            "            <label for='pw2'>Repeat Password:</label>\n" +
-            "            <input type='password' name='rpwd' id='pw2' onkeyup='checkPass()'/><br>\n" +
-            "            <input type='hidden' name='invitationKey' id='invitationKey' value='" +  inviationKey +"'/><br>\n" +
-            "            <input type='submit' value='submit' id='btn' disabled/>\n" +
-            "        </form>\n" +
-            "        <p id='outputCompare'></p>\n" +
-            "        <p id='outputCompliance'></p>\n" +
+        var html = `<html>
+        <head>
+            <meta charset=\"UTF-8\">
+            <title>Register for StudiCircle</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+            <style>
+                .form-control{
+                    outline: none;
+                    border: none;
+                    border-bottom: 1px solid lightgrey;
+                    border-radius: 0;
+                }
+                .form-control:focus{
+                    outline: none;
+                    border: none;
+                    border-bottom: 2px solid #488aff;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <h1>Register for StudiCircle</h1>
+                        <p class="infotext lead">
+                            To register please fill in the form below:
+                        </p>
+                        <form method='POST' action='${constants.getGuestUserActivationURL()}'>
+                            <input class="form-control" type='text' name='userName' id='userName' placeholder="User Name" /><br>
+                            <input class="form-control" type='password' name='pwd' id='pw1' placeholder="Password" onkeyup='checkPass()'/><br>
+                            <input class="form-control" type='password' name='rpwd' id='pw2'placeholder="Repeat Password"  onkeyup='checkPass()'/><br>
+                            <input class="btn btn-block btn-primary" type='submit' value='submit' id='btn' disabled/>
+                            <input class="hiddenfield" type='hidden' name='invitationKey' id='invitationKey' value='${inviationKey}'/><br>
+                        </form>
+                        <p id='outputCompare' class="col-lg-8 offset-lg-2"></p>
+                        <p id='outputCompliance' class="col-lg-8 offset-lg-2"></p>
+                    </div>
+                </div>
+            </div>\n` +
                     "<script>\n" +
                     "\t//Store the password field objects into variables ...\n" +
                     "\tvar pass1 = document.getElementById('pw1');\n" +
