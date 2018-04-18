@@ -26,7 +26,7 @@ export class MitgliederÜbersicht {
     this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role == "admin") {
           this.isAdmin = true;
@@ -117,7 +117,7 @@ export class MitgliederÜbersicht {
     alert.present();
   }
 
-  invitation(data: string){
+  invitation(data: string){ // TODO checken ob business Circle oder "normaler"
     console.log("[E-Mail]: "+data);
     const modification = this.circleProvider.invite(this.circleId, data).subscribe(
       (res) => {

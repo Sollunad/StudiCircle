@@ -33,7 +33,7 @@ export class PopoverPage {
   openConfirmDialog(){
     this.circleId=this.navParams.data.circleId;
     this.circleName=this.navParams.data.circleName;
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role=="admin") {
           console.log("[ROLE] : "+role.role);
@@ -151,7 +151,7 @@ export class CircleStartseite {
           component: MitgliederÜbersicht,
           imageName: 'mitglieder.jpg'
         });
-        this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+        this.circleProvider.getUserRole(this.circleId).subscribe(
           role => {
             if (role.role == "admin") {
               console.log("[ROLE] : " + role.role);

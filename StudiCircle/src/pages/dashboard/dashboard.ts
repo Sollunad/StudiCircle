@@ -7,8 +7,10 @@ import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
+import {Invitation} from "../../providers/declarations/Invitation";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {UserInfo} from "../../providers/declarations/UserInfo";
 
 @Component({
   selector: 'page-dashboard',
@@ -18,6 +20,7 @@ export class DashboardPage {
 
   settings: SettingsPage;
   private circles : Circle[]=[];
+  public invitList: Invitation[];
   private accountName : string;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
@@ -62,6 +65,13 @@ export class DashboardPage {
       this.circles = data;
       // this.showCircle(data[0]);
     });
+    this.circleProvider.getAllInvitsForUser().subscribe(
+      invitList => this.invitList = invitList
+    );
+  }
+
+  reactToInvit(circleId: number, invitId: number, status: boolean){
+    this.circleProvider.answerInvite(circleId, invitId, status);
   }
 
   public showLocationPrompt() {
