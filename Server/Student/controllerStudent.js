@@ -169,7 +169,7 @@ module.exports = {
             userId = await database.getUserIdFromMail(mail);
         } catch (err) {
             console.log(err);
-            responder.sendResponse(res, 451, "Mail doesn't exists");
+            responder.sendResponse(res, 204, "Mail doesn't exists");
         }
         try {
             console.log("User ID" + userId);
