@@ -7,9 +7,9 @@ import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
+import {Invitation} from "../../providers/declarations/Invitation";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
-
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html'
@@ -18,6 +18,11 @@ export class DashboardPage {
 
   settings: SettingsPage;
   private circles : Circle[]=[];
+  public invitList: Invitation[] = [
+    {cId : 1, invitId : 1, cName: "Martin"},
+    {cId : 2, invitId : 2, cName: "ist"},
+    {cId : 3, invitId : 3, cName: "1 Kek"}
+  ];
   private accountName : string;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
@@ -57,11 +62,22 @@ export class DashboardPage {
     this.navCtrl.push(CircleErstellenPage);
   }
 
+  answerInvitation(iID: number, cID: number, answer: boolean){
+    console.log("Answered on inviteID: " + iID + " for circleID: " + cID + " accepted invite: " + answer);
+    /*this.circleProvider.answerInvite(iID, cID, answer).subscribe(data => console.log(data));*/
+  }
   ionViewWillEnter() {
     this.circleProvider.getCircles().subscribe(data => {
       this.circles = data;
       // this.showCircle(data[0]);
     });
+    /*this.circleProvider.getAllInvitsForUser().subscribe(
+      invitList => this.invitList = invitList
+    );*/
+  }
+
+  reactToInvit(circleId: number, invitId: number, status: boolean){
+    this.circleProvider.answerInvite(circleId, invitId, status);
   }
 
   public showLocationPrompt() {

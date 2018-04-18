@@ -438,7 +438,7 @@ module.exports = {
 
         if (argumentMissing(res, mail, circleId)) return;
 
-        const userId = req.session.userId;
+        const userId = req.session.userId; //TODO mindestens Mod, nur einmal
 
         db.User.findOne({where: {"email": mail}}).then(user => {
             if(user){
@@ -446,11 +446,62 @@ module.exports = {
                     if(result) sendInfoResponse(res, "Invitation sent.");
                 });
             }else{
-                studentInterface.sendInvitation(userId,mail,circleId);
-                sendInfoResponse(res, "Invitation sent to not registered user.");
+                // TODO nur für bussines circle
+                if(studentInterface.sendInvitation(userId,mail,circleId)){
+                    sendInfoResponse(res, "Invitation sent to not registered user.");
+                }else{
+                    sendInfoResponse(res, 500, "External email error.")
+                }
             }
         }).catch(err => {
             sendInfoResponse(res, 500, "Database fail.");
+        });
+    },
+
+    allInvitationsPerUser : function(req, res){
+        const userId = req.session.userId;
+
+        db.Invitation.findAll({where: {"UserId": userId}, include: [db.Circle]}).then(result => {
+            if(result && result.length > 0){
+                let resultData = [];
+                result.forEach(invit => {
+                   resultData.push({"invitId": invit.id, "cId": invit.CircleId, "cName": invit.name});
+                });
+                res.send(resultData);
+            }else{
+                sendInfoResponse(res, "No invitations found.");
+            }
+        }).catch(err => {
+            sendInfoResponse(500, "Database error.");
+        })
+    },
+
+    reactToInvitation : function(req, res){
+        const invitationId = req.body.invitId;
+        const isAccepted = req.body.accepted;
+
+        if(argumentMissing(res, invitationId, isAccepted)) return ;
+
+        const userId = req.session.userId;
+
+        db.Invitation.findOne({where: {"id": invitationId, "UserId": userId}}).then(invit => {
+            if(invit){
+                if(isAccepted){
+                    db.UserInCircles.create({"UserId": userId, "CircleId": invit.CircleId, "role": cons.CircleRole.MEMBER}).then(result => {
+                        invit.destroy();
+                        sendInfoResponse(res,"Invitation accepted.");
+                    }).catch(err => {
+                        sendInfoResponse(res, "User already in circle. Or some database error.");
+                    });
+                }else{
+                    invit.destroy();
+                    sendInfoResponse(res,"Invitation rejected.");
+                }
+            }else{
+                sendInfoResponse(res, 400, "No invitation with current user.");
+            }
+        }).catch(err => {
+            sendInfoResponse(500, "Database error.");
         });
     },
 
@@ -479,7 +530,6 @@ module.exports = {
         // }).then(circles => {
         //     res.status(200).json(circles);
         // });
-
         res.status(200).json([
             {
                 postID: 1,

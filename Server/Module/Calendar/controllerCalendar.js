@@ -3,6 +3,15 @@ const cons = require('./constants.js');
 
 
 module.exports = {
+
+  //title: name für den Termin
+  //descriotion: beschreibung für den Termin
+  //location: Ort des Termins
+  //startDate: Anfang des Termins
+  //endDate: Ende des Termins
+  //allday: flag ob termin den ganzen TAg dauert
+  //circleId: Id des Circles für den der Termin erstellt wird
+  //Methode legt termin mit den entsprechenden Attributen an.
   createAppointment : function (req, res) {
       const title = req.body.title;
       const description = req.body.description;
@@ -30,6 +39,14 @@ module.exports = {
       });
   },
 
+  //appID: Id des Termins
+  //title: name für den Termin
+  //descriotion: beschreibung für den Termin
+  //location: Ort des Termins
+  //startDate: Anfang des Termins
+  //endDate: Ende des Termins
+  //allday: flag ob termin den ganzen TAg dauert
+  //Methode bearbeitet die Attribute entsprechend.
   editAppointment : function(req,res){
 
     const appID = req.body.appID;
@@ -69,36 +86,36 @@ module.exports = {
 
   },
 
+  //voting: wert des Enums wie abgestimmt wurde
+  //appId : id des termins für den abgestimmt wurde
+  //Methode zum abstimmen für einen Termin ändert getätigte abstimmung falls bereits abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
     const appID = req.body.appID;
+    const userId = req.session.userId;
 
-    if(argumentMissing(res, voting)) return;
 
-    if(voting == cons.Votings.COMMIT){
-      db.Calendar.Appointment.increment('countCommits', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else if(voting == cons.Votings.REJECT){
-      db.Calendar.Appointment.increment('countRejections', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else if(voting == cons.Votings.INTERESTED){
-      db.Calendar.Appointment.increment('countInterested', { where: { id: appID }}).then(calendar => {
-        sendInfoResponse(res, "Vote sent");
-      }).catch(err => {
-          sendInfoResponse(res, 500, "Server error. Voting failed.");
-      });
-    }else {
-      sendInfoResponse(res, 500, "Server error. No Valid Vote.")
-    }
+    if(argumentMissing(res, voting, appID, userId)) return;
+
+    db.Calendar.Vote.findOne({where: {"user" : userId, "appId":appID}}).then(vote => {
+      vote.updateAttributes({'vote': voting});
+      sendInfoResponse(res, "Vote updated");
+      return;
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      return;
+    });
+
+    db.Calender.Vote.create({'appID': appID, 'user': userId, 'vote':voting}).then(vote =>{
+      sendInfoResponse(res, "Vote sent");
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+    });
 
   },
 
+  //appID: id des Termins für den man die Abstimmung möchte
+  //methode zum abrufen der Abstimmung zu einem Termin
   getVoting : function (req,res){
     const appID = req.query.appID;
 

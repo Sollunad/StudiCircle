@@ -14,6 +14,7 @@ import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
 import {BlackboardPost} from "../declarations/BlackboardPost";
+import {Invitation} from "../declarations/Invitation";
 
 @Injectable()
 export class CircleProvider {
@@ -115,10 +116,6 @@ export class CircleProvider {
     return this.http.post(this.consts.url+'circle/leave',body);
   }
 
-  public checkIfAdmin(cid: number): Observable<any>{
-    return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
-  }
-
   public changeRole(userId: number, circleId: number, role: string) {
     return this.http.post(this.consts.url+'circle/changerole', {
       userId: userId,
@@ -168,6 +165,31 @@ export class CircleProvider {
     );
     return resSubject.asObservable();
   }
+
+  public answerInvite(cId : number, iId: number, status: boolean) {
+    const resSubject: Subject<any> = new Subject<any>();
+    let body = {circleId: cId, invitId: iId, status, mySession: this.apiProvider.currentUser.session};
+    let header = {"headers": {"Content-Type": "application/json"}};
+    const editVisibility: Subscription = this.http.post(
+      this.consts.url + 'circle/answerInvit', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editVisibility.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        editVisibility.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
+  }
+
+  public getAllInvitsForUser(): Observable<Invitation[]>{
+    return this.http.get<Invitation[]>(this.consts.url+this.consts.url+'circle/getInvit?mySession=' + this.apiProvider.currentUser.session);
+  }
+
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
     // console.log('getBlackboardPosts', circleId);
 

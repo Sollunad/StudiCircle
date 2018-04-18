@@ -1,7 +1,7 @@
 const Votings = {
-    COMMIT: "commit",
-    REJECT: "reject",
-    INTERESTED: "interested"
+    COMMIT: 2,
+    REJECT: 1,
+    INTERESTED: 0,
 };
 
 module.exports = {
