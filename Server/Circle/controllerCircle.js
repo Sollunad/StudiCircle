@@ -1,5 +1,6 @@
 const db = require('../Database/database.js');
 const cons = require('./constants.js');
+const consUser = require('../Student/constants.js');
 const studentInterface = require('../Student/moduleInterface.js');
 
 module.exports = {
@@ -76,7 +77,7 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.create({"name":name,"visible":visible,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"business":false,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
@@ -88,6 +89,7 @@ module.exports = {
                 circle.addUser(user).then(result => {
                     if (result[0]){
                         result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
+                        if(user.type == consUser.AccountType.BUSINESS) circle.updateAttributes({"business":true});
                         sendInfoResponse(res, "Circle created and User added.");
                     }else{
                         sendInfoResponse(res, "User already in circle.");
@@ -128,31 +130,37 @@ module.exports = {
     },
 
     editModules : function (req,res) {
-      const circleId = req.body.id;
+        const circleId = req.body.id;
 
-      const calendar = req.body.calendar;
-      const bill = req.body.bill;
-      const bet = req.body.bet;
-      const file = req.body.file;
-      const market = req.body.market;
+        const calendar = req.body.calendar;
+        const bill = req.body.bill;
+        const bet = req.body.bet;
+        const file = req.body.file;
+        const market = req.body.market;
 
-      if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
 
-      const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId;
 
-      db.Circle.findById(circleId)
-      .then(circle => {
-        circle.updateAttributes({
-          "calendar": calendar,
-          "bill": bill,
-          "bet": bet,
-          "filesharing": file,
-          "market": market
+        isAdminInCircle(userId, circleId, result => {
+           if(result){
+                db.Circle.findById(circleId)
+                    .then(circle => {
+                        circle.updateAttributes({
+                            "calendar": calendar,
+                            "bill": bill,
+                            "bet": bet,
+                            "filesharing": file,
+                            "market": market
+                        });
+                        sendInfoResponse(res, "OK");
+                    }).catch(err => {
+                    sendInfoResponse(res, 500, "Save changes failed.");
+                });
+           }else{
+               sendInfoResponse(res, 412, "User is not admin in circle.");
+           }
         });
-        sendInfoResponse(res, "OK");
-      }).catch(err => {
-        sendInfoResponse(res, 500, "Save changes failed.");
-      });
 
     },
 
@@ -507,7 +515,7 @@ module.exports = {
 
         if(argumentMissing(res, circleId)) return;
 
-        db.Invitation.findAll({where: {"CircleId": circleId, "status": 0}, include: [{model: db.User}]}).then(result => {
+        db.Invitation.findAll({where: {"CircleId": circleId}, include: [{model: db.User}]}).then(result => {
             if(result && result.length > 0){
                 let resultData = [];
                 result.forEach(invit => {
