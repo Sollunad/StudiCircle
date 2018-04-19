@@ -86,13 +86,37 @@ module.exports = {
 
   },
 
+  delete : function (req,res){
+    const appID = req.body.appID;
+
+    if(argumentMissing(res,appID)) return;
+    db.Calendar.Vote.findAll({where: {"AppointmentId": appID}}).then(voting => {
+      if (voting[0]){
+        voting.forEach(vote =>{
+          vote.destroy();
+        })
+      }
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      return;
+    });
+    db.Calendar.Appointment.findById(appID).then(appointment => {
+      appointment.destroy();
+      sendInfoResponse(res,  "Successful deleted");
+      return;
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      return;
+    });
+  },
+
   //voting: wert des Enums wie abgestimmt wurde
   //appId : id des termins für den abgestimmt wurde
   //Methode zum abstimmen für einen Termin ändert getätigte abstimmung falls bereits abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
     const appID = req.body.appID;
-    const userId = 31;
+    const userId = req.session.userId;
 
 
     if(argumentMissing(res, voting, appID, userId)) return;
@@ -112,6 +136,7 @@ module.exports = {
       return;
     });
 
+    //geht auch hier rein, enn person schon abgestimmt hat... Fehler noch zu finden
     if(voting < 3){
       db.Calendar.Vote.create({'AppointmentId': appID, 'UserId': userId, 'vote':voting}).then(vote =>{
         sendInfoResponse(res, "Vote sent");
