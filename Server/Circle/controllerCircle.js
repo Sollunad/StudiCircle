@@ -496,7 +496,7 @@ module.exports = {
 
         if(argumentMissing(res, circleId)) return;
 
-        db.Invitation.findAll({where: {"CircleId": circleId}, include: [{model: db.User}]}).then(result => {
+        db.Invitation.findAll({where: {"CircleId": circleId, "status": 0}, include: [{model: db.User}]}).then(result => {
             if(result && result.length > 0){
                 let resultData = [];
                 result.forEach(invit => {
