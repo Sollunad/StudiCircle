@@ -454,7 +454,7 @@ module.exports = {
                     if(result) sendInfoResponse(res, "Invitation sent.");
                 });
             }else{
-                // TODO nur für bussines circle
+                // TODO nur für business circle
                 if(studentInterface.sendInvitation(userId,mail,circleId)){
                     sendInfoResponse(res, "Invitation sent to not registered user.");
                 }else{
