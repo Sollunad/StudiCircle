@@ -452,24 +452,35 @@ module.exports = {
 
         if (argumentMissing(res, mail, circleId)) return;
 
-        const userId = req.session.userId; //TODO mindestens Mod, nur einmal
+        const userId = req.session.userId;
 
-        db.User.findOne({where: {"email": mail}}).then(user => {
-            if(user){
-                db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
-                    if(result) sendInfoResponse(res, "Invitation sent.");
+        isModOrAboveInCircle(userId, circleId, (result) => {
+            if(result){
+                db.User.findOne({where: {"email": mail}}).then(user => {
+                    if(user){
+                        db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
+                            if(result) sendInfoResponse(res, "Invitation sent.");
+                        });
+                    }else{
+                        db.Circle.findOne({where: {"id": circleId}}).then(circle => {
+                            if(circle.business){
+                                if(studentInterface.sendInvitation(userId,mail,circleId)){
+                                    sendInfoResponse(res, "Invitation sent to not registered user.");
+                                }else{
+                                    sendInfoResponse(res, 500, "External email error.")
+                                }
+                            }else{
+                                sendInfoResponse(res, 404, "No user with given email found.");
+                            }
+                        });
+                    }
+                }).catch(err => {
+                    sendInfoResponse(res, 500, "Database fail.");
                 });
-            }else{
-                // TODO nur für business circle
-                if(studentInterface.sendInvitation(userId,mail,circleId)){
-                    sendInfoResponse(res, "Invitation sent to not registered user.");
-                }else{
-                    sendInfoResponse(res, 500, "External email error.")
-                }
             }
-        }).catch(err => {
-            sendInfoResponse(res, 500, "Database fail.");
         });
+
+
     },
 
     allInvitationsPerUser : function(req, res){
