@@ -4,7 +4,7 @@
       {{ viewTitle }}
     </ion-title>
     <ion-buttons end>
-      <button ion-button *ngIf="userRole===admin||userRole===mod" icon-only (click)="addEvent()">
+      <button ion-button icon-only (click)="addEvent()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
@@ -12,19 +12,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-row>
-    <calendar [calendarMode]="calendar.mode"
-              [currentDate]="calendar.currentDate"
-              (onEventSelected)="onEventSelected($event)"
-              (onTitleChanged)="onViewTitleChanged($event)"
-              (onTimeSelected)="onTimeSelected($event)"
-              step="30"
-              [showEventDetail]="false"
-              class="calendar">
-    </calendar>
-  </ion-row>
-  <ion-row>
-    <ion-list>HALLO</ion-list>
-  </ion-row>
-
+  <ion-grid>
+    <ion-row>
+      <ion-calendar [(ngModel)]="date" (onChange)="onTimeSelected($event)" [type]="type" [format]="'YYYY-MM-DD'">
+      </ion-calendar>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+          <timeline [date]="selectedDay" [userRole]="userRole"></timeline>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -1,3 +1,19 @@
 page-calendar{
 
+  ion-calendar{
+    background-color: rgb(248,248,248);
+  }
+
+  ion-grid{
+    background-color: rgb(248,248,248);
+  }
+
+  ion-scroll {
+    white-space: nowrap;
+    height: 55vh;
+  }
+
+  .scroll-content{
+    background-color: rgb(248,248,248);
+  }
 }

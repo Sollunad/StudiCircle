@@ -1,90 +1,102 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Social Card</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-row class="background">
+  <ion-col col-12 col-lg-6 *ngFor="let appointment of filteredAppointments">
+    <ion-card>
+      <ion-item>
+        <ion-row>
+          <ion-col col-10>
+            <h2>{{appointment.appointment.title}}</h2>
+            <p>
+              <ion-icon name="calendar"></ion-icon>
+              &nbsp;&nbsp;{{appointment.appointment.startDate | date: 'dd. MMMM yyyy, HH:mm'}} Uhr
+            </p>
+            <p>
+              <ion-icon name="time"></ion-icon>
+              &nbsp;&nbsp;{{appointment.appointment.endDate | strictTime:appointment.startDate}}
+            </p>
+            <p>
+              <ion-icon name="pin"></ion-icon>
+              &nbsp;&nbsp;{{appointment.appointment.location}}
+            </p>
+          </ion-col>
+          <ion-col col-2>
+            <ion-item *ngIf="userRole=='admin' || userRole=='mod'">
+              <button ion-button icon-only item-right clear (click)="presentPopover($event)">
+                <ion-icon class="settings-icon" name="more"></ion-icon>
+              </button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-item>
 
-<ion-content class="cards-bg social-cards">
 
-  <ion-card *ngFor="let appointment of appointments">
-    <ion-item>
+      <ion-card-content>
+        <p>{{appointment.appointment.description}}</p>
+      </ion-card-content>
       <ion-row>
-        <ion-col col-10>
-          <h2>{{appointment.title}}</h2>
-          <p><ion-icon name="calendar"></ion-icon>&nbsp;&nbsp;{{appointment.appointment.startDate | date: 'dd. MMMM yyyy, HH:mm'}} Uhr</p>
-          <p><ion-icon name="time"></ion-icon>&nbsp;&nbsp;{{appointment.appointment.endDate | strictTime:appointment.startDate}}</p>
-          <p> <ion-icon name="pin"></ion-icon>&nbsp;&nbsp;{{appointment.appointment.location}}</p>
+        <ion-col>
+          <button ion-button clear small class="votes">
+            {{appointment.appointment.countCommits+appointment.appointment.countRejections+appointment.appointment.countInterested}}
+            Stimmen
+          </button>
         </ion-col>
-        <ion-col col-2>
-          <ion-item *ngIf="userRole=='admin' || userRole=='mod'">
-            <button ion-button icon-only item-right clear (click)="presentPopover($event)">
-              <ion-icon class="settings-icon" name="more"></ion-icon>
+      </ion-row>
+      <ion-row class="buttons">
+        <ion-col col-4>
+          <ng-template [ngIf]="appointment.vote=='committed'" [ngIfElse]="notCommited">
+            <button ion-button [ngStyle]="{'color':'green'}" clear small icon-start
+                    (click)="toggleVote(appointment,'committed')">
+              <ion-icon name='ios-thumbs-up'></ion-icon>
+              {{appointment.appointment.countCommits}} Zusagen
             </button>
-          </ion-item>
+          </ng-template>
+
+          <ng-template #notCommited>
+            <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start
+                    (click)="toggleVote(appointment,'committed')">
+              <ion-icon name='ios-thumbs-up-outline'></ion-icon>
+              {{appointment.appointment.countCommits}} Zusagen
+            </button>
+          </ng-template>
         </ion-col>
-      </ion-row>
-    </ion-item>
 
+        <ion-col col-4>
+          <ng-template [ngIf]="appointment.vote=='rejected'" [ngIfElse]="notRejected">
+            <button ion-button [ngStyle]="{'color':'red'}" clear small icon-start
+                    (click)="toggleVote(appointment,'rejected')">
+              <ion-icon name='ios-thumbs-down'></ion-icon>
+              {{appointment.appointment.countCommits}} Absagen
+            </button>
+          </ng-template>
 
-    <ion-card-content>
-      <p>{{appointment.appointment.description}}</p>
-    </ion-card-content>
-    <ion-row>
-      <ion-col>
-        <button ion-button clear small class="votes">
-          {{appointment.appointment.countCommits+appointment.appointment.countRejections+appointment.appointment.countInterested}} Stimmen
-        </button>
-      </ion-col>
-    </ion-row>
-    <ion-row class="buttons">
-      <ion-col>
-        <ng-template [ngIf]="appointment.vote=='committed'" [ngIfElse]="notCommited">
-        <button ion-button [ngStyle]="{'color':'green'}" clear small icon-start (click)="toggleVote(appointment,'committed')">
-          <ion-icon name='ios-thumbs-up'></ion-icon>
-          {{appointment.appointment.countCommits}} Zusagen
-        </button>
-        </ng-template>
+          <ng-template #notRejected>
+            <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start
+                    (click)="toggleVote(appointment,'rejected')">
+              <ion-icon name='ios-thumbs-down-outline'></ion-icon>
+              {{appointment.appointment.countCommits}} Absagen
+            </button>
+          </ng-template>
+        </ion-col>
 
-        <ng-template #notCommited>
-          <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start (click)="toggleVote(appointment,'committed')">
-            <ion-icon name='ios-thumbs-up-outline'></ion-icon>
-            {{appointment.appointment.countCommits}} Zusagen
-          </button>
-        </ng-template>
-      </ion-col>
+        <ion-col col-4>
+          <ng-template [ngIf]="appointment.vote=='interested'" [ngIfElse]="notInterested">
+            <button ion-button [ngStyle]="{'color':'blue'}" clear small icon-start
+                    (click)="toggleVote(appointment,'interested')">
+              <ion-icon name='ios-notifications'></ion-icon>
+              {{appointment.appointment.countCommits}} Interessiert
+            </button>
+          </ng-template>
 
-      <ion-col>
-        <ng-template [ngIf]="appointment.vote=='rejected'" [ngIfElse]="notRejected">
-          <button ion-button [ngStyle]="{'color':'red'}" clear small icon-start (click)="toggleVote(appointment,'rejected')">
-            <ion-icon name='ios-thumbs-down'></ion-icon>
-            {{appointment.appointment.countCommits}} Absagen
-          </button>
-        </ng-template>
-
-        <ng-template #notRejected>
-          <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start (click)="toggleVote(appointment,'rejected')">
-            <ion-icon name='ios-thumbs-down-outline'></ion-icon>
-            {{appointment.appointment.countCommits}} Absagen
-          </button>
-        </ng-template>
-      </ion-col>
-
-      <ion-col>
-        <ng-template [ngIf]="appointment.vote=='interested'" [ngIfElse]="notInterested">
-          <button ion-button [ngStyle]="{'color':'blue'}" clear small icon-start (click)="toggleVote(appointment,'interested')">
-            <ion-icon name='ios-notifications'></ion-icon>
-            {{appointment.appointment.countCommits}} Interessiert
-          </button>
-        </ng-template>
-
-        <ng-template #notInterested>
-          <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start (click)="toggleVote(appointment,'interested')">
-            <ion-icon name='ios-notifications-outline'></ion-icon>
-            {{appointment.appointment.countCommits}} Interessiert
-          </button>
-        </ng-template>
-      </ion-col>
+          <ng-template #notInterested>
+            <button ion-button [ngStyle]="{'color':'gray'}" clear small icon-start
+                    (click)="toggleVote(appointment,'interested')">
+              <ion-icon name='ios-notifications-outline'></ion-icon>
+              {{appointment.appointment.countCommits}} Interessiert
+            </button>
+          </ng-template>
+        </ion-col>
 
       </ion-row>
-  </ion-card>
-</ion-content>
+    </ion-card>
+  </ion-col>
+</ion-row>
+<h3 *ngIf="filteredAppointments.length===0">Keine Einträge</h3>

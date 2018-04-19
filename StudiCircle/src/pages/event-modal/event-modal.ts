@@ -10,7 +10,7 @@ import {DatePickerProvider} from "ionic2-date-picker";
 
 export class EventModalPage {
 
-  event = { title: "", description: "", place:"", startTime: moment().toISOString(), endTime: moment().format(), allDay: false };
+  event = { title: "", description: "", place:"", startTime: moment().format(), endTime: moment().add(2, 'hours').format(), allDay: false };
   minDate = new Date().toISOString();
 
   constructor(public navCtrl: NavController, public viewCtrl: ViewController,
@@ -30,6 +30,7 @@ export class EventModalPage {
   }
 
   save() {
+    console.log(this.event);
     this.viewCtrl.dismiss(this.event);
   }
 }

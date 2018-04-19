@@ -36,10 +36,11 @@ import {NgCalendarModule} from "ionic2-calendar";
 import {CalendarPage} from "../pages/calendar/calendar";
 import {EventModalPage} from "../pages/event-modal/event-modal";
 import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
-import {TimelinePage} from "../pages/timeline/timeline";
+import {TimelinePage, Timeline} from "../pages/timeline/timeline";
 import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
 import {DatePickerModule} from "ionic2-date-picker";
 import {StrictRelativeTime} from "../pipes/strict-relative-time";
+import {CalendarModule} from "ion2-calendar";
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {StrictRelativeTime} from "../pipes/strict-relative-time";
     CalendarTabPage,
     TimelinePage,
     PopoverTimelinePage,
-    StrictRelativeTime
+    StrictRelativeTime,
+    Timeline
   ],
 
   imports: [
@@ -78,7 +80,8 @@ import {StrictRelativeTime} from "../pipes/strict-relative-time";
     HttpClientModule,
     IonicModule.forRoot(MyApp),
     IonicPageModule.forChild(EmojiPickerComponent),
-    DatePickerModule
+    DatePickerModule,
+    CalendarModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -104,7 +107,8 @@ import {StrictRelativeTime} from "../pipes/strict-relative-time";
     EventModalPage,
     CalendarTabPage,
     TimelinePage,
-    PopoverTimelinePage
+    PopoverTimelinePage,
+    Timeline
   ],
   providers: [
     StatusBar,

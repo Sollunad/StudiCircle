@@ -6,6 +6,7 @@ import {EventModalPage} from "../event-modal/event-modal";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import {AppointmentCard} from "../timeline/timeline";
 registerLocaleData(localeDe);
 
 @Component({
@@ -16,9 +17,31 @@ export class CalendarPage {
 
   eventSource = [];
   viewTitle: string;
-  selectedDay = new Date();
+  selectedDay: Date = new Date();
   circleId:number;
-  userRole:string;
+  userRole:string= 'admin';
+
+
+  date: string;
+  type: 'moment'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
+
+  appointments: AppointmentCard[] = [
+    {appointment: {id: 1, title: 'Basketball', description: 'Tolles Event', location: 'Mannheim', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-14T18:40:37.049Z' ,countCommits: 12,countRejections: 2, countInterested: 7},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-15T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-14T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-18T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
+    {appointment: {id: 1, title: 'Basketball', description: 'Tolles Event', location: 'Mannheim', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-14T18:40:37.049Z' ,countCommits: 12,countRejections: 2, countInterested: 7},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-15T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-14T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
+    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
+      endDate: '2018-04-18T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'}];
 
 
 
@@ -75,6 +98,6 @@ export class CalendarPage {
   }
 
   onTimeSelected(ev) {
-    this.selectedDay = ev.selectedTime;
+    this.selectedDay = moment(ev).toDate();
   }
 }

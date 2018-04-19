@@ -29,6 +29,7 @@
     "@ionic/storage": "2.1.3",
     "date-fns": "^1.29.0",
     "intl": "^1.2.5",
+    "ion2-calendar": "^2.1.7",
     "ionic-angular": "3.9.2",
     "ionic2-calendar": "^0.4.3",
     "ionic2-date-picker": "^1.1.2",

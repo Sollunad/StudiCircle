@@ -12,7 +12,7 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <ion-input type="text" placeholder="Title" [(ngModel)]="event.title"></ion-input>
+      <ion-input type="text" placeholder="Titel" [(ngModel)]="event.title"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -33,10 +33,10 @@
       <ion-datetime displayFormat="DD.MM.YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
     </ion-item>
 
-    <ion-item>
+    <!--<ion-item>
       <ion-label>Ganztägig</ion-label>
       <ion-checkbox [(ngModel)]="event.allDay"></ion-checkbox>
-    </ion-item>
+    </ion-item>-->
   </ion-list>
 
   <button ion-button full icon-left (click)="save()">

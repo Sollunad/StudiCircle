@@ -46,6 +46,7 @@ export class ChatPage {
       messageObject.text = message.text;
       messageObject.userId = message.userId;
       this.messages.push(messageObject);
+      this.scrollToBottom();
       console.log(this.messages);
     });
 
