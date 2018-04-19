@@ -9,6 +9,7 @@ import {ForgotPasswordPage} from "../forgot-password/forgot-password";
 import {getMailRegex, stringHasAppropiateLength} from "../../util/stringUtils";
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastyProvider} from "../../providers/toasty/toasty";
+import { ImpressumPage } from '../impressum/impressum';
 
 @Component({
   selector: 'page-log-in',
@@ -42,6 +43,10 @@ export class LogInPage {
   goToForgotPassword(params){
     if (!params) params = {};
     this.navCtrl.push(ForgotPasswordPage);
+  }
+  goToImpressum(params){
+    if (!params) params = {};
+    this.navCtrl.push(ImpressumPage);
   }
 
   login(){
