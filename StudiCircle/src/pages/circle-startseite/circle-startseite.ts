@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AlertController, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
 import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
@@ -8,6 +8,7 @@ import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellun
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
 import {CalendarTabPage} from "../calendar-tab/calendar-tab";
+import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
   template: `
@@ -27,14 +28,14 @@ export class PopoverPage {
   circleId;
   circleName;
 
-  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController, private popoverCtrl: PopoverController) {
+  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController) {
 
   }
 
   openConfirmDialog(){
     this.circleId=this.navParams.data.circleId;
     this.circleName=this.navParams.data.circleName;
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role=="admin") {
           console.log("[ROLE] : "+role.role);
@@ -96,9 +97,13 @@ export class CircleStartseite {
   ];
 
   circleId: number;
-
+  public invitStatusList: InvitationStatus[] = [
+    //true->accepted, false->denied, null->open
+    {cId : 1, invitId : 1, cName: "Martin", status: true},
+    {cId : 2, invitId : 2, cName: "ist", status: false},
+    {cId : 3, invitId : 3, cName: "1 Kek", status: null}
+  ];
   circleName: string;
-  public checkRole: boolean;
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
@@ -114,33 +119,11 @@ export class CircleStartseite {
     this.circleName = navParams.get('circleName');
   }
 
-  ionViewDidLoad() {
-    this.circleProvider.getModuleListByCircleId(this.circleId).subscribe(moduleList => {
-      console.log(moduleList);
-      this.staticModules.forEach(module => {
-        for (let entry of moduleList) {
-          if (module.mapName == entry)
-            this.moduleList.push(module)
-        }
-      });
-      this.moduleList.push({
-        title: 'Mitglieder',
-        mapName: 'member',
-        component: MitgliederÜbersicht,
-        imageName: 'mitglieder.jpg'
-      });
-      this.circleProvider.checkIfAdmin(this.circleId).subscribe(
-        role => {
-          if (role.role == "admin") {
-            console.log("[ROLE] : " + role.role);
-            this.moduleList.push({
-              title: 'Einstellungen',
-              mapName: 'settings',
-              component: CircleEinstellungenPage,
-              imageName: 'einstellungen.jpg'
-            });
-          }
-        });
+  ionViewWillEnter(){
+    this.loadModules();
+    this.circleProvider.getAllInvitsForCircle(this.circleId).subscribe(invitStatusList => {
+      this.invitStatusList = invitStatusList;
+      console.log(this.invitStatusList);
     });
   }
 
@@ -158,4 +141,39 @@ export class CircleStartseite {
       this.navCtrl.push(module.component, {circleId: this.circleId});
     }
 
+    loadModules(){
+
+      this.moduleList = [
+        {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+        {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
+      ];
+
+      this.circleProvider.getModuleListByCircleId(this.circleId).subscribe(moduleList => {
+        console.log(moduleList);
+        this.staticModules.forEach(module => {
+          for (let entry of moduleList) {
+            if (module.mapName == entry)
+              this.moduleList.push(module)
+          }
+        });
+        this.moduleList.push({
+          title: 'Mitglieder',
+          mapName: 'member',
+          component: MitgliederÜbersicht,
+          imageName: 'mitglieder.jpg'
+        });
+        this.circleProvider.getUserRole(this.circleId).subscribe(
+          role => {
+            if (role.role == "admin") {
+              console.log("[ROLE] : " + role.role);
+              this.moduleList.push({
+                title: 'Einstellungen',
+                mapName: 'settings',
+                component: CircleEinstellungenPage,
+                imageName: 'einstellungen.jpg'
+              });
+            }
+          });
+      });
+    }
 }

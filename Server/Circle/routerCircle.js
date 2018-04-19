@@ -79,4 +79,48 @@ module.exports = function(app) {
     // userId (Number): selected users id
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
+
+    // circleID
+    // return: Posts of Blackboard
+    app.route('/circle/getbbPosts')
+        .get(circle.getBlackboardPosts);
+
+    // userId (Number): selected users id
+    app.route('/circle/leave')
+        .post(circle.leaveCircle);
+
+    app.route('/circle/invite')
+        .post(circle.inviteToCircle);
+
+    app.route('/circle/getInvit')
+        .get(circle.allInvitationsPerUser);
+
+    app.route('/circle/answerInvit')
+        .post(circle.reactToInvitation);
+
+    // TODO überprüfen und allInvitationsForCircle implementieren
+    app.route('/circle/getInvitForCircle')
+        .get(circle.allInvitationsForCircle);
+
+
+
+    // circleId (Number): current circle
+    app.route('/circle/blackboard/posts')
+        .get(circle.getPosts);
+
+    // circleId (Number): current circle
+    // userId (Number): current user
+    // title (String): title from post
+    // text (String): text from post
+    app.route('/circle/blackboard/newPost')
+        .post(circle.newPost);
+
+    //postID (Number)
+    //userID (number)
+    app.route('/circle/blackboard/newComment')
+        .post(circle.newComment);
+
+    //postID (number)
+    app.route('/circle/blackboard/getComments')
+        .get(circle.getComments);
 };

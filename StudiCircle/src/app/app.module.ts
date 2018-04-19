@@ -23,6 +23,8 @@ import {ForgotPasswordPage} from "../pages/forgot-password/forgot-password";
 import {ChangeMailPage} from "../pages/change-mail/change-mail";
 import {SearchPage} from "../pages/search/search";
 import {CircleEinstellungenPage} from "../pages/circle-einstellungen/circle-einstellungen";
+import {BlackboardPage} from "../pages/blackboard/blackboard";
+import {BlackboardPostPage} from '../pages/blackboard-post/blackboard-post';
 import {constants} from "../consts/constants";
 import {AdminAuswaehlenPage} from "../pages/admin-wählen/admin-auswählen";
 import {ChatPage} from "../pages/chat/chat";
@@ -32,7 +34,7 @@ import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {PopoverPage} from "../pages/circle-startseite/circle-startseite";
 import {ToastyProvider} from "../providers/toasty/toasty";
-import {NgCalendarModule} from "ionic2-calendar";
+import {FAQPage} from "../pages/faq/faq";
 import {CalendarPage} from "../pages/calendar/calendar";
 import {EventModalPage} from "../pages/event-modal/event-modal";
 import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
@@ -64,6 +66,9 @@ import {CalendarModule} from "ion2-calendar";
     EmojiPickerComponent,
     ChatPage,
     PopoverPage,
+    BlackboardPage,
+    BlackboardPostPage,
+    FAQPage,
     CalendarPage,
     EventModalPage,
     CalendarTabPage,
@@ -74,7 +79,6 @@ import {CalendarModule} from "ion2-calendar";
   ],
 
   imports: [
-    NgCalendarModule,
     HttpModule,
     BrowserModule,
     HttpClientModule,
@@ -106,6 +110,9 @@ import {CalendarModule} from "ion2-calendar";
     CalendarPage,
     EventModalPage,
     CalendarTabPage,
+    BlackboardPage,
+    BlackboardPostPage,
+    FAQPage,
     TimelinePage,
     PopoverTimelinePage,
     Timeline

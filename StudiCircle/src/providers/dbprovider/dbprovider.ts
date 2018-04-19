@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {GeoResponse} from "../declarations/GeoResponse";
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
-import {Circle} from '../declarations/Circle';
+import {BlackboardPost} from "../declarations/BlackboardPost";
 import {constants} from "../../consts/constants";
 
 /*
@@ -15,53 +15,35 @@ import {constants} from "../../consts/constants";
 */
 @Injectable()
 export class DbProvider {
-  private result: any;
-  private circles: Circle[] = [];
 
   constructor(public http: HttpClient, private api: ApiProvider, public consts: constants) { }
-
-  public getCircles(): Observable<Circle[]> {
-      return this.http.get<Circle[]>(this.consts.url+'circle/forUser?mySession=' + this.api.currentUser.session);
-    /*this.http.get('https/api.dev.sknx.de/circle/forUser?id=1').map(res => {
-       this.res = res;
-       console.log(res);
-     });*/
-     /*return new Promise<Array<string>>((resolve, reject) => {
-       const successSubject: Subject<boolean> = new Subject<boolean>();
-       const subs: Subscription = this.http.get(
-         'http://localhost:8080/circle/forUser'+'?mySession='+this.api.currentUser.session).subscribe(
-         (res: ApiResponse) => {
-           subs.unsubscribe();
-           successSubject.next(res.httpStatus === 200);
-           this.circles = [];
-           for(let i of res["circles"]){
-            this.circles.push(i["name"]);
-           }
-           resolve(this.circles);
-         },
-         (error: any) => {
-           console.log(error);
-           subs.unsubscribe();
-           successSubject.next(false);
-         }
-       );
-     });*/
-  }
-
-  public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    console.log('getCirclesByLocation', lat, lon, distance);
-
-    const url = this.consts.url+`circle/forLocation?loc[lat]=${lat}&loc[lon]=${lon}&dist=${distance}`;
-    return this.http.get<Circle[]>(url);
-  }
-
-  public setLocation(lat, lon) {
-    console.log('setLocation', lat, lon);
-  }
-
 
   public getLocationByAddress(address: string): Observable<GeoResponse> {
     const url = `https://nominatim.openstreetmap.org/search/${address}?format=json&limit=1`;
     return this.http.get<GeoResponse>(url);
+  }
+
+  public getBlackboardPosts(circleId: string){
+    //Code
+    const url = this.consts.url+'circle/getbbPosts?mySession='+ this.api.currentUser.session+'&circleID='+circleId;
+  //  const localurl = 'http://localhost:8080/circle/getbbPosts?mySession=' + this.api.currentUser.session;
+
+    return this.http.get(url);
+  }
+
+  public deletePost(postID: number){
+    //const url = this.const.url+"circle/blackboard/deletePost"+postID;
+    //return this.http.post(url, {postID: postID});
+    return 1;
+  }
+
+  public postComment(Comment: BlackboardPost){
+    const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
+    return this.http.post(url, {com: Comment});
+  }
+
+  public getComments(postID: number){
+    const url = this.consts.url + "circle/blackboard/getComments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
+    return this.http.get(url);
   }
 }

@@ -4,6 +4,7 @@ import {SettingsPage} from '../settings/settings';
 import {CircleStartseite} from '../circle-startseite/circle-startseite';
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from '../../providers/circle-provider/CircleProvider';
+import {ApiProvider} from '../../providers/api/api';
 import {Circle} from '../../providers/declarations/Circle';
 
 @Component({
@@ -12,10 +13,11 @@ import {Circle} from '../../providers/declarations/Circle';
 })
 export class SearchPage {
 
-  public search: '';
-  public distance: 0;
+  public search: string = '';
+  public distance: number = 0;
+  public distanceLabel: string = '1';
   public circles: Array<Circle>;
-  private nonFilteredCircles = Array<Circle>();
+  public count: number = 0;
 
   private distances = [
     { label: '1', value: 1 },
@@ -25,37 +27,38 @@ export class SearchPage {
     { label: '50', value: 50 },
     { label: '∞', value: -1 }
   ];
+  private nonFilteredCircles = Array<Circle>();
   private lat: number;
   private lon: number;
-  private userId: number;
 
-  constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider) {
-    this.distance = 0;
-    this.lat = 0;
+  constructor(public navCtrl: NavController, public http: HttpClient, private circleProvider: CircleProvider, private api: ApiProvider) {
     this.getUserData();
     this.getCirclesByLocation();
   }
 
   private getUserData() {
-    // TODO:
+    const coords = this.api.getLocation();
+    this.lat = coords.lat;
+    this.lon = coords.lon;
+  }
 
-    this.lon = 0;
-    this.userId = 1;
+  private setCircles(circles: Circle[]) {
+    this.count = circles.length;
+    this.circles = circles;
   }
 
   private getCirclesByLocation() {
     const dist = this.distances[this.distance].value;
     this.circleProvider.getCirclesByLocation(this.lat, this.lon, dist).subscribe(
       circles => {
-        console.log('getCirclesByLocation', circles);
-        this.circles = this.nonFilteredCircles = circles;
+        // console.log('getCirclesByLocation', circles);
+        this.nonFilteredCircles = circles;
+        this.setCircles(circles);
       });
   }
 
   private distanceChanged() {
-    // console.log(this.distance);
-    document.getElementById('search-distance').innerText = this.distances[this.distance].label;
-
+    this.distanceLabel = this.distances[this.distance].label;
     this.search = '';
     this.getCirclesByLocation();
   }
@@ -64,11 +67,13 @@ export class SearchPage {
     let value = this.search.trim().toLowerCase();
 
     if (value && value != '') {
-      console.log('value', value);
-      this.circles = this.nonFilteredCircles.filter(circle => circle.name.toLowerCase().startsWith(value));
+      // console.log('value', value);
+      this.setCircles(
+        this.nonFilteredCircles.filter(circle => circle.name.toLowerCase().startsWith(value))
+      );
     } else {
-      console.log('value', 'empty');
-      this.circles = this.nonFilteredCircles;
+      // console.log('value', 'empty');
+      this.setCircles(this.nonFilteredCircles);
     }
   }
 
@@ -82,9 +87,9 @@ export class SearchPage {
   }
 
   private joinCircle(circle: Circle) {
-    console.log(circle);
+    console.log('joinCircle', circle);
 
-    this.circleProvider.addUserToCircle(this.userId, circle.id).subscribe(
+    this.circleProvider.addUserToCircle(circle.id).subscribe(
       result => {
         console.log('joinCircle', result);
       });

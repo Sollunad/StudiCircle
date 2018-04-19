@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
-import {DashboardPage} from "../dashboard/dashboard";
 import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
 
 @Component({
@@ -19,19 +18,23 @@ export class CircleEinstellungenPage {
   private bet: boolean = true;
   private filesharing: boolean = true;
   private market: boolean = true;
+  private pub:boolean;
+  private pri:boolean;
 
 
-  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public http: HttpClient, public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, public viewCtrl: ViewController) {
     this.circleId = navParams.get('circleId');
   }
 
   ionViewDidLoad() {
-    console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualvisibility =>
+    console.log(this.circleProvider.getCircleVisibility(this.circleId).subscribe(actualVisibility =>
     {
-      if(actualvisibility){
-        this.visibility = 1;
+      if(actualVisibility){
+        this.pub=true;
+        this.pri=false;
       } else {
-        this.visibility = 0;
+        this.pub=false;
+        this.pri=true;
       }
     }
     ));
@@ -51,7 +54,8 @@ export class CircleEinstellungenPage {
             this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
-            this.navCtrl.push(DashboardPage);
+            this.navCtrl.remove(this.viewCtrl.index-1);
+            this.navCtrl.pop();
           }
         },
         {
@@ -142,46 +146,67 @@ export class CircleEinstellungenPage {
     alert.present();
   }
 
-  openConfirmDialog2() {
+  openVisibilitySelect() {
     let alert = this.alertCtrl.create({
-      title: 'Änderung bestätigen',
-      message: 'Sichtbarkeit wirklich ändern?',
+      title: 'Sichtbarkeit',
+      message: 'Wählen sie die Sichtbarkeit des Circles',
+      inputs: [
+        {
+          id: 'public',
+          type: 'radio',
+          label: 'öffentlich',
+          value: '1',
+          checked: this.pub
+        },
+        {
+          id: 'private',
+          type: 'radio',
+          label: 'privat',
+          value: '0',
+          checked: this.pri
+        }
+      ],
       buttons: [
         {
           text: 'Speichern',
-          handler: () => {
-            console.log('gespeichert');
-            this.editVisibility();
+          handler: vis => {
+            console.log(vis);
+            this.visibility=vis;
+            if(this.visibility==1){
+              this.pub=true;
+              this.pri=false;
+            } else {
+              this.pub=false;
+              this.pri=true;
+            }
+            console.log("[Visibility]: "+this.visibility);
+            const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
+              (res) => {
+                if(res.info=="OK"){
+                  console.log("[Visibility] : Visibility edit successful");
+                  console.log(res);
+                  modification.unsubscribe();
+                  return true;
+                }else{
+                  console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                  return false;
+                }
+              }
+            );
           }
         },
         {
           text: 'Abbrechen',
           role: 'cancel',
           handler: () => {
-            console.log('canceled');
+            console.log('Moduländerung abgebrochen');
           }
         }
       ]
     });
     alert.present();
-  }
-
-  editVisibility(){
-    console.log("[Visibility]: "+this.visibility);
-    const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
-    (res) => {
-          if(res.info=="OK"){
-            console.log("[Visibility] : Visibility edit successful");
-            modification.unsubscribe();
-            return true;
-          }else{
-            console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
-            console.log(res);
-            modification.unsubscribe();
-            return false;
-          }
-      }
-    )
   }
 
   openAdminSelect(){

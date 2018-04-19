@@ -13,11 +13,18 @@ import {Subscription} from "rxjs/Subscription";
 import {Subject} from "rxjs/Subject";
 import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
+import {BlackboardPost} from "../declarations/BlackboardPost";
+import {Invitation} from "../declarations/Invitation";
+import {InvitationStatus} from "../declarations/InvitationStatus";
 
 @Injectable()
 export class CircleProvider {
 
   constructor(public http: HttpClient, public apiProvider: ApiProvider, public consts: constants) {
+  }
+
+  public getCircles(): Observable<Circle[]> {
+    return this.http.get<Circle[]>(this.consts.url+'circle/forUser?mySession=' + this.apiProvider.currentUser.session);
   }
 
   public getMemberListByCircleId(uid: number): Observable<UserInfo[]>{
@@ -84,8 +91,6 @@ export class CircleProvider {
     }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    // return this.http.get<Circle[]>("http://localhost:8080/circle/circlesForLocation?location[latitude]=lat&location[longitude]=long&location[range]=range");
-
     const url = this.consts.url+`circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
     return this.http.get<Circle[]>(url);
   }
@@ -94,17 +99,30 @@ export class CircleProvider {
     return this.http.get<boolean>(this.consts.url+'circle/getVisibility?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
   }
 
-  public addUserToCircle(userId: number, circleId: number) {
+  public addUserToCircle(circleId: number) {
     return this.http.post(this.consts.url+'circle/addUser', {
-      userId: userId,
+      userId: this.apiProvider.currentUser.uuid,
       circleId: circleId
     });
   }
 
   public selectNewAdmin(userId: number, circleId: number){
+    const resSubject: Subject<any> = new Subject<any>();
     let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
-    console.log(body);
-    return this.http.post(this.consts.url+'circle/newAdmin',body);
+    let header = {"headers": {"Content-Type": "application/json"}};
+    const selectNewAdmin: Subscription = this.http.post(this.consts.url + 'circle/newAdmin', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        selectNewAdmin.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        selectNewAdmin.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
   }
 
   public leaveCircle(circleId: number){
@@ -112,15 +130,12 @@ export class CircleProvider {
     return this.http.post(this.consts.url+'circle/leave',body);
   }
 
-  public checkIfAdmin(cid: number): Observable<any>{
-    return this.http.get<any>(this.consts.url+'circle/getRole?circleId='+cid+'&mySession=' + this.apiProvider.currentUser.session);
-  }
-
   public changeRole(userId: number, circleId: number, role: string) {
     return this.http.post(this.consts.url+'circle/changerole', {
       userId: userId,
       circleId: circleId,
-      role: role
+      role: role,
+      mySession : this.apiProvider.currentUser.session
     })
   }
 
@@ -145,4 +160,80 @@ export class CircleProvider {
     return successSubject.asObservable();
   }
 
+  public invite(id : number, mail: string){
+    const resSubject: Subject<any> = new Subject<any>();
+    let body = {circleId : id, mail: mail, mySession : this.apiProvider.currentUser.session};
+    let header = {"headers" : {"Content-Type": "application/json"}};
+    const editVisibility: Subscription = this.http.post(
+      this.consts.url+'circle/invite', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        editVisibility.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        editVisibility.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
+  }
+
+  public answerInvite(cId : number, iId: number, status: boolean) {
+    const resSubject: Subject<any> = new Subject<any>();
+    let body = {circleId: cId, invitId: iId, status, mySession: this.apiProvider.currentUser.session};
+    let header = {"headers": {"Content-Type": "application/json"}};
+    const answerInvite: Subscription = this.http.post(
+      this.consts.url + 'circle/answerInvit', body, header
+    ).subscribe(
+      (res: ApiResponse) => {
+        answerInvite.unsubscribe();
+        resSubject.next(res);
+      },
+      (error: any) => {
+        console.log(error);
+        answerInvite.unsubscribe();
+        resSubject.next(error);
+      }
+    );
+    return resSubject.asObservable();
+  }
+
+  public getAllInvitsForUser(): Observable<Invitation[]>{
+    return this.http.get<Invitation[]>(this.consts.url+'circle/getInvit?mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public getAllInvitsForCircle(cId: number): Observable<InvitationStatus[]> {
+    return this.http.get<InvitationStatus[]>(this.consts.url + 'circle/getInvitForCircle?circleId='+cId+'mySession=' + this.apiProvider.currentUser.session);
+  }
+
+  public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
+    // console.log('getBlackboardPosts', circleId);
+
+    // TODO: url
+    // const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
+    const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
+    return this.http.get<BlackboardPost[]>(url);
+  }
+
+  public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
+    console.log('insertPost', circleId, title, text);
+
+    // TODO: url
+    // const url = this.consts.url+`circle/blackboard/posts/newPost`;
+    const url = 'http://localhost:8080/circle/blackboard/newPost';
+    return this.http.post<BlackboardPost>(url, {
+      circleId: circleId,
+      userId: this.apiProvider.currentUser.uuid,
+      title: title,
+      text: text
+    });
+  }
+
+  public deletePost(postID: number){
+    //const url = this.const.url+"circle/blackboard/deletePost"+postID;
+    //return this.http.post(url, {postID: postID});
+    return 1;
+  }
 }
