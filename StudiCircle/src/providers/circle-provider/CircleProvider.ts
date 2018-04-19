@@ -201,7 +201,7 @@ export class CircleProvider {
   }
 
   public getAllInvitsForUser(): Observable<Invitation[]>{
-    return this.http.get<Invitation[]>(this.consts.url+'circle/getInvit?mySession=' + this.apiProvider.currentUser.session);
+    return this.http.get<Invitation[]>(this.consts.url+'circle/getInvitForUser?mySession=' + this.apiProvider.currentUser.session);
   }
 
   public getAllInvitsForCircle(cId: number): Observable<InvitationStatus[]> {

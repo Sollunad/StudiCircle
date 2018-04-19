@@ -198,10 +198,6 @@ module.exports = {
         // res.send({circles: [{name:"DHBW",id:1}]});
     },
 
-    circlesForCircleId : function(req, res){
-        //TODO
-    },
-
     //returns all circles at a certain distance(km) to a point(lat/long)
     circlesForLocation : function (req, res) {
       const lat1 = req.query.lat;
@@ -478,9 +474,8 @@ module.exports = {
 
     allInvitationsPerUser : function(req, res){
         const userId = req.session.userId;
-        //TODO nur offene anzeigen lassen
 
-        db.Invitation.findAll({where: {"UserId": userId, "status": 0}, include: [{model: db.Circle}]}).then(result => { // TODO join scheint nicht zu klappen, bekomme keinen Namen übergeben
+        db.Invitation.findAll({where: {"UserId": userId, "status": 0}, include: [{model: db.Circle}]}).then(result => {
             if(result && result.length > 0){
                 let resultData = [];
                 result.forEach(invit => {
@@ -492,7 +487,28 @@ module.exports = {
                 res.send(resultData);
             }
         }).catch(err => {
-            sendInfoResponse(500, "Database error.");
+            sendInfoResponse(res, 500, "Database error.");
+        })
+    },
+
+    allInvitationsPerCircle : function(req, res){
+        const circleId = req.query.circleId;
+
+        if(argumentMissing(res, circleId)) return;
+
+        db.Invitation.findAll({where: {"CircleId": circleId}, include: [{model: db.User}]}).then(result => {
+            if(result && result.length > 0){
+                let resultData = [];
+                result.forEach(invit => {
+                    resultData.push({"invitId": invit.id, "user": invit.User.name, "status": invit.status});
+                });
+                res.send(resultData);
+            }else{
+                //const resultData = [{"invitId": null, "cId": null, "cName": "No invitations found."}];
+                res.send([]);
+            }
+        }).catch(err => {
+            sendInfoResponse(res, 500, "Database error.");
         })
     },
 
