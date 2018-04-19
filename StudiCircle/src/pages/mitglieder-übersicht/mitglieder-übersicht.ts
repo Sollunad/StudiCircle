@@ -13,6 +13,7 @@ export class MitgliederÜbersicht {
   public memberList: UserInfo[];
 
   private circleId : number;
+  private isAdminOrMod : boolean = false;
   private isAdmin : boolean = false;
   private currentUserId : number;
 
@@ -29,7 +30,10 @@ export class MitgliederÜbersicht {
     this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role == "admin") {
+          this.isAdminOrMod = true;
           this.isAdmin = true;
+        }else if (role.role == "mod"){
+          this.isAdminOrMod = true;
         }
       });
   }

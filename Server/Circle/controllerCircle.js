@@ -245,6 +245,7 @@ module.exports = {
 
     members : function (req, res) {
         const circleId = req.query.id;
+        var germanRoleName = "";
 
         if (argumentMissing(res, circleId)) return;
 
@@ -254,7 +255,14 @@ module.exports = {
             const data = [];
             let userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role});
+                if(element.UserInCircles.role === "admin"){
+                    germanRoleName = "(Administrator)";
+                }else if (element.UserInCircles.role === "mod"){
+                    germanRoleName = "(Moderator)";
+                }else if (element.UserInCircles.role === "member"){
+                    germanRoleName = "";
+                }
+                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role, germanRole: germanRoleName});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
