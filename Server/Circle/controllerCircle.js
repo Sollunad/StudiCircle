@@ -466,7 +466,7 @@ module.exports = {
             if(result){
                 db.User.findOne({where: {"email": mail}}).then(user => {
                     if(user){
-                        db.Invitation.create({"UserId": user.id, "CircleId": circleId}).then(result =>{
+                        db.Invitation.create({"UserId": user.id, "CircleId": circleId, "status":0}).then(result =>{
                             if(result) sendInfoResponse(res, "Invitation sent.");
                         });
                     }else{
@@ -568,7 +568,7 @@ module.exports = {
         const userId = req.session.userId;
 
         db.Invitation.findById(invitId).then(invit => {
-            if(invit){
+            if(invit && invit.status > 0){
                 isModOrAboveInCircle(userId, invit.CircleId, result => {
                    if(result){
                         invit.destroy();
@@ -577,7 +577,7 @@ module.exports = {
                    }
                 });
             }else{
-                sendInfoResponse(res, 400, "No invitation with given id.")
+                sendInfoResponse(res, 400, "No invitation with given id. Or invitation is still open.");
             }
         });
     },
