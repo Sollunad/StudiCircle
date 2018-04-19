@@ -161,11 +161,17 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId; //TODO: nur Admin darf löschen
+        const userId = req.session.userId;
 
-        db.Circle.build({"id" : circleId}).destroy();
+        isAdminInCircle(userId, circleId, result => {
+           if(result){
+                db.Circle.build({"id" : circleId}).destroy();
+                sendInfoResponse(res, "Circle removed.");
+           } else{
+               sendInfoResponse(res, 400, "You are not admin in the circle.");
+           }
+        });
 
-        sendInfoResponse(res, "Circle removed.");
     },
 
     //return all circles the user is following
@@ -190,6 +196,10 @@ module.exports = {
         });
 
         // res.send({circles: [{name:"DHBW",id:1}]});
+    },
+
+    circlesForCircleId : function(req, res){
+        //TODO
     },
 
     //returns all circles at a certain distance(km) to a point(lat/long)
@@ -468,20 +478,17 @@ module.exports = {
 
     allInvitationsPerUser : function(req, res){
         const userId = req.session.userId;
+        //TODO nur offene anzeigen lassen
 
-        db.Invitation.findAll({where: {"UserId": userId}, include: [db.Circle]}).then(result => { // TODO join scheint nicht zu klappen, bekomme keinen Namen übergeben
+        db.Invitation.findAll({where: {"UserId": userId, "status": 0}, include: [{model: db.Circle}]}).then(result => { // TODO join scheint nicht zu klappen, bekomme keinen Namen übergeben
             if(result && result.length > 0){
                 let resultData = [];
                 result.forEach(invit => {
-                   resultData.push({"invitId": invit.id, "cId": invit.CircleId, "cName": invit.name});
+                   resultData.push({"invitId": invit.id, "cId": invit.CircleId, "cName": invit.Circle.name});
                 });
                 res.send(resultData);
             }else{
-                //sendInfoResponse(res, "No invitations found.");
-                // TODO andere Variante???
-                let resultData = [];
-                resultData.push({"invitId": null, "cId": null, "cName": "No invitations found."});
-                console.log(resultData);
+                const resultData = [{"invitId": null, "cId": null, "cName": "No invitations found."}];
                 res.send(resultData);
             }
         }).catch(err => {
@@ -491,27 +498,27 @@ module.exports = {
 
     reactToInvitation : function(req, res){
         const invitationId = req.body.invitId;
-        const isAccepted = req.body.accepted;
+        const isAccepted = req.body.status;
 
         if(argumentMissing(res, invitationId, isAccepted)) return ;
 
         const userId = req.session.userId;
 
-        db.Invitation.findOne({where: {"id": invitationId, "UserId": userId}}).then(invit => {
+        db.Invitation.findOne({where: {"id": invitationId, "UserId": userId, "status": 0}}).then(invit => {
             if(invit){
                 if(isAccepted){
                     db.UserInCircles.create({"UserId": userId, "CircleId": invit.CircleId, "role": cons.CircleRole.MEMBER}).then(result => {
-                        invit.destroy();
+                        invit.updateAttributes({"status": 2});
                         sendInfoResponse(res,"Invitation accepted.");
                     }).catch(err => {
-                        sendInfoResponse(res, "User already in circle. Or some database error.");
+                        sendInfoResponse(res, 409, "User already in circle. Or some database error.");
                     });
                 }else{
-                    invit.destroy();
+                    invit.updateAttributes({"status": 1});
                     sendInfoResponse(res,"Invitation rejected.");
                 }
             }else{
-                sendInfoResponse(res, 400, "No invitation with current user.");
+                sendInfoResponse(res, 400, "No valid invitation found.");
             }
         }).catch(err => {
             sendInfoResponse(500, "Database error.");
@@ -645,6 +652,18 @@ function isAdminInCircle(userId, circleId, callback){
         where: {CircleId: circleId, UserId: userId}
     }).then(result => {
         if(result && result.role == cons.CircleRole.ADMINISTRATOR){
+            if(callback) callback(true);
+        }else{
+            if(callback) callback(false);
+        }
+    });
+}
+
+function isModOrAboveInCircle(userId, circleId, callback){
+    db.UserInCircles.findOne({
+        where: {CircleId: circleId, UserId: userId}
+    }).then(result => {
+        if(result && result.role != cons.CircleRole.MEMBER){
             if(callback) callback(true);
         }else{
             if(callback) callback(false);
