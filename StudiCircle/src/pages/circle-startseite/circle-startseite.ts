@@ -15,8 +15,11 @@ import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
       <!--für verschiedene Abschnitte-->
       <ion-row>
         <!--für einzelne Einträge in den Abschnitten-->
-        <ion-col>
-          <button ion-button full color="danger" (click)="openConfirmDialog()">Circle Verlassen<ion-icon name="exit"></ion-icon></button>
+        <ion-col style="padding: 0px;">
+          <button ion-button full color="dark" (click)="openConfirmDialog()" style="margin: 0px;" clear icon-end>Einladungen<ion-icon style="font-size: 2em;" name="notifications"></ion-icon></button>
+        </ion-col>
+        <ion-col style="padding: 0px;">
+          <button ion-button full color="danger" (click)="openConfirmDialog()" style="margin: 0px;" icon-end>Circle Verlassen<ion-icon style="font-size: 2em;" name="exit"></ion-icon></button>
         </ion-col>
       </ion-row>
     </ion-list>
