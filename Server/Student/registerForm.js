@@ -1,11 +1,12 @@
 const constants = require('./constants');
 
 module.exports = {
-    getForm : function (validationKey) {
+    getForm : function (inviationKey) {
+        console.log(inviationKey);
         var html = `<html>
         <head>
             <meta charset=\"UTF-8\">
-            <title>Reset your Password at Studicircle</title>
+            <title>Register for StudiCircle</title>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
             <style>
                 .form-control{
@@ -25,15 +26,16 @@ module.exports = {
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h1>Reset your password at StudiCircle</h1>
+                        <h1>Register for StudiCircle</h1>
                         <p class="infotext lead">
-                            To reset your password please fill in the form below:
+                            To register please fill in the form below:
                         </p>
-                        <form method='POST' action='${constants.getPasswordChangeURL()}'>
+                        <form method='POST' action='${constants.getGuestUserActivationURL()}'>
+                            <input class="form-control" type='text' name='userName' id='userName' placeholder="User Name" /><br>
                             <input class="form-control" type='password' name='pwd' id='pw1' placeholder="Password" onkeyup='checkPass()'/><br>
                             <input class="form-control" type='password' name='rpwd' id='pw2'placeholder="Repeat Password"  onkeyup='checkPass()'/><br>
                             <input class="btn btn-block btn-primary" type='submit' value='submit' id='btn' disabled/>
-                            <input class="hiddenfield" type='hidden' name='validationKey' id='validationKey' value='${validationKey}'/><br>
+                            <input class="hiddenfield" type='hidden' name='invitationKey' id='invitationKey' value='${inviationKey}'/><br>
                         </form>
                         <p id='outputCompare' class="col-lg-8 offset-lg-2"></p>
                         <p id='outputCompliance' class="col-lg-8 offset-lg-2"></p>
