@@ -560,6 +560,28 @@ module.exports = {
         });
     },
 
+    deleteInvitation : function(req, res){
+        const invitId = req.query.invitId;
+
+        if(argumentMissing(res, invitId)) return;
+
+        const userId = req.session.userId;
+
+        db.Invitation.findById(invitId).then(invit => {
+            if(invit){
+                isModOrAboveInCircle(userId, invit.CircleId, result => {
+                   if(result){
+                        invit.destroy();
+                   }else{
+                       sendInfoResponse(res, 412, "User do not have permission to delete an invitation.");
+                   }
+                });
+            }else{
+                sendInfoResponse(res, 400, "No invitation with given id.")
+            }
+        });
+    },
+
     // keine geroutete function
     isAdminAnywhere : function(userId, callback){
         db.UserInCircles.findAll({
