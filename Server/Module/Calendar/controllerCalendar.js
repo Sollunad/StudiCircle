@@ -97,15 +97,21 @@ module.exports = {
         })
       }
     }).catch(err => {
-      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      sendInfoResponse(res, 500, "1 Server error. deletion failed.");
       return;
     });
     db.Calendar.Appointment.findById(appID).then(appointment => {
-      appointment.destroy();
-      sendInfoResponse(res,  "Successful deleted");
-      return;
+      if(appointment){
+        appointment.destroy();
+        sendInfoResponse(res,  "Successful deleted");
+        return;
+      }else{
+        sendInfoResponse(res, 400, "no Appointment with given id");
+        return;
+      }
+
     }).catch(err => {
-      sendInfoResponse(res, 500, "Server error. Voting failed.");
+      sendInfoResponse(res, 500, "2 Server error. deltion failed.");
       return;
     });
   },
@@ -122,32 +128,33 @@ module.exports = {
     if(argumentMissing(res, voting, appID, userId)) return;
 
     db.Calendar.Vote.findOne({where: {"UserId" : userId, "AppointmentId":appID}}).then(vote => {
-      if(voting < 3){
-        vote.updateAttributes({'vote': voting});
-        sendInfoResponse(res, "Vote updated");
-        return;
+      if(vote){
+        if(voting < 3){
+          vote.updateAttributes({'vote': voting});
+          sendInfoResponse(res, "Vote updated");
+          return;
+        }else{
+          vote.destroy();
+          sendInfoResponse(res, "Vote updated");
+          return;
+        }
       }else{
-        vote.destroy();
-        sendInfoResponse(res, "Vote updated");
-        return;
+        if(voting < 3){
+          db.Calendar.Vote.create({'AppointmentId': appID, 'UserId': userId, 'vote':voting}).then(vote =>{
+            sendInfoResponse(res, "Vote sent");
+            return;
+          }).catch(err => {
+            sendInfoResponse(res, 500, "Server error. Voting failed.");
+            return;
+          });
+        }else {
+          sendInfoResponse(res, 500, "No voting sent");
+        }
       }
-    }).catch(err => {
+  }).catch(err => {
       sendInfoResponse(res, 500, "Server error. Voting failed.");
       return;
     });
-
-    //geht auch hier rein, enn person schon abgestimmt hat... Fehler noch zu finden
-    if(voting < 3){
-      db.Calendar.Vote.create({'AppointmentId': appID, 'UserId': userId, 'vote':voting}).then(vote =>{
-        sendInfoResponse(res, "Vote sent");
-        return;
-      }).catch(err => {
-        sendInfoResponse(res, 500, "Server error. Voting failed.");
-        return;
-      });
-    }else {
-      sendInfoResponse(res, 500, "No voting sent");
-    }
 
   },
 
