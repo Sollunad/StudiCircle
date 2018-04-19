@@ -561,7 +561,7 @@ module.exports = {
     },
 
     deleteInvitation : function(req, res){
-        const invitId = req.query.invitId;
+        const invitId = req.body.invitId;
 
         if(argumentMissing(res, invitId)) return;
 
