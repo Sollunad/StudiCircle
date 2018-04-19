@@ -26,8 +26,10 @@ export class GetInvolvedPage {
 
   public mailValidation = getMailRegex();
 
+  public business_desc = "";
+  public business_name = "";
   passwdChk = '';
-  accountType: string = "rb-6-0";
+  accountType: string = "student";
   selectedAccountType: AccountTypes;
 
   constructor(public navCtrl: NavController, private _apiService : ApiProvider, private toasty : ToastyProvider) {
@@ -57,18 +59,24 @@ export class GetInvolvedPage {
     const registration = this._apiService.register(this.profile.mail,
                                                    this.profile.name,
                                                    this.profile.password,
-                                                   this.profile.profileType).subscribe(
-      (success: boolean) => {
-        if(success){
+                                                   this.profile.profileType,
+                                                    this.business_name + ' :\n' +this.business_desc).subscribe(
+      (status: number) => {
+        registration.unsubscribe();
+        if(status===200) {
           console.log("[REGISTER] : Registration successful");
           this.toasty.toast("Registration successful");
           this.goToVerifyNow({});
-        }else{
+          return true;
+        } else if(status===451) {
+          this.toasty.toast("Mail is already in use");
+        } else if(status===403) {
+          this.toasty.toast("This is a really invalid student mail");
+        } else{
           console.log("[REGISTER] : Registration not successful");
           this.toasty.toast("Registration was not successful");
         }
-        registration.unsubscribe();
-        return success;
+        return false;
       }
     )
   }
@@ -107,11 +115,13 @@ export class GetInvolvedPage {
   }
 
   logProfile(){
-    this.selectedAccountType = this.accountType === "rb-6-0"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
-    console.log(this.selectedAccountType);
+    if(this.accountType == undefined){
+      this.toasty.toast("No account Type selected");
+      return;
+    }
+    this.selectedAccountType = this.accountType === "student"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
     if(this.profile.mail && this.profile.password && this.passwdChk){
       if(this.selectedAccountType === AccountTypes.STUDENT){
-        console.log("student");
         console.log("[REGISTER] : Student Profile");
         if(this.profile.mail.match('(@student\.)|(\.edu$)') && this.profile.mail.match(getMailRegex())){
           console.log("[REGISTER] : Valid Student Mail");
@@ -127,13 +137,11 @@ export class GetInvolvedPage {
         }
       }else{
         if(this.selectedAccountType === AccountTypes.BUSINESS){
-          console.log("Business");
           console.log("[REGISTER] : Business User detected");
           if(this.profile.mail.match(getMailRegex())){
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
               if(this.usernameCheck()){
-                console.log("regsiter")
                 this.registerNow();
               }
             }

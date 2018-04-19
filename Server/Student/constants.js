@@ -14,7 +14,7 @@ const KEY_LENGTH = 48;
 const SALT_LENGTH = 48;
 
 const API_URL_ROOT_PRODUCTIVE = "https://api.sknx.de";
-const API_URL_ROOT_DEV = "https://api.dev.sknx.de";
+const API_URL_ROOT_DEV = "https://dev.sknx.de";
 
 const PASS_MIN_LENGTH = 8;
 const PASS_MAX_LENGTH = 64;
@@ -38,6 +38,11 @@ module.exports = {
         return root + "/user/activate/" + activationToken;
     },
 
+    getDeactivationURL : function (activationToken) {
+        var root = this.getRootURL();
+        return root + "/user/disable/" + activationToken;
+    },
+
     getPasswordChangeURL : function () {
         var root = this.getRootURL();
         return root + "/user/resetPassword";
@@ -46,6 +51,16 @@ module.exports = {
     getNewMailActivationURL : function (activationToken) {
         var root = this.getRootURL();
         return root + "/user/changeMail/" + activationToken;
+    },
+
+    getCreateGuestUserURL : function (invitationToken) {
+        var root = this.getRootURL();
+        return root + "/user/guest/register/" + invitationToken;
+    },
+
+    getGuestUserActivationURL : function () {
+        var root = this.getRootURL();
+        return root + "/user/guest/activate";
     },
 
     getRootURL : function () {

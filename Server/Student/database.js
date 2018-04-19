@@ -1,4 +1,5 @@
 const constant = require('./constants');
+const circleConstants = require('../Circle/constants');
 const db = require('../Database/database.js');
 
 module.exports = {
@@ -125,6 +126,92 @@ module.exports = {
         }
     },
 
+    getTimestampFromValidationKey : async function (validationKey) {
+        try {
+            return await db.ValidationKey.findAll({ where:{ 'validationKey': validationKey }}).then( validationKey => {
+                if ( validationKey &&  validationKey[0] && validationKey[0].dataValues.id)
+                    return  validationKey[0].dataValues.updatedAt;
+                throw  "database error";
+            }).error(err => {
+                throw   "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    getCircleInvitationsFromUserId : async function (userId) {
+        try {
+            return await db.Invitation.findAll({ where:{ 'UserId': userId }}).then(invitations => {
+                if (invitations && invitations.length > 0) {
+                    var returnArray = [];
+                    let length = invitations.length;
+                    for (var i=0; i<length; i = i +1) {
+                        var singleInvitation = {};
+                        singleInvitation.id = invitations[i].dataValues.id;
+                        singleInvitation.UserId = invitations[i].dataValues.UserId;
+                        singleInvitation.CircleId = invitations[i].dataValues.CircleId;
+                        singleInvitation.updatedAt = invitations[i].dataValues.updatedAt;
+                        returnArray.push(singleInvitation);
+                    }
+                    return returnArray;
+                }
+                throw "UserId without invitations!";
+            }).error(err => {
+                console.log(error);
+                throw "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    addUserToCircle : async function (userId, circleId) {
+        try {
+           return await db.Circle.findById( circleId ).then(circle => {
+               circle.addUser(userId).then(result => {
+                   if (result[0]) {
+                       result[0][0].update({"role": circleConstants.CircleRole.MEMBER});
+                       return true;
+                   } else {
+                       return false;
+                   }
+               });
+           }).error(err => {
+               throw   "error";
+           });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    removeInvitation : async function (invitationId) {
+        try {
+            return await db.Invitation.findById( invitationId ).then( invitation => {
+                if ( invitation && invitation.dataValues.id) {
+                    try {
+                        return !! db.Invitation.destroy({
+                            where: {
+                                id: invitationId
+                            }
+                        });
+                    } catch (e) {
+                        return false;
+                    }
+                } else
+                    throw  "database error";
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
     getUserAuthData : async function( userId ) {
         try {
             return await db.User.findById( userId ).then( user => {
@@ -138,7 +225,21 @@ module.exports = {
             console.log(err);
             throw "database error";
         }
-        // return {"salt":"99/m2P3YFRV8OPZa2zUWUoBeAU150mIQ5iIjgY8cas0FdlMeghnyprtuOQiQZJu1", "hash":"fb7a30b7ff7272572a6f8b555c76acf63b700f8d50109403085fa8e4adfc7728"};
+    },
+
+    getCircleNameById : async function (circleId) {
+        try{
+            return await db.Circle.findById( circleId ).then( circle => {
+                if ( circle &&  circle && circle.dataValues.id)
+                    return  circle.dataValues.name;
+                throw  "database error";
+            }).error(err => {
+                throw   "error";
+            });
+        }catch (error) {
+            console.log(err);
+            throw false;
+        }
     },
 
     insertNewPerson: async function(mail, username, password, salt, accountType, randomString){
@@ -212,6 +313,30 @@ module.exports = {
                     return user.updateAttributes({
                         'pwdHash': hash,
                         'salt': salt
+                    }).then(() => {
+                        return true;
+                    }).error(() => {
+                        throw false;
+                    });
+                }else{
+                    throw  false;
+                }
+            }).error(err => {
+                throw   "error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+    },
+
+    setUsername : async function (userId, userName) {
+        console.log("SET USERID - userId: " + userId + " | Username: " + userName);
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user && user.dataValues.id){
+                    return user.updateAttributes({
+                        'name': userName
                     }).then(() => {
                         return true;
                     }).error(() => {
