@@ -7,7 +7,7 @@ const responder = require('./responseSender');
 
 module.exports = {
 
-    registerBusiness: function (mail, password, userName, businessDescription, res, businessName) {
+    registerBusiness: function (mail, password, userName, businessDescription, businessName, res) {
 
         let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
         html = '<html lang="de-DE">\n' +
