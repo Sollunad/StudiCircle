@@ -38,7 +38,7 @@ export class CircleProvider {
   }
 
   public create(name : string, visibility : string, location: any){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const resSubject: Subject<any> = new Subject<any>();
     let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
@@ -46,15 +46,15 @@ export class CircleProvider {
     ).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        resSubject.next(res);
       },
       (error: any) => {
         console.log(error);
         editVisibility.unsubscribe();
-        successSubject.next(false);
+        resSubject.next(error);
       }
     );
-    return successSubject.asObservable();
+    return resSubject.asObservable();
   }
 
   public edit(id : number, visibility : number){
