@@ -7,7 +7,7 @@ const responder = require('./responseSender');
 
 module.exports = {
 
-    registerBusiness: function (mail, password, userName, businessDescription, res) {
+    registerBusiness: function (mail, password, userName, businessDescription, businessName, res) {
 
         let randomString = mailer.generateRandomString(constant.KEY_LENGTH);
         html = '<html lang="de-DE">\n' +
@@ -19,6 +19,8 @@ module.exports = {
                 '<p>There´s a new user "' + userName + '".</p> '+
                 '<p>The business description of the new user is:</p>'+
                 '<p>' + businessDescription + '</p>'+
+                '<p>The business name:</p>'+
+                '<p>' + businessName + '</p>'+
                 '<p>The mail address is: ' + mail + '</p>'+
                 '<p>Please click on following link to activate this account on StudiCircle: <a href="' + constant.getActivationURL(randomString) + '">Validate new account</a></p>' +
                 '<p>Please click on following link to cancel the activitation / invitation of this account on StudiCircle: <a href="' + constant.getDeactivationURL(randomString) + '">Disable new account</a></p>' +
@@ -93,7 +95,7 @@ module.exports = {
 
     },
 
-    register: async function (mail, password, accountType, userName, res, businessDescription) {
+    register: async function (mail, password, accountType, userName, res, businessDescription, businessName) {
 
         if (!mail || !password || !accountType || !userName) {
             if (res) {
@@ -161,7 +163,7 @@ module.exports = {
         }
 
         if (accountType == constant.AccountType.BUSINESS) {
-            return this.registerBusiness(mail, password, userName, businessDescription, res);
+            return this.registerBusiness(mail, password, userName, businessDescription, businessName, res);
         }
 
         try{
