@@ -84,33 +84,9 @@ export class BlackboardPage {
   }
 
   private getAllPostsOfBlackboard(){
-
-    let posts = this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
-      console.log('getBlackboardPosts', posts);
-      this.posts = posts;
-    });
-    return;
-
-    // //array to store comments temporarily
-    // let comments = new Array<BlackboardPost>();
-    //   // get the posts in this circle
-    // const subs: Subscription = this.dbProvider.getBlackboardPosts(this.circleId).subscribe((data:any[]) => {
-    // console.log('getAllPostsOfBlackboard', data);
-    //   //iterate over all posts
-    //   subs.unsubscribe();
-    //     for(let post of data){
-    //     // push 3 comments in comments-object
-    //       for(let comment of post.Comments){
-    //         if(comment.PostId === post.id){
-    //             comments.push({postID: comment.id, userName: comment.User.name, title: 'Titel', text: comment.body, date: comment.createdAt});
-    //         }
-    //       }
-    //       this.posts.push({postID: post.id, userName: post.User.name, title: 'Titel', text: post.body, date: post.createdAt, comments: comments});
-    //       comments = [];
-    //     }
-    //   }, (err: any) => {
-    //     // Error-Handling
-    //     console.log(err);
-    //   });
+      this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+        console.log('getBlackboardPosts', posts);
+        this.posts = posts;
+      });
     }
 }

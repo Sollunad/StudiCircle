@@ -41,7 +41,8 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
-require('./Module/Blackboard/blackboard')(app);
+var routesBlackboard = require('./Module/Blackboard/blackboard'); //importing route
+routesBlackboard(app); //register the route
 
 var server = app.listen(port);
 console.log('todo list RESTful API server started on: ' + port );
