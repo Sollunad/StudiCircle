@@ -83,4 +83,19 @@ module.exports = function(app) {
     // userId (Number): selected users id
     app.route('/circle/leave')
         .post(circle.leaveCircle);
+  
+    app.route('/circle/invite')
+        .post(circle.inviteToCircle);
+
+    app.route('/circle/getInvitForUser')
+        .get(circle.allInvitationsPerUser);
+
+    app.route('/circle/answerInvit')
+        .post(circle.reactToInvitation);
+
+    app.route('/circle/getInvitForCircle')
+       .get(circle.allInvitationsPerCircle);
+
+    app.route('/circle/deleteInvit')
+        .post(circle.deleteInvitation);
 };

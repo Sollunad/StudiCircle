@@ -7,6 +7,7 @@ import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellun
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
 import {BlackboardPage} from "../blackboard/blackboard";
+import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
   template: `
@@ -14,8 +15,8 @@ import {BlackboardPage} from "../blackboard/blackboard";
       <!--für verschiedene Abschnitte-->
       <ion-row>
         <!--für einzelne Einträge in den Abschnitten-->
-        <ion-col>
-          <button ion-button full color="danger" (click)="openConfirmDialog()">Circle Verlassen<ion-icon name="exit"></ion-icon></button>
+        <ion-col style="padding: 0px;">
+          <button ion-button full color="danger" (click)="openConfirmDialog()" style="margin: 0px;" icon-end>Circle Verlassen<ion-icon style="font-size: 2em;" name="exit"></ion-icon></button>
         </ion-col>
       </ion-row>
     </ion-list>
@@ -26,14 +27,14 @@ export class PopoverPage {
   circleId;
   circleName;
 
-  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController, private popoverCtrl: PopoverController) {
+  constructor(public circleProvider: CircleProvider, public navParams: NavParams, private alertCtrl: AlertController, public navCtrl: NavController, private viewCtrl: ViewController) {
 
   }
 
   openConfirmDialog(){
     this.circleId=this.navParams.data.circleId;
     this.circleName=this.navParams.data.circleName;
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role=="admin") {
           console.log("[ROLE] : "+role.role);
@@ -97,7 +98,6 @@ export class CircleStartseite {
   circleId: number;
 
   circleName: string;
-  public checkRole: boolean;
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
@@ -134,7 +134,7 @@ export class CircleStartseite {
     loadModules(){
 
       this.moduleList = [
-        {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
+        {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
 
@@ -152,7 +152,7 @@ export class CircleStartseite {
           component: MitgliederÜbersicht,
           imageName: 'mitglieder.jpg'
         });
-        this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+        this.circleProvider.getUserRole(this.circleId).subscribe(
           role => {
             if (role.role == "admin") {
               console.log("[ROLE] : " + role.role);

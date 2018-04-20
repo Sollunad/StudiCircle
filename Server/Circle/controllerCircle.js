@@ -1,6 +1,9 @@
 const db = require('../Database/database.js');
 const cons = require('./constants.js');
 
+const consUser = require('../Student/constants.js');
+const studentInterface = require('../Student/moduleInterface.js');
+
 module.exports = {
     helloworld : function (req, res) {
       res.status(200).json({
@@ -22,18 +25,14 @@ module.exports = {
                 db.UserInCircles.findOne({where: {"UserId" : userId, "CircleId" : circleId}}).then(result2 => {
                     result2.destroy();
                     sendInfoResponse(res, "User from circle removed.");
-                    return;
-                }).error(err => {
+                }).catch(err => {
                     sendInfoResponse(res, 404, "User not found in circle.");
-                    return;
                 });
             }else{
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not Admin in the requested circle.");
-                return;
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "User not found in circle.");
-            return;
         });
         // res.send("User from circle removed.");
     },
@@ -55,19 +54,15 @@ module.exports = {
                     if(result[0]){
                         result[0][0].update({"role" : cons.CircleRole.MEMBER});
                         sendInfoResponse(res, "User added to circle.");
-                        return;
                     }else{
                         sendInfoResponse(res, "User already in circle.");
-                        return;
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "No user with given id.");
-                return;
             });
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 404, "No circle with given id.");
-            return;
         });
     },
 
@@ -83,7 +78,7 @@ module.exports = {
 
         const userId = req.session.userId;
 
-        db.Circle.create({"name":name,"visible":visible,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"business":false,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
@@ -95,15 +90,16 @@ module.exports = {
                 circle.addUser(user).then(result => {
                     if (result[0]){
                         result[0][0].update({"role" : cons.CircleRole.ADMINISTRATOR});
+                        if(user.type == consUser.AccountType.BUSINESS) circle.updateAttributes({"business":true});
                         sendInfoResponse(res, "Circle created and User added.");
                     }else{
                         sendInfoResponse(res, "User already in circle.");
                     }
                 });
-            }).error(err => {
+            }).catch(err => {
                 sendInfoResponse(res, 404, "User from session not found.");
-            });;
-        }).error(err => {
+            });
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error. Creating circle failed.");
         });
     },
@@ -112,52 +108,60 @@ module.exports = {
         const circleId = req.body.id;
         const visible = req.body.vis;
 
-        if (argumentMissing(res, circleId, visible, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, visible)) return;
 
-        const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId;
 
-        db.Circle.findById(circleId)
-        .then(circle => {
-          circle.updateAttributes({
-            "visible": visible,
-            "calendar": calendar,
-            "bill": bill,
-            "bet": bet,
-            "filesharing": filesharing,
-            "market": market
-          })
-          res.send("OK");
-        }).error(err => {
-          sendInfoResponse(res, 500, "Save changes failed.");
+        isAdminInCircle(userId, circleId, result => {
+            if(result){
+                db.Circle.findById(circleId)
+                .then(circle => {
+                    circle.updateAttributes({
+                        "visible": visible
+                    });
+                    sendInfoResponse(res,  "OK");
+                }).catch(err => {
+                    sendInfoResponse(res, 500, "Save changes failed.");
+                });
+            }else{
+                sendInfoResponse(res, 400, "User is no admin in circle.");
+            }
         });
+
     },
 
     editModules : function (req,res) {
-      const circleId = req.body.id;
+        const circleId = req.body.id;
 
-      const calendar = req.body.calendar;
-      const bill = req.body.bill;
-      const bet = req.body.bet;
-      const file = req.body.file;
-      const market = req.body.market;
+        const calendar = req.body.calendar;
+        const bill = req.body.bill;
+        const bet = req.body.bet;
+        const file = req.body.file;
+        const market = req.body.market;
 
-      if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
+        if (argumentMissing(res, circleId, calendar, bill, bet, file, market)) return;
 
-      const userId = req.session.userId; //TODO: wer darf alles circle bearbeiten?
+        const userId = req.session.userId;
 
-      db.Circle.findById(circleId)
-      .then(circle => {
-        circle.updateAttributes({
-          "calendar": calendar,
-          "bill": bill,
-          "bet": bet,
-          "filesharing": file,
-          "market": market
+        isAdminInCircle(userId, circleId, result => {
+           if(result){
+                db.Circle.findById(circleId)
+                    .then(circle => {
+                        circle.updateAttributes({
+                            "calendar": calendar,
+                            "bill": bill,
+                            "bet": bet,
+                            "filesharing": file,
+                            "market": market
+                        });
+                        sendInfoResponse(res, "OK");
+                    }).catch(err => {
+                    sendInfoResponse(res, 500, "Save changes failed.");
+                });
+           }else{
+               sendInfoResponse(res, 412, "User is not admin in circle.");
+           }
         });
-        sendInfoResponse(res, "OK");
-      }).error(err => {
-        sendInfoResponse(res, 500, "Save changes failed.");
-      });
 
     },
 
@@ -166,11 +170,17 @@ module.exports = {
 
         if (argumentMissing(res, circleId)) return;
 
-        const userId = req.session.userId; //TODO: nur Admin darf löschen
+        const userId = req.session.userId;
 
-        db.Circle.build({"id" : circleId}).destroy();
+        isAdminInCircle(userId, circleId, result => {
+           if(result){
+                db.Circle.build({"id" : circleId}).destroy();
+                sendInfoResponse(res, "Circle removed.");
+           } else{
+               sendInfoResponse(res, 400, "You are not admin in the circle.");
+           }
+        });
 
-        sendInfoResponse(res, "Circle removed.");
     },
 
     //return all circles the user is following
@@ -241,7 +251,7 @@ module.exports = {
 
         var filteredCircles = circles.filter(circleFilter);
         res.status(200).json(filteredCircles);
-      }).error(err => {
+      }).catch(err => {
         res.status(500).json({
           'error': 'Server Error'
         });
@@ -250,16 +260,24 @@ module.exports = {
 
     members : function (req, res) {
         const circleId = req.query.id;
+        var germanRoleName = "";
 
         if (argumentMissing(res, circleId)) return;
 
         const userId = req.session.userId;
 
         db.Circle.build({"id" : circleId}).getUsers().then(users => {
-            var data = [];
-            var userInCircle = false;
+            const data = [];
+            let userInCircle = false;
             users.forEach(element => {
-                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role});
+                if(element.UserInCircles.role === "admin"){
+                    germanRoleName = "(Administrator)";
+                }else if (element.UserInCircles.role === "mod"){
+                    germanRoleName = "(Moderator)";
+                }else if (element.UserInCircles.role === "member"){
+                    germanRoleName = "";
+                }
+                data.push({uuid: element.id, username: element.name, role: element.UserInCircles.role, germanRole: germanRoleName});
                 if(!userInCircle && element.id == userId) userInCircle = true;
             });
             if(userInCircle){
@@ -267,7 +285,7 @@ module.exports = {
             } else {
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not in the requested circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             res.status(500);
             sendInfoResponse(res, 500, "Server Error");
         });
@@ -283,7 +301,7 @@ module.exports = {
             sendInfoResponse(res, 404, "No circle with given id.");
             return;
           }
-          var result = [];
+          const result = [];
           if(circle.blackboard){
             result.push("blackboard");
           }
@@ -306,25 +324,21 @@ module.exports = {
             result.push("market");
           }
           res.send(result);
-          return;
-      }).error(err => {
+      }).catch(err => {
           sendInfoResponse(res, 500, "Error.");
-          return;
       });
     },
 
     getVisibility : function(req, res){
-      var circleId = req.query.circleId;
-      db.Circle.findById(circleId).then(circle => {
+        const circleId = req.query.circleId;
+        db.Circle.findById(circleId).then(circle => {
         if(circle == null){
           sendInfoResponse(res, 404, "No circle with given id.");
           return;
         }
         res.send(circle.visible);
-        return;
-      }).error(err => {
+      }).catch(err => {
         sendInfoResponse(res, 500, "Error");
-        return;
       });
     },
 
@@ -347,10 +361,10 @@ module.exports = {
 				sendInfoResponse(res, "Changed Role for " + selectedUser.toString()
 						+ " to " + newRole
 						+ "in Circle " + circleId + ".");
-			}).error((error) => {
+			}).catch((error) => {
                 sendInfoResponse(res, 500, "Update failed.");
 			});
-		}).error((error) => {
+		}).catch((error) => {
             sendInfoResponse(res, 500, "Could not find user in circle.");
 		});
 	},
@@ -388,16 +402,16 @@ module.exports = {
                             // change old admin to member
                             result2.update({"role": cons.CircleRole.MEMBER}).then(() => {
                                 sendInfoResponse(res, "Admin changed.");
-                			}).error((error) => {
+                			}).catch((error) => {
                                 sendInfoResponse(res, 500,"Update of new Admin failed.");
                 			});
-                		}).error((error) => {
+                		}).catch((error) => {
                             sendInfoResponse(res, 500, "Could not find new admin user in circle.");
                 		});
-        			}).error((error) => {
+        			}).catch((error) => {
                         sendInfoResponse(res, 500, "Update of old admin failed.");
         			});
-        		}).error((error) => {
+        		}).catch((error) => {
                     sendInfoResponse(res, 500, "Could not find old admin user in circle.");
         		});
             }else{
@@ -419,13 +433,13 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "Bad request. User ist not in the circle.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Server error at database request.");
         })
     },
 
     leaveCircle : function(req, res){
-        const circleId = req.body.circleId
+        const circleId = req.body.circleId;
         if (argumentMissing(res, circleId)) return;
         const userId = req.session.userId;
 
@@ -436,8 +450,143 @@ module.exports = {
             }else{
                 sendInfoResponse(res, 400, "User not in circle or user is admin.");
             }
-        }).error(err => {
+        }).catch(err => {
             sendInfoResponse(res, 500, "Database error.");
+        });
+    },
+
+    inviteToCircle : function(req, res){
+        const mail = req.body.mail;
+        const circleId = req.body.circleId;
+
+        if (argumentMissing(res, mail, circleId)) return;
+
+        const userId = req.session.userId;
+
+        isModOrAboveInCircle(userId, circleId, (result) => {
+            if(result){
+                db.User.findOne({where: {"email": mail}}).then(user => {
+                    if(user){
+                        db.UserInCircles.findOne({where: {"UserId": user.id, "CircleId": circleId}}).then(userInCircle => {
+                            if(!userInCircle){
+                                db.Invitation.create({"UserId": user.id, "CircleId": circleId, "status":0}).then(result =>{
+                                    if(result) sendInfoResponse(res, "Invitation sent.");
+                                });
+                            }else{
+                                sendInfoResponse(res, 400, "User already in circle.");
+                            }
+                        });
+                    }else{
+                        db.Circle.findById(circleId).then(circle => {
+                            if(circle.business){
+                                if(studentInterface.sendInvitation(userId,mail,circleId)){
+                                    sendInfoResponse(res, "Invitation sent to not registered user.");
+                                }else{
+                                    sendInfoResponse(res, 500, "External email error.")
+                                }
+                            }else{
+                                sendInfoResponse(res, 404, "No user with given email found.");
+                            }
+                        });
+                    }
+                }).catch(err => {
+                    sendInfoResponse(res, 500, "Database fail.");
+                });
+            }else{
+                sendInfoResponse(res, 403, "Permission denied. User who made the request is not admin or mod in the circle.");
+
+            }
+        });
+    },
+
+    allInvitationsPerUser : function(req, res){
+        const userId = req.session.userId;
+
+        db.Invitation.findAll({where: {"UserId": userId, "status": 0}, include: [{model: db.Circle}]}).then(result => {
+            if(result && result.length > 0){
+                let resultData = [];
+                result.forEach(invit => {
+                   resultData.push({"invitId": invit.id, "cId": invit.CircleId, "cName": invit.Circle.name});
+                });
+                res.send(resultData);
+            }else{
+                const resultData = [{"invitId": null, "cId": null, "cName": "No invitations found."}];
+                res.send(resultData);
+            }
+        }).catch(err => {
+            sendInfoResponse(res, 500, "Database error.");
+        })
+    },
+
+    allInvitationsPerCircle : function(req, res){
+        const circleId = req.query.circleId;
+
+        if(argumentMissing(res, circleId)) return;
+
+        db.Invitation.findAll({where: {"CircleId": circleId}, include: [{model: db.User}]}).then(result => {
+            if(result && result.length > 0){
+                let resultData = [];
+                result.forEach(invit => {
+                    resultData.push({"invitId": invit.id, "user": invit.User.name, "status": invit.status});
+                });
+                res.send(resultData);
+            }else{
+                //const resultData = [{"invitId": null, "cId": null, "cName": "No invitations found."}];
+                res.send([]);
+            }
+        }).catch(err => {
+            sendInfoResponse(res, 500, "Database error.");
+        })
+    },
+
+    reactToInvitation : function(req, res){
+        const invitationId = req.body.invitId;
+        const isAccepted = req.body.status;
+
+        if(argumentMissing(res, invitationId, isAccepted)) return ;
+
+        const userId = req.session.userId;
+
+        db.Invitation.findOne({where: {"id": invitationId, "UserId": userId, "status": 0}}).then(invit => {
+            if(invit){
+                if(isAccepted){
+                    db.UserInCircles.create({"UserId": userId, "CircleId": invit.CircleId, "role": cons.CircleRole.MEMBER}).then(result => {
+                        invit.updateAttributes({"status": 2});
+                        sendInfoResponse(res,"Invitation accepted.");
+                    }).catch(err => {
+                        sendInfoResponse(res, 409, "User already in circle. Or some database error.");
+                    });
+                }else{
+                    invit.updateAttributes({"status": 1});
+                    sendInfoResponse(res,"Invitation rejected.");
+                }
+            }else{
+                sendInfoResponse(res, 400, "No valid invitation found.");
+            }
+        }).catch(err => {
+            sendInfoResponse(500, "Database error.");
+        });
+    },
+
+    deleteInvitation : function(req, res){
+        const invitId = req.body.invitId;
+
+        if(argumentMissing(res, invitId)) return;
+
+        const userId = req.session.userId;
+
+        db.Invitation.findById(invitId).then(invit => {
+            if(invit && invit.status > 0){
+                isModOrAboveInCircle(userId, invit.CircleId, result => {
+                   if(result){
+                        invit.destroy();
+                   }else{
+                       sendInfoResponse(res, 412, "User do not have permission to delete an invitation.");
+                   }
+                });
+            }else{
+                sendInfoResponse(res, 400, "No invitation with given id. Or invitation is still open.");
+            }
         });
     },
 
@@ -453,19 +602,6 @@ module.exports = {
             }
         });
     },
-
-    // keine geroutete function
-    isAdminAnywhere : function(userId, callback){
-        db.UserInCircles.findAll({
-            where: {UserId: userId, role: cons.CircleRole.ADMINISTRATOR}
-        }).then(result => {
-            if(result.length > 0){
-            if(callback) callback(true);
-        }else{
-            if(callback) callback(false);
-        }
-    });
-    }
 };
 
 // locale Funktionen
@@ -475,6 +611,18 @@ function isAdminInCircle(userId, circleId, callback){
         where: {CircleId: circleId, UserId: userId}
     }).then(result => {
         if(result && result.role == cons.CircleRole.ADMINISTRATOR){
+            if(callback) callback(true);
+        }else{
+            if(callback) callback(false);
+        }
+    });
+}
+
+function isModOrAboveInCircle(userId, circleId, callback){
+    db.UserInCircles.findOne({
+        where: {CircleId: circleId, UserId: userId}
+    }).then(result => {
+        if(result && result.role != cons.CircleRole.MEMBER){
             if(callback) callback(true);
         }else{
             if(callback) callback(false);

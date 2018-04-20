@@ -27,10 +27,14 @@ const allowedUrls = ["/user/login",
                         "/user/forgotPassword",
                         "/user/resetPassword",
                         "/user/register",
+                        "/user/trigger",
+                        "/user/guest/activate",
                     ];
 const allowedWildcards = ["/user/activate/",
+                            "/user/disable/",
                             "/user/resetPassword/",
                             "/user/changeMail/",
+                            "/user/guest/register/",
                         ];
 app.route('/circle/*').all(authorize);
 app.route('/user/*').all(authorize);
@@ -41,11 +45,16 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
+
 var routesBlackboard = require('./Module/Blackboard/blackboard'); //importing route
 routesBlackboard(app); //register the route
 
+var routesCalendar = require('./Module/Calendar/routerCalendar'); //importing route
+routesCalendar(app); //register the route
+
+
 var server = app.listen(port);
-console.log('todo list RESTful API server started on: ' + port );
+console.log('RESTful API server started on: ' + port );
 
 // timeout sessions
 setInterval(mySession.cleanSessions, sessionConstants.SESSION_TIMEOUT_CHECK_INTERVALL);
@@ -86,6 +95,7 @@ function containsWildcard(url){
 }
 
 function responseWhenUnauthorized (req, res) {
+    console.log("[SESSION] Unauthorized request from " + req.remoteAddr + ". Requested Ressource: " + req.originalUrl);
     mySession.invalidate(req.session.sessionId);
     res.status(401);
     res.send("Unauthorized! Failed in Server.js");

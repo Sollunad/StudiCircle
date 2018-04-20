@@ -3,6 +3,6 @@ export function stringHasAppropiateLength(string: string, min: number , max: num
 }
 
 export function getMailRegex(){
-    let mailRegex: string = "^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+    let mailRegex: string = "^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
     return mailRegex;
 }
