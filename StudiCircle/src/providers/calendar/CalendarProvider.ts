@@ -35,4 +35,8 @@ export class CalendarProvider {
     let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointmentId:appointmentId};
     return this.http.post(this.consts.url+'calendar/delete',body);
   }
+
+  public getAllCalendarEntries(circleId:number): Observable<any>{
+    return this.http.get(this.consts.url+'calendar/getAllAppointments?circleID='+circleId);
+  }
 }

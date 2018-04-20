@@ -4,6 +4,7 @@ const Sequelize = require('sequelize'),
 const Circle = sequelize.define('Circle', {
 	name: Sequelize.STRING,
 	visible: Sequelize.BOOLEAN,
+	business: Sequelize.BOOLEAN,
 	// MODUL - Booleans (existiert/existiert nicht)
 	blackboard: Sequelize.BOOLEAN,
 	calendar: Sequelize.BOOLEAN,

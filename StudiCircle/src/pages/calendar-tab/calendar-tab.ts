@@ -1,6 +1,8 @@
 import {CalendarPage} from "../calendar/calendar";
 import {Component} from "@angular/core";
 import {TimelinePage, AppointmentCard} from "../timeline/timeline";
+import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {NavParams} from "ionic-angular";
 
 @Component({
   selector: 'page-calendar-tab',
@@ -29,4 +31,9 @@ export class CalendarTabPage {
   calendarPage = CalendarPage;
   timelinePage = TimelinePage;
   params = {appointmentList: this.appointments};
+
+  constructor(calendarProvider:CalendarProvider, navParams:NavParams){
+    let circleId = navParams.get('circleId');
+    calendarProvider.getAllCalendarEntries(circleId).subscribe(data => console.log(data));
+  }
 }
