@@ -1,8 +1,8 @@
 export interface Appointment {
-  id: number
+  id?: number
   title: string
   description?: string
-  location: string
+  location?: string
   startDate: string
   endDate?: string
   allDay?:boolean

@@ -7,6 +7,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import {AppointmentCard} from "../timeline/timeline";
+import {CalendarComponentOptions, DayConfig} from "ion2-calendar";
 registerLocaleData(localeDe);
 
 @Component({
@@ -21,29 +22,13 @@ export class CalendarPage {
   circleId:number;
   userRole:string= 'admin';
 
+  options:CalendarComponentOptions = {};
+  dates:Array<DayConfig>=[];
+
+  appointments: AppointmentCard[] = [];
 
   date: string;
   type: 'moment'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
-
-  appointments: AppointmentCard[] = [
-    {appointment: {id: 1, title: 'Basketball', description: 'Tolles Event', location: 'Mannheim', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-14T18:40:37.049Z' ,countCommits: 12,countRejections: 2, countInterested: 7},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-15T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-14T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-18T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
-    {appointment: {id: 1, title: 'Basketball', description: 'Tolles Event', location: 'Mannheim', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-14T18:40:37.049Z' ,countCommits: 12,countRejections: 2, countInterested: 7},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-15T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-14T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'},
-    {appointment: {id: 2, title: 'Fußball', description: 'Beste Sport wo gibbet', location: 'Borussia-Park', startDate: '2018-04-13T18:40:37.049Z',
-      endDate: '2018-04-18T19:40:37.049Z' ,countCommits: 42,countRejections: 12, countInterested: 27},vote:'none'}];
-
-
 
   calendar = {
     mode: 'month',
@@ -56,13 +41,31 @@ export class CalendarPage {
 
     this.circleId = navParams.get('circleId');
 
+    this.appointments = navParams.get('appointmentList');
+
+    console.log(navParams.data);
+
+    this.options.from = new Date('2010-01-01T00:00:00.000Z');
+    this.options.to = 0;
+
+    this.dates = this.fillUpCalendar(this.appointments);
+
+    this.options.daysConfig = this.dates;
     /*circleProvider.getUserRole(this.circleId).subscribe(data => {
       this.userRole = data.role;
     });*/
   }
 
+  fillUpCalendar(appointmentList:AppointmentCard[]):Array<DayConfig>{
+    let dateList:Array<DayConfig> = [];
+    appointmentList.forEach(appointment => {
+      dateList.push({date:new Date(appointment.appointment.startDate),subTitle:'●'});
+    });
+    return dateList;
+  }
+
   addEvent() {
-    let modal = this.modalCtrl.create(EventModalPage);
+    let modal = this.modalCtrl.create(EventModalPage,{circleId:this.circleId});
     modal.present();
     modal.onDidDismiss(data => {
       if (data) {

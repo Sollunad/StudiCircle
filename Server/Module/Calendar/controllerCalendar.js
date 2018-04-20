@@ -13,12 +13,12 @@ module.exports = {
   //circleId: Id des Circles für den der Termin erstellt wird
   //Methode legt termin mit den entsprechenden Attributen an.
   createAppointment : function (req, res) {
-      const title = req.body.title;
-      const description = req.body.description;
-      const location = req.body.location;
-      const startDate = req.body.startDate;
-      const endDate =  req.body.endDate;
-      const allDay = req.body.allDay;
+      const title = req.body.appointment.title;
+      const description = req.body.appointment.description;
+      const location = req.body.appointment.location;
+      const startDate = req.body.appointment.startDate;
+      const endDate =  req.body.appointment.endDate;
+      const allDay = req.body.appointment.allDay;
       const circleId= req.body.circleId;
 
       if (argumentMissing(res, title, location)) return;

@@ -10,6 +10,7 @@ import {ApiProvider} from "../api/api";
 import {constants} from "../../consts/constants";
 import * as io from 'socket.io-client';
 import Socket = SocketIOClient.Socket;
+import {Appointment} from "../declarations/Appointment";
 
 
 @Injectable()
@@ -20,23 +21,18 @@ export class CalendarProvider {
   constructor(public http: HttpClient, public apiProvider: ApiProvider, public consts: constants) {
   }
 
-  public openSocketConnection(circleId : number):Socket{
-    console.log("[OPENSOCKETCONNECTION]");
-    return io(
-      this._apiPath,
-      {
-        query: {
-          sessionId:  this.apiProvider.currentUser.session,
-          circleId:   circleId
-        },
-        path: '/socket/socket.io'
-        //transports: ['websocket']
-      }
-    );
+  public addCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
+    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
+    return this.http.post(this.consts.url+'calendar/create',body);
   }
 
-  public loadMessagesFromTo(circleId:number, offset:number, limit:number): Observable<any>{
-    return this.http.get<any>(this.consts.url+'chat/getMessages?circleId=' + circleId + '&mySession=' +
-      this.apiProvider.currentUser.session + '&offset=' + offset + '&limit=' + limit);
+  public editCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
+    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
+    return this.http.post(this.consts.url+'calendar/edit',body);
+  }
+
+  public deleteCalendarEntry(circleId:number, appointmentId:number): Observable<any>{
+    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointmentId:appointmentId};
+    return this.http.post(this.consts.url+'calendar/delete',body);
   }
 }

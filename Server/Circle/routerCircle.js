@@ -99,8 +99,8 @@ module.exports = function(app) {
         .post(circle.reactToInvitation);
 
     // TODO überprüfen und allInvitationsForCircle implementieren
-    app.route('/circle/getInvitForCircle')
-        .get(circle.allInvitationsForCircle);
+    //app.route('/circle/getInvitForCircle')
+        //.get(circle.allInvitationsForCircle);
 
 
 

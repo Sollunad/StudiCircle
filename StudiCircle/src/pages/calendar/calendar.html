@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>
-      {{ viewTitle }}
+      Kalender
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="addEvent()">
@@ -14,8 +14,8 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-calendar [(ngModel)]="date" (onChange)="onTimeSelected($event)" [type]="type" [format]="'YYYY-MM-DD'">
-      </ion-calendar>
+        <ion-calendar [(ngModel)]="date" [options]="options"(onChange)="onTimeSelected($event)" [type]="type" [format]="'YYYY-MM-DD'">
+        </ion-calendar>
     </ion-row>
     <ion-row>
       <ion-col>

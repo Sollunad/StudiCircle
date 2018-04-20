@@ -43,6 +43,7 @@ import {PopoverTimelinePage} from "../pages/popover-timeline/popover-timeline";
 import {DatePickerModule} from "ionic2-date-picker";
 import {StrictRelativeTime} from "../pipes/strict-relative-time";
 import {CalendarModule} from "ion2-calendar";
+import {CalendarProvider} from "../providers/calendar/CalendarProvider";
 
 @NgModule({
   declarations: [
@@ -131,7 +132,8 @@ import {CalendarModule} from "ion2-calendar";
     constants,
     EmojiProvider,
     ChatProvider,
-    ToastyProvider
+    ToastyProvider,
+    CalendarProvider
   ]
 })
 export class AppModule {}

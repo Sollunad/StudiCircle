@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController, ModalController} from 'ionic-angular';
+import {NavController, NavParams, ViewController, ModalController} from 'ionic-angular';
 import * as moment from 'moment';
 import {DatePickerProvider} from "ionic2-date-picker";
+import {Appointment} from "../../providers/declarations/Appointment";
+import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
 
 @Component({
   selector: 'event-modal',
@@ -10,11 +12,26 @@ import {DatePickerProvider} from "ionic2-date-picker";
 
 export class EventModalPage {
 
-  event = { title: "", description: "", place:"", startTime: moment().format(), endTime: moment().add(2, 'hours').format(), allDay: false };
+  event : Appointment = {title: '', description: '', location: '', startDate: moment().format(),
+                         endDate: moment().add(2, 'hours').format() ,countCommits: 0,countRejections: 0, countInterested: 0};
+
   minDate = new Date().toISOString();
 
+  existingAppointment=false;
+
+  circleId:number;
+
   constructor(public navCtrl: NavController, public viewCtrl: ViewController,
-              private datePickerProvider: DatePickerProvider, public modalCtrl: ModalController) {
+              private datePickerProvider: DatePickerProvider, public modalCtrl: ModalController,
+              public calendarProvider:CalendarProvider, navParams:NavParams) {
+    this.circleId = navParams.get('circleId');
+    let appointment = navParams.get('appointment');
+    console.log(appointment);
+    if(appointment!=null){
+      console.log('War hier');
+      this.event=appointment;
+      this.existingAppointment = true;
+    }
   }
 
   showCalendar() {
@@ -31,6 +48,12 @@ export class EventModalPage {
 
   save() {
     console.log(this.event);
+    if(this.existingAppointment){
+      this.calendarProvider.editCalendarEntry(this.circleId,this.event);
+    }
+    else{
+      this.calendarProvider.addCalendarEntry(this.circleId,this.event);
+    }
     this.viewCtrl.dismiss(this.event);
   }
 }
