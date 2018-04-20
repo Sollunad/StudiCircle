@@ -16,9 +16,6 @@ import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
       <ion-row>
         <!--für einzelne Einträge in den Abschnitten-->
         <ion-col style="padding: 0px;">
-          <button ion-button full color="dark" (click)="openConfirmDialog()" style="margin: 0px;" clear icon-end>Einladungen<ion-icon style="font-size: 2em;" name="notifications"></ion-icon></button>
-        </ion-col>
-        <ion-col style="padding: 0px;">
           <button ion-button full color="danger" (click)="openConfirmDialog()" style="margin: 0px;" icon-end>Circle Verlassen<ion-icon style="font-size: 2em;" name="exit"></ion-icon></button>
         </ion-col>
       </ion-row>
@@ -99,12 +96,7 @@ export class CircleStartseite {
   ];
 
   circleId: number;
-  public invitStatusList: InvitationStatus[] = [
-    //true->accepted, false->denied, null->open
-    {cId : 1, invitId : 1, cName: "Martin", status: true},
-    {cId : 2, invitId : 2, cName: "ist", status: false},
-    {cId : 3, invitId : 3, cName: "1 Kek", status: null}
-  ];
+
   circleName: string;
 
   staticModules = [
@@ -123,10 +115,6 @@ export class CircleStartseite {
 
   ionViewWillEnter(){
     this.loadModules();
-    this.circleProvider.getAllInvitsForCircle(this.circleId).subscribe(invitStatusList => {
-      this.invitStatusList = invitStatusList;
-      console.log(this.invitStatusList);
-    });
   }
 
     presentPopover(ev) {

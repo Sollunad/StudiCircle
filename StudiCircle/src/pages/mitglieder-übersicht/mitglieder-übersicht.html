@@ -16,7 +16,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-fab  center bottom>
+  <ion-fab  *ngIf="isAdminOrMod" center bottom>
     <button ion-fab (click)="openInviteDialog()">
       <ion-icon name="add"></ion-icon>
     </button>

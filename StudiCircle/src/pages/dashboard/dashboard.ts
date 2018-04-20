@@ -70,22 +70,44 @@ export class DashboardPage {
   }
 
   // Function to accept or deny Invitations
-  answerInvitation(iId: number, cId: number, answer: boolean){
-    console.log("Answered on inviteID: " + iId + " for circleID: " + cId + " accepted invite: " + answer);
-    this.circleProvider.answerInvite(cId, iId, answer).subscribe(data => {
-        if(data.status!=200){
-          console.log("[Response]:"+data.statusText);
-          let alert = this.alertCtrl.create({
-            title: 'Fehler',
-            subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
-            buttons: ['OK']
-          });
-          alert.present();
-        }else{
-          console.log("[Response]:"+data.statusText);
+  answerInvitation(iId: number, cId: number, answer: number){
+    var question;
+    if (answer == 2){
+      question = 'Do you really accept the invitation?';
+    } else {
+      question = 'Do you really decline the invitation?';
+    }
+    this.alertCtrl.create({
+      title: 'Confirm Invitation Answer!',
+      message: question,
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          this.circleProvider.answerInvite(cId, iId, answer).subscribe(data => {
+              console.log("Answered on inviteID: " + iId + " for circleID: " + cId + " accepted invite: " + answer);
+              if(data.status!=200){
+                console.log("[Response]:"+data.statusText);
+                let alert = this.alertCtrl.create({
+                  title: 'Fehler',
+                  subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }else{
+                console.log("[Response]:"+data.statusText);
+              }
+            }
+          );
         }
-      }
-    );
+      },{
+        text: 'Abbrechen',
+        role: 'cancel',
+        handler: () => {
+          console.log('Answer invite canceled');
+        }
+      }]
+    }).present();
+
   }
 
   public showLocationPrompt() {

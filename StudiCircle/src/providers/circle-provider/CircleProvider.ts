@@ -180,9 +180,10 @@ export class CircleProvider {
     return resSubject.asObservable();
   }
 
-  public answerInvite(cId : number, iId: number, status: boolean) {
+  public answerInvite(cId : number, iId: number, status: number) {
     const resSubject: Subject<any> = new Subject<any>();
-    let body = {circleId: cId, invitId: iId, status, mySession: this.apiProvider.currentUser.session};
+    let body = {circleId: cId, invitId: iId, status: status, mySession: this.apiProvider.currentUser.session};
+
     let header = {"headers": {"Content-Type": "application/json"}};
     const answerInvite: Subscription = this.http.post(
       this.consts.url + 'circle/answerInvit', body, header
