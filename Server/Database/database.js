@@ -107,6 +107,17 @@ Invitation.belongsTo(Circle);
 Circle.hasMany(Calendar.Appointment);
 Calendar.Appointment.belongsTo(Circle);
 
+/**
+ * Calendar-Entry-Vote
+ * 1:n - VOTE AND USER
+ * 1:n - VOTE AND APPOINMENT
+ */
+Calendar.Vote.belongsTo(User);
+User.hasMany(Calendar.Vote);
+
+Calendar.Vote.belongsTo(Calendar.Appointment);
+Calendar.Appointment.hasMany(Calendar.Vote);
+
 
 
 

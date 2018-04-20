@@ -13,6 +13,7 @@ export class MitgliederÜbersicht {
   public memberList: UserInfo[];
 
   private circleId : number;
+  private isAdminOrMod : boolean = false;
   private isAdmin : boolean = false;
   private currentUserId : number;
 
@@ -26,10 +27,13 @@ export class MitgliederÜbersicht {
     this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role == "admin") {
+          this.isAdminOrMod = true;
           this.isAdmin = true;
+        }else if (role.role == "mod"){
+          this.isAdminOrMod = true;
         }
       });
   }
@@ -121,18 +125,21 @@ export class MitgliederÜbersicht {
     console.log("[E-Mail]: "+data);
     const modification = this.circleProvider.invite(this.circleId, data).subscribe(
       (res) => {
-        if(res.info=="OK"){
+        if(res==200){
           console.log("[Invitation] : Invitation sent successful");
           modification.unsubscribe();
-          return true;
         }else{
           console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
           console.log(res);
           modification.unsubscribe();
-          return false;
         }
       }
     )
+  }
+
+  itemSelected(item: string) {
+    console.log("Selected Item", item);
+
   }
 
 }
