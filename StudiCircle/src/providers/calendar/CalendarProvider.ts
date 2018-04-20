@@ -37,7 +37,7 @@ export class CalendarProvider {
     return this.http.post(this.consts.url+'calendar/delete',body);
   }
 
-  public getAllCalendarEntries(circleId:number): Observable<any>{
-    return this.http.get(this.consts.url+'calendar/getAllAppointments?circleID='+circleId);
+  public getAllCalendarEntries(circleId:number): Observable<Appointment[]>{
+    return this.http.get<Appointment[]>(this.consts.url+'calendar/getAllAppointments?circleID='+circleId);
   }
 }

@@ -1,4 +1,3 @@
-
 import {Component} from "@angular/core";
 import {NavController, ModalController, AlertController, NavParams} from "ionic-angular";
 import * as moment from 'moment';
@@ -18,7 +17,7 @@ export class CalendarPage {
 
   eventSource = [];
   viewTitle: string;
-  selectedDay: Date = new Date();
+  selectedDay: Date;
   circleId:number;
   userRole:string= 'admin';
 
@@ -27,8 +26,7 @@ export class CalendarPage {
 
   appointments: AppointmentCard[] = [];
 
-  date: string;
-  type: 'moment'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
+  date: string = new Date().toDateString();
 
   calendar = {
     mode: 'month',
@@ -42,6 +40,8 @@ export class CalendarPage {
     this.circleId = navParams.get('circleId');
 
     this.appointments = navParams.get('appointmentList');
+    console.log(this.appointments);
+    console.log(this.appointments[0]);
 
     this.options.from = new Date('2010-01-01T00:00:00.000Z');
     this.options.to = 0;
@@ -53,6 +53,12 @@ export class CalendarPage {
       this.userRole = data.role;
     });*/
   }
+
+  ionViewDidLoad(){
+    this.appointments = this.appointments;
+    this.selectedDay = moment().startOf('day').toDate();
+  }
+
 
   fillUpCalendar(appointmentList:AppointmentCard[]):Array<DayConfig>{
     let dateList:Array<DayConfig> = [];
@@ -94,7 +100,7 @@ export class CalendarPage {
       title: '' + event.title,
       subTitle: 'From: ' + start + '<br>To: ' + end,
       buttons: ['OK']
-    })
+    });
     alert.present();
   }
 

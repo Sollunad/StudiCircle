@@ -197,11 +197,10 @@ module.exports = {
 
     if(argumentMissing(res,circleID)) return;
 
-    var result = {};
-    result.appointments = [];
+    var result = [];
     db.Calendar.Appointment.findAll({where: {"CircleId": circleID}}).then(appointments => {
       appointments.forEach(function(item, index){
-        result.appointments.push(item.dataValues);
+        result.push(item.dataValues);
       });
       res.status(200).send(result);
     }).catch(err => {

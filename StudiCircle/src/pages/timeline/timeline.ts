@@ -5,6 +5,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {Appointment} from "../../providers/declarations/Appointment";
 import * as isSameDay from 'date-fns/is_same_day';
 import {VoteListPage} from "../vote-list/vote-list";
+import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
 
 @Component({
   selector: 'timeline',
@@ -25,7 +26,7 @@ export class Timeline {
   appointments: AppointmentCard[] = [];
 
   constructor(private popoverCtrl: PopoverController,circleProvider:CircleProvider, navParams:NavParams,
-              public modalCtrl: ModalController) {
+              public modalCtrl: ModalController, calendarProvider:CalendarProvider) {
     this.circleId = navParams.get('circleId');
     this.appointments = navParams.get('appointmentList');
     this.filteredAppointments = this.appointments;

@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import {DatePickerProvider} from "ionic2-date-picker";
 import {Appointment} from "../../providers/declarations/Appointment";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {ToastyProvider} from "../../providers/toasty/toasty";
 
 @Component({
   selector: 'event-modal',
@@ -23,7 +24,7 @@ export class EventModalPage {
 
   constructor(public navCtrl: NavController, public viewCtrl: ViewController,
               private datePickerProvider: DatePickerProvider, public modalCtrl: ModalController,
-              public calendarProvider:CalendarProvider, navParams:NavParams) {
+              public calendarProvider:CalendarProvider, navParams:NavParams, public toastProvider: ToastyProvider) {
     this.circleId = navParams.get('circleId');
     console.log(this.circleId);
     let appointment = navParams.get('appointment');
@@ -46,14 +47,19 @@ export class EventModalPage {
   }
 
   save() {
-    console.log(this.event);
-    if(this.existingAppointment){
-      this.calendarProvider.editCalendarEntry(this.circleId,this.event);
+    if(this.event.title!='') {
+      console.log(this.event);
+      if (this.existingAppointment) {
+        this.calendarProvider.editCalendarEntry(this.circleId, this.event);
+      }
+      else {
+        console.log(this.circleId);
+        this.calendarProvider.addCalendarEntry(this.circleId, this.event).subscribe(data => console.log(data));
+      }
+      this.viewCtrl.dismiss(this.event);
     }
     else{
-      console.log(this.circleId);
-      this.calendarProvider.addCalendarEntry(this.circleId,this.event).subscribe(data => console.log(data));
+      this.toastProvider.toast("Bitte geben Sie einen Titel an");
     }
-    this.viewCtrl.dismiss(this.event);
   }
 }
