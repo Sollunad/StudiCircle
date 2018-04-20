@@ -22,17 +22,17 @@ export class CalendarProvider {
   }
 
   public addCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
-    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
+    let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
     return this.http.post(this.consts.url+'calendar/create',body);
   }
 
   public editCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
-    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
+    let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
     return this.http.post(this.consts.url+'calendar/edit',body);
   }
 
   public deleteCalendarEntry(circleId:number, appointmentId:number): Observable<any>{
-    let body = {"circleId": circleId, mySession : this.apiProvider.currentUser.session, appointmentId:appointmentId};
+    let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointmentId:appointmentId};
     return this.http.post(this.consts.url+'calendar/delete',body);
   }
 

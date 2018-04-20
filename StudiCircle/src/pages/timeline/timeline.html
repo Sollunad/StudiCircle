@@ -34,7 +34,7 @@
       </ion-card-content>
       <ion-row>
         <ion-col>
-          <button ion-button clear small class="votes">
+          <button ion-button clear small (click)="openModal(appointment.appointment)" class="votes">
             {{appointment.appointment.countCommits+appointment.appointment.countRejections+appointment.appointment.countInterested}}
             Stimmen
           </button>

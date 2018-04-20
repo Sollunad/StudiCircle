@@ -25,6 +25,7 @@ export class EventModalPage {
               private datePickerProvider: DatePickerProvider, public modalCtrl: ModalController,
               public calendarProvider:CalendarProvider, navParams:NavParams) {
     this.circleId = navParams.get('circleId');
+    console.log(this.circleId);
     let appointment = navParams.get('appointment');
     if(appointment!=null){
       this.event=appointment;

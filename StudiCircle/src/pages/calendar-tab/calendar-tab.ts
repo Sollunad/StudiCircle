@@ -30,10 +30,12 @@ export class CalendarTabPage {
 
   calendarPage = CalendarPage;
   timelinePage = TimelinePage;
-  params = {appointmentList: this.appointments};
+  params = {};
 
   constructor(calendarProvider:CalendarProvider, navParams:NavParams){
     let circleId = navParams.get('circleId');
+    console.log(circleId);
+    this.params = {appointmentList: this.appointments, circleId:circleId};
     calendarProvider.getAllCalendarEntries(circleId).subscribe(data => console.log(data));
   }
 }

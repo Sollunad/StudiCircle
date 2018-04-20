@@ -1,9 +1,10 @@
 import {Component, Input} from "@angular/core";
-import {PopoverController, NavParams} from "ionic-angular";
+import {PopoverController, NavParams, ModalController} from "ionic-angular";
 import {PopoverTimelinePage} from "../popover-timeline/popover-timeline";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {Appointment} from "../../providers/declarations/Appointment";
 import * as isSameDay from 'date-fns/is_same_day';
+import {VoteListPage} from "../vote-list/vote-list";
 
 @Component({
   selector: 'timeline',
@@ -23,7 +24,8 @@ export class Timeline {
 
   appointments: AppointmentCard[] = [];
 
-  constructor(private popoverCtrl: PopoverController,circleProvider:CircleProvider, navParams:NavParams) {
+  constructor(private popoverCtrl: PopoverController,circleProvider:CircleProvider, navParams:NavParams,
+              public modalCtrl: ModalController) {
     this.circleId = navParams.get('circleId');
     this.appointments = navParams.get('appointmentList');
     this.filteredAppointments = this.appointments;
@@ -43,6 +45,12 @@ export class Timeline {
      }else{
        appointmentCard.vote=vote;
      }
+  }
+
+  openModal(appointment: Appointment) {
+
+    let modal = this.modalCtrl.create(VoteListPage, {appointemntId: appointment.id});
+    modal.present();
   }
 
   presentPopover(appointment:Appointment) {
