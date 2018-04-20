@@ -1,4 +1,5 @@
 const database = require('./database');
+const registration = require('./registration');
 
 module.exports = {
 
@@ -20,7 +21,11 @@ module.exports = {
         }
     },
 
-    sendInvitation : function (invitingUserId, mail, circle) {
-        //TODO
+    sendInvitation : async function (invitingUserId, mail, circle) {
+        try {
+            return await registration.externInvitation(mail,invitingUserId, circle);
+        } catch (error) {
+            console.log(error);
+        }
     },
 }

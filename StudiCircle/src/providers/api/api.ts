@@ -75,8 +75,8 @@ export class ApiProvider {
     );
   }
 
-  public register(mail : string, name : string, passwd : string, type : string){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+  public register(mail : string, name : string, passwd : string, type : string, business_desc: string){
+    const successSubject: Subject<number> = new Subject<number>();
     let typeAsInt : number;
     if(type == 'student'){
       typeAsInt = AccountTypes.STUDENT;
@@ -92,7 +92,8 @@ export class ApiProvider {
       "mail": mail,
       "username" : name,
       "pwd": passwd,
-      "type": typeAsInt
+      "type": typeAsInt,
+      "businessDescription": business_desc
     });
 
     const header = { "headers": {"Content-Type": "application/json"} };
@@ -104,12 +105,11 @@ export class ApiProvider {
     ).subscribe(
       (res: ApiResponse) => {
         registerNewUser.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        successSubject.next(res.httpStatus);
       },
-      (error: any) => {
-        console.log(error);
+      (error: HttpErrorResponse) => {
         registerNewUser.unsubscribe();
-        successSubject.next(false);
+        successSubject.next(error.status);
       }
     );
     return successSubject.asObservable();
@@ -146,11 +146,12 @@ export class ApiProvider {
       }
     ).subscribe(
       (res: ApiResponse) => {
+        console.log(res);
         successSubject.next(res.httpStatus);
         requestSub.unsubscribe();
       },
-      () => {
-        successSubject.next(undefined);
+      (error : HttpErrorResponse) => {
+        successSubject.next(error.status);
         requestSub.unsubscribe();
       }
     );

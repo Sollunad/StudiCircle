@@ -15,6 +15,5 @@ module.exports = {
             "message": text,
             "userData": ""
         });
-        return true;
     }
 }

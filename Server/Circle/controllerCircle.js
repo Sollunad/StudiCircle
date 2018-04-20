@@ -1,5 +1,6 @@
 const db = require('../Database/database.js');
 const cons = require('./constants.js');
+
 const consUser = require('../Student/constants.js');
 const studentInterface = require('../Student/moduleInterface.js');
 
@@ -493,6 +494,7 @@ module.exports = {
                 });
             }else{
                 sendInfoResponse(res, 403, "Permission denied. User who made the request is not admin or mod in the circle.");
+
             }
         });
 

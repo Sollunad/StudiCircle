@@ -34,6 +34,7 @@ import {EmojiPickerComponent} from "../components/emoji-picker";
 import {ChatProvider} from "../providers/chat/ChatProvider";
 import {ToastyProvider} from "../providers/toasty/toasty";
 import {FAQPage} from "../pages/faq/faq";
+import {ImpressumPage} from "../pages/impressum/impressum";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {FAQPage} from "../pages/faq/faq";
     PopoverPage,
     BlackboardPage,
     BlackboardPostPage,
-    FAQPage
+    FAQPage,
+    ImpressumPage
   ],
 
   imports: [
@@ -91,7 +93,8 @@ import {FAQPage} from "../pages/faq/faq";
     AdminAuswaehlenPage,
     BlackboardPage,
     BlackboardPostPage,
-    FAQPage
+    FAQPage,
+    ImpressumPage
   ],
   providers: [
     StatusBar,
