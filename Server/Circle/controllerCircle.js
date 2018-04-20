@@ -497,8 +497,6 @@ module.exports = {
 
             }
         });
-
-
     },
 
     allInvitationsPerUser : function(req, res){

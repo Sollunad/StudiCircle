@@ -23,20 +23,6 @@ export class DbProvider {
     return this.http.get<GeoResponse>(url);
   }
 
-  public getBlackboardPosts(circleId: string){
-    //Code
-    const url = this.consts.url+'circle/getbbPosts?mySession='+ this.api.currentUser.session+'&circleID='+circleId;
-  //  const localurl = 'http://localhost:8080/circle/getbbPosts?mySession=' + this.api.currentUser.session;
-
-    return this.http.get(url);
-  }
-
-  public deletePost(postID: number){
-    //const url = this.const.url+"circle/blackboard/deletePost"+postID;
-    //return this.http.post(url, {postID: postID});
-    return 1;
-  }
-
   public postComment(Comment: BlackboardPost){
     const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
     return this.http.post(url, {com: Comment});

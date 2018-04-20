@@ -87,7 +87,7 @@ export class CircleProvider {
     }
 
   public getCirclesByLocation(lat: number, lon: number, distance: number): Observable<Circle[]> {
-    const url = this.consts.url+`circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}`;
+    const url = this.consts.url+`circle/forLocation?lat=${lat}&lon=${lon}&dist=${distance}&mySession=${this.apiProvider.currentUser.session}`;
     return this.http.get<Circle[]>(url);
   }
 
@@ -197,31 +197,32 @@ export class CircleProvider {
   }
 
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
-    // console.log('getBlackboardPosts', circleId);
+    console.log('getBlackboardPosts', circleId);
 
-    // TODO: url
-    // const url = this.consts.url+`circle/blackboard/posts/${circleId}`;
-    const url = `http://localhost:8080/circle/blackboard/posts?id=${circleId}`;
+    const url = this.consts.url+`circle/blackboard/posts/${circleId}&mySession=${this.apiProvider.currentUser.session}`;
     return this.http.get<BlackboardPost[]>(url);
   }
 
   public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
     console.log('insertPost', circleId, title, text);
 
-    // TODO: url
-    // const url = this.consts.url+`circle/blackboard/posts/newPost`;
-    const url = 'http://localhost:8080/circle/blackboard/newPost';
+    const url = this.consts.url+`circle/blackboard/posts/newPost`;
     return this.http.post<BlackboardPost>(url, {
       circleId: circleId,
       userId: this.apiProvider.currentUser.uuid,
       title: title,
-      text: text
+      text: text,
+      mySession: this.apiProvider.currentUser.session
     });
   }
 
-  public deletePost(postID: number){
-    //const url = this.const.url+"circle/blackboard/deletePost"+postID;
-    //return this.http.post(url, {postID: postID});
-    return 1;
+  public deletePost(post: BlackboardPost){
+    // return this.http.delete(this.consts.url + 'circle/blackboard/deletePost?id=${post}');
+    // let body = {"id": post.postID, mySession : this.apiProvider.currentUser.session};
+    // const url = 'http://localhost:8080/circle/blackboard/posts/?id' + postID;
+    return this.http.post(this.consts.url +'circle/blackboard/deletePost/', {
+      postID: post.postID,
+      mySession: this.apiProvider.currentUser.session
+    });
   }
 }
