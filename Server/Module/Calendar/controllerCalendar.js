@@ -157,7 +157,25 @@ module.exports = {
     });
   },
 
+  //circleID: die ID des Circle für den man die Termine haben möchte
+  //gibt alle Termine des angegeben Circles zurück
+  getAllAppointments : function(req, res){
+    const circleID = req.query.circleID;
 
+    if(argumentMissing(res,circleID)) return;
+
+    var result = {};
+    result.appointments = [];
+    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}}).then(appointments => {
+      appointments.forEach(function(item, index){
+        result.appointments.push(item.dataValues);
+      });
+      res.status(200).send(result);
+    }).catch(err => {
+      console.log(err);
+      sendInfoResponse(res, 500, "Error getting Appointments");
+    })
+  }
 
 }
 
