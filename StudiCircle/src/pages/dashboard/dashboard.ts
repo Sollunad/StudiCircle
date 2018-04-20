@@ -86,10 +86,11 @@ export class DashboardPage {
           const modification = this.circleProvider.answerInvite(cId, iId, answer).subscribe(
             (res) => {
               if(res==200){
-                console.log("[Invitation] : Invitation sent successful");
+                console.log("[Invitation] : Invitation answered successful");
+                this.ionViewWillEnter()
                 modification.unsubscribe();
               }else{
-                console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
+                console.log("[Invitation] : Invitation answered not successful \n [ERROR-LOG]: ");
                 console.log(res);
                 modification.unsubscribe();
               }
