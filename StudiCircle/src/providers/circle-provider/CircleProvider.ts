@@ -43,16 +43,14 @@ export class CircleProvider {
     const resSubject: Subject<any> = new Subject<any>();
     let body = {name : name, vis : visibility, loc : location, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}};
-    const editVisibility: Subscription = this.http.post(
-      this.consts.url+'circle/new', body, header
-    ).subscribe(
+    const createCircle: Subscription = this.http.post(
+      this.consts.url+'circle/new', body, header).subscribe(
       (res: ApiResponse) => {
-        editVisibility.unsubscribe();
-        resSubject.next(res);
+        createCircle.unsubscribe();
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
-        editVisibility.unsubscribe();
+        createCircle.unsubscribe();
         resSubject.next(error);
       }
     );
@@ -64,14 +62,12 @@ export class CircleProvider {
     let body = {id : id, vis : visibility, mySession : this.apiProvider.currentUser.session};
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editVisibility: Subscription = this.http.post(
-      this.consts.url+'circle/edit', body, header
-    ).subscribe(
+      this.consts.url+'circle/edit', body, header).subscribe(
       (res: ApiResponse) => {
         editVisibility.unsubscribe();
-        resSubject.next(res);
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
         editVisibility.unsubscribe();
         resSubject.next(error);
       }
@@ -110,14 +106,12 @@ export class CircleProvider {
     const resSubject: Subject<any> = new Subject<any>();
     let body = {"userId": userId, "circleId": circleId, mySession : this.apiProvider.currentUser.session};
     let header = {"headers": {"Content-Type": "application/json"}};
-    const selectNewAdmin: Subscription = this.http.post(this.consts.url + 'circle/newAdmin', body, header
-    ).subscribe(
+    const selectNewAdmin: Subscription = this.http.post(this.consts.url + 'circle/newAdmin', body, header).subscribe(
       (res: ApiResponse) => {
         selectNewAdmin.unsubscribe();
-        resSubject.next(res);
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
         selectNewAdmin.unsubscribe();
         resSubject.next(error);
       }
@@ -140,40 +134,35 @@ export class CircleProvider {
   }
 
   public editModules(cid: number, calendar: boolean, bill: boolean, bet: boolean, file: boolean, market:boolean){
-    const successSubject: Subject<boolean> = new Subject<boolean>();
+    const resSubject: Subject<any> = new Subject<any>();
     let data = {id : cid, calendar : calendar, bill: bill, bet: bet, file: file, market: market, mySession : this.apiProvider.currentUser.session};
-    console.log(data);
     let header = {"headers" : {"Content-Type": "application/json"}};
     const editModules: Subscription = this.http.post(
-      this.consts.url+'circle/editModules',data, header
-    ).subscribe(
+      this.consts.url+'circle/editModules',data, header).subscribe(
       (res: ApiResponse) => {
         editModules.unsubscribe();
-        successSubject.next(res.httpStatus === 200);
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
         editModules.unsubscribe();
-        successSubject.next(false);
+        resSubject.next(error);
       }
     );
-    return successSubject.asObservable();
+    return resSubject.asObservable();
   }
 
-  public invite(id : number, mail: string){
+  public invite(id : number, mail: string) {
     const resSubject: Subject<any> = new Subject<any>();
-    let body = {circleId : id, mail: mail, mySession : this.apiProvider.currentUser.session};
-    let header = {"headers" : {"Content-Type": "application/json"}};
-    const editVisibility: Subscription = this.http.post(
-      this.consts.url+'circle/invite', body, header
-    ).subscribe(
+    let body = {circleId: id, mail: mail, mySession: this.apiProvider.currentUser.session};
+    let header = {"headers": {"Content-Type": "application/json"}};
+    const inviteToCircle: Subscription = this.http.post(
+      this.consts.url + 'circle/invite', body, header).subscribe(
       (res: ApiResponse) => {
-        editVisibility.unsubscribe();
-        resSubject.next(res);
+        inviteToCircle.unsubscribe();
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
-        editVisibility.unsubscribe();
+        inviteToCircle.unsubscribe();
         resSubject.next(error);
       }
     );
@@ -186,14 +175,12 @@ export class CircleProvider {
 
     let header = {"headers": {"Content-Type": "application/json"}};
     const answerInvite: Subscription = this.http.post(
-      this.consts.url + 'circle/answerInvit', body, header
-    ).subscribe(
+      this.consts.url + 'circle/answerInvit', body, header).subscribe(
       (res: ApiResponse) => {
         answerInvite.unsubscribe();
-        resSubject.next(res);
+        resSubject.next(res.httpStatus = 200);
       },
       (error: any) => {
-        console.log(error);
         answerInvite.unsubscribe();
         resSubject.next(error);
       }

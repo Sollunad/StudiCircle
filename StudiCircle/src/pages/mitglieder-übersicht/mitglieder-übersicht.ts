@@ -121,19 +121,17 @@ export class MitgliederÜbersicht {
     alert.present();
   }
 
-  invitation(data: string){ // TODO checken ob business Circle oder "normaler"
+  invitation(data: string){
     console.log("[E-Mail]: "+data);
     const modification = this.circleProvider.invite(this.circleId, data).subscribe(
       (res) => {
-        if(res.info=="OK"){
+        if(res==200){
           console.log("[Invitation] : Invitation sent successful");
           modification.unsubscribe();
-          return true;
         }else{
           console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
           console.log(res);
           modification.unsubscribe();
-          return false;
         }
       }
     )

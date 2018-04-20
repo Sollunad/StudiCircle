@@ -83,18 +83,15 @@ export class DashboardPage {
       buttons: [{
         text: 'OK',
         handler: () => {
-          this.circleProvider.answerInvite(cId, iId, answer).subscribe(data => {
-              console.log("Answered on inviteID: " + iId + " for circleID: " + cId + " accepted invite: " + answer);
-              if(data.status!=200){
-                console.log("[Response]:"+data.statusText);
-                let alert = this.alertCtrl.create({
-                  title: 'Fehler',
-                  subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
-                  buttons: ['OK']
-                });
-                alert.present();
+          const modification = this.circleProvider.answerInvite(cId, iId, answer).subscribe(
+            (res) => {
+              if(res==200){
+                console.log("[Invitation] : Invitation sent successful");
+                modification.unsubscribe();
               }else{
-                console.log("[Response]:"+data.statusText);
+                console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
+                console.log(res);
+                modification.unsubscribe();
               }
             }
           );

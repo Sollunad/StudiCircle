@@ -120,15 +120,14 @@ export class CircleEinstellungenPage {
             this.mapModulesFromArraytoBool(modules);
 
             const modification = this.circleProvider.editModules(this.circleId,this.calendar,this.bill,this.bet,this.filesharing,this.market).subscribe(
-              (success: boolean) => {
-                if(success){
+              (res) => {
+                if(res==200){
                   console.log("[Modules] : Modules edit successful");
                   modification.unsubscribe();
-                  return true;
                 }else{
-                  console.log("[Modules] : Modules edit not successful");
+                  console.log("[Modules] : Modules edit not successful \n [ERROR-LOG]: ");
+                  console.log(res);
                   modification.unsubscribe();
-                  return false;
                 }
               }
             );
@@ -182,16 +181,13 @@ export class CircleEinstellungenPage {
             console.log("[Visibility]: "+this.visibility);
             const modification = this.circleProvider.edit(this.circleId, this.visibility).subscribe(
               (res) => {
-                if(res.info=="OK"){
+                if(res==200){
                   console.log("[Visibility] : Visibility edit successful");
-                  console.log(res);
                   modification.unsubscribe();
-                  return true;
                 }else{
                   console.log("[Visibility] : Visibility edit not successful \n [ERROR-LOG]: ");
                   console.log(res);
                   modification.unsubscribe();
-                  return false;
                 }
               }
             );

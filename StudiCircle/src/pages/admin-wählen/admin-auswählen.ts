@@ -33,20 +33,18 @@ export class AdminAuswaehlenPage {
         {
           text: 'Akzeptieren',
           handler: () => {
-            this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(data => {
-                console.log(data);
-              if(data.status!=200){
-                console.log("[Response]:"+data.statusText);
-                let alert = this.alertCtrl.create({
-                  title: 'Fehler',
-                  subTitle: 'Bei der Verarbeitung der Anfrage lief etwas schief',
-                  buttons: ['OK']
-                });
-                alert.present();
-              }else{
-                console.log("[Response]:"+data.statusText);
+            const modification = this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
+              (res) => {
+                if(res==200){
+                  console.log("[Admin] : New Admin selected successful");
+                  modification.unsubscribe();
+                }else{
+                  console.log("[Admin] : New Admin selected not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                }
               }
-              });
+            );
             this.navCtrl.remove(this.viewCtrl.index-1);
             this.navCtrl.pop();
           }
