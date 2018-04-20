@@ -134,7 +134,7 @@ export class CircleStartseite {
     loadModules(){
 
       this.moduleList = [
-        {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+        {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
 
