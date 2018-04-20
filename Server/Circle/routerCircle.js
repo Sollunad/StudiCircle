@@ -80,11 +80,6 @@ module.exports = function(app) {
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
 
-    // circleID
-    // return: Posts of Blackboard
-    app.route('/circle/getbbPosts')
-        .get(circle.getBlackboardPosts);
-
     // userId (Number): selected users id
     app.route('/circle/leave')
         .post(circle.leaveCircle);
@@ -104,25 +99,4 @@ module.exports = function(app) {
     app.route('/circle/deleteInvit')
         .post(circle.deleteInvitation);
 
-
-
-    // circleId (Number): current circle
-    app.route('/circle/blackboard/posts')
-        .get(circle.getPosts);
-
-    // circleId (Number): current circle
-    // userId (Number): current user
-    // title (String): title from post
-    // text (String): text from post
-    app.route('/circle/blackboard/newPost')
-        .post(circle.newPost);
-
-    //postID (Number)
-    //userID (number)
-    app.route('/circle/blackboard/newComment')
-        .post(circle.newComment);
-
-    //postID (number)
-    app.route('/circle/blackboard/getComments')
-        .get(circle.getComments);
 };
