@@ -7,6 +7,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
+import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
   template: `
@@ -14,8 +15,8 @@ import {DashboardPage} from "../dashboard/dashboard";
       <!--für verschiedene Abschnitte-->
       <ion-row>
         <!--für einzelne Einträge in den Abschnitten-->
-        <ion-col>
-          <button ion-button full color="danger" (click)="openConfirmDialog()">Circle Verlassen<ion-icon name="exit"></ion-icon></button>
+        <ion-col style="padding: 0px;">
+          <button ion-button full color="danger" (click)="openConfirmDialog()" style="margin: 0px;" icon-end>Circle Verlassen<ion-icon style="font-size: 2em;" name="exit"></ion-icon></button>
         </ion-col>
       </ion-row>
     </ion-list>
@@ -33,7 +34,7 @@ export class PopoverPage {
   openConfirmDialog(){
     this.circleId=this.navParams.data.circleId;
     this.circleName=this.navParams.data.circleName;
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role=="admin") {
           console.log("[ROLE] : "+role.role);
@@ -151,7 +152,7 @@ export class CircleStartseite {
           component: MitgliederÜbersicht,
           imageName: 'mitglieder.jpg'
         });
-        this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+        this.circleProvider.getUserRole(this.circleId).subscribe(
           role => {
             if (role.role == "admin") {
               console.log("[ROLE] : " + role.role);

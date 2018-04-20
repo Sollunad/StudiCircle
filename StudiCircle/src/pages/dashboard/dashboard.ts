@@ -7,9 +7,9 @@ import {DbProvider} from '../../providers/dbprovider/dbprovider';
 import {CircleErstellenPage} from '../circle-erstellen/circle-erstellen';
 import {ApiProvider} from "../../providers/api/api";
 import {Circle} from "../../providers/declarations/Circle";
+import {Invitation} from "../../providers/declarations/Invitation";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
-
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html'
@@ -18,6 +18,7 @@ export class DashboardPage {
 
   settings: SettingsPage;
   private circles : Circle[]=[];
+  public invitList: Invitation[];
   private accountName : string;
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private dbprovider: DbProvider, private alertCtrl: AlertController, private api: ApiProvider, private circleProvider : CircleProvider) {
@@ -25,6 +26,17 @@ export class DashboardPage {
     if(this.api.currentUser.username){
       this.accountName = this.api.currentUser.username.split(' ')[0];
     }
+  }
+
+  ionViewWillEnter() {
+    this.circleProvider.getCircles().subscribe(data => {
+      this.circles = data;
+      // this.showCircle(data[0]);
+    });
+    this.circleProvider.getAllInvitsForUser().subscribe(invitList => {
+      this.invitList = invitList;
+      console.log(this.invitList);
+    });
   }
 
   private getCurrentPosition() {
@@ -57,11 +69,43 @@ export class DashboardPage {
     this.navCtrl.push(CircleErstellenPage);
   }
 
-  ionViewWillEnter() {
-    this.circleProvider.getCircles().subscribe(data => {
-      this.circles = data;
-      // this.showCircle(data[0]);
-    });
+  // Function to accept or deny Invitations
+  answerInvitation(iId: number, cId: number, answer: boolean){
+    var question;
+    if (answer){
+      question = 'Do you really accept the invitation?';
+    } else {
+      question = 'Do you really decline the invitation?';
+    }
+    this.alertCtrl.create({
+      title: 'Confirm Invitation Answer!',
+      message: question,
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          const modification = this.circleProvider.answerInvite(cId, iId, answer).subscribe(
+            (res) => {
+              if(res==200){
+                console.log("[Invitation] : Invitation answered successful");
+                this.ionViewWillEnter()
+                modification.unsubscribe();
+              }else{
+                console.log("[Invitation] : Invitation answered not successful \n [ERROR-LOG]: ");
+                console.log(res);
+                modification.unsubscribe();
+              }
+            }
+          );
+        }
+      },{
+        text: 'Abbrechen',
+        role: 'cancel',
+        handler: () => {
+          console.log('Answer invite canceled');
+        }
+      }]
+    }).present();
+
   }
 
   public showLocationPrompt() {

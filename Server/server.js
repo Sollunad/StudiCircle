@@ -45,6 +45,9 @@ routesCircle(app); //register the route
 var routesStudents = require('./Student/routerStudent'); //importing route
 routesStudents(app); //register the route
 
+var routesCalendar = require('./Module/Calendar/routerCalendar'); //importing route
+routesCalendar(app); //register the route
+
 var server = app.listen(port);
 console.log('RESTful API server started on: ' + port );
 
