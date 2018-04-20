@@ -26,9 +26,7 @@ export class EventModalPage {
               public calendarProvider:CalendarProvider, navParams:NavParams) {
     this.circleId = navParams.get('circleId');
     let appointment = navParams.get('appointment');
-    console.log(appointment);
     if(appointment!=null){
-      console.log('War hier');
       this.event=appointment;
       this.existingAppointment = true;
     }
@@ -52,7 +50,7 @@ export class EventModalPage {
       this.calendarProvider.editCalendarEntry(this.circleId,this.event);
     }
     else{
-      this.calendarProvider.addCalendarEntry(this.circleId,this.event);
+      this.calendarProvider.addCalendarEntry(this.circleId,this.event).subscribe(data => console.log(data));
     }
     this.viewCtrl.dismiss(this.event);
   }

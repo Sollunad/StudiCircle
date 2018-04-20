@@ -11,7 +11,7 @@ import {CalendarTabPage} from "../pages/calendar-tab/calendar-tab";
 })
 export class MyApp {
 
-  rootPage: any = CalendarTabPage;
+  rootPage: any = LogInPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {

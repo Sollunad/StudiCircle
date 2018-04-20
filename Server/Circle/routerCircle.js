@@ -99,7 +99,7 @@ module.exports = function(app) {
         .post(circle.reactToInvitation);
 
     //app.route('/circle/getInvitForCircle')
-       .get(circle.allInvitationsPerCircle);
+       //.get(circle.allInvitationsPerCircle);
 
     app.route('/circle/deleteInvit')
         .post(circle.deleteInvitation);

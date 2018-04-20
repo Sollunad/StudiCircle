@@ -43,8 +43,6 @@ export class CalendarPage {
 
     this.appointments = navParams.get('appointmentList');
 
-    console.log(navParams.data);
-
     this.options.from = new Date('2010-01-01T00:00:00.000Z');
     this.options.to = 0;
 
