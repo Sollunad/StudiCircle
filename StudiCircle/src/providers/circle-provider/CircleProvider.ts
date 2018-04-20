@@ -169,7 +169,7 @@ export class CircleProvider {
     return resSubject.asObservable();
   }
 
-  public answerInvite(cId : number, iId: number, status: number) {
+  public answerInvite(cId : number, iId: number, status: boolean) {
     const resSubject: Subject<any> = new Subject<any>();
     let body = {circleId: cId, invitId: iId, status: status, mySession: this.apiProvider.currentUser.session};
 

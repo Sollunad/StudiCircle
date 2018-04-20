@@ -466,11 +466,17 @@ module.exports = {
             if(result){
                 db.User.findOne({where: {"email": mail}}).then(user => {
                     if(user){
-                        db.Invitation.create({"UserId": user.id, "CircleId": circleId, "status":0}).then(result =>{
-                            if(result) sendInfoResponse(res, "Invitation sent.");
+                        db.UserInCircles.findOne({where: {"UserId": user.id, "CircleId": circleId}}).then(userInCircle => {
+                            if(!userInCircle){
+                                db.Invitation.create({"UserId": user.id, "CircleId": circleId, "status":0}).then(result =>{
+                                    if(result) sendInfoResponse(res, "Invitation sent.");
+                                });
+                            }else{
+                                sendInfoResponse(res, 400, "User already in circle.");
+                            }
                         });
                     }else{
-                        db.Circle.findOne({where: {"id": circleId}}).then(circle => {
+                        db.Circle.findById(circleId).then(circle => {
                             if(circle.business){
                                 if(studentInterface.sendInvitation(userId,mail,circleId)){
                                     sendInfoResponse(res, "Invitation sent to not registered user.");

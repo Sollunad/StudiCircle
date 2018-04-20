@@ -70,9 +70,9 @@ export class DashboardPage {
   }
 
   // Function to accept or deny Invitations
-  answerInvitation(iId: number, cId: number, answer: number){
+  answerInvitation(iId: number, cId: number, answer: boolean){
     var question;
-    if (answer == 2){
+    if (answer){
       question = 'Do you really accept the invitation?';
     } else {
       question = 'Do you really decline the invitation?';
