@@ -44,6 +44,7 @@ import {DatePickerModule} from "ionic2-date-picker";
 import {StrictRelativeTime} from "../pipes/strict-relative-time";
 import {CalendarModule} from "ion2-calendar";
 import {CalendarProvider} from "../providers/calendar/CalendarProvider";
+import {VoteListPage} from "../pages/vote-list/vote-list";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import {CalendarProvider} from "../providers/calendar/CalendarProvider";
     TimelinePage,
     PopoverTimelinePage,
     StrictRelativeTime,
-    Timeline
+    Timeline,
+    VoteListPage
   ],
 
   imports: [
@@ -116,7 +118,8 @@ import {CalendarProvider} from "../providers/calendar/CalendarProvider";
     FAQPage,
     TimelinePage,
     PopoverTimelinePage,
-    Timeline
+    Timeline,
+    VoteListPage
   ],
   providers: [
     StatusBar,

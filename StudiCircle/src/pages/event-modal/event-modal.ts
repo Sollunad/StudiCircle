@@ -51,6 +51,7 @@ export class EventModalPage {
       this.calendarProvider.editCalendarEntry(this.circleId,this.event);
     }
     else{
+      console.log(this.circleId);
       this.calendarProvider.addCalendarEntry(this.circleId,this.event).subscribe(data => console.log(data));
     }
     this.viewCtrl.dismiss(this.event);

@@ -22,6 +22,7 @@ export class CalendarProvider {
   }
 
   public addCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
+
     let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
     return this.http.post(this.consts.url+'calendar/create',body);
   }

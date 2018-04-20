@@ -19,7 +19,8 @@ module.exports = {
       const startDate = req.body.appointment.startDate;
       const endDate =  req.body.appointment.endDate;
       const allDay = req.body.appointment.allDay;
-      const circleId= req.body.circleId;
+      const circleId = req.body.circleId;
+	  console.log(circleId);
 
       if (argumentMissing(res, title, location)) return;
       if (allDay == null || !allDay){
@@ -32,7 +33,7 @@ module.exports = {
         }
       }
 
-      db.Calendar.Appointment.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"allDay":allDay||null,"circleId":circleId}).then(calendar => {
+      db.Calendar.Appointment.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"CircleId":circleId}).then(calendar => {
         sendInfoResponse(res, "Appointment Created");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Creating appointment failed.");
