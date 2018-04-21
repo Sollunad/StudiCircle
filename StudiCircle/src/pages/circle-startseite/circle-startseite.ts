@@ -1,12 +1,12 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AlertController, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
-import {SearchPage} from "../search/search";
 import {MitgliederÜbersicht} from "../mitglieder-übersicht/mitglieder-übersicht";
 import {HttpClient} from "@angular/common/http";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
+import {BlackboardPage} from "../blackboard/blackboard";
 import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
@@ -91,7 +91,7 @@ export class CircleStartseite {
   @ViewChild('popoverText', {read: ElementRef}) text: ElementRef;
 
   moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
-    {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+    {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
     {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
   ];
 
@@ -134,7 +134,7 @@ export class CircleStartseite {
     loadModules(){
 
       this.moduleList = [
-        {title: 'Blackboard', mapName: 'blackboard', component: SearchPage, imageName: 'blackboard.jpg'},
+        {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
 

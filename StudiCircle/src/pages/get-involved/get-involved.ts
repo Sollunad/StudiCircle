@@ -142,6 +142,7 @@ export class GetInvolvedPage {
             if(this.passwdCheck()){
               this.profile.profileType = 'business';
               if(this.usernameCheck()){
+                console.log("regsiter")
                 this.registerNow();
               }
             }
