@@ -50,7 +50,7 @@ export class EventModalPage {
     if(this.event.title!='') {
       console.log(this.event);
       if (this.existingAppointment) {
-        this.calendarProvider.editCalendarEntry(this.circleId, this.event);
+        this.calendarProvider.editCalendarEntry(this.circleId, this.event).subscribe(data => console.log(data));
       }
       else {
         console.log(this.circleId);

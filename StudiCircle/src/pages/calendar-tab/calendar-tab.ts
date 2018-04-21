@@ -2,8 +2,9 @@ import {CalendarPage} from "../calendar/calendar";
 import {Component} from "@angular/core";
 import {TimelinePage, AppointmentCard} from "../timeline/timeline";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
-import {NavParams} from "ionic-angular";
+import {NavParams, ModalController} from "ionic-angular";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {EventModalPage} from "../event-modal/event-modal";
 
 @Component({
   selector: 'page-calendar-tab',
@@ -12,25 +13,26 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 export class CalendarTabPage {
 
   appointments: AppointmentCard[] = [];
-  userRole:string= 'admin';
+  userRole:string= '';
   calendarPage:any;
   timelinePage:any;
   params = {};
+  circleId:number;
 
-  constructor(calendarProvider:CalendarProvider, navParams:NavParams, circleProvider:CircleProvider){
-    let circleId = navParams.get('circleId');
-    calendarProvider.getAllCalendarEntries(circleId).subscribe(data => {
-      data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
-      });
-    });
-    this.params = {appointmentList: this.appointments, circleId:circleId};
+  constructor(calendarProvider:CalendarProvider, navParams:NavParams, circleProvider:CircleProvider, private modalCtrl:ModalController){
+    this.circleId = navParams.get('circleId');
+    this.params = {circleId:this.circleId};
     this.calendarPage = CalendarPage;
     this.timelinePage = TimelinePage;
-    circleProvider.getUserRole(circleId).subscribe(data => {
+    circleProvider.getUserRole(this.circleId).subscribe(data => {
       this.userRole = data.role;
+      console.log(this.userRole);
     });
-    console.log(this.params);
+  }
+
+  addEvent() {
+    let modal = this.modalCtrl.create(EventModalPage,{circleId:this.circleId});
+    modal.present();
   }
 }
 

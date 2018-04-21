@@ -18,6 +18,8 @@ export class CalendarProvider {
 
   private _apiPath = this.consts.url;
 
+  public appointmentList:Observable<Appointment[]>;
+
   constructor(public http: HttpClient, public apiProvider: ApiProvider, public consts: constants) {
   }
 
@@ -28,12 +30,13 @@ export class CalendarProvider {
   }
 
   public editCalendarEntry(circleId:number, appointment:Appointment): Observable<any>{
-    let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointment:appointment};
+    console.log(appointment.id);
+    let body = {appointmentId: appointment.id, mySession : this.apiProvider.currentUser.session, appointment:appointment};
     return this.http.post(this.consts.url+'calendar/edit',body);
   }
 
-  public deleteCalendarEntry(circleId:number, appointmentId:number): Observable<any>{
-    let body = {circleId: circleId, mySession : this.apiProvider.currentUser.session, appointmentId:appointmentId};
+  public deleteCalendarEntry(appointmentId:number): Observable<any>{
+    let body = {appointmentId: appointmentId, mySession : this.apiProvider.currentUser.session};
     return this.http.post(this.consts.url+'calendar/delete',body);
   }
 

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavParams, ModalController} from "ionic-angular";
+import {NavParams, ModalController, ViewController} from "ionic-angular";
 import {Appointment} from "../../providers/declarations/Appointment";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
 import {EventModalPage} from "../event-modal/event-modal";
@@ -17,17 +17,22 @@ export class PopoverTimelinePage {
   appointment:Appointment;
   circleId:number;
 
-  constructor(private navParams: NavParams, public calendarProvider:CalendarProvider, private modalCtrl: ModalController) {
+  constructor(private navParams: NavParams, public calendarProvider:CalendarProvider, private modalCtrl: ModalController,
+              public viewCtrl: ViewController) {
     this.appointment = navParams.get('appointment');
     this.circleId = navParams.get('circleId');
   }
 
   editAppointment(){
-      let modal = this.modalCtrl.create(EventModalPage,{circleId:this.circleId, appointment:this.appointment});
+      let newAppointment= Object.assign({}, this.appointment);
+      let modal = this.modalCtrl.create(EventModalPage,{circleId:this.circleId, appointment:newAppointment});
       modal.present();
+      modal.onDidDismiss(data => this.viewCtrl.dismiss());
   }
 
   deleteAppointment(){
-    this.calendarProvider.deleteCalendarEntry(this.circleId,1);
+    console.log("Test");
+    this.calendarProvider.deleteCalendarEntry(this.appointment.id).subscribe(data => console.log(data));
+    this.viewCtrl.dismiss();
   }
 }

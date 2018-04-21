@@ -26,10 +26,14 @@ export class Timeline {
   appointments: AppointmentCard[] = [];
 
   constructor(private popoverCtrl: PopoverController,circleProvider:CircleProvider, navParams:NavParams,
-              public modalCtrl: ModalController, calendarProvider:CalendarProvider) {
+              public modalCtrl: ModalController, private calendarProvider:CalendarProvider) {
     this.circleId = navParams.get('circleId');
-    this.appointments = navParams.get('appointmentList');
-    this.filteredAppointments = this.appointments;
+
+    this.loadAppointments();
+
+    circleProvider.getUserRole(this.circleId).subscribe(data => {
+      this.userRole = data.role;
+    });
   }
 
   @Input()
@@ -57,9 +61,26 @@ export class Timeline {
   presentPopover(appointment:Appointment) {
 
     let popover = this.popoverCtrl.create(PopoverTimelinePage,{circleId:this.circleId, appointment:appointment});
+    popover.onDidDismiss(() => this.loadAppointments());
 
     popover.present({
       ev: event
+    });
+  }
+
+  private loadAppointments() {
+    this.calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
+      this.appointments = [];
+      data.forEach(appointment =>{
+        this.appointments.push({appointment:appointment, vote:'none'});
+      });
+      if(this.filteredDate!=null){
+        this.filteredAppointments = this.appointments.filter(
+          appointment => isSameDay(this.filteredDate,new Date(appointment.appointment.startDate))
+        );
+      } else{
+        this.filteredAppointments = this.appointments;
+      }
     });
   }
 }
@@ -71,13 +92,11 @@ export class Timeline {
 
 export class TimelinePage {
 
-  userRole:string = 'admin';
+  userRole:string = '';
 
-  constructor(){
-    /*circleProvider.getUserRole(this.circleId).subscribe(data => {
-     this.userRole = data.role;
-     });*/
+  constructor() {
   }
+
 }
 
 export interface AppointmentCard{
