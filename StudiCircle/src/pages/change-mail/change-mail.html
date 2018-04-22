@@ -1,23 +1,23 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Change Mail
+      E-Mail ändern
     </ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page8">
   <form id="changeMail-form8">
     <ion-item id="changeMail-input15">
-      <ion-input type="email" placeholder="new mail" name="new_mail" [(ngModel)]="newMail"></ion-input>
+      <ion-input type="email" placeholder="neue Mailadresse" name="new_mail" [(ngModel)]="newMail"></ion-input>
     </ion-item>
     <ion-item id="changeMail-input16">
-      <ion-input type="email" placeholder="confirm new mail" name="confirm_new_mail" [(ngModel)]="chkNewMail"></ion-input>
+      <ion-input type="email" placeholder="neue Mailadresse bestätigen" name="confirm_new_mail" [(ngModel)]="chkNewMail"></ion-input>
     </ion-item>
     <ion-item id="changeMail-input17">
-      <ion-input type="password" placeholder="confirm password" name="confirm_pw" [(ngModel)]="pwd"></ion-input>
+      <ion-input type="password" placeholder="Passwort" name="confirm_pw" [(ngModel)]="pwd"></ion-input>
     </ion-item>
   </form>
-  <button id="changeMail-button7" ion-button color="balanced" block on-click="mailChange()">
-    Change Mail
+  <button id="changeMail-button7" ion-button color="primary" block on-click="mailChange()">
+    E-Mail ändern
   </button>
 </ion-content>
