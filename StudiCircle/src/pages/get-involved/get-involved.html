@@ -6,58 +6,82 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page1">
-  <div class="spacer" style="width:288px;height:40px;" id="getInvolved-spacer1"></div>
   <h1 id="getInvolved-heading1" style="color:#000000;font-weight:600;text-align:center;">
-    StudiCircle
+    Registriere dich hier!
   </h1>
+  <div class="description">
+    <p>Wähle zwischen einem Studenten Account und einem Business Account. Das erwartet dich ...</p>
+    <ul>
+      <li><b>... als Student:</b> Ein soziales Netzwerk, zu welchem nur Studenten mit ihrer Studentenmail Zugang haben.</li>
+      <li><b>... als Business User:</b>
+        Ein Netzwerk für dich als Vereinsmitglied oder Veranstalter! Hier kannst du neue Mitglieder anwerben und Termine verwalten.
+        Gib dafür einfach den Namen und eine Beschreibung deines Vorhabens ein, damit du von uns für den StudiCircle freigeschaltet werden kannst.</li>
+    </ul>
+  </div>
+  <ion-list name="radioListAccType" radio-group [(ngModel)]="accountType">
+    <ion-item name="studentProfile" id="getInvolved-checkbox1">
+      <ion-label>Student</ion-label>
+      <ion-radio color="dark" name="student" value="student" checked></ion-radio>
+    </ion-item>
+    <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
+      <ion-label>Business / Club</ion-label>
+      <ion-radio color="dark" name="business"  value="business"></ion-radio>
+    </ion-item>
+  </ion-list>
+
   <form id="getInvolved-form1">
     <ion-item id="getInvolved-input2">
-      <ion-input type="email" 
-                 placeholder="you@studicircle.io" 
-                 name="mail" 
-                 [(ngModel)]="profile.mail" 
+      <ion-input type="email"
+                 placeholder="deine@studentenmail.com"
+                 name="mail"
+                 [(ngModel)]="profile.mail"
                  [pattern]='mailValidation'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input7">
-      <ion-input type="text" 
-                 placeholder="Firstname Lastname" 
-                 name="user_name" 
-                 [(ngModel)]="profile.name" 
+      <ion-input type="text"
+                 placeholder="Vorname Nachname"
+                 name="user_name"
+                 [(ngModel)]="profile.name"
                  pattern='([a-zA-ZäöüÄÖÜ\-]+ (([a-zA-ZäöüÄÖÜ]+\-{0,1}[a-zA-ZäöüÄÖÜ]+)+))$'></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input3">
-      <ion-input type="password" 
-                 placeholder="Password" 
-                 name="pw" 
-                 [(ngModel)]="profile.password" 
-                 clearOnEdit="false" 
+      <ion-input type="password"
+                 placeholder="Passwort"
+                 name="pw"
+                 [(ngModel)]="profile.password"
+                 clearOnEdit="false"
                  minlength = "8"
                  maxlength = "64"></ion-input>
     </ion-item>
     <ion-item id="getInvolved-input6">
-      <ion-input type="password" 
-                 placeholder="Retype Password" 
-                 name="pw_check" 
-                 clearOnEdit="false" 
-                 [(ngModel)]="passwdChk" 
+      <ion-input type="password"
+                 placeholder="Passwort wiederholen"
+                 name="pw_check"
+                 clearOnEdit="false"
+                 [(ngModel)]="passwdChk"
                  minlength = "8"
                  maxlength = "64"></ion-input>
     </ion-item>
+    <ion-item *ngIf="accountType!=='student'" id="getInvolved-input69">
+      <ion-input *ngIf="accountType!=='student'" type="text"
+                 placeholder="Name des Business"
+                 name="name"
+                 minlength="1"
+                 maxlength="100"
+                 [(ngModel)]="business_name"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="accountType!=='student'" id="getInvolved-input70">
+      <ion-input *ngIf="accountType!=='student'" type="text"
+                 placeholder="Beschreibung des Business"
+                 name="description"
+                 minlength = "100"
+                 maxlength = "10000"
+                 [(ngModel)]="business_desc"></ion-input>
+    </ion-item>
     <div class="spacer" style="width:300px;height:36px;" id="getInvolved-spacer4"></div>
-
-    <ion-list name="radioListAccType" radio-group [(ngModel)]="accountType">
-      <ion-item name="studentProfile" id="getInvolved-checkbox1">
-        <ion-label>Student</ion-label>
-        <ion-radio name="student" checked></ion-radio>
-      </ion-item>
-      <ion-item name="thirdPartyProfile" id="getInvolved-checkbox2">
-        <ion-label>Business / Club</ion-label>
-        <ion-radio name="business"></ion-radio>
-      </ion-item>
-    </ion-list>
 
   </form>
   <button id="getInvolved-button1" ion-button color="balanced" block on-click="logProfile()">
-    Register now!
+    Jetzt Registrieren!
   </button>
 </ion-content>

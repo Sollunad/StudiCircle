@@ -1,30 +1,26 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Change Password
+      Passwort ändern
     </ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page7">
-  <div class="spacer" style="width:283px;height:74px;" id="passMan-spacer5"></div>
-  <h1 id="passMan-heading4" style="color:#000000;text-align:center;">
-    Change Password
-  </h1>
   <form id="passMan-form7">
     <ion-item id="passMan-input8">
       <ion-label></ion-label>
-      <ion-input type="password" placeholder="old password" name="pw_old" [(ngModel)]="pw_old"></ion-input>
+      <ion-input type="password" placeholder="altes Passwort" name="pw_old" [(ngModel)]="pw_old"></ion-input>
     </ion-item>
     <ion-item id="passMan-input10">
       <ion-label></ion-label>
-      <ion-input type="password" placeholder="new password" name="pw_new" [(ngModel)]="pw_new"></ion-input>
+      <ion-input type="password" placeholder="neues Passwort" name="pw_new" [(ngModel)]="pw_new"></ion-input>
     </ion-item>
     <ion-item id="passMan-input9">
       <ion-label></ion-label>
-      <ion-input type="password" placeholder="confirm new password" name="pw_new_confirm" [(ngModel)]="pw_new_confirm"></ion-input>
+      <ion-input type="password" placeholder="neues Passwort wiederholen" name="pw_new_confirm" [(ngModel)]="pw_new_confirm"></ion-input>
     </ion-item>
   </form>
-  <button id="passMan-button6" ion-button color="positive" block on-click="managePassword()">
-    Do It!
+  <button id="passMan-button6" ion-button color="primary" block on-click="managePassword()">
+    Änderung bestätigen
   </button>
 </ion-content>

@@ -80,32 +80,22 @@ module.exports = function(app) {
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
 
-    // circleID
-    // return: Posts of Blackboard
-    app.route('/circle/getbbPosts')
-        .get(circle.getBlackboardPosts);
-
     // userId (Number): selected users id
     app.route('/circle/leave')
         .post(circle.leaveCircle);
+  
+    app.route('/circle/invite')
+        .post(circle.inviteToCircle);
 
-    // circleId (Number): current circle
-    app.route('/circle/blackboard/posts')
-        .get(circle.getPosts);
+    app.route('/circle/getInvitForUser')
+        .get(circle.allInvitationsPerUser);
 
-    // circleId (Number): current circle
-    // userId (Number): current user
-    // title (String): title from post
-    // text (String): text from post
-    app.route('/circle/blackboard/newPost')
-        .post(circle.newPost);
+    app.route('/circle/answerInvit')
+        .post(circle.reactToInvitation);
 
-    //postID (Number)
-    //userID (number)
-    app.route('/circle/blackboard/newComment')
-        .post(circle.newComment);
+    //app.route('/circle/getInvitForCircle')
+       //.get(circle.allInvitationsPerCircle);
 
-    //postID (number)
-    app.route('/circle/blackboard/getComments')
-        .get(circle.getComments);
+    app.route('/circle/deleteInvit')
+        .post(circle.deleteInvitation);
 };

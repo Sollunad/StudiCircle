@@ -33,8 +33,17 @@ export class AdminAuswaehlenPage {
         {
           text: 'Akzeptieren',
           handler: () => {
-            this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
-              message => console.log(message)
+            const modification = this.circleProvider.selectNewAdmin(userId, this.circleId).subscribe(
+              (res) => {
+                if(res==200){
+                  console.log("[Admin] : New Admin selected successful");
+                  modification.unsubscribe();
+                }else{
+                  console.log("[Admin] : New Admin selected not successful \n [ERROR-LOG]: ");
+                  console.log(res);
+                  modification.unsubscribe();
+                }
+              }
             );
             this.navCtrl.remove(this.viewCtrl.index-1);
             this.navCtrl.pop();

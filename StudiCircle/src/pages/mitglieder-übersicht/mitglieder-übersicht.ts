@@ -2,8 +2,7 @@ import {Component} from '@angular/core';
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {UserInfo} from "../../providers/declarations/UserInfo";
-import {AlertController, NavController, NavParams, ViewController} from "ionic-angular";
-import {DashboardPage} from "../dashboard/dashboard";
+import {AlertController, NavController, NavParams} from "ionic-angular";
 import {ApiProvider} from "../../providers/api/api";
 
 @Component({
@@ -14,11 +13,12 @@ export class MitgliederÜbersicht {
   public memberList: UserInfo[];
 
   private circleId : number;
+  private isAdminOrMod : boolean = false;
   private isAdmin : boolean = false;
   private currentUserId : number;
 
 
-  constructor(public circleProvider: CircleProvider, private viewCtrl: ViewController, public navCtrl: NavController, public alertCtrl: AlertController, public apiProvider: ApiProvider, public http: HttpClient, public navParams: NavParams) {
+  constructor(public circleProvider: CircleProvider, public navCtrl: NavController, public alertCtrl: AlertController, public apiProvider: ApiProvider, public http: HttpClient, public navParams: NavParams) {
     this.circleId = navParams.get('circleId');
     this.currentUserId = Number(this.apiProvider.getCurrentUser().id);
   }
@@ -27,10 +27,13 @@ export class MitgliederÜbersicht {
     this.circleProvider.getMemberListByCircleId(this.circleId).subscribe(
         memberList => this.memberList = memberList
     );
-    this.circleProvider.checkIfAdmin(this.circleId).subscribe(
+    this.circleProvider.getUserRole(this.circleId).subscribe(
       role => {
         if (role.role == "admin") {
+          this.isAdminOrMod = true;
           this.isAdmin = true;
+        }else if (role.role == "mod"){
+          this.isAdminOrMod = true;
         }
       });
   }
@@ -76,7 +79,7 @@ export class MitgliederÜbersicht {
     });
   }
 
-  itemSelected(item: string) {
+  static itemSelected(item: string) {
     console.log("Selected Item", item);
   }
 
@@ -122,18 +125,21 @@ export class MitgliederÜbersicht {
     console.log("[E-Mail]: "+data);
     const modification = this.circleProvider.invite(this.circleId, data).subscribe(
       (res) => {
-        if(res.info=="OK"){
+        if(res==200){
           console.log("[Invitation] : Invitation sent successful");
           modification.unsubscribe();
-          return true;
         }else{
           console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
           console.log(res);
           modification.unsubscribe();
-          return false;
         }
       }
     )
+  }
+
+  itemSelected(item: string) {
+    console.log("Selected Item", item);
+
   }
 
 }
