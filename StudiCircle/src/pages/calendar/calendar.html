@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Kalender
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addEvent()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+        <ion-calendar [(ngModel)]="date" [options]="options" (onChange)="onTimeSelected($event)" [type]="string" [format]="'YYYY-MM-DD'" *ngIf="options">
+        </ion-calendar>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+          <timeline [date]="selectedDay" [userRole]="userRole"></timeline>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

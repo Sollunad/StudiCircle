@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Kalender
+    </ion-title>
+    <ion-buttons end>
+      <button *ngIf="userRole=='admin' || userRole=='mod'" ion-button icon-only (click)="addEvent()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-tabs class="tabs-basic">
+  <ion-tab tabTitle="Kalender" tabIcon="calendar" [root]="calendarPage" [rootParams]="params"></ion-tab>
+  <ion-tab tabTitle="Timeline" tabIcon="list" [root]="timelinePage" [rootParams]="params"></ion-tab>
+</ion-tabs>
