@@ -6,20 +6,28 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page6">
-  <div class="spacer" style="width:300px;height:40px;" id="circleEinstellungen-spacer2"></div>
-
-  <button id="circleEinstellungen-button" ion-button color="secondary" (click)="openVisibilitySelect()" block>
+  <div class="visibilityDescription">
+    <p><strong>Wer soll deinen Circle sehen können?</strong></p>
+  </div>
+  <button id="circleEinstellungen-button" ion-button color="primary" (click)="openVisibilitySelect()" block>
     Sichtbarkeit anpassen
   </button>
   <div class="spacer" style="width:300px;height:40px;" id="circleEinstellungen-spacer1"></div>
-   <button id="circleEinstellungen-button5" ion-button color="secondary" (click)="openAdminSelect()" block>
+  <div class="changeAdminDescription">
+    <p><strong>Zu viel Verantwortung? Dann gib sie jemand anderem!</strong></p>
+  </div>
+  <button id="circleEinstellungen-button5" ion-button color="primary" (click)="openAdminSelect()" block>
     anderen Admin auswählen
   </button>
   <div class="spacer" style="width:300px;height:40px;" id="circleEinstellungen-spacer7"></div>
-  <button id="circleEinstellungen-button2" ion-button color="secondary" (click)="openModuleSelect()" block>
+  <div class="openModuleDescription">
+    <p><strong>Welche Module möchtest du für deinen Circle aktivieren?</strong></p>
+  </div>
+  <button id="circleEinstellungen-button2" ion-button color="primary" (click)="openModuleSelect()" block>
     Module aktivieren/deaktivieren
   </button>
   <div class="spacer" style="width:300px;height:40px;" id="circleEinstellungen-spacer"></div>
+  <hr>
   <button id="circleEinstellungen-button3" ion-button color="danger" (click)="openConfirmDialog()" block>
     Diesen Circle löschen
   </button>

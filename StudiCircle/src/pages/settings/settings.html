@@ -1,42 +1,36 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Settings
+      Einstellungen
     </ion-title>
     <ion-buttons end>
       <button ion-button (click)="goToFAQ()">
-        <ion-icon name="help"></ion-icon>
+        FAQ
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page6">
+  <h2>
+    {{accountName}}
+  </h2>
   <ion-list id="settings-list8">
-    <ion-item color="none" id="settings-list-item26">
-      <ion-avatar item-left>
-        <img />
-      </ion-avatar>
-      <h2>
-        {{accountName}}
-      </h2>
-    </ion-item>
     <ion-item color="none" id="settings-list-item31">
-      Change Name
+      Namen ändern
     </ion-item>
     <ion-item color="none" on-click="goToChangeMail()" id="settings-list-item29">
-      Change Mail
+      E-Mail ändern
     </ion-item>
     <ion-item color="none" on-click="goToPassMan()" id="settings-list-item30">
-      Change Password
+      Passwort ändern
     </ion-item>
   </ion-list>
-  <div class="spacer" style="height:50px;" id="faq-spacer1"></div>
-  <h3>DELETE ACCOUNT</h3>
+  <h3>Account löschen</h3>
   <ion-item id="settings-list-item666">
     <ion-label></ion-label>
-    <ion-input clearInput clearOnEdit="false" type="password" placeholder="Confirm Password" [(ngModel)]="pw_confirm" (ionChange)="validateInput(pw_confirm)"></ion-input>
+    <ion-input clearInput clearOnEdit="false" type="password" placeholder="Passwort eingeben" [(ngModel)]="pw_confirm" (ionChange)="validateInput(pw_confirm)"></ion-input>
   </ion-item>
   <button id="settings-button8" ion-button [color]="deleteButtonColor" block on-click="deleteAccount()" [disabled]="!enabled">
-    Delete Account
+    Account löschen
   </button>
 </ion-content>
