@@ -485,7 +485,7 @@ module.exports = {
                                     sendInfoResponse(res, 500, "External email error.")
                                 }
                             }else{
-                                sendInfoResponse(res, 404, "No user with given email found.");
+                                sendInfoResponse(res, 409, "No user with given email found.");
                             }
                         });
                     }
