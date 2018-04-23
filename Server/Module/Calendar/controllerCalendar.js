@@ -13,13 +13,14 @@ module.exports = {
   //circleId: Id des Circles für den der Termin erstellt wird
   //Methode legt termin mit den entsprechenden Attributen an.
   createAppointment : function (req, res) {
-      const title = req.body.title;
-      const description = req.body.description;
-      const location = req.body.location;
-      const startDate = req.body.startDate;
-      const endDate =  req.body.endDate;
-      const allDay = req.body.allDay;
-      const circleId= req.body.circleId;
+      const title = req.body.appointment.title;
+      const description = req.body.appointment.description;
+      const location = req.body.appointment.location;
+      const startDate = req.body.appointment.startDate;
+      const endDate =  req.body.appointment.endDate;
+      const allDay = req.body.appointment.allDay;
+      const circleId = req.body.circleId;
+	  console.log(circleId);
 
       if (argumentMissing(res, title, location)) return;
       if (allDay == null || !allDay){
@@ -32,7 +33,7 @@ module.exports = {
         }
       }
 
-      db.Calendar.Appointment.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"allDay":allDay||null,"circleId":circleId}).then(calendar => {
+      db.Calendar.Appointment.create({"title":title,"description":description||null,"location":location,"startDate":startDate||null,"endDate":endDate||null,"CircleId":circleId}).then(calendar => {
         sendInfoResponse(res, "Appointment Created");
       }).catch(err => {
           sendInfoResponse(res, 500, "Server error. Creating appointment failed.");
@@ -49,13 +50,13 @@ module.exports = {
   //Methode bearbeitet die Attribute entsprechend.
   editAppointment : function(req,res){
 
-    const appID = req.body.appID;
-    const title = req.body.title;
-    const description = req.body.description;
-    const location = req.body.location;
-    const startDate = req.body.startDate;
-    const endDate =  req.body.endDate;
-    const allDay = req.body.allDay;
+    const appID = req.body.appointmentId;
+    const title = req.body.appointment.title;
+    const description = req.body.appointment.description;
+    const location = req.body.appointment.location;
+    const startDate = req.body.appointment.startDate;
+    const endDate =  req.body.appointment.endDate;
+    const allDay = req.body.appointment.allDay;
 
 
     if (argumentMissing(res, title, location, appID)) return;
@@ -87,7 +88,7 @@ module.exports = {
   },
 
   delete : function (req,res){
-    const appID = req.body.appID;
+    const appID = req.body.appointmentId;
 
     if(argumentMissing(res,appID)) return;
     db.Calendar.Vote.findAll({where: {"AppointmentId": appID}}).then(voting => {
@@ -189,7 +190,24 @@ module.exports = {
     });
   },
 
+  //circleID: die ID des Circle für den man die Termine haben möchte
+  //gibt alle Termine des angegeben Circles zurück
+  getAllAppointments : function(req, res){
+    const circleID = req.query.circleID;
 
+    if(argumentMissing(res,circleID)) return;
+
+    var result = [];
+    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}}).then(appointments => {
+      appointments.forEach(function(item, index){
+        result.push(item.dataValues);
+      });
+      res.status(200).send(result);
+    }).catch(err => {
+      console.log(err);
+      sendInfoResponse(res, 500, "Error getting Appointments");
+    })
+  }
 
 }
 

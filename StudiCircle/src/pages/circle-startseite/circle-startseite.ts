@@ -6,6 +6,7 @@ import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {CircleEinstellungenPage} from "../circle-einstellungen/circle-einstellungen";
 import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
+import {CalendarTabPage} from "../calendar-tab/calendar-tab";
 import {BlackboardPage} from "../blackboard/blackboard";
 import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
@@ -101,7 +102,7 @@ export class CircleStartseite {
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
-    {title: 'Kalender', mapName: 'calendar', component: '', imageName: 'kalender.jpg'},
+    {title: 'Kalender', mapName: 'calendar', component: CalendarTabPage, imageName: 'kalender.jpg'},
     {title: 'Wetten', mapName: 'bet', component: '', imageName: 'wetten.jpg'},
     {title: 'File-Sharing', mapName: 'filesharing', component: '', imageName: 'file-sharing.jpg'},
     {title: 'Flohmarkt', mapName: 'market', component: '', imageName: 'flohmarkt.jpg'}
