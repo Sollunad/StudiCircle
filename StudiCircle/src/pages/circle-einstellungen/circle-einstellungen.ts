@@ -85,14 +85,14 @@ export class CircleEinstellungenPage {
         {
           id: 'bill',
           type: 'checkbox',
-          label: 'Rechnungen',
+          label: 'Rechnungen (wip)',
           value: 'bill',
           checked: this.bill
         },
         {
           id: 'bet',
           type: 'checkbox',
-          label: 'Wetten',
+          label: 'Wetten(wip)',
           value: 'bet',
           checked: this.bet,
 
@@ -100,14 +100,14 @@ export class CircleEinstellungenPage {
         {
           id: 'file',
           type: 'checkbox',
-          label: 'Filesharing',
+          label: 'Filesharing(wip)',
           value: 'filesharing',
           checked: this.filesharing
         },
         {
           id: 'market',
           type: 'checkbox',
-          label: 'Flohmarkt',
+          label: 'Flohmarkt(wip)',
           value: 'market',
           checked: this.market,
         }
