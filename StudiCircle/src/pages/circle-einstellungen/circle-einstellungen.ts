@@ -100,14 +100,14 @@ export class CircleEinstellungenPage {
         {
           id: 'file',
           type: 'checkbox',
-          label: 'Filesharing(wip)',
+          label: 'Filesharing (wip)',
           value: 'filesharing',
           checked: this.filesharing
         },
         {
           id: 'market',
           type: 'checkbox',
-          label: 'Flohmarkt(wip)',
+          label: 'Flohmarkt (wip)',
           value: 'market',
           checked: this.market,
         }
