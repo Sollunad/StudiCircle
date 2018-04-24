@@ -6,6 +6,7 @@ import {Appointment} from "../../providers/declarations/Appointment";
 import * as isSameDay from 'date-fns/is_same_day';
 import {VoteListPage} from "../vote-list/vote-list";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {Vote} from "../../providers/declarations/Vote";
 
 @Component({
   selector: 'timeline',
@@ -44,10 +45,12 @@ export class Timeline {
     this.filteredDate = date;
   }
 
-  toggleVote(appointmentCard:AppointmentCard, vote:string) {
+  toggleVote(appointmentCard:AppointmentCard, vote:Vote) {
      if(appointmentCard.vote===vote) {
-       appointmentCard.vote='none';
+       this.calendarProvider.voteForAppointment(appointmentCard.appointment.id,Vote.NONE);
+       appointmentCard.vote=Vote.NONE;
      }else{
+       this.calendarProvider.voteForAppointment(appointmentCard.appointment.id,vote);
        appointmentCard.vote=vote;
      }
   }
@@ -72,7 +75,7 @@ export class Timeline {
     this.calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
       this.appointments = [];
       data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
+        this.appointments.push({appointment:appointment, vote:Vote.NONE});
       });
       if(this.filteredDate!=null){
         this.filteredAppointments = this.appointments.filter(
@@ -101,5 +104,5 @@ export class TimelinePage {
 
 export interface AppointmentCard{
   appointment:Appointment
-  vote:string;
+  vote:Vote;
 }

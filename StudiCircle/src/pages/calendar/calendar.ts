@@ -8,6 +8,7 @@ import localeDe from '@angular/common/locales/de';
 import {AppointmentCard} from "../timeline/timeline";
 import {CalendarComponentOptions, DayConfig} from "ion2-calendar";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {Vote} from "../../providers/declarations/Vote";
 registerLocaleData(localeDe);
 
 @Component({
@@ -42,7 +43,7 @@ export class CalendarPage implements OnInit{
 
     calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
       data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
+        this.appointments.push({appointment:appointment, vote:Vote.NONE});
       });
       this.options = {};
       this.dates = this.fillUpCalendar(this.appointments);
@@ -61,7 +62,7 @@ export class CalendarPage implements OnInit{
   ngOnInit() {
     this.calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
       data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
+        this.appointments.push({appointment:appointment, vote:Vote.NONE});
       });
       this.dates = this.fillUpCalendar(this.appointments);
       this.options.daysConfig = this.dates;

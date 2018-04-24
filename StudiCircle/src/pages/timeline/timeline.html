@@ -42,7 +42,7 @@
       </ion-row>
       <ion-row class="buttons">
         <ion-col col-6 col-sm-4>
-          <ng-template [ngIf]="appointment.vote=='committed'" [ngIfElse]="notCommited">
+          <ng-template [ngIf]="appointment.vote===Vote.COMMIT" [ngIfElse]="notCommited">
             <button ion-button [ngStyle]="{'color':'green'}" clear small icon-start
                     (click)="toggleVote(appointment,'committed')">
               <ion-icon name='ios-thumbs-up'></ion-icon>
@@ -60,7 +60,7 @@
         </ion-col>
 
         <ion-col col-6 col-sm-4>
-          <ng-template [ngIf]="appointment.vote=='rejected'" [ngIfElse]="notRejected">
+          <ng-template [ngIf]="appointment.vote===Vote.REJECT" [ngIfElse]="notRejected">
             <button ion-button [ngStyle]="{'color':'red'}" clear small icon-start
                     (click)="toggleVote(appointment,'rejected')">
               <ion-icon name='ios-thumbs-down'></ion-icon>
@@ -78,7 +78,7 @@
         </ion-col>
 
         <ion-col col-6 col-sm-4>
-          <ng-template [ngIf]="appointment.vote=='interested'" [ngIfElse]="notInterested">
+          <ng-template [ngIf]="appointment.vote===Vote.INTERESTED" [ngIfElse]="notInterested">
             <button ion-button [ngStyle]="{'color':'blue'}" clear small icon-start
                     (click)="toggleVote(appointment,'interested')">
               <ion-icon name='ios-notifications'></ion-icon>

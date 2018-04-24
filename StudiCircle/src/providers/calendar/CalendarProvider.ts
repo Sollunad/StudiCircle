@@ -11,6 +11,7 @@ import {constants} from "../../consts/constants";
 import * as io from 'socket.io-client';
 import Socket = SocketIOClient.Socket;
 import {Appointment} from "../declarations/Appointment";
+import {Vote} from "../declarations/Vote";
 
 
 @Injectable()
@@ -40,7 +41,12 @@ export class CalendarProvider {
     return this.http.post(this.consts.url+'calendar/delete',body);
   }
 
+  public voteForAppointment(appointmentId: number, vote:Vote){
+    let body = {appointmentId: appointmentId, mySession : this.apiProvider.currentUser.session, voting: vote};
+    return this.http.post(this.consts.url+'calendar/vote',body);
+  }
+
   public getAllCalendarEntries(circleId:number): Observable<Appointment[]>{
-    return this.http.get<Appointment[]>(this.consts.url+'calendar/getAllAppointments?circleID='+circleId);
+    return this.http.get<Appointment[]>(this.consts.url+'calendar/getAllAppointments?circleID='+circleId+'&mySession='+this.apiProvider.currentUser.session);
   }
 }

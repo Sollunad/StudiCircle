@@ -122,7 +122,7 @@ module.exports = {
   //Methode zum abstimmen für einen Termin ändert getätigte abstimmung falls bereits abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
-    const appID = req.body.appID;
+    const appID = req.body.appointmentId;
     const userId = req.session.userId;
 
 
@@ -211,6 +211,7 @@ module.exports = {
   //circleID: die ID des Circle für den man die Termine haben möchte
   //gibt alle Termine des angegeben Circles zurück
   getAllAppointments : function(req, res){
+	console.log(req.session);
     const circleID = req.query.circleID;
     const userID =   req.session.userId;
 
