@@ -15,8 +15,11 @@ module.exports = function(app) {
 
     app.route('/calendar/getAllAppointments')
         .get(calendar.getAllAppointments);
-		
+
     app.route('/calendar/delete')
         .post(calendar.delete);
+
+    app.route('/calendar/votingDetails')
+        .get(calendar.getVotingDetails)
 
 };

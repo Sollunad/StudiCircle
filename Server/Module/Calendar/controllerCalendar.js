@@ -190,6 +190,24 @@ module.exports = {
     });
   },
 
+  getVotingDetails : function (req,res){
+    const appID = req.query.appID;
+
+    if(argumentMissing(res,appID)) return;
+
+    var result = [];
+    db.Calendar.Vote.findAll({where: {"AppointmentId": appID}, include: [db.User]}).then(voting => {
+      voting.forEach(vote => {
+        result.push({"name": vote.User.name, "vote": vote.dataValues.vote});
+        console.log(result);        
+      });
+      console.log(result);
+      res.status(200).send(result);
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Error geting Votes");
+    });
+  },
+
   //circleID: die ID des Circle für den man die Termine haben möchte
   //gibt alle Termine des angegeben Circles zurück
   getAllAppointments : function(req, res){
@@ -204,9 +222,8 @@ module.exports = {
       });
       res.status(200).send(result);
     }).catch(err => {
-      console.log(err);
       sendInfoResponse(res, 500, "Error getting Appointments");
-    })
+    });
   }
 
 }
