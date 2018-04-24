@@ -94,13 +94,17 @@ export class SettingsPage {
                   console.log("[SETTINGS] : Account deletion successful");
                   this.toasty.toast("Account deletion successful");
                   this.goToLogIn({});
+                  return;
                 } else if(status===412){
                   this.toasty.toast("User still Admin in one or more circles")
+                  return;
                 } else if(status===400) {
                   console.log("[SETTINGS] : Session or Password missing");
+                  return;
                 } else if(status===401) {
                   console.log("[SETTINGS] : Session or Password invalid");
                   this.toasty.toast("Wrong Password");
+                  return;
                 }
                 this.toasty.toast("Account deletion failed");
               }

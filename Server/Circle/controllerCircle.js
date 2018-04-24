@@ -77,8 +77,11 @@ module.exports = {
         }
 
         const userId = req.session.userId;
+        var circleIsBusiness = false;
+        const userData = studentInterface.getUserData(userId);
+        if (userData.type = 'BUSINESS') {circleIsBusiness = true;}
 
-        db.Circle.create({"name":name,"visible":visible,"business":false,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"business":circleIsBusiness,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
