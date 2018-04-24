@@ -59,7 +59,10 @@ module.exports = function (app) {
         }).then(result => {
             console.log(result);
         }).error(err => {
-            res.status(500).send("Error while posting comment");
+            res.status(500).json({
+                message: "Error while posting comment",
+                error: err
+            });
         });
     });
 
@@ -95,10 +98,19 @@ module.exports = function (app) {
                 // UserId: userId
             }
         }).error(err => {
-            res.json({
+            res.status(500).json({
                 message: "No Posts found or you are not allowed",
                 error: err
             });
         });
     });
+
+    function argumentMissing(res, ...args){
+        if(!args.every(arg => {return arg != undefined;})) {
+            res.status(400).send('Bad request. Argument(s) missing.');
+            return true;
+        }
+        return false;
+    }
+
 };
