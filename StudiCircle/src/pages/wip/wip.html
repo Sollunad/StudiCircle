@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Work in Progress</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="wip-background" *ngFor="let module of moduleList">
+  <div class="shadow">
+    <div class="topleft">
+      <p>{{module.title}}</p>
+    </div>
+    <div class="middle">
+      <h1>COMING SOON</h1>
+      <hr>
+      <p>few days left</p>
+    </div>
+    <div class="bottomleft">
+      <p>Dieses Modul befindet sich noch in der Fertigstellung.</p>
+    </div>
+  </div>
+</ion-content>
