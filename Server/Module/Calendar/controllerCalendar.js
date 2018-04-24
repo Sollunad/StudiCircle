@@ -212,18 +212,21 @@ module.exports = {
   //gibt alle Termine des angegeben Circles zurück
   getAllAppointments : function(req, res){
     const circleID = req.query.circleID;
+    const userID =   req.session.userId;
 
-    if(argumentMissing(res,circleID)) return;
-
+    if(argumentMissing(res,circleID, userID)) return;
     var result = [];
     db.Calendar.Appointment.findAll({where: {"CircleId": circleID}, include: [db.Calendar.Vote]}).then(appointments => {
       appointments.forEach(appointment => {
+        var uservote = 3;
         var commits = 0;
         var rejections = 0;
         var interested = 0;
         if(appointment.dataValues.Votes){
           appointment.dataValues.Votes.forEach(vote => {
-            console
+            if(vote.dataValues.UserId == userID){
+              uservote = vote.dataValues.vote;
+            }
             if(vote.dataValues.vote == 0){
               interested = interested +1;
             }else if (vote.dataValues.vote == 1) {
@@ -234,7 +237,8 @@ module.exports = {
 
           });
         }
-        var votejsn = {"countCommits": commits, "countRejections": rejections, "countInterested": interested};
+
+        var votejsn = {"countCommits": commits, "countRejections": rejections, "countInterested": interested, "userVote": uservote};
         var obj = Object.assign(appointment.dataValues, votejsn)
         result.push(obj);
       });
