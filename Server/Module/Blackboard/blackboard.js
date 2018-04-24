@@ -11,13 +11,8 @@ module.exports = function (app) {
                 {model: db.Blackboard.Comment, include: [db.User], limit: 3},
             ], order: [['createdAt', 'DESC']]
         }).then(result => {
-            if (result.length === 0) {
-                res.json({msg: 'No Circles'});
-            }
-            else {
-                console.log(result);
-                res.status(200).json(result);
-            }
+            // console.log(result);
+            res.status(200).json(result);
         }).error(err => {
             res.status(500).json({
                 message: "Error while reading posts",
@@ -73,12 +68,8 @@ module.exports = function (app) {
             where: {Postid: postID}, include: [{model: db.User, attributes: ['id', 'name']},
             ], order: [['createdAt', 'ASC']]
         }).then(result => {
-            if (result.length === 0) {
-                res.json({msg: 'No Comments'});
-            } else {
-                console.log(result);
-                res.status(200).json(result);
-            }
+            // console.log(result);
+            res.status(200).json(result);
         }).error(err => {
             res.status(500).json({
                 message: "Error while reading comments",
@@ -106,7 +97,7 @@ module.exports = function (app) {
     });
 
     function argumentMissing(res, ...args){
-        if(!args.every(arg => {return arg != undefined;})) {
+        if(!args.every(arg => {return arg !== undefined;})) {
             res.status(400).send('Bad request. Argument(s) missing.');
             return true;
         }
