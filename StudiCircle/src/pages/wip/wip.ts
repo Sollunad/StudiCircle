@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {BlackboardPage} from "../blackboard/blackboard";
-import {ChatPage} from "../chat/chat";
+import {NavParams} from "ionic-angular";
 
 @Component({
   templateUrl: 'wip.html'
@@ -8,10 +8,9 @@ import {ChatPage} from "../chat/chat";
 
 export class WipPage {
 
-  moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
-    {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'}
-  ];
-  constructor() {
+  moduleName: string;
 
+  constructor(public navParams: NavParams) {
+    this.moduleName = navParams.get('moduleName');
   }
 }

@@ -93,7 +93,7 @@ export class CircleStartseite {
   @ViewChild('popoverText', {read: ElementRef}) text: ElementRef;
 
   moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
-    {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
+    {title: 'Blackboard', mapName: 'blackboard', component: WipPage, imageName: 'blackboard.jpg'},
     {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
   ];
 
@@ -130,13 +130,13 @@ export class CircleStartseite {
     }
 
     openPage(module) {
-      this.navCtrl.push(module.component, {circleId: this.circleId});
+      this.navCtrl.push(module.component, {circleId: this.circleId, moduleName: module.title});
     }
 
     loadModules(){
 
       this.moduleList = [
-        {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
+        {title: 'Blackboard', mapName: 'blackboard', component: WipPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
 
