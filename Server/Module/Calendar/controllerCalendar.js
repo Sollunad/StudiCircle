@@ -177,7 +177,7 @@ module.exports = {
               }else if (vote.dataValues.vote == 1) {
                 rejections = rejections +1;
               }else if (vote.dataValues.vote == 2) {
-                  commits = rejections +1;
+                  commits = commits +1;
               }
           });
           res.send({'commits':commits, 'rejections':rejections, 'interested': interested});
@@ -199,7 +199,7 @@ module.exports = {
     db.Calendar.Vote.findAll({where: {"AppointmentId": appID}, include: [db.User]}).then(voting => {
       voting.forEach(vote => {
         result.push({"name": vote.User.name, "vote": vote.dataValues.vote});
-        console.log(result);        
+        console.log(result);
       });
       console.log(result);
       res.status(200).send(result);
@@ -216,12 +216,31 @@ module.exports = {
     if(argumentMissing(res,circleID)) return;
 
     var result = [];
-    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}}).then(appointments => {
-      appointments.forEach(function(item, index){
-        result.push(item.dataValues);
+    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}, include: [db.Calendar.Vote]}).then(appointments => {
+      appointments.forEach(appointment => {
+        var commits = 0;
+        var rejections = 0;
+        var interested = 0;
+        if(appointment.dataValues.Votes){
+          appointment.dataValues.Votes.forEach(vote => {
+            console
+            if(vote.dataValues.vote == 0){
+              interested = interested +1;
+            }else if (vote.dataValues.vote == 1) {
+              rejections = rejections +1;
+            }else if (vote.dataValues.vote == 2) {
+              commits = commits +1;
+            }
+
+          });
+        }
+        var votejsn = {"countCommits": commits, "countRejections": rejections, "countInterested": interested};
+        var obj = Object.assign(appointment.dataValues, votejsn)
+        result.push(obj);
       });
       res.status(200).send(result);
     }).catch(err => {
+      console.log(err);
       sendInfoResponse(res, 500, "Error getting Appointments");
     });
   }
