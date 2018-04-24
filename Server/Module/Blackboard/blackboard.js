@@ -7,9 +7,12 @@ module.exports = function (app) {
         if (argumentMissing(res, circleId)) return;
 
         db.Blackboard.Post.findAll({
-            where: {CircleId: circleId}, include: [{model: db.User, attributes: ['id', 'name']},
+            where: {CircleId: circleId},
+            include: [
+                {model: db.User, attributes: ['id', 'name']},
                 {model: db.Blackboard.Comment, include: [db.User], limit: 3},
-            ], order: [['createdAt', 'DESC']]
+            ],
+            order: [['createdAt', 'DESC']]
         }).then(result => {
             // console.log(result);
             res.status(200).json(result);
@@ -30,10 +33,10 @@ module.exports = function (app) {
         if (argumentMissing(res, circleId, userId, title, text)) return;
 
         db.Blackboard.create({
-            userId: userId,
-            circleId: circleId,
+            UserId: userId,
+            CircleId: circleId,
             title: title,
-            body: text,
+            body: text
         }).then(post => {
             res.status(200).json(post);
         }).error(err => {
@@ -65,7 +68,7 @@ module.exports = function (app) {
         const postID = req.query.postID;
 
         db.Blackboard.Comment.findAll({
-            where: {Postid: postID}, include: [{model: db.User, attributes: ['id', 'name']},
+            where: {PostId: postID}, include: [{model: db.User, attributes: ['id', 'name']},
             ], order: [['createdAt', 'ASC']]
         }).then(result => {
             // console.log(result);
@@ -85,7 +88,7 @@ module.exports = function (app) {
         console.log('controller: deletePost', postID);
         db.Blackboard.Post.destroy({
             where: {
-                PostId: postID
+                id: postID
                 // UserId: userId
             }
         }).error(err => {

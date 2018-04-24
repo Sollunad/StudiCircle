@@ -24,12 +24,14 @@ export class DbProvider {
   }
 
   public postComment(Comment: BlackboardPost){
-    const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
-    return this.http.post(url, {com: Comment});
+    const url = this.consts.url + "blackboard/newComment";
+    return this.http.post(url, {
+      mySession: this.api.currentUser.session,
+      com: Comment});
   }
 
   public getComments(postID: number){
-    const url = this.consts.url + "circle/blackboard/getComments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
+    const url = this.consts.url + "blackboard/comments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
     return this.http.get(url);
   }
 }
