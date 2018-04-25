@@ -206,10 +206,10 @@ export class CircleProvider {
   public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
     console.log('insertPost', circleId, title, text);
 
-    const url = this.consts.url+`blackboard/posts/newPost`;
+    const url = this.consts.url+`blackboard/newPost`;
     return this.http.post<BlackboardPost>(url, {
       circleId: circleId,
-      userId: this.apiProvider.currentUser.uuid,
+      userId: this.apiProvider.currentUser.id,
       title: title,
       text: text,
       mySession: this.apiProvider.currentUser.session
