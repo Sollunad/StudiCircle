@@ -11,6 +11,6 @@
   </ion-navbar>
 </ion-header>
 <ion-tabs class="tabs-basic">
-  <ion-tab tabTitle="Kalender" tabIcon="calendar" [root]="calendarPage" [rootParams]="params"></ion-tab>
-  <ion-tab tabTitle="Timeline" tabIcon="list" [root]="timelinePage" [rootParams]="params"></ion-tab>
+  <ion-tab tabTitle="Kalender" tabIcon="calendar" [root]="calendarPage" [rootParams]="params" (ionSelect)="setFilteredDate()"></ion-tab>
+  <ion-tab tabTitle="Timeline" tabIcon="list" [root]="timelinePage" [rootParams]="params" (ionSelect)="removeFilteredDate()"></ion-tab>
 </ion-tabs>

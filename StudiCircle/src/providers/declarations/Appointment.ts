@@ -1,3 +1,4 @@
+import {Vote} from "./Vote";
 export interface Appointment {
   id?: number
   title: string
@@ -9,4 +10,5 @@ export interface Appointment {
   countCommits: number
   countRejections: number
   countInterested: number
+  userVote?: Vote
 }

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform, ViewController} from 'ionic-angular';
+import {NavParams, Platform, ViewController} from 'ionic-angular';
+import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {Vote} from "../../providers/declarations/Vote";
+import {UserVote} from "../../providers/declarations/UserVote";
 
 /**
  * Generated class for the VoteListPage page.
@@ -8,20 +11,30 @@ import {IonicPage, NavController, NavParams, Platform, ViewController} from 'ion
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-vote-list',
   templateUrl: 'vote-list.html',
 })
 export class VoteListPage {
 
-  userList:string[] = ['Michael Ballack', 'Thorsten Frings'];
+
+  userList: UserVote[] = [];
+
+  vote = Vote;
 
   appointemntId:number;
 
-  constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController) {
+  constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, calendarProvider:CalendarProvider) {
 
     this.appointemntId = params.get('appointmentId');
+
+    calendarProvider.getVoteList(this.appointemntId).subscribe(data=>{
+      this.userList=data;
+      console.log(data);
+    });
+
+    //TODO decentralize data storage for appointments
+    //TODO Maybe add load spinner
 
   }
 

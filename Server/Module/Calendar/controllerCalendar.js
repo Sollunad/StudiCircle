@@ -191,7 +191,7 @@ module.exports = {
   },
 
   getVotingDetails : function (req,res){
-    const appID = req.query.appID;
+    const appID = req.query.appointmentId;
 
     if(argumentMissing(res,appID)) return;
 
