@@ -3,6 +3,7 @@ import {AlertController, NavController, NavParams, ViewController} from 'ionic-a
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import {HttpClient} from "@angular/common/http";
 import {AdminAuswaehlenPage} from "../admin-wählen/admin-auswählen";
+import {DashboardPage} from "../dashboard/dashboard";
 
 @Component({
   selector: 'page-circle-einstellungen',
@@ -14,10 +15,10 @@ export class CircleEinstellungenPage {
   circleId : number;
   private visibility : number = 1;
   private calendar: boolean = true;
-  private bill: boolean = true;
-  private bet: boolean = true;
-  private filesharing: boolean = true;
-  private market: boolean = true;
+  private bill: boolean = false;
+  private bet: boolean = false;
+  private filesharing: boolean = false;
+  private market: boolean = false;
   private pub:boolean;
   private pri:boolean;
 
@@ -54,8 +55,8 @@ export class CircleEinstellungenPage {
             this.circleProvider.removeCircleByCircleId(this.circleId).subscribe(
               message => console.log(message)
             );
-            this.navCtrl.remove(this.viewCtrl.index-1);
-            this.navCtrl.pop();
+            this.viewCtrl.dismiss();
+            this.navCtrl.popTo(DashboardPage);
           }
         },
         {
