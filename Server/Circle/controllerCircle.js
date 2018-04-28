@@ -81,7 +81,7 @@ module.exports = {
         const userData = studentInterface.getUserData(userId);
         if (userData.type = 'BUSINESS') {circleIsBusiness = true;}
 
-        db.Circle.create({"name":name,"visible":visible,"business":circleIsBusiness,"blackboard":true,"calendar":true,"bill":true,"bet":true,"filesharing":true,"chat":true,"market":true}).then(circle => {
+        db.Circle.create({"name":name,"visible":visible,"business":circleIsBusiness,"blackboard":true,"calendar":true,"bill":false,"bet":false,"filesharing":false,"chat":true,"market":false}).then(circle => {
             // Location speichern
             if (location !== null){
                 db.Location.create({"longitude" : location.lon*1.0, "latitude" : location.lat*1.0}).then(locationObj => {
@@ -488,7 +488,7 @@ module.exports = {
                                     sendInfoResponse(res, 500, "External email error.")
                                 }
                             }else{
-                                sendInfoResponse(res, 404, "No user with given email found.");
+                                sendInfoResponse(res, 409, "No user with given email found.");
                             }
                         });
                     }

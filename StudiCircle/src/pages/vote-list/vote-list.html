@@ -14,9 +14,11 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let user of userList">
-      {{user}}
-      <ion-icon name="rose" item-end></ion-icon>
+    <ion-item *ngFor="let userVote of userList">
+      {{userVote.name}}
+        <ion-icon *ngIf="userVote.vote===vote.COMMIT" [ngStyle]="{'color':'green'}" name='ios-thumbs-up' item-end></ion-icon>
+        <ion-icon *ngIf="userVote.vote===vote.REJECT" [ngStyle]="{'color':'red'}" name='ios-thumbs-down' item-end></ion-icon>
+        <ion-icon *ngIf="userVote.vote===vote.INTERESTED" [ngStyle]="{'color':'blue'}" name='ios-notifications' item-end></ion-icon>
     </ion-item>
   </ion-list>
 </ion-content>

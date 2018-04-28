@@ -45,6 +45,7 @@ export class SearchPage {
   private setCircles(circles: Circle[]) {
     this.count = circles.length;
     this.circles = circles;
+    this.circles = this.circles.filter( circle => circle.visible === true);
   }
 
   private getCirclesByLocation() {

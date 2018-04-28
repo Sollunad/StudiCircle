@@ -46,6 +46,7 @@ import {StrictRelativeTime} from "../pipes/strict-relative-time";
 import {CalendarModule} from "ion2-calendar";
 import {CalendarProvider} from "../providers/calendar/CalendarProvider";
 import {VoteListPage} from "../pages/vote-list/vote-list";
+import {WipPage} from "../pages/wip/wip";
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import {VoteListPage} from "../pages/vote-list/vote-list";
     PopoverTimelinePage,
     StrictRelativeTime,
     Timeline,
-    VoteListPage
+    VoteListPage,
+    WipPage
   ],
 
   imports: [
@@ -122,7 +124,8 @@ import {VoteListPage} from "../pages/vote-list/vote-list";
     ImpressumPage,
     PopoverTimelinePage,
     Timeline,
-    VoteListPage
+    VoteListPage,
+    WipPage
   ],
   providers: [
     StatusBar,
