@@ -6,6 +6,8 @@ import {Appointment} from "../../providers/declarations/Appointment";
 import * as isSameDay from 'date-fns/is_same_day';
 import {VoteListPage} from "../vote-list/vote-list";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {Vote} from "../../providers/declarations/Vote";
+import {containerStart} from "@angular/core/src/render3/instructions";
 
 @Component({
   selector: 'timeline',
@@ -14,20 +16,23 @@ import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
 
 export class Timeline {
 
+  vote = Vote;
+
   circleId:number;
+
+  public filteredAppointments:Appointment[]=[];
 
   @Input()
   userRole:string;
 
-  filteredDate:Date;
+  calendarPro:CalendarProvider;
 
-  filteredAppointments:AppointmentCard[]=[];
-
-  appointments: AppointmentCard[] = [];
 
   constructor(private popoverCtrl: PopoverController,circleProvider:CircleProvider, navParams:NavParams,
-              public modalCtrl: ModalController, private calendarProvider:CalendarProvider) {
+              public modalCtrl: ModalController, public calendarProvider:CalendarProvider) {
     this.circleId = navParams.get('circleId');
+
+    this.calendarPro = calendarProvider;
 
     this.loadAppointments();
 
@@ -38,23 +43,48 @@ export class Timeline {
 
   @Input()
   set date(date:Date) {
-    this.filteredAppointments = this.appointments.filter(
-      appointment => isSameDay(date,new Date(appointment.appointment.startDate))
+    this.calendarProvider.filteredAppointments = this.calendarProvider.appointments.filter(
+      appointment => isSameDay(date,new Date(appointment.startDate))
     );
-    this.filteredDate = date;
+    this.calendarProvider.filteredDate = date;
   }
 
-  toggleVote(appointmentCard:AppointmentCard, vote:string) {
-     if(appointmentCard.vote===vote) {
-       appointmentCard.vote='none';
+  toggleVote(appointment:Appointment, vote:Vote) {
+    //console.log(this.calendarProvider.filteredAppointments.indexOf(appointment));
+     if(appointment.userVote===vote) {
+       this.calendarProvider.voteForAppointment(appointment.id,Vote.NONE).subscribe(data=>console.log(data));
+       appointment.userVote=Vote.NONE;
+       this.incrementBy(appointment,vote,-1);
      }else{
-       appointmentCard.vote=vote;
+       if(vote!==Vote.NONE){
+         console.log('test');
+         this.incrementBy(appointment, appointment.userVote,-1);
+       }
+       this.calendarProvider.voteForAppointment(appointment.id,vote).subscribe(data=>console.log(data));
+       appointment.userVote=vote;
+       this.incrementBy(appointment,vote,1);
      }
+  }
+
+  incrementBy(appointment:Appointment, vote:Vote, count:number){
+    switch (vote){
+      case Vote.COMMIT:
+        appointment.countCommits += count;
+        break;
+
+      case Vote.REJECT:
+        appointment.countRejections += count;
+        break;
+
+      case Vote.INTERESTED:
+        appointment.countInterested += count;
+        break;
+    }
   }
 
   openModal(appointment: Appointment) {
 
-    let modal = this.modalCtrl.create(VoteListPage, {appointemntId: appointment.id});
+    let modal = this.modalCtrl.create(VoteListPage, {appointmentId: appointment.id});
     modal.present();
   }
 
@@ -69,19 +99,7 @@ export class Timeline {
   }
 
   private loadAppointments() {
-    this.calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
-      this.appointments = [];
-      data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
-      });
-      if(this.filteredDate!=null){
-        this.filteredAppointments = this.appointments.filter(
-          appointment => isSameDay(this.filteredDate,new Date(appointment.appointment.startDate))
-        );
-      } else{
-        this.filteredAppointments = this.appointments;
-      }
-    });
+    this.calendarProvider.test(this.circleId);
   }
 }
 
@@ -97,9 +115,4 @@ export class TimelinePage {
   constructor() {
   }
 
-}
-
-export interface AppointmentCard{
-  appointment:Appointment
-  vote:string;
 }

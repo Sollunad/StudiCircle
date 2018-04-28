@@ -36,8 +36,7 @@ const allowedWildcards = ["/user/activate/",
                             "/user/changeMail/",
                             "/user/guest/register/",
                         ];
-app.route('/circle/*').all(authorize);
-app.route('/user/*').all(authorize);
+app.route('*').all(authorize);
 
 var routesCircle = require('./Circle/routerCircle'); //importing route
 routesCircle(app); //register the route
