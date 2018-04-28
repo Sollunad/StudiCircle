@@ -44,7 +44,7 @@ export class BlackboardPostPage {
     this.input = "";
     this.comment = {postID: this.post.id, text: tmpInput};
     const subs: Subscription = this.dbprovider.postComment(this.comment).subscribe((data:any[]) => {
-      console.log(data);
+      //console.log(data);
       subs.unsubscribe();
     });
   }
@@ -69,6 +69,7 @@ export class BlackboardPostPage {
           }
         }
       }
+      //console.log(this.comments);
       subs.unsubscribe();
     });
 

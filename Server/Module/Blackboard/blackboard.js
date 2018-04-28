@@ -32,7 +32,7 @@ module.exports = function (app) {
 
         if (argumentMissing(res, circleId, userId, title, text)) return;
 
-        db.Blackboard.create({
+        db.Blackboard.Post.create({
             UserId: userId,
             CircleId: circleId,
             title: title,
@@ -82,7 +82,7 @@ module.exports = function (app) {
 
     app.route('/blackboard/deletePost').post(function (req, res) {
         const postID = req.body.postID;
-        const userId = req.session.userId;
+        //const userId = req.session.userId;
 
         console.log('controller: deletePost', postID);
         db.Blackboard.Post.destroy({

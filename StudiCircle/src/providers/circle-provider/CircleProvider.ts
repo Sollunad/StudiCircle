@@ -207,7 +207,7 @@ export class CircleProvider {
     console.log('insertPost', circleId, title, text);
 
     const url = this.consts.url+`blackboard/newPost`;
-    return this.http.post<BlackboardPost>(url, {
+    return this.http.post(url, {
       circleId: circleId,
       userId: this.apiProvider.currentUser.id,
       title: title,
@@ -217,10 +217,10 @@ export class CircleProvider {
   }
 
   public deletePost(post: BlackboardPost){
-    console.log('deletePost', post.postID);
+    console.log('deletePost', post.id);
 
     return this.http.post(this.consts.url +'blackboard/deletePost/', {
-      postID: post.postID,
+      postID: post.id,
       mySession: this.apiProvider.currentUser.session
     });
   }

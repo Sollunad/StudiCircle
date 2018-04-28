@@ -15,29 +15,35 @@
 
 <ion-content padding>
 
-  <ion-card color="primary">
-    <ion-card-header>
-      {{this.postCreator}}:
-    </ion-card-header>
-    <ion-card-content>
-      {{this.postText}}
-    </ion-card-content>
-  </ion-card>
-  <div *ngIf="this.comments != []">
-    <div  style="margin-left: 5%;" *ngFor="let comment of comments">
-      <ion-card color="light">
-        <ion-card-header>
-          {{comment.User.name}} ({{comment.createdAt | date: 'dd.MM.yy HH:mm'}}):
-        </ion-card-header>
-        <ion-card-content>
-          {{comment.body}}
-        </ion-card-content>
-      </ion-card>
+  <div style="position: relative; margin: 0 0 130px 0;">
 
+    <ion-card color="primary">
+      <ion-card-header>
+        {{this.postCreator}}:
+      </ion-card-header>
+      <ion-card-content>
+        {{this.postText}}
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="this.comments != []">
+      <div  style="margin-left: 5%;" *ngFor="let comment of comments">
+        <ion-card color="light">
+          <ion-card-header>
+            {{comment.User.name}} ({{comment.createdAt | date: 'dd.MM.yy HH:mm'}}):
+          </ion-card-header>
+          <ion-card-content>
+            {{comment.body}}
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
+
   </div>
-  <ion-card ion-fixed style="position: relative; top: calc(100% - 130px)">
+
+  <ion-card ion-fixed style="position: relative; top: calc(100% - 130px); opacity: 0.85;">
       <ion-textarea id="comment" no-margin style="padding: 10px 0 0 10px;" placeholder="Leave a comment..." rows="4" autofocus [(ngModel)]="input"></ion-textarea>
       <button style="margin: 0 10px 10px 0;" no-padding float-right ion-button icon-only small (click)="sendComment()"><ion-icon name="send"></ion-icon></button>
   </ion-card>
+
 </ion-content>
