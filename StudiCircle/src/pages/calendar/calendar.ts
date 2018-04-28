@@ -5,27 +5,24 @@ import {EventModalPage} from "../event-modal/event-modal";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import {AppointmentCard} from "../timeline/timeline";
 import {CalendarComponentOptions, DayConfig} from "ion2-calendar";
 import {CalendarProvider} from "../../providers/calendar/CalendarProvider";
+import {Vote} from "../../providers/declarations/Vote";
+import {Appointment} from "../../providers/declarations/Appointment";
 registerLocaleData(localeDe);
 
 @Component({
   selector: 'page-calendar',
   templateUrl: 'calendar.html',
 })
-export class CalendarPage implements OnInit{
+export class CalendarPage{
 
   eventSource = [];
   viewTitle: string;
-  selectedDay: Date;
+  selectedDay: Date = new Date(moment().startOf('day').format());
   circleId:number;
   userRole:string= 'admin';
 
-  options:CalendarComponentOptions;
-  dates:Array<DayConfig>=[];
-
-  appointments: AppointmentCard[] = [];
 
   date: string = new Date().toDateString();
 
@@ -35,53 +32,16 @@ export class CalendarPage implements OnInit{
     locale: 'de-DE'
   };
 
+  calendarPro:CalendarProvider;
+
   constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController,
               navParams: NavParams, circleProvider:CircleProvider, private calendarProvider:CalendarProvider) {
 
+    this.calendarPro = calendarProvider;
+
     this.circleId = navParams.get('circleId');
 
-    calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
-      data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
-      });
-      this.options = {};
-      this.dates = this.fillUpCalendar(this.appointments);
-      this.options.daysConfig = this.dates;
-      this.options.from = new Date('2010-01-01T00:00:00.000Z');
-      this.options.to = 0;
-    });
-
-
-
-    /*circleProvider.getUserRole(this.circleId).subscribe(data => {
-      this.userRole = data.role;
-    });*/
-  }
-
-  ngOnInit() {
-    this.calendarProvider.getAllCalendarEntries(this.circleId).subscribe(data => {
-      data.forEach(appointment =>{
-        this.appointments.push({appointment:appointment, vote:'none'});
-      });
-      this.dates = this.fillUpCalendar(this.appointments);
-      this.options.daysConfig = this.dates;
-      this.options.from = new Date('2010-01-01T00:00:00.000Z');
-      this.options.to = 0;
-    });
-  }
-
-  ionViewDidLoad(){
-    this.selectedDay = moment().startOf('day').toDate();
-  }
-
-
-  fillUpCalendar(appointmentList:AppointmentCard[]):Array<DayConfig>{
-    let dateList:Array<DayConfig> = [];
-    appointmentList.forEach(appointment => {
-      console.log(appointment);
-      dateList.push({date:new Date(appointment.appointment.startDate),subTitle:'●'});
-    });
-    return dateList;
+    this.loadAppointments();
   }
 
   addEvent() {
@@ -122,5 +82,18 @@ export class CalendarPage implements OnInit{
 
   onTimeSelected(ev) {
     this.selectedDay = moment(ev).toDate();
+  }
+
+  private loadAppointments() {
+    var test:Date;
+    test = new Date(moment().startOf('day').format());
+    console.log(test);
+    test = moment().startOf('day').toDate();
+    console.log(test);
+    test = new Date(moment().startOf('day').toISOString());
+    console.log(test);
+    this.calendarProvider.filteredDate = new Date(moment().startOf('day').format());
+    console.log(this.calendarProvider.filteredDate);
+    this.calendarProvider.test(this.circleId);
   }
 }

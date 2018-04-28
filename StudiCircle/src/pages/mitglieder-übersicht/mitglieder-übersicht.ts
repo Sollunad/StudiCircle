@@ -128,7 +128,17 @@ export class MitgliederÜbersicht {
         if(res==200){
           console.log("[Invitation] : Invitation sent successful");
           modification.unsubscribe();
-        }else{
+        } else if (res.status==409){
+          let alert = this.alertCtrl.create({
+            title: 'Einladung fehlgeschlagen',
+            subTitle: 'Es existiert kein registrierter User mit der E-Mail: '+ data,
+            buttons: ['OK']
+          });
+          console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
+          console.log(res);
+          alert.present();
+          modification.unsubscribe();
+        } else{
           console.log("[Invitation] : Invitation sent not successful \n [ERROR-LOG]: ");
           console.log(res);
           modification.unsubscribe();
