@@ -23,11 +23,11 @@ export class DbProvider {
     return this.http.get<GeoResponse>(url);
   }
 
-  public postComment(Comment: BlackboardPost){
+  public postComment(Comment: any){
+    console.log(Comment);
     const url = this.consts.url + "blackboard/newComment";
-    return this.http.post(url, {
-      mySession: this.api.currentUser.session,
-      com: Comment});
+    let body = {mySession: this.api.currentUser.session, text: Comment.text, postID: Comment.postID, userID: this.api.currentUser.id};
+    return this.http.post(url, body);
   }
 
   public getComments(postID: number){

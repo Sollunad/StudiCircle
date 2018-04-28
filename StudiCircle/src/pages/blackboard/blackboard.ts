@@ -72,7 +72,6 @@ export class BlackboardPage {
   }
 
   private showPost(post: BlackboardPost) {
-    console.log(post);
     this.navCtrl.push(BlackboardPostPage, {
         post: post
       });

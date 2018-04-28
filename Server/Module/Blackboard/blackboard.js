@@ -48,12 +48,11 @@ module.exports = function (app) {
     });
 
     app.route('/blackboard/newComment').post(function (req, res) {
-        const comment = req.body.com;
-        console.log("\n\nComment", comment);
+        console.log("\n\nBody", req.body);
         db.Blackboard.Comment.create({
-            "body": comment.body,
-            "PostId": comment.postID,
-            "UserId": req.session.userId,
+            "body": req.body.text,
+            "PostId": req.body.postID,
+            "UserId": req.body.userID,
         }).then(result => {
             console.log(result);
         }).error(err => {
@@ -71,7 +70,7 @@ module.exports = function (app) {
             where: {PostId: postID}, include: [{model: db.User, attributes: ['id', 'name']},
             ], order: [['createdAt', 'ASC']]
         }).then(result => {
-            // console.log(result);
+            //console.log(result);
             res.status(200).json(result);
         }).error(err => {
             res.status(500).json({
