@@ -64,28 +64,30 @@ export class BlackboardPage {
   }
 
   private insertPost(title: string, text: string) {
-    console.log('new post', title, text);
+    //console.log('new post', title, text);
     this.circleProvider.insertPost(this.circleId, title, text).subscribe(post => {
-      console.log('post', post);
-      this.posts.push(post);
+      //console.log('post', post);
+      this.getAllPostsOfBlackboard();
     });
   }
 
   private showPost(post: BlackboardPost) {
-    console.log(post);
     this.navCtrl.push(BlackboardPostPage, {
         post: post
       });
   }
 
   private deletePost(post: BlackboardPost) {
-    console.log('deletePost', post);
-    this.circleProvider.deletePost(post).subscribe(console.log);
+    //console.log('deletePost', post);
+    this.circleProvider.deletePost(post).subscribe(data => {
+      //console.log(data);
+      this.getAllPostsOfBlackboard();
+    });
   }
 
   private getAllPostsOfBlackboard(){
       this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
-        console.log('getBlackboardPosts', posts);
+        //console.log('getBlackboardPosts', posts);
         this.posts = posts;
       });
     }
