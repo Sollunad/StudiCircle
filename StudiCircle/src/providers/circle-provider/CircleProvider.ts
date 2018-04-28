@@ -200,17 +200,17 @@ export class CircleProvider {
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
     console.log('getBlackboardPosts', circleId);
 
-    const url = this.consts.url+`circle/blackboard/posts/${circleId}&mySession=${this.apiProvider.currentUser.session}`;
+    const url = this.consts.url+`blackboard/posts?circleId=${circleId}&mySession=${this.apiProvider.currentUser.session}`;
     return this.http.get<BlackboardPost[]>(url);
   }
 
   public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
     console.log('insertPost', circleId, title, text);
 
-    const url = this.consts.url+`circle/blackboard/posts/newPost`;
+    const url = this.consts.url+`blackboard/newPost`;
     return this.http.post<BlackboardPost>(url, {
       circleId: circleId,
-      userId: this.apiProvider.currentUser.uuid,
+      userId: this.apiProvider.currentUser.id,
       title: title,
       text: text,
       mySession: this.apiProvider.currentUser.session
@@ -218,10 +218,9 @@ export class CircleProvider {
   }
 
   public deletePost(post: BlackboardPost){
-    // return this.http.delete(this.consts.url + 'circle/blackboard/deletePost?id=${post}');
-    // let body = {"id": post.postID, mySession : this.apiProvider.currentUser.session};
-    // const url = 'http://localhost:8080/circle/blackboard/posts/?id' + postID;
-    return this.http.post(this.consts.url +'circle/blackboard/deletePost/', {
+    console.log('deletePost', post.postID);
+
+    return this.http.post(this.consts.url +'blackboard/deletePost/', {
       postID: post.postID,
       mySession: this.apiProvider.currentUser.session
     });

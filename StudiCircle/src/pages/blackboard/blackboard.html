@@ -3,6 +3,7 @@
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
+-->
 
 <ion-header>
 
@@ -21,17 +22,17 @@
         <ion-card>
           <ion-item>
             <h1>{{post.title}}</h1>
-            <p>{{post.date}} -
-              <ion-badge item-end>@{{post.userName}}</ion-badge>
+            <p>{{post.createdAt | date: 'dd.MM.yy HH:mm' }} -
+              <ion-badge item-end>@{{post.User.name}}</ion-badge>
             </p>
           </ion-item>
-          <ion-card-content>{{post.text}}</ion-card-content>
+          <ion-card-content>{{post.body}}</ion-card-content>
 
           <ion-row>
             <ion-col>
               <button ion-button icon-left small color="secondary" (click)="showPost(post)">
                 <ion-icon name="text"></ion-icon>
-                {{post.comments.length}} Comments
+                {{post.Comments.length}} Comments
               </button>
               <button ion-button icon-left small color="danger" (click)="deletePost(post)">
                 <ion-icon name="trash"></ion-icon>
@@ -46,11 +47,11 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-item *ngFor="let comment of post.comments">
-                <p>{{comment.date}} -
-                  <ion-badge color="dark" item-end>@{{comment.userName}}</ion-badge>
+              <ion-item *ngFor="let comment of post.Comments">
+                <p>{{comment.createdAt | date: 'dd.MM.yy HH:mm' }} -
+                  <ion-badge color="dark" item-end>@{{comment.User.name}}</ion-badge>
                 </p>
-                {{comment.text}}
+                {{comment.body}}
               </ion-item>
             </ion-col>
           </ion-row>
@@ -66,55 +67,3 @@
   </ion-fab>
 
 </ion-content>
-
-          <!--<ion-header>-->
-
-  <!--<ion-navbar>-->
-    <!--<ion-title>Blackboard</ion-title>-->
-  <!--</ion-navbar>-->
-
-<!--</ion-header>-->
-
-
-<!--<ion-content padding>-->
-  <!--<h1>Posts</h1>-->
-  <!--<ion-list id="posts">-->
-    <!--<ion-item-sliding *ngFor="let post of posts; let ind = index">-->
-    <!--<ion-item >-->
-      <!--<ion-card>-->
-        <!--<ion-item>-->
-          <!--<h1>{{post.userName}}</h1>-->
-          <!--<p>{{post.date | date: 'dd.MM.yy HH:mm'}}</p>-->
-        <!--</ion-item>-->
-        <!--<ion-card-content><h2>{{post.text}}</h2></ion-card-content>-->
-
-        <!--<ion-row>-->
-          <!--<ion-col>-->
-            <!--<button ion-button icon-left small color="secondary" (click)="showPost(ind)">-->
-              <!--<ion-icon name="text"></ion-icon>-->
-              <!--<div>{{post.comments.length}} Comment(s)</div>-->
-            <!--</button>-->
-            <!--<button ion-button icon-left small color="danger" (click)="deletePost(post)">-->
-              <!--<ion-icon name="trash"></ion-icon>-->
-              <!--<div>Delete</div>-->
-            <!--</button>-->
-          <!--</ion-col>-->
-        <!--</ion-row>-->
-      <!--<ion-list id="comments">-->
-        <!--<ion-item-sliding *ngFor="let comment of post.comments">-->
-          <!--<ion-item>-->
-              <!--<h3>{{comment.userName}}</h3>-->
-              <!--<p>{{comment.text}}</p>-->
-            <!--</ion-item>-->
-          <!--</ion-item-sliding>-->
-        <!--</ion-list>-->
-      <!--</ion-card>-->
-    <!--</ion-item>-->
-  <!--</ion-item-sliding>-->
-  <!--</ion-list>-->
-
-  <!--<ion-fab right bottom>-->
-    <!--<button ion-fab color="secondary" large icon-only (click)="addPost()">-->
-      <!--<ion-icon name="add"></ion-icon>-->
-    <!--</button>-->
-  <!--</ion-fab>-->
