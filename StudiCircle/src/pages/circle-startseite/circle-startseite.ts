@@ -93,13 +93,14 @@ export class CircleStartseite {
   @ViewChild('popoverText', {read: ElementRef}) text: ElementRef;
 
   moduleList: Array<{ title: string, mapName: string, component: any, imageName: string }> = [
-    {title: 'Blackboard', mapName: 'blackboard', component: WipPage, imageName: 'blackboard.jpg'},
+    {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
     {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
   ];
 
   circleId: number;
 
   circleName: string;
+
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: WipPage, imageName: 'rechnungen.jpg'},
@@ -136,7 +137,7 @@ export class CircleStartseite {
     loadModules(){
 
       this.moduleList = [
-        {title: 'Blackboard', mapName: 'blackboard', component: WipPage, imageName: 'blackboard.jpg'},
+        {title: 'Blackboard', mapName: 'blackboard', component: BlackboardPage, imageName: 'blackboard.jpg'},
         {title: 'Chat', mapName: 'chat', component: ChatPage, imageName: 'chat.jpg'}
       ];
 

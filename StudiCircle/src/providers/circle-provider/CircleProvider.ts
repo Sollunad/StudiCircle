@@ -204,7 +204,7 @@ export class CircleProvider {
     return this.http.get<BlackboardPost[]>(url);
   }
 
-  public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
+  public insertPost(circleId: number, title: string, text: string) {
     console.log('insertPost', circleId, title, text);
 
     const url = this.consts.url+`blackboard/newPost`;
@@ -217,7 +217,7 @@ export class CircleProvider {
     });
   }
 
-  public deletePost(post: BlackboardPost){
+  public deletePost(post: any){
     console.log('deletePost', post.id);
 
     return this.http.post(this.consts.url +'blackboard/deletePost/', {
