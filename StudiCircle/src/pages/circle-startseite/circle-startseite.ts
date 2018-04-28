@@ -99,6 +99,7 @@ export class CircleStartseite {
   circleId: number;
 
   circleName: string;
+  
 
   staticModules = [
     {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
