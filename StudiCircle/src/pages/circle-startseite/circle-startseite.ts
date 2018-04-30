@@ -8,6 +8,7 @@ import {ChatPage} from "../chat/chat";
 import {DashboardPage} from "../dashboard/dashboard";
 import {CalendarTabPage} from "../calendar-tab/calendar-tab";
 import {BlackboardPage} from "../blackboard/blackboard";
+import {WipPage} from "../wip/wip";
 import {InvitationStatus} from "../../providers/declarations/InvitationStatus";
 
 @Component({
@@ -100,12 +101,13 @@ export class CircleStartseite {
 
   circleName: string;
 
+
   staticModules = [
-    {title: 'Rechnungen', mapName: 'bill', component: '', imageName: 'rechnungen.jpg'},
+    {title: 'Rechnungen', mapName: 'bill', component: WipPage, imageName: 'rechnungen.jpg'},
     {title: 'Kalender', mapName: 'calendar', component: CalendarTabPage, imageName: 'kalender.jpg'},
-    {title: 'Wetten', mapName: 'bet', component: '', imageName: 'wetten.jpg'},
-    {title: 'File-Sharing', mapName: 'filesharing', component: '', imageName: 'file-sharing.jpg'},
-    {title: 'Flohmarkt', mapName: 'market', component: '', imageName: 'flohmarkt.jpg'}
+    {title: 'Wetten', mapName: 'bet', component: WipPage, imageName: 'wetten.jpg'},
+    {title: 'File-Sharing', mapName: 'filesharing', component: WipPage, imageName: 'file-sharing.jpg'},
+    {title: 'Flohmarkt', mapName: 'market', component: WipPage, imageName: 'flohmarkt.jpg'}
   ];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: HttpClient,
@@ -129,7 +131,7 @@ export class CircleStartseite {
     }
 
     openPage(module) {
-      this.navCtrl.push(module.component, {circleId: this.circleId});
+      this.navCtrl.push(module.component, {circleId: this.circleId, moduleName: module.title});
     }
 
     loadModules(){

@@ -10,6 +10,7 @@ import {Circle} from "../../providers/declarations/Circle";
 import {Invitation} from "../../providers/declarations/Invitation";
 import {CircleStartseite} from "../circle-startseite/circle-startseite";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {LogInPage} from "../log-in/log-in";
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html'
@@ -63,6 +64,11 @@ export class DashboardPage {
   goToSettings(params) {
     if (!params) params = {};
     this.navCtrl.push(SettingsPage);
+  }
+
+  goToLogIn(params) {
+    if (!params) params = {};
+    this.navCtrl.push(LogInPage);
   }
 
   onNewCircle() {

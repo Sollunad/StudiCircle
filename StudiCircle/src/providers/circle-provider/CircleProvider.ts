@@ -98,7 +98,8 @@ export class CircleProvider {
   public addUserToCircle(circleId: number) {
     return this.http.post(this.consts.url+'circle/addUser', {
       userId: this.apiProvider.currentUser.uuid,
-      circleId: circleId
+      circleId: circleId,
+      mySession: this.apiProvider.currentUser.session
     });
   }
 
@@ -199,29 +200,28 @@ export class CircleProvider {
   public getBlackboardPosts(circleId: number): Observable<BlackboardPost[]>{
     console.log('getBlackboardPosts', circleId);
 
-    const url = this.consts.url+`circle/blackboard/posts/${circleId}&mySession=${this.apiProvider.currentUser.session}`;
+    const url = this.consts.url+`blackboard/posts?circleId=${circleId}&mySession=${this.apiProvider.currentUser.session}`;
     return this.http.get<BlackboardPost[]>(url);
   }
 
-  public insertPost(circleId: number, title: string, text: string): Observable<BlackboardPost> {
+  public insertPost(circleId: number, title: string, text: string) {
     console.log('insertPost', circleId, title, text);
 
-    const url = this.consts.url+`circle/blackboard/posts/newPost`;
-    return this.http.post<BlackboardPost>(url, {
+    const url = this.consts.url+`blackboard/newPost`;
+    return this.http.post(url, {
       circleId: circleId,
-      userId: this.apiProvider.currentUser.uuid,
+      userId: this.apiProvider.currentUser.id,
       title: title,
       text: text,
       mySession: this.apiProvider.currentUser.session
     });
   }
 
-  public deletePost(post: BlackboardPost){
-    // return this.http.delete(this.consts.url + 'circle/blackboard/deletePost?id=${post}');
-    // let body = {"id": post.postID, mySession : this.apiProvider.currentUser.session};
-    // const url = 'http://localhost:8080/circle/blackboard/posts/?id' + postID;
-    return this.http.post(this.consts.url +'circle/blackboard/deletePost/', {
-      postID: post.postID,
+  public deletePost(post: any){
+    console.log('deletePost', post.id);
+
+    return this.http.post(this.consts.url +'blackboard/deletePost/', {
+      postID: post.id,
       mySession: this.apiProvider.currentUser.session
     });
   }

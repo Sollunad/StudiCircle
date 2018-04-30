@@ -7,17 +7,15 @@ module.exports = function (app) {
         if (argumentMissing(res, circleId)) return;
 
         db.Blackboard.Post.findAll({
-            where: {CircleId: circleId}, include: [{model: db.User, attributes: ['id', 'name']},
+            where: {CircleId: circleId},
+            include: [
+                {model: db.User, attributes: ['id', 'name']},
                 {model: db.Blackboard.Comment, include: [db.User], limit: 3},
-            ], order: [['createdAt', 'DESC']]
+            ],
+            order: [['createdAt', 'DESC']]
         }).then(result => {
-            if (result.length === 0) {
-                res.json({msg: 'No Circles'});
-            }
-            else {
-                console.log(result);
-                res.status(200).json(result);
-            }
+            // console.log(result);
+            res.status(200).json(result);
         }).error(err => {
             res.status(500).json({
                 message: "Error while reading posts",
@@ -34,11 +32,11 @@ module.exports = function (app) {
 
         if (argumentMissing(res, circleId, userId, title, text)) return;
 
-        db.Blackboard.create({
-            userId: userId,
-            circleId: circleId,
+        db.Blackboard.Post.create({
+            UserId: userId,
+            CircleId: circleId,
             title: title,
-            body: text,
+            body: text
         }).then(post => {
             res.status(200).json(post);
         }).error(err => {
@@ -50,16 +48,18 @@ module.exports = function (app) {
     });
 
     app.route('/blackboard/newComment').post(function (req, res) {
-        const comment = req.body.com;
-        console.log("\n\nComment", comment);
+        console.log("\n\nBody", req.body);
         db.Blackboard.Comment.create({
-            "body": comment.body,
-            "PostId": comment.postID,
-            "UserId": req.session.userId,
+            "body": req.body.text,
+            "PostId": req.body.postID,
+            "UserId": req.body.userID,
         }).then(result => {
             console.log(result);
         }).error(err => {
-            res.status(500).send("Error while posting comment");
+            res.status(500).json({
+                message: "Error while posting comment",
+                error: err
+            });
         });
     });
 
@@ -67,15 +67,11 @@ module.exports = function (app) {
         const postID = req.query.postID;
 
         db.Blackboard.Comment.findAll({
-            where: {Postid: postID}, include: [{model: db.User, attributes: ['id', 'name']},
+            where: {PostId: postID}, include: [{model: db.User, attributes: ['id', 'name']},
             ], order: [['createdAt', 'ASC']]
         }).then(result => {
-            if (result.length === 0) {
-                res.json({msg: 'No Comments'});
-            } else {
-                console.log(result);
-                res.status(200).json(result);
-            }
+            //console.log(result);
+            res.status(200).json(result);
         }).error(err => {
             res.status(500).json({
                 message: "Error while reading comments",
@@ -86,19 +82,28 @@ module.exports = function (app) {
 
     app.route('/blackboard/deletePost').post(function (req, res) {
         const postID = req.body.postID;
-        const userId = req.session.userId;
+        //const userId = req.session.userId;
 
         console.log('controller: deletePost', postID);
         db.Blackboard.Post.destroy({
             where: {
-                PostId: postID
+                id: postID
                 // UserId: userId
             }
         }).error(err => {
-            res.json({
+            res.status(500).json({
                 message: "No Posts found or you are not allowed",
                 error: err
             });
         });
     });
+
+    function argumentMissing(res, ...args){
+        if(!args.every(arg => {return arg !== undefined;})) {
+            res.status(400).send('Bad request. Argument(s) missing.');
+            return true;
+        }
+        return false;
+    }
+
 };

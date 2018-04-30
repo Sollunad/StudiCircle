@@ -79,10 +79,6 @@ module.exports = function(app) {
     // userId (Number): selected users id
 	app.route('/circle/leave')
 		.post(circle.leaveCircle);
-
-    // userId (Number): selected users id
-    app.route('/circle/leave')
-        .post(circle.leaveCircle);
   
     app.route('/circle/invite')
         .post(circle.inviteToCircle);

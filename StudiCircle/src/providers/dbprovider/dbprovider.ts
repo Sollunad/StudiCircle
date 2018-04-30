@@ -23,13 +23,15 @@ export class DbProvider {
     return this.http.get<GeoResponse>(url);
   }
 
-  public postComment(Comment: BlackboardPost){
-    const url = this.consts.url + "circle/blackboard/newComment?mySession=" + this.api.currentUser.session;
-    return this.http.post(url, {com: Comment});
+  public postComment(Comment: any){
+    console.log(Comment);
+    const url = this.consts.url + "blackboard/newComment";
+    let body = {mySession: this.api.currentUser.session, text: Comment.text, postID: Comment.postID, userID: this.api.currentUser.id};
+    return this.http.post(url, body);
   }
 
   public getComments(postID: number){
-    const url = this.consts.url + "circle/blackboard/getComments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
+    const url = this.consts.url + "blackboard/comments?mySession=" + this.api.currentUser.session + "&postID=" + postID;
     return this.http.get(url);
   }
 }

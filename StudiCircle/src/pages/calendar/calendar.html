@@ -14,7 +14,7 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-        <ion-calendar [(ngModel)]="date" [options]="options" (onChange)="onTimeSelected($event)" [type]="string" [format]="'YYYY-MM-DD'" *ngIf="options">
+        <ion-calendar [(ngModel)]="date" [options]="calendarPro.options" (onChange)="onTimeSelected($event)" [type]="string" [format]="'YYYY-MM-DD'" *ngIf="calendarPro.options">
         </ion-calendar>
     </ion-row>
     <ion-row>

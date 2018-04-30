@@ -16,7 +16,7 @@ export class EventModalPage {
   event : Appointment = {title: '', description: '', location: '', startDate: moment().format(),
                          endDate: moment().add(2, 'hours').format() ,countCommits: 0,countRejections: 0, countInterested: 0};
 
-  minDate = new Date().toISOString();
+  minDate = moment().format();
 
   existingAppointment=false;
 
@@ -61,5 +61,11 @@ export class EventModalPage {
     else{
       this.toastProvider.toast("Bitte geben Sie einen Titel an");
     }
+  }
+
+  change(){
+    console.log(moment(this.event.startDate).add(2, 'hours').format());
+    console.log(moment(new Date(this.event.startDate)).add(2, 'hours').format());
+    this.event.endDate = moment(this.event.startDate).add(2, 'hours').format();
   }
 }

@@ -25,7 +25,7 @@
 
     <ion-item>
       <ion-label>Beginn</ion-label>
-      <ion-datetime displayFormat="DD.MM.YYYY HH:mm" pickerFormat="D MMM YYYY : HH:mm" [(ngModel)]="event.startDate" [min]="minDate"></ion-datetime>
+      <ion-datetime (ionChange)="change()" displayFormat="DD.MM.YYYY HH:mm" pickerFormat="D MMM YYYY : HH:mm" [(ngModel)]="event.startDate" [min]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item>

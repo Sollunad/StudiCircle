@@ -122,7 +122,7 @@ module.exports = {
   //Methode zum abstimmen für einen Termin ändert getätigte abstimmung falls bereits abgestimmt wurde
   vote : function (req,res){
     const voting = req.body.voting;
-    const appID = req.body.appID;
+    const appID = req.body.appointmentId;
     const userId = req.session.userId;
 
 
@@ -177,7 +177,7 @@ module.exports = {
               }else if (vote.dataValues.vote == 1) {
                 rejections = rejections +1;
               }else if (vote.dataValues.vote == 2) {
-                  commits = rejections +1;
+                  commits = commits +1;
               }
           });
           res.send({'commits':commits, 'rejections':rejections, 'interested': interested});
@@ -190,23 +190,64 @@ module.exports = {
     });
   },
 
+  getVotingDetails : function (req,res){
+    const appID = req.query.appointmentId;
+
+    if(argumentMissing(res,appID)) return;
+
+    var result = [];
+    db.Calendar.Vote.findAll({where: {"AppointmentId": appID}, include: [db.User]}).then(voting => {
+      voting.forEach(vote => {
+        result.push({"name": vote.User.name, "vote": vote.dataValues.vote});
+        console.log(result);
+      });
+      console.log(result);
+      res.status(200).send(result);
+    }).catch(err => {
+      sendInfoResponse(res, 500, "Error geting Votes");
+    });
+  },
+
   //circleID: die ID des Circle für den man die Termine haben möchte
   //gibt alle Termine des angegeben Circles zurück
   getAllAppointments : function(req, res){
+	console.log(req.session);
     const circleID = req.query.circleID;
+    const userID =   req.session.userId;
 
-    if(argumentMissing(res,circleID)) return;
-
+    if(argumentMissing(res,circleID, userID)) return;
     var result = [];
-    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}}).then(appointments => {
-      appointments.forEach(function(item, index){
-        result.push(item.dataValues);
+    db.Calendar.Appointment.findAll({where: {"CircleId": circleID}, include: [db.Calendar.Vote]}).then(appointments => {
+      appointments.forEach(appointment => {
+        var uservote = 3;
+        var commits = 0;
+        var rejections = 0;
+        var interested = 0;
+        if(appointment.dataValues.Votes){
+          appointment.dataValues.Votes.forEach(vote => {
+            if(vote.dataValues.UserId == userID){
+              uservote = vote.dataValues.vote;
+            }
+            if(vote.dataValues.vote == 0){
+              interested = interested +1;
+            }else if (vote.dataValues.vote == 1) {
+              rejections = rejections +1;
+            }else if (vote.dataValues.vote == 2) {
+              commits = commits +1;
+            }
+
+          });
+        }
+
+        var votejsn = {"countCommits": commits, "countRejections": rejections, "countInterested": interested, "userVote": uservote};
+        var obj = Object.assign(appointment.dataValues, votejsn)
+        result.push(obj);
       });
       res.status(200).send(result);
     }).catch(err => {
       console.log(err);
       sendInfoResponse(res, 500, "Error getting Appointments");
-    })
+    });
   }
 
 }
