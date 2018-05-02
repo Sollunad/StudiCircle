@@ -77,11 +77,44 @@ export class BlackboardPage {
       });
   }
 
-  private deletePost(post: BlackboardPost) {
-    //console.log('deletePost', post);
-    this.circleProvider.deletePost(post).subscribe(data => {
-      //console.log(data);
-      this.getAllPostsOfBlackboard();
+  deletePost(post: BlackboardPost) {
+    console.log('deletePost', post);
+    let alert = this.alertCtrl.create({
+      title: 'Post wirklich löschen?',
+      message: 'Möchten Sie den Post wirklich aus dem Blackboard entfernen?',
+      buttons: [
+        {
+          text: 'Entfernen',
+          handler: () => {
+            this.circleProvider.deletePostPro(post).subscribe(
+              message => {
+                console.log(message);
+
+              }
+            );
+            this.reloadPosts();
+          }
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Post löschen abgebrochen');
+          }
+        }
+
+      ]
+
+    });
+
+    alert.present();
+  }
+
+  reloadPosts() {
+    this.posts = [];
+    this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+      console.log('getBlackboardPosts', posts);
+      this.posts = posts;
     });
   }
 

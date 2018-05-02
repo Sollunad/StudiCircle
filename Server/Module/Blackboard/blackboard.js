@@ -82,20 +82,30 @@ module.exports = function (app) {
 
     app.route('/blackboard/deletePost').post(function (req, res) {
         const postID = req.body.postID;
-        //const userId = req.session.userId;
+        const userId = req.session.userId;
 
-        console.log('controller: deletePost', postID);
-        db.Blackboard.Post.destroy({
-            where: {
-                id: postID
-                // UserId: userId
+        console.log('controller: deletePost', postID, userId);
+        db.UserInCircles.findOne({where: {'UserId': userId}}).then(resul1 => {
+            if (resul1) {
+                db.Blackboard.Post.destroy({
+                    where: {'id': postID, 'UserId': userId}
+                }).error(err => {
+                    res.status(500).json({
+                        message: "No Posts found or you are not allowed",
+                        error: err
+                    });
+                });
+            } else if (db.UserInCircles.findOne({where: {'UserId': userId, 'role': cons.CircleRole.MODERATOR}})) {
+                db.Blackboard.Post.destroy({
+                    where: {'id': postID, 'UserId': userId}
+                }).error(err => {
+                    res.status(500).json({
+                        message: "No Posts found or you are not allowed",
+                        error: err
+                    });
+                });
             }
-        }).error(err => {
-            res.status(500).json({
-                message: "No Posts found or you are not allowed",
-                error: err
-            });
-        });
+        })
     });
 
     function argumentMissing(res, ...args){
