@@ -239,13 +239,9 @@ module.exports = {
     },
 
     registrationInform : async function ( validationKey, message){
-        console.log("test1");
         try {
-            console.log("test1");
             let userId = await database.getUserIdFromValidationKey( validationKey);
-            console.log("inform3");
             let userData = await database.getUserData(userId);
-            console.log("inform");
             console.log(userData.username);
             let html = '<html lang="de-DE">\n' +
                 '<head>\n' +

@@ -96,6 +96,22 @@ module.exports = {
 
     },
 
+    getAccountTypeByUserId : async function(userId) {
+        try {
+            return await db.User.findById(userId).then(user => {
+                if ( user ) {
+                    return user.dataValues.type;
+                }
+            }).error(err => {
+                throw  "database error";
+            });
+        } catch (err) {
+            console.log(err);
+            throw "database error";
+        }
+
+    },
+
     getUserIdFromMail : async function(mail) {
         try {
             return await db.User.findAll({ where:{ 'email': mail }}).then(user => {
