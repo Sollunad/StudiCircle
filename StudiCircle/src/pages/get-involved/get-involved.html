@@ -32,7 +32,14 @@
   <form id="getInvolved-form1">
     <ion-item id="getInvolved-input2">
       <ion-input type="email"
+                 *ngIf="accountType==='student'"
                  placeholder="deine@studentenmail.com"
+                 name="mail"
+                 [(ngModel)]="profile.mail"
+                 [pattern]='mailValidation'></ion-input>
+      <ion-input type="email"
+                 *ngIf="accountType!=='student'"
+                 placeholder="deine@email.com"
                  name="mail"
                  [(ngModel)]="profile.mail"
                  [pattern]='mailValidation'></ion-input>
