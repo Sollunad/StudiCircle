@@ -105,10 +105,12 @@ export class ChatPage {
   }
 
   sendMessage() {
-    this.socket.emit('add-message', { text: this.message });
-    this.message = '';
-    this.onFocus();
-    this.scrollToBottom()
+    if(this.message.trim()!=='') {
+      this.socket.emit('add-message', {text: this.message});
+      this.message = '';
+      this.onFocus();
+      this.scrollToBottom();
+    }
   }
 
   deleteMessage(messageId:number) {
