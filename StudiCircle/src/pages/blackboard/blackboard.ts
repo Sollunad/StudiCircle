@@ -5,6 +5,8 @@ import {BlackboardPost} from "../../providers/declarations/BlackboardPost";
 import {BlackboardPostPage} from "../blackboard-post/blackboard-post";
 import {Subscription} from "rxjs/Subscription";
 import {CircleProvider} from "../../providers/circle-provider/CircleProvider";
+import {ApiProvider} from '../../providers/api/api';
+import {UserInfo} from '../../providers/declarations/UserInfo';
 
 /**
  * Generated class for the BlackboardPage page.
@@ -23,15 +25,29 @@ export class BlackboardPage {
   private posts = new Array<BlackboardPost>();
   private date = new Date();
   private userName = 'Hans Solo';
+  private isAdminOrMod: boolean = false;
+  public currentUserID: number;
+  public memberList: UserInfo[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private circleProvider: CircleProvider, private dbProvider: DbProvider) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public apiProvider: ApiProvider, private alertCtrl: AlertController, private circleProvider: CircleProvider, private dbProvider: DbProvider) {
+    this.currentUserID = Number(this.apiProvider.getCurrentUser().id);
   }
 
   ionViewDidLoad() {
     this.getAllPostsOfBlackboard();
+    console.log(this.currentUserID);
+    this.circleProvider.getUserRole(this.circleId).subscribe(
+      role => {
+        if (role.role == "admin") {
+          this.isAdminOrMod = true;
+        } else if (role.role == "mod") {
+          this.isAdminOrMod = true;
+        }
+      });
   }
 
-    //get the first 3 comments of every post
+  //get the first 3 comments of every post
 
   /*private showPost(post: any) {
     console.log(this.posts[post].userName);
@@ -52,7 +68,7 @@ export class BlackboardPage {
         text: 'OK',
         handler: data => {
           const title = data.title.toString().trim();
-          if(title.length < 5) return;
+          if (title.length < 5) return;
 
           const text = data.text.toString().trim();
           if (text.length < 10) return;
@@ -73,8 +89,8 @@ export class BlackboardPage {
 
   private showPost(post: BlackboardPost) {
     this.navCtrl.push(BlackboardPostPage, {
-        post: post
-      });
+      post: post
+    });
   }
 
   deletePost(post: BlackboardPost) {
@@ -83,16 +99,18 @@ export class BlackboardPage {
       title: 'Post wirklich löschen?',
       message: 'Möchten Sie den Post wirklich aus dem Blackboard entfernen?',
       buttons: [
+
         {
+
           text: 'Entfernen',
           handler: () => {
             this.circleProvider.deletePostPro(post).subscribe(
               message => {
                 console.log(message);
-
               }
             );
             this.reloadPosts();
+            console.log('im hier');
           }
         },
         {
@@ -102,26 +120,24 @@ export class BlackboardPage {
             console.log('Post löschen abgebrochen');
           }
         }
-
       ]
-
     });
-
     alert.present();
   }
 
   reloadPosts() {
     this.posts = [];
     this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
-      console.log('getBlackboardPosts', posts);
-      this.posts = posts;
-    });
+        this.posts = posts;
+      }
+    );
   }
 
-  private getAllPostsOfBlackboard(){
-      this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
-        //console.log('getBlackboardPosts', posts);
-        this.posts = posts;
-      });
-    }
+  private getAllPostsOfBlackboard() {
+    this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+      //console.log('getBlackboardPosts', posts);
+      this.posts = posts;
+    });
+
+  }
 }
