@@ -1,5 +1,6 @@
 module.exports = function (app) {
     const db = require('../../Database/database.js');
+    const cons = require('../../Circle/constants.js');
 
     app.route('/blackboard/posts').get(function (req, res) {
         const circleId = req.query.circleId;
@@ -82,21 +83,22 @@ module.exports = function (app) {
 
     app.route('/blackboard/deletePost').post(function (req, res) {
         const postID = req.body.postID;
-        //const userId = req.session.userId;
-
-        console.log('controller: deletePost', postID);
-        db.Blackboard.Post.destroy({
-            where: {
-                id: postID
-                // UserId: userId
+        const userId = req.session.userId;
+        if(argumentMissing(res,postID)) return;
+        console.log('controller: deletePost', postID, userId);
+        db.UserInCircles.findOne({where: {'UserId': userId}}).then(resul1 => {
+            if (resul1.UserId == userId || resul1.role == cons.CircleRole.MODERATOR) {
+                db.Blackboard.Post.destroy({
+                    where: {'id': postID}
+                }).error(err => {
+                    res.status(500).json({
+                        message: "No Posts found or you are not allowed",
+                        error: err
+                    });
+                });
             }
-        }).error(err => {
-            res.status(500).json({
-                message: "No Posts found or you are not allowed",
-                error: err
-            });
-        });
-    });
+        })
+     });
 
     function argumentMissing(res, ...args){
         if(!args.every(arg => {return arg !== undefined;})) {

@@ -17,7 +17,7 @@
 <ion-content padding>
   <h1>Posts</h1>
   <ion-list id="posts">
-    <ion-item-sliding *ngFor="let post of posts">
+    <ion-item-sliding *ngFor="let post of posts let member of memberList">
       <ion-item>
         <ion-card>
           <ion-item>
@@ -34,15 +34,10 @@
                 <ion-icon name="text"></ion-icon>
                 {{post.Comments.length}} Comments
               </button>
-              <button ion-button icon-left small color="danger" (click)="deletePost(post)">
+              <button ion-button *ngIf="isAdminOrMod || post.UserId == currentUserID" icon-left small color="danger" (click)="deletePost(post)">
                 <ion-icon name="trash"></ion-icon>
                 Delete
               </button>
-            </ion-col>
-            <ion-col center text-center>
-              <ion-note>
-                11h ago
-              </ion-note>
             </ion-col>
           </ion-row>
           <ion-row>
