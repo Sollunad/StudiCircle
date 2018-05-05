@@ -39,7 +39,7 @@ module.exports = {
 
     joinOpenCircle : function (req, res) {
         const circleId = req.body.circleId;
-        const userId = req.body.userId;
+        const userId = req.session.userId;
         //const userRole = req.body.role;
 
         if (argumentMissing(res, circleId, userId)) return;
