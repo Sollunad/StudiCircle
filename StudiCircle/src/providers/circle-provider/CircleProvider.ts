@@ -219,10 +219,10 @@ export class CircleProvider {
 
   public deletePostPro(post):Observable<any>{
     console.log('deletePost', post.id);
-
     return this.http.post(this.consts.url +'blackboard/deletePost', {
       postID: post.id,
-      mySession: this.apiProvider.currentUser.session
+      mySession: this.apiProvider.currentUser.session,
     });
+
   }
 }

@@ -110,8 +110,8 @@ export class BlackboardPage {
               }
             );
             this.reloadPosts();
-            console.log('im hier');
           }
+
         },
         {
           text: 'Abbrechen',
@@ -127,10 +127,10 @@ export class BlackboardPage {
 
   reloadPosts() {
     this.posts = [];
-    this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
-        this.posts = posts;
-      }
-    );
+    return this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+      this.posts = posts;
+    })
+
   }
 
   private getAllPostsOfBlackboard() {
