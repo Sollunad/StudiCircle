@@ -68,10 +68,10 @@ export class BlackboardPage {
         text: 'OK',
         handler: data => {
           const title = data.title.toString().trim();
-          if (title.length < 5) return;
+          if (title.length < 1) return;
 
           const text = data.text.toString().trim();
-          if (text.length < 10) return;
+
 
           this.insertPost(title, text);
         }
@@ -109,6 +109,7 @@ export class BlackboardPage {
                 console.log(message);
               }
             );
+
             this.reloadPosts();
           }
 
@@ -127,7 +128,7 @@ export class BlackboardPage {
 
   reloadPosts() {
     this.posts = [];
-    return this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
+     return this.circleProvider.getBlackboardPosts(this.circleId).subscribe(posts => {
       this.posts = posts;
     })
 
