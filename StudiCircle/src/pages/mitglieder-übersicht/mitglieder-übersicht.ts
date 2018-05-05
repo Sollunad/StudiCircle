@@ -53,6 +53,7 @@ export class MitgliederÜbersicht {
               }
             );
           }
+
         },
         {
           text: 'Abbrechen',
