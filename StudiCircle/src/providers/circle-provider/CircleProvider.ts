@@ -96,8 +96,7 @@ export class CircleProvider {
   }
 
   public addUserToCircle(circleId: number) {
-    return this.http.post(this.consts.url+'circle/addUser', {
-      userId: this.apiProvider.currentUser.uuid,
+    return this.http.post(this.consts.url+'circle/joinOpen', {
       circleId: circleId,
       mySession: this.apiProvider.currentUser.session
     });
