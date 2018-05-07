@@ -1,15 +1,12 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Frequently Asked Questions (RTFM)
+      Frequently Asked Questions (FAQ)
     </ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page5">
   <ion-list id="faq-list1">
-    <h1>
-      Here are some read the fucking manuals for you peasant:
-    </h1>
     <ion-item *ngFor="let entry of articles" (click)="articlePressed(entry)">{{entry}}</ion-item>
   </ion-list>
 </ion-content>

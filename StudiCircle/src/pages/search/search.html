@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Search
+      Circle-Suche
     </ion-title>
     <ion-buttons end>
       <button ion-button on-click="goToSettings()">
@@ -11,9 +11,6 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page5">
-  <h1 id="search-heading3" style="color:#000000;">
-    Search for Circles ...
-  </h1>
   <form id="search-form12">
     <ion-searchbar (ionInput)="searchCircles()" name="search" [(ngModel)]="search"></ion-searchbar>
 

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar hideBackButton>
     <ion-title>
-      Log In
+      StudiCircle
     </ion-title>
     <ion-buttons end>
       <button id="logIn-button6" ion-button color="dark" style="font-weight:400;" on-click="goToImpressum()">
@@ -16,10 +16,10 @@
   </div>
   <form id="logIn-form6">
     <ion-item id="logIn-input13">
-      <ion-input autocomplete="on" clearInput type="email" placeholder="you@studicircle.io" name="mail" [(ngModel)]="mail" pattern='^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'></ion-input>
+      <ion-input autocomplete="on" clearInput type="email" placeholder="deine@email.de" name="mail" [(ngModel)]="mail" pattern='^[a-zA-Z0-9._]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'></ion-input>
     </ion-item>
     <ion-item id="logIn-input14">
-      <ion-input clearInput clearOnEdit="false" type="password" placeholder="your password goes here" name="pw" [(ngModel)]="pw" maxlength="64" minlength="8"></ion-input>
+      <ion-input clearInput clearOnEdit="false" type="password" placeholder="dein passwort" name="pw" [(ngModel)]="pw" maxlength="64" minlength="8"></ion-input>
     </ion-item>
     <button id="logIn-button4" ion-button color="primary" block style="font-weight:500;" on-click="login()">
       Einloggen
