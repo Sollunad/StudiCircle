@@ -65,16 +65,16 @@ export class GetInvolvedPage {
         registration.unsubscribe();
         if(status===200) {
           console.log("[REGISTER] : Registration successful");
-          this.toasty.toast("Registration successful");
+          this.toasty.toast("Registrierung erfolgreich!");
           this.goToVerifyNow({});
           return true;
         } else if(status===451) {
-          this.toasty.toast("Mail is already in use");
+          this.toasty.toast("Die E-Mail ist bereits in Verwendung!");
         } else if(status===403) {
-          this.toasty.toast("This is a really invalid student mail");
+          this.toasty.toast("Die E-Mail ist keine gültige Studenten-Mail!");
         } else{
           console.log("[REGISTER] : Registration not successful");
-          this.toasty.toast("Registration was not successful");
+          this.toasty.toast("Registrierung war nicht erfolgreich!");
         }
         return false;
       }
@@ -87,7 +87,7 @@ export class GetInvolvedPage {
         console.log("[REGISTER] : User Name is valid");
         return true;
       }else{
-        this.toasty.toast("Invalid Username");
+        this.toasty.toast("Ungültiger Nutzername!");
         console.log("[REGISTER] : Set User - Name not valid");
       }
     }
@@ -101,12 +101,12 @@ export class GetInvolvedPage {
         console.log("[REGISTER] : PasswordCheck successful");
         return true;
       }else{
-        this.toasty.toast("Passwords are not equal");
+        this.toasty.toast("Die Passwörter sind nicht gleich!");
         console.log("[REGISTER] : PasswordCheck not successful");
       }
       return false;
     }else{
-      this.toasty.toast("Password must contain Letters & Numbers & a special character at a miminum length of eight characters");
+      this.toasty.toast("Dein Passwort muss mindestens acht Zeichen, davon mindestens eine Zahl, einen Buchstaben und ein Sonderzeichen enthalten!");
       console.log("[REGISTER] : Password must contain Letters & Numbers & a special character at a miminum length of eight characters");
     }
     this.profile.password = '';
@@ -116,7 +116,7 @@ export class GetInvolvedPage {
 
   logProfile(){
     if(this.accountType == undefined){
-      this.toasty.toast("No account Type selected");
+      this.toasty.toast("Keinen Account-Typ ausgewählt!");
       return;
     }
     this.selectedAccountType = this.accountType === "student"? AccountTypes.STUDENT : AccountTypes.BUSINESS;
@@ -133,7 +133,7 @@ export class GetInvolvedPage {
           }
         }else{
           console.log("[REGISTER] : Invalid Student Mail | only supports domains of educational authorities");
-          this.toasty.toast("Invalid Student Mail | only supports domains of educational authorities");
+          this.toasty.toast("Studenten-Mail ungültig");
         }
       }else{
         if(this.selectedAccountType === AccountTypes.BUSINESS){
@@ -149,25 +149,25 @@ export class GetInvolvedPage {
           }
         }else{
           console.log("[REGISTER] : Please select a Type of User");
-          this.toasty.toast("Please select a Type of User");
+          this.toasty.toast("Bitte wähle einen Account-Typ aus!");
         }
       }
     }else{
       if(!this.profile.name){
         console.log("[REGISTER] : User Name is a required field");
-        this.toasty.toast("User Name is a required field");
+        this.toasty.toast("Bitte gib einen Namen an!");
       }
       if(!this.profile.mail){
         console.log("[REGISTER] : Mail is a required field");
-        this.toasty.toast("Mail is a required field");
+        this.toasty.toast("Bitte gib eine E-Mail an!");
       }
       if(!this.profile.password){
         console.log("[REGISTER] : Password is a required field");
-        this.toasty.toast("Password is a required field");
+        this.toasty.toast("Bitte gib ein Passwort an!");
       }
       if(!this.passwdChk){
         console.log("[REGISTER] : Please confirm your password of choice");
-        this.toasty.toast("Password is a required field");
+        this.toasty.toast("Bitte gib ein Passwort an!");
       }
     }
   }
