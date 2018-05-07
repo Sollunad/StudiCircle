@@ -39,7 +39,7 @@ module.exports = {
 
     joinOpenCircle : function (req, res) {
         const circleId = req.body.circleId;
-        const userId = req.body.userId;
+        const userId = req.session.userId;
         //const userRole = req.body.role;
 
         if (argumentMissing(res, circleId, userId)) return;
@@ -79,7 +79,7 @@ module.exports = {
         const userId = req.session.userId;
         var circleIsBusiness = false;
         const userData = studentInterface.getUserData(userId);
-        if (userData.type = 'BUSINESS') {circleIsBusiness = true;}
+        if (userData.type == 'BUSINESS') {circleIsBusiness = true;}
 
         db.Circle.create({"name":name,"visible":visible,"business":circleIsBusiness,"blackboard":true,"calendar":true,"bill":false,"bet":false,"filesharing":false,"chat":true,"market":false}).then(circle => {
             // Location speichern

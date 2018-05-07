@@ -51,7 +51,7 @@ export class LogInPage {
 
   login(){
     if(!this.mail && !this.pw) {
-      this.toasty.toast("Email and Password field cannot be empty!");
+      this.toasty.toast("Bitte gib eine E-Mail und ein Passwort ein!");
       console.log("[LOGIN] : Please provide an E-Mail as well as an Password");
     }else{
       if(this.mail.match(getMailRegex()) && stringHasAppropiateLength(this.pw,8,64)) {
@@ -64,13 +64,13 @@ export class LogInPage {
           },
           (data: HttpErrorResponse) => {
             if(data.status === 412) {
-              this.toasty.toast("Your Account is not yet activated!");
+              this.toasty.toast("Dein Account wurde noch nicht freigeschaltet!");
             } else if(data.status === 451) {
-              this.toasty.toast("This E - Mail is not in use!");
+              this.toasty.toast("Zu dieser E-Mail existiert kein Account!");
             } else if(data.status === 401) {
-              this.toasty.toast("Wrong password!");
+              this.toasty.toast("E-Mail oder Passwort falsch!");
             } else {
-              this.toasty.toast("Something went wrong");
+              this.toasty.toast("Etwas ist schief gelaufen!");
             }
             console.log("[LOGIN] : Login failed");
             loginSub.unsubscribe();
@@ -78,9 +78,9 @@ export class LogInPage {
         )
       }else{
         if(this.mail.length === 0){
-          this.toasty.toast("The email field cannot be empty!");
+          this.toasty.toast("Bitte gib eine E-Mail und ein Passwort ein!");
         }else if(this.pw.length === 0){
-          this.toasty.toast("The password field cannot be empty!");
+          this.toasty.toast("Bitte gib eine E-Mail und ein Passwort ein!");
         }
         console.log("[LOGIN] : Non-compliant E-Mail or Password")
       }

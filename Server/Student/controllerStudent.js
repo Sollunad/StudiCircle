@@ -39,7 +39,11 @@ module.exports = {
             if ( await database.validationKeyExists(validationKey)) {
                 //console.log("validation key exists");
                 if (await database.setState(validationKey, constants.AccountState.ACTIVE)){
-                    await registration.registrationInform( validationKey, "Your account registration is activated successfully.");
+                    let userId = await database.getUserIdFromValidationKey(validationKey);
+                    let type = await  database.getAccountTypeByUserId(userId);
+                    if ( type == constants.AccountType.BUSINESS) {
+                        await registration.registrationInform(validationKey, "Your account registration is activated successfully.");
+                    }
                     responder.sendResponse(res, 201, "Successfully validated new user account.");
                 }
             } else {

@@ -96,8 +96,7 @@ export class CircleProvider {
   }
 
   public addUserToCircle(circleId: number) {
-    return this.http.post(this.consts.url+'circle/addUser', {
-      userId: this.apiProvider.currentUser.uuid,
+    return this.http.post(this.consts.url+'circle/joinOpen', {
       circleId: circleId,
       mySession: this.apiProvider.currentUser.session
     });
@@ -217,12 +216,12 @@ export class CircleProvider {
     });
   }
 
-  public deletePost(post: any){
+  public deletePostPro(post):Observable<any>{
     console.log('deletePost', post.id);
-
-    return this.http.post(this.consts.url +'blackboard/deletePost/', {
+    return this.http.post(this.consts.url +'blackboard/deletePost', {
       postID: post.id,
-      mySession: this.apiProvider.currentUser.session
+      mySession: this.apiProvider.currentUser.session,
     });
+
   }
 }

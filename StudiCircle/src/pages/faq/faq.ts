@@ -9,12 +9,12 @@ import {ToastyProvider} from "../../providers/toasty/toasty";
 })
 export class FAQPage {
 
-  public articles = ['Wie kann ich „nicht-Studenten“ einladen?',
+  public articles = ['Wie kann ich „Nicht-Studenten“ einladen?',
                     'Wie lösche ich einen Account und was passiert mit meinen Daten, wenn ich meinen Account lösche?',
-                    'Welche Daten brauche ich um einen Business-Account registrieren zu können und wie sieht der Prozess aus?',
-                    'Was ist der unterscheid zwischen einem „normalen“ Account und einem „Business“-Account?',
+                    'Welche Daten brauche ich, um einen Business-Account registrieren zu können und wie sieht der Prozess aus?',
+                    'Was ist der Unterschied zwischen einem „normalen“ Account und einem „Business“-Account?',
                     'Wer steckt hinter StudiCircle?',
-                    'Wohin kann ich wenden, wenn ich Fragen oder Probleme habe?',
+                    'An wen kann ich mich wenden, wenn ich Fragen oder Probleme habe?',
                     ];
 
   public answers = [
@@ -23,7 +23,7 @@ export class FAQPage {
     'Der Prozess für die Registrierung eines Business-Accounts unterscheidet sich ein kleines bisschen von einem normalen Account. Nach der Angabe der Kontaktdaten wird man auf der zweiten Seite aufgefordert eine Bezeichnung und Beschreibung der Einrichtung anzugeben. Anschließenden werden diese Daten zur Prüfung weitergegeben und der Account manuell freigegeben.\n',
     'Unter normalen Accounts sind die üblichen Accounts von Studenten gemeint. Da wir euch aber auch die Möglichkeit geben wollten innerhalb eure Vereine oder anderen Einrichtungen StudiCircle zu nutzen und dies Leute einschließt, die keine Studenten sind, können sich offizielle Vereinsvertreter Business-Accounts anlegen und über diesen Weg auch „nicht-Studenten“ einladen.\n',
     'Ganz nach dem Motto „Von Studenten für Studenten“ wurde StudiCircle in Rahmen eines Projektes von einer Gruppe Studenten der Fachrichtung Angewandte Informatik entwickelt.\n',
-    'Bei Fragen oder Probleme stehen wir euch unter ________________ zur Verfügung.'
+    'Bei Fragen oder Problemen stehen wir euch unter studicircle@web.de zur Verfügung.'
   ];
 
   constructor(public navCtrl: NavController, private toasty : ToastyProvider, private alertCtrl : AlertController) {
@@ -38,7 +38,7 @@ export class FAQPage {
       title: this.articles[index],
       subTitle: this.answers[index],
       buttons: [{
-        text: 'GOTCHA'
+        text: 'Alles klar!'
       }]
     });
 

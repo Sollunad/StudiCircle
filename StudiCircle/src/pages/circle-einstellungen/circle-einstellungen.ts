@@ -74,7 +74,7 @@ export class CircleEinstellungenPage {
   openModuleSelect() {
     let alert = this.alertCtrl.create({
       title: 'Module',
-      message: 'Wählen sie alle im Circle nutzbaren Module!',
+      message: 'Wähle alle im Circle nutzbaren Module!',
       inputs: [
         {
           id: 'calendar',
@@ -93,7 +93,7 @@ export class CircleEinstellungenPage {
         {
           id: 'bet',
           type: 'checkbox',
-          label: 'Wetten(wip)',
+          label: 'Wetten (wip)',
           value: 'bet',
           checked: this.bet,
 
@@ -149,7 +149,7 @@ export class CircleEinstellungenPage {
   openVisibilitySelect() {
     let alert = this.alertCtrl.create({
       title: 'Sichtbarkeit',
-      message: 'Wählen sie die Sichtbarkeit des Circles',
+      message: 'Wähle die Sichtbarkeit des Circles',
       inputs: [
         {
           id: 'public',
