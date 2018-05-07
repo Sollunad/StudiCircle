@@ -79,12 +79,12 @@ export class DashboardPage {
   answerInvitation(iId: number, cId: number, answer: boolean){
     var question;
     if (answer){
-      question = 'Do you really accept the invitation?';
+      question = 'Möchtest du dem Circle wirklich joinen?';
     } else {
-      question = 'Do you really decline the invitation?';
+      question = 'Möchtest du die Einladung wirklich verwerfen?';
     }
     this.alertCtrl.create({
-      title: 'Confirm Invitation Answer!',
+      title: 'Antwort bestätigen!',
       message: question,
       buttons: [{
         text: 'OK',
