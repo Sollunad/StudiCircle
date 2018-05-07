@@ -31,11 +31,11 @@
             <ion-col>
               <button ion-button icon-left small color="secondary" (click)="showPost(post)">
                 <ion-icon name="text"></ion-icon>
-                {{post.Comments.length}} Comments
+                {{post.Comments.length}} Kommentare
               </button>
               <button ion-button *ngIf="isAdminOrMod || post.UserId == currentUserID" icon-left small color="danger" (click)="deletePost(post)">
                 <ion-icon name="trash"></ion-icon>
-                Delete
+                Löschen
               </button>
             </ion-col>
           </ion-row>
