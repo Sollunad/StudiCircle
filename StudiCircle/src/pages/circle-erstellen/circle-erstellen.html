@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Circle Erstellen
+      Circle erstellen
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -12,7 +12,7 @@
   <form id="circleErstellen-form1">
     <ion-item id="circleErstellen-input1">
       <ion-label>
-        Name*
+        Name
       </ion-label>
       <ion-input type="text" placeholder="Mustercircle" name="circlename" [(ngModel)]="newName"></ion-input>
       <button clear item-right (click)="showExtraInfoName()"><ion-icon style="font-size: 2em;" name="help-circle"></ion-icon></button>
@@ -40,9 +40,6 @@
     </ion-item>
   </form>
   <div id="circleErstellen-markdown1" class="show-list-numbers-and-dots">
-    <p style="color:#000000;font-size:11px;">
-      Alle mit * Markierten Felder müssen ausgefüllt werden
-    </p>
   </div>
   <button id="circleErstellen-button1" ion-button color="positive" (click)="createCircle()" block>
     Erstellen

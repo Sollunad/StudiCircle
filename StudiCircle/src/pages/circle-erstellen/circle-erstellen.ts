@@ -19,19 +19,19 @@ export class CircleErstellenPage {
 
   showExtraInfoName() {
     this.showAlert('Name',
-      'Hier können sie einen beliebigen Namen für den Circle angeben unter dem dieser dann angezeigt wird'
+      'Gebe hier einen Namen für den Circle an, unter dem dieser dann angezeigt wird!'
     );
   }
 
   showExtraInfoAdresse() {
     this.showAlert('Standort',
-      'Hier können sie einen beliebigen Standort für den Circle angeben um Leute in der Umgebung darauf aufmerksam zu machen.'
+      'Gebe hier einen Standort für den Circle an, um Leute in der Umgebung darauf aufmerksam zu machen!'
     );
   }
 
   showExtraInfoSichtbarkeit() {
     this.showAlert('Sichtbarkeit',
-      'Hier können sie auswählen ob alle User ihren Circel sehen und ihm beitreten können (Öffentlich), oder ob das nur auf Einladung möglich sein soll (Privat)'
+      'Gebe hier an, ob alle User deinen Circle sehen und ihm beitreten können (öffentlich), oder ob das nur auf Einladung möglich sein soll (privat)'
     );
   }
 
