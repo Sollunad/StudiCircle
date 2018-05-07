@@ -1,18 +1,20 @@
 # StudiCircle
 
-## Wichtige Links
+## Installation
 
-- [Sprint- und Product-Backlog](https://docs.google.com/spreadsheets/d/1YCvQa_m60D70OW_NKOWodGU-s6tj3FHdgRDIcPds1GU/)
-- [Übersicht 1. Sprint](https://drive.google.com/file/d/1ujw161Y97WQo8EW02hdNSwXAGiTV3paX/view?usp=sharing)
-- [bisher erstellte Mockups](https://drive.google.com/drive/folders/1L52qtxCDA95i3iDvHFCivjW2H9l7jyGI)
-- Sonstige Informationen / Dokumentation siehe [StudiCircle/Wiki](https://github.com/Sollunad/StudiCircle/wiki)
+- Repository clonen und Branch "master" auschecken
+- Oberverzeichnis des Repositories öffnen (beinhaltet Ordner "Server", "StudiCircle", etc.)
+- Unterordner "StudiCircle" öffnen
+- Kommandozeile in diesem Ordner starten
+- Vor dem ersten Start eingeben:
 
 ```
 npm install -g ionic
 npm install -g cordova
-cd StudiCircle/StudiCircle
-npm i
-(opt.) ionic build
+npm install
+```
+- Zum Ausführen eingeben:
+```
 ionic serve
 ```
 
