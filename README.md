@@ -2,6 +2,8 @@
 
 ## Installation
 
+Hinweis: Eine Installation von npm wird vorausgesetzt.
+
 - Repository clonen und Branch "master" auschecken
 - Oberverzeichnis des Repositories öffnen (beinhaltet Ordner "Server", "StudiCircle", etc.)
 - Unterordner "StudiCircle" öffnen
